@@ -3,6 +3,10 @@ PATH
   specs:
     rocket_job_mission_control (0.0.1)
       bootstrap-sass (>= 3.2.0.1)
+      haml
+      mongo (~> 1.0)
+      mongo_ha
+      mongo_mapper (~> 0.13)
       rails (~> 4.1.9)
       rocket_job
       rubyzip
@@ -148,9 +152,5 @@ PLATFORMS
 
 DEPENDENCIES
   bson_ext
-  haml
-  mongo (~> 1.0)
-  mongo_ha
-  mongo_mapper (~> 0.13)
   rocket_job_mission_control!
   rspec-rails

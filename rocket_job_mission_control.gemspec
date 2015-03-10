@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.add_dependency "bootstrap-sass", ">= 3.2.0.1"
   s.add_dependency "rubyzip"
   s.add_dependency "rocket_job"
-  #s.add_dependency 'mongo_ha'
-  #s.add_dependency 'mongo', '~>1.0'
-  #s.add_dependency 'mongo_mapper', '~> 0.13'
-  #s.add_dependency 'haml'
+  s.add_dependency 'mongo_ha'
+  s.add_dependency 'mongo', '~>1.0'
+  s.add_dependency 'mongo_mapper', '~> 0.13'
+  s.add_dependency 'haml'
 end

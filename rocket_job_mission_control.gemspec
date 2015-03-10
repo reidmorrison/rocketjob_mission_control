@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = RocketJobMissionControl::VERSION
   s.authors     = ["Michael Cloutier", "Chris Lamb"]
   s.email       = [""]
-  s.homepage    = "TODO"
+  s.homepage    = "https://github.com/mjcloutier/rocket_job_mission_control"
   s.summary     = "Web UI for Rocket Job"
   s.description = "Adds a web interface for Rocket Job."
   s.license     = "MIT"

@@ -1,0 +1,38 @@
+%h3.inline-block= "#{@job.klass}##{@job.perform_method}"
+
+.job-state.inline-block
+  .left state
+  .right{ class: job_class(@job) }
+    = @job.state
+
+- if @job.state == :failed
+  .job-retry.inline-block
+    = link_to "retry job", retry_job_path(@job), method: :post, class: 'btn btn-sm btn-default btn-retry'
+
+.priority
+  = form_tag set_priority_job_path(@job), method: :post do
+    = hidden_field_tag :id, @job.id
+
+    .input-group.spinner{ "data-id" => @job.id }
+      %input.form-control{type: "text", name: 'priority', value: "#{@job.priority.present? ? @job.priority : 50}"}
+
+      .input-group-btn-vertical
+        %button.btn.btn-default.up{ type: 'button' }
+          %i.fa.fa-caret-up
+
+        %button.btn.btn-default.down{ type: 'button' }
+          %i.fa.fa-caret-down
+
+      = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
+
+.clearfix
+
+.description
+  %b Created At:
+  = @job.created_at
+
+- @job.status.each_pair do |key, value|
+  .status-message
+    %b= key.to_s.titleize
+    = value
+.clearfix

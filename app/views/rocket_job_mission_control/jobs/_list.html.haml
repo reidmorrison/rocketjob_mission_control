@@ -1,0 +1,49 @@
+.col-md-6.job-list
+  .job-search-box.input-group
+    %input.form-control{ placeholder: "Search", type: "text" }
+      %span.input-group-btn
+        %button.btn.btn-default{ type: "button" }
+          %i.fa.fa-search
+
+  .list
+    - @jobs.each do |job|
+      = link_to job_path(id: job.id), remote: true, class: 'card' do
+        .inner
+          - if job._type == "RocketJob::BatchJob" && job.slices_queued > 0
+            .batch
+              = job.slices_queued
+
+          .title.float-left
+            %h3
+              - case job.state
+              - when :queued
+                %i.fa.fa-bed.warning
+              - when :running
+                %i.fa.fa-cog.fa-spin.primary
+              - when :completed
+                %i.fa.fa-check-circle-o.success
+              - when :aborted
+                %i.fa.fa-times-circle-o.warning
+              - else :failed
+                %i.fa.fa-times-circle-o.danger
+
+              = "#{job.priority} - #{job.klass}##{job.perform_method}"
+
+          .duration
+            - case job.state
+            - when :queued
+              %i.fa.fa-clock-o
+              = distance_of_time_in_words_to_now(job.status[:started_at], include_seconds: true)
+              queued
+            - when :completed
+              %i.fa.fa-clock-o
+              = distance_of_time_in_words(job.status[:started_at], job.status[:completed_at], include_seconds: true)
+            - when :running
+              %i.fa.fa-clock-o
+              = distance_of_time_in_words_to_now(job.status[:started_at], include_seconds: true)
+            - when :aborted
+              %i.fa.fa-clock-o
+              = distance_of_time_in_workds(job.status[:started_at], job.status[:aborted_at], include_seconds: true)
+            - when :failed
+              %i.fa.fa-bomb
+              failed

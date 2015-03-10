@@ -1,0 +1,41 @@
+#servers
+  .grid
+    - if @servers.present?
+      - @servers.each do |server|
+        .card.col-xs-6.col-sm-6.col-md-3.col-lg-2
+          .inner
+            .icon
+              %i.fa.fa-database
+
+            .title
+              %h3
+                = server.name
+
+            .state
+              %b State:
+              = server.state
+
+            .threads.max_threads
+              %b Max Threads:
+              = server.max_threads
+
+            .threads.current_threads
+              %b Current Threads:
+              = server.heartbeat.current_threads.present? ? server.heartbeat.current_threads : 0
+
+            .time
+              %b Started:
+              = server.started_at.strftime("%b, %d %Y at %l:%M %p")
+
+            .actions
+              = render partial: 'actions', locals: { server: server }
+
+    - else
+      .no-servers
+        There are currently no servers.
+        %br
+        You can start a server with the following command:
+
+        .code-block.col-md-6.col-md-offset-3
+          %pre
+            %code.language-bash bin/rake rocket_job:server

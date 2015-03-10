@@ -1,7 +1,6 @@
-Rocket Job Mission Control
-===============
+# Rocket Job Mission Control ![](http://ruby-gem-downloads-badge.herokuapp.com/rocket_job_mission_control)
 
-A UI for [rocket_job][0].
+The UI for [rocket_job][0].
 This gem is written to work with rails 4 applications using
 activerecord.
 

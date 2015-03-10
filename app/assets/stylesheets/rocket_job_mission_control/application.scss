@@ -10,9 +10,6 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require base
- *= require bootstrap_and_overrides
- *= require jquery.bootstrap-touchspin
- *= require prism
+ *= require_tree .
  *= require_self
  */

@@ -64,8 +64,7 @@ Releasing a new version
 Authors
 ------
 
-Michael Cloutier - [mjcloutier][1]
-
+Michael Cloutier - [mjcloutier][1]  
 Chris Lamb - [lambcr][2]
 
 

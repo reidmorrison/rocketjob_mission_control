@@ -43,7 +43,7 @@ Contributing
 
 1. Fork
 2. Hack
-3. `rake test`
+3. `rake spec`
 4. Send a pull request
 
 
@@ -68,6 +68,6 @@ Michael Cloutier - [mjcloutier][1]
 Chris Lamb - [lambcr][2]
 
 
-[0]: https://github.com/defunkt/resque
+[0]: https://github.com/reidmorrison/rocket_job
 [1]: https://github.com/mjcloutier
 [2]: https://github.com/lambcr

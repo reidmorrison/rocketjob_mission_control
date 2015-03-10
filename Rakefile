@@ -22,4 +22,5 @@ Bundler::GemHelper.install_tasks
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
-task default: 'app:spec'
+task spec: 'app:spec'
+task default: :spec

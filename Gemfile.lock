@@ -52,6 +52,7 @@ GEM
       descendants_tracker (~> 0.0.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.3.0)
     haml (4.0.6)
@@ -61,14 +62,8 @@ GEM
     json (1.8.2)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
-    metaclass (0.0.4)
     mime-types (2.4.3)
     minitest (5.5.1)
-    minitest-rails (2.1.1)
-      minitest (~> 5.4)
-      railties (~> 4.1)
-    mocha (1.1.0)
-      metaclass (~> 0.0.1)
     mongo (1.12.0)
       bson (= 1.12.0)
     mongo_ha (1.12.0)
@@ -108,6 +103,23 @@ GEM
       semantic_logger (~> 2.13)
       symmetric-encryption (~> 3.0)
       sync_attr (>= 1.0)
+    rspec-core (3.2.1)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-rails (3.2.1)
+      actionpack (>= 3.0, < 4.3)
+      activesupport (>= 3.0, < 4.3)
+      railties (>= 3.0, < 4.3)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.2)
     rubyzip (1.1.7)
     sass (3.4.13)
     semantic_logger (2.13.1)
@@ -137,9 +149,8 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   haml
-  minitest-rails
-  mocha
   mongo (~> 1.0)
   mongo_ha
   mongo_mapper (~> 0.13)
   rocket_job_mission_control!
+  rspec-rails

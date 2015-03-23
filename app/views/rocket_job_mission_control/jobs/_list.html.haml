@@ -9,9 +9,9 @@
     - @jobs.each do |job|
       = link_to job_path(id: job.id), remote: true, class: 'card' do
         .inner
-          - if job._type == "RocketJob::BatchJob" && job.slices_queued > 0
+          - if job._type == "RocketJob::SlicedJob" && job.input.queued_slices > 0
             .batch
-              = job.slices_queued
+              = job.input.queued_slices
 
           .title.float-left
             %h3

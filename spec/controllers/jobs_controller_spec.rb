@@ -5,7 +5,7 @@ module RocketJobMissionControl
     routes { Engine.routes }
 
     describe "GET #show" do
-      describe "with a valid job" do
+      describe "with a valid job id" do
         before do
           allow(RocketJob::Job).to receive(:sort).and_return([])
           allow(RocketJob::Job).to receive(:find).and_return('job')
@@ -46,7 +46,7 @@ module RocketJobMissionControl
 
         before do
           allow(RocketJob::Job).to receive(:sort).and_return(jobs)
-          get :index, use_route: 'jobs'
+          get :index
         end
 
         it "succeeds" do

@@ -20,20 +20,10 @@
               = "#{job.priority} - #{job.klass}##{job.perform_method}"
 
           .duration
-            - case job.state
-            - when :queued
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words_to_now(job.status[:started_at], include_seconds: true)
-              queued
-            - when :completed
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words(job.status[:started_at], job.status[:completed_at], include_seconds: true)
-            - when :running
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words_to_now(job.status[:started_at], include_seconds: true)
-            - when :aborted
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words(job.status[:started_at], job.status[:aborted_at], include_seconds: true)
-            - when :failed
+            - if job.failed?
               %i.fa.fa-bomb
               failed
+            - else
+              %i.fa.fa-clock-o
+              = job_duration(job)
+

@@ -22,7 +22,7 @@ module RocketJobMissionControl
     end
 
     def show
-      @jobs = RocketJob::Job.sort(priority: :desc, created_at: :desc)
+      @jobs = RocketJob::Job.sort(created_at: :desc)
       @job = RocketJob::Job.find(params[:id])
 
       respond_to do |format|
@@ -32,7 +32,7 @@ module RocketJobMissionControl
     end
 
     def index
-      @jobs = RocketJob::Job.sort(priority: :desc, created_at: :desc)
+      @jobs = RocketJob::Job.sort(created_at: :desc)
 
       respond_to do |format|
         format.html

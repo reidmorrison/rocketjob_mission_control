@@ -23,6 +23,10 @@ module RocketJobMissionControl
         it "assigns the jobs" do
           expect(assigns(:jobs)).to eq([])
         end
+
+        it "grabs a sorted list of rocket jobs" do
+          expect(RocketJob::Job).to have_received(:sort).with(created_at: :desc)
+        end
       end
     end
 
@@ -36,6 +40,11 @@ module RocketJobMissionControl
         it "succeeds" do
           expect(response.status).to be(200)
         end
+
+        it "grabs a sorted list of rocket jobs" do
+          expect(RocketJob::Job).to have_received(:sort).with(created_at: :desc)
+        end
+
         it "returns no jobs" do
           expect(assigns(:jobs)).to eq([])
         end
@@ -52,6 +61,11 @@ module RocketJobMissionControl
         it "succeeds" do
           expect(response.status).to be(200)
         end
+
+        it "grabs a sorted list of rocket jobs" do
+          expect(RocketJob::Job).to have_received(:sort).with(created_at: :desc)
+        end
+
         it "returns the jobs" do
           expect(assigns(:jobs)).to match_array(jobs)
         end

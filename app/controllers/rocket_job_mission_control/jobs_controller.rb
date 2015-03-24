@@ -8,7 +8,6 @@ module RocketJobMissionControl
 
       respond_to do |format|
         format.html { redirect_to job_path(@job) }
-        format.js
       end
     end
 
@@ -17,7 +16,6 @@ module RocketJobMissionControl
 
       respond_to do |format|
         format.html { redirect_to job_path(@job) }
-        format.js
       end
     end
 
@@ -27,7 +25,6 @@ module RocketJobMissionControl
 
       respond_to do |format|
         format.html
-        format.js { render :index }
       end
     end
 
@@ -36,7 +33,6 @@ module RocketJobMissionControl
 
       respond_to do |format|
         format.html
-        format.js
       end
     end
 

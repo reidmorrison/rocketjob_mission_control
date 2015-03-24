@@ -7,7 +7,7 @@
 
   .list
     - @jobs.each do |job|
-      = link_to job_path(id: job.id), remote: true, class: 'card' do
+      = link_to job_path(id: job.id), class: 'card' do
         .inner
           - if job._type == "RocketJob::SlicedJob" && job.input.queued_slices > 0
             .batch

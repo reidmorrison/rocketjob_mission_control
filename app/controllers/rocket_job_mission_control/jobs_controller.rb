@@ -1,45 +1,42 @@
 module RocketJobMissionControl
-  class JobsController < ApplicationController
-    before_filter :find_job, only: [:set_priority, :download, :retry]
+  class JobsController < RocketJobMissionControl::ApplicationController
+    before_filter :find_job, only: [:abort, :retry, :update]
 
-    def set_priority
-      @job.priority = params[:priority]
-      @job.save
+    def update
+      @job.update_attributes!(job_params)
 
-      respond_to do |format|
-        format.html { redirect_to job_path(@job) }
-      end
+      redirect_to job_path(@job)
+    end
+
+    def abort
+      @job.abort!
+
+      redirect_to job_path(@job)
     end
 
     def retry
       @job.retry!
 
-      respond_to do |format|
-        format.html { redirect_to job_path(@job) }
-      end
+      redirect_to job_path(@job)
     end
 
     def show
       @jobs = RocketJob::Job.sort(created_at: :desc)
       @job = RocketJob::Job.find(params[:id])
-
-      respond_to do |format|
-        format.html
-      end
     end
 
     def index
       @jobs = RocketJob::Job.sort(created_at: :desc)
-
-      respond_to do |format|
-        format.html
-      end
     end
 
     private
 
     def find_job
       @job = RocketJob::Job.find(params[:id])
+    end
+
+    def job_params
+      params.require(:job).permit(:priority)
     end
 
   end

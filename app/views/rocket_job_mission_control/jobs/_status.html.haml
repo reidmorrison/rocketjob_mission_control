@@ -1,45 +1,50 @@
-%h3.inline-block= "#{@job.klass}##{@job.perform_method}"
+.col-md-6.job-status
+  #job
+    %h3= "#{@job.klass}##{@job.perform_method}"
 
-.job-state.inline-block
-  .left state
-  .right{ class: job_class(@job) }
-    = @job.state
+    - if [:queued, :running, :failed].include?(@job.state)
+      .job-retry
+        = link_to "abort job", abort_job_path(@job), method: :patch, class: 'btn btn-sm btn-warning'
 
-- if @job.state == :failed
-  .job-retry.inline-block
-    = link_to "retry job", retry_job_path(@job), method: :post, class: 'btn btn-sm btn-default btn-retry'
+    - if @job.state == :failed
+      .job-retry
+        = link_to "retry job", retry_job_path(@job), method: :patch, class: 'btn btn-sm btn-primary'
 
-.priority
-  = form_tag set_priority_job_path(@job), method: :post do
-    = hidden_field_tag :id, @job.id
+    .job-state.inline-block
+      .left state
+      .right{ class: job_class(@job) }
+        = @job.state
 
-    .input-group.spinner{ "data-id" => @job.id }
-      %input.form-control{type: "text", name: 'priority', value: "#{@job.priority.present? ? @job.priority : 50}"}
+    .priority
+      = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
 
-      .input-group-btn-vertical
-        %button.btn.btn-default.up{ type: 'button' }
-          %i.fa.fa-caret-up
+        .input-group.spinner{ "data-id" => @job.id }
+          = f.text_field(:priority, class: 'form-control')
 
-        %button.btn.btn-default.down{ type: 'button' }
-          %i.fa.fa-caret-down
+          .input-group-btn-vertical
+            %button.btn.btn-default.up{ type: 'button' }
+              %i.fa.fa-caret-up
 
-      = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
+            %button.btn.btn-default.down{ type: 'button' }
+              %i.fa.fa-caret-down
 
-.clearfix
+          = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
 
-.id
-  %label ID:
-  = @job.id
-.created_at
-  %label Created At:
-  = @job.created_at
+    .clearfix
 
-- @job.status.each_pair do |key, value|
-  .status-message
-    %label= "#{key.to_s.titleize}:"
-    = value
-.clearfix
+    .id
+      %label ID:
+      = @job.id
+    .created_at
+      %label Created At:
+      = @job.created_at
 
-.parameters
-  %label Parameters:
-  %div= @job.arguments
+    - @job.status.each_pair do |key, value|
+      .status-message
+        %label= "#{key.to_s.titleize}:"
+        = value
+    .clearfix
+
+    .parameters
+      %label Parameters:
+      %div= @job.arguments

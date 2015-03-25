@@ -1,8 +1,8 @@
 RocketJobMissionControl::Engine.routes.draw do
 
-  resources :jobs, only: [:index, :show] do
-    post :set_priority, on: :member
-    post :retry,        on: :member
+  resources :jobs, only: [:index, :show, :update] do
+    patch :retry,        on: :member
+    patch :abort,        on: :member
   end
 
   resources :servers, only: [:index, :destroy] do

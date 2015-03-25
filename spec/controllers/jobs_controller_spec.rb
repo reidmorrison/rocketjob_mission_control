@@ -4,6 +4,26 @@ module RocketJobMissionControl
   RSpec.describe JobsController do
     routes { Engine.routes }
 
+    describe "PATCH #update" do
+      describe "with a valid job id" do
+        let(:job) { spy(id: 42, to_param: 42) }
+
+        before do
+          allow(RocketJob::Job).to receive(:sort).and_return([])
+          allow(RocketJob::Job).to receive(:find).and_return(job)
+          patch :update, id: 42, job: {id: 42, priority: 12}
+        end
+
+        it "succeeds" do
+          expect(response).to redirect_to(job_path(42))
+        end
+
+        it "updates the job correctly" do
+          expect(job).to have_received(:update_attributes!).with('priority' => '12')
+        end
+      end
+    end
+
     describe "GET #show" do
       describe "with a valid job id" do
         before do

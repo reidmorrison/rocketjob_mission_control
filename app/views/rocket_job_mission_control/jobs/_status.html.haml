@@ -10,11 +10,10 @@
     = link_to "retry job", retry_job_path(@job), method: :post, class: 'btn btn-sm btn-default btn-retry'
 
 .priority
-  = form_tag set_priority_job_path(@job), method: :post do
-    = hidden_field_tag :id, @job.id
+  = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
 
     .input-group.spinner{ "data-id" => @job.id }
-      %input.form-control{type: "text", name: 'priority', value: "#{@job.priority.present? ? @job.priority : 50}"}
+      = f.text_field(:priority, class: 'form-control')
 
       .input-group-btn-vertical
         %button.btn.btn-default.up{ type: 'button' }

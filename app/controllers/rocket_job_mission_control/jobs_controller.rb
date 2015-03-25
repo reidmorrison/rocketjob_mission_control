@@ -1,5 +1,5 @@
 module RocketJobMissionControl
-  class JobsController < ApplicationController
+  class JobsController < RocketJobMissionControl::ApplicationController
     before_filter :find_job, only: [:set_priority, :download, :retry]
 
     def set_priority

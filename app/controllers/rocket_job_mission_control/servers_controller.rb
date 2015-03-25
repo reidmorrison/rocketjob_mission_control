@@ -1,5 +1,5 @@
 module RocketJobMissionControl
-  class ServersController < ApplicationController
+  class ServersController < RocketJobMissionControl::ApplicationController
     before_filter :find_server, only: [:stop, :pause, :resume, :destroy]
 
     def index

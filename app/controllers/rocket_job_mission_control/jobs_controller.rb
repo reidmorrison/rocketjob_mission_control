@@ -8,7 +8,6 @@ module RocketJobMissionControl
 
       respond_to do |format|
         format.html { redirect_to job_path(@job) }
-        format.js
       end
     end
 
@@ -17,26 +16,23 @@ module RocketJobMissionControl
 
       respond_to do |format|
         format.html { redirect_to job_path(@job) }
-        format.js
       end
     end
 
     def show
-      @jobs = RocketJob::Job.sort(priority: :desc, created_at: :desc)
+      @jobs = RocketJob::Job.sort(created_at: :desc)
       @job = RocketJob::Job.find(params[:id])
 
       respond_to do |format|
         format.html
-        format.js { render :index }
       end
     end
 
     def index
-      @jobs = RocketJob::Job.sort(priority: :desc, created_at: :desc)
+      @jobs = RocketJob::Job.sort(created_at: :desc)
 
       respond_to do |format|
         format.html
-        format.js
       end
     end
 

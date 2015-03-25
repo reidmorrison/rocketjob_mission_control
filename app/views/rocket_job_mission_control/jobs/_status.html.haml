@@ -27,12 +27,19 @@
 
 .clearfix
 
-.description
-  %b Created At:
+.id
+  %label ID:
+  = @job.id
+.created_at
+  %label Created At:
   = @job.created_at
 
 - @job.status.each_pair do |key, value|
   .status-message
-    %b= key.to_s.titleize
+    %label= "#{key.to_s.titleize}:"
     = value
 .clearfix
+
+.parameters
+  %label Parameters:
+  %div= @job.arguments

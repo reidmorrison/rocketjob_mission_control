@@ -7,7 +7,7 @@
 
   .list
     - @jobs.each do |job|
-      = link_to job_path(id: job.id), remote: true, class: 'card' do
+      = link_to job_path(id: job.id), class: 'card' do
         .inner
           - if job._type == "RocketJob::SlicedJob" && job.input.queued_slices > 0
             .batch
@@ -15,35 +15,15 @@
 
           .title.float-left
             %h3
-              - case job.state
-              - when :queued
-                %i.fa.fa-bed.warning
-              - when :running
-                %i.fa.fa-cog.fa-spin.primary
-              - when :completed
-                %i.fa.fa-check-circle-o.success
-              - when :aborted
-                %i.fa.fa-times-circle-o.warning
-              - else :failed
-                %i.fa.fa-times-circle-o.danger
+              %i.fa{class: job_state_icon(job.state)}
 
               = "#{job.priority} - #{job.klass}##{job.perform_method}"
 
           .duration
-            - case job.state
-            - when :queued
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words_to_now(job.status[:started_at], include_seconds: true)
-              queued
-            - when :completed
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words(job.status[:started_at], job.status[:completed_at], include_seconds: true)
-            - when :running
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words_to_now(job.status[:started_at], include_seconds: true)
-            - when :aborted
-              %i.fa.fa-clock-o
-              = distance_of_time_in_words(job.status[:started_at], job.status[:aborted_at], include_seconds: true)
-            - when :failed
+            - if job.failed?
               %i.fa.fa-bomb
               failed
+            - else
+              %i.fa.fa-clock-o
+              = job_duration(job)
+

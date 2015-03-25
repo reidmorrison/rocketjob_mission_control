@@ -1,6 +1,4 @@
 #queue
   = render partial: 'list', locals: { jobs: @jobs }
 
-  .col-md-6.job-status
-    #job
-      = render partial: 'status', locals: { job: @job }
+= render partial: 'status', locals: { job: @job }

@@ -4,17 +4,35 @@ module RocketJobMissionControl
   RSpec.describe JobsController do
     routes { Engine.routes }
 
+    describe "PATCH #abort" do
+      describe "with a valid job id" do
+        let(:job) { spy(id: 42, to_param: 42) }
+
+        before do
+          allow(RocketJob::Job).to receive(:find).and_return(job)
+          patch :abort, id: 42, job: {id: 42, priority: 12}
+        end
+
+        it "redirects to the job" do
+          expect(response).to redirect_to(job_path(42))
+        end
+
+        it "aborts the job" do
+          expect(job).to have_received(:abort!)
+        end
+      end
+    end
+
     describe "PATCH #update" do
       describe "with a valid job id" do
         let(:job) { spy(id: 42, to_param: 42) }
 
         before do
-          allow(RocketJob::Job).to receive(:sort).and_return([])
           allow(RocketJob::Job).to receive(:find).and_return(job)
           patch :update, id: 42, job: {id: 42, priority: 12}
         end
 
-        it "succeeds" do
+        it "redirects to the job" do
           expect(response).to redirect_to(job_path(42))
         end
 

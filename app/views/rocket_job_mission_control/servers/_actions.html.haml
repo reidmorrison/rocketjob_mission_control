@@ -1,5 +1,5 @@
 - if server.stopping?
-  %p Server is coming down...
+  %p Server is stopping...
   = link_to "destroy", server_path(server), method: :delete, class: 'btn btn-danger'
 -else
   = link_to "stop", stop_server_path(server), method: :patch, class: 'btn btn-danger'

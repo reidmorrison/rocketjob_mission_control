@@ -15,7 +15,7 @@ module RocketJobMissionControl
     end
 
     def destroy
-      @server.destroy!
+      @server.destroy
 
       respond_to do |format|
         format.html { redirect_to servers_path }

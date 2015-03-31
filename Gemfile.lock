@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:reidmorrison/rocket_job.git
-  revision: a8cc2fe76a7c88fbc783c7527d5dcb684724becf
+  revision: 80965a165b5c25f5b0e49d8d5f7f78b79204edf2
   specs:
     rocket_job (0.3.0)
       aasm (~> 4.1)
@@ -61,7 +61,7 @@ GEM
     bootstrap-sass (3.3.4.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
-    bson (1.12.0)
+    bson (1.12.1)
     bson_ext (1.12.0)
       bson (~> 1.12.0)
     builder (3.2.2)
@@ -81,8 +81,8 @@ GEM
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
     minitest (5.5.1)
-    mongo (1.12.0)
-      bson (= 1.12.0)
+    mongo (1.12.1)
+      bson (= 1.12.1)
     mongo_ha (1.12.0)
       mongo (~> 1.12)
     mongo_mapper (0.13.1)

@@ -47,4 +47,5 @@
 
     .parameters
       %label Parameters:
-      %div= @job.arguments
+      %pre
+        %code= pretty_print_arguments(@job.arguments)

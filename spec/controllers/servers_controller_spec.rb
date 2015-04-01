@@ -17,8 +17,28 @@ module RocketJobMissionControl
           expect(response).to redirect_to(servers_path)
         end
 
+        it "displays a flash message" do
+          expect(flash[:notice]).to eq(I18n.t(:success, scope: [:server, :destroy]))
+        end
+
         it "destroys the server" do
           expect(server).to have_received(:destroy)
+        end
+      end
+
+      describe "when the server fails to stop" do
+        before do
+          server = spy(destroy: false)
+          allow(RocketJob::Server).to receive(:find).and_return(server)
+          delete :destroy, id: server.id
+        end
+
+        it "redirects to servers" do
+          expect(response).to redirect_to(servers_path)
+        end
+
+        it "displays a flash message" do
+          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:server, :destroy]))
         end
       end
     end

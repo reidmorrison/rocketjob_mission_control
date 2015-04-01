@@ -15,7 +15,11 @@ module RocketJobMissionControl
     end
 
     def destroy
-      @server.destroy
+      if @server.destroy
+        flash[:notice] = t(:success, scope: [:server, :destroy])
+      else
+        flash[:alert]  = t(:failure, scope: [:server, :destroy])
+      end
 
       respond_to do |format|
         format.html { redirect_to servers_path }

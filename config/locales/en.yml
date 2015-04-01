@@ -43,3 +43,9 @@ en:
     destroy:
       success: "Server successfully destroyed."
       failure: "Error attempting to destroy server."
+    pause:
+      success: "Server successfully paused."
+      failure: "Error attempting to pause server."
+    resume:
+      success: "Server successfully resumed."
+      failure: "Error attempting to resume server."

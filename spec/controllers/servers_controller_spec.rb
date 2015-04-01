@@ -4,41 +4,43 @@ module RocketJobMissionControl
   RSpec.describe ServersController do
     routes { Engine.routes }
 
-    describe "PATCH #stop" do
-      describe "with a valid server id" do
-        let(:server) { spy(id: 42, to_param: 42) }
+    [:stop, :pause, :resume].each do |action|
+      describe "PATCH ##{action}" do
+        describe "with a valid server id" do
+          let(:server) { spy(id: 42, to_param: 42) }
 
-        before do
-          allow(RocketJob::Server).to receive(:find).and_return(server)
-          patch :stop, id: server.id
+          before do
+            allow(RocketJob::Server).to receive(:find).and_return(server)
+            patch action, id: server.id
+          end
+
+          it "redirects to servers" do
+            expect(response).to redirect_to(servers_path)
+          end
+
+          it "displays a flash message" do
+            expect(flash[:notice]).to eq(I18n.t(:success, scope: [:server, action]))
+          end
+
+          it "#{action} the server" do
+            expect(server).to have_received("#{action}!".to_sym)
+          end
         end
 
-        it "redirects to servers" do
-          expect(response).to redirect_to(servers_path)
-        end
+        describe "when the server fails to #{action}" do
+          before do
+            server = spy("#{action}!".to_sym => false)
+            allow(RocketJob::Server).to receive(:find).and_return(server)
+            patch action, id: server.id
+          end
 
-        it "displays a flash message" do
-          expect(flash[:notice]).to eq(I18n.t(:success, scope: [:server, :stop]))
-        end
+          it "redirects to servers" do
+            expect(response).to redirect_to(servers_path)
+          end
 
-        it "stops the server" do
-          expect(server).to have_received(:stop!)
-        end
-      end
-
-      describe "when the server fails to stop" do
-        before do
-          server = spy(stop!: false)
-          allow(RocketJob::Server).to receive(:find).and_return(server)
-          patch :stop, id: server.id
-        end
-
-        it "redirects to servers" do
-          expect(response).to redirect_to(servers_path)
-        end
-
-        it "displays a flash message" do
-          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:server, :stop]))
+          it "displays a flash message" do
+            expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:server, action]))
+          end
         end
       end
     end

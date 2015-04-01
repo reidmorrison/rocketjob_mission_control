@@ -31,7 +31,11 @@ module RocketJobMissionControl
     end
 
     def pause
-      @server.pause!
+      if @server.pause!
+        flash[:notice] = t(:success, scope: [:server, :pause])
+      else
+        flash[:alert]  = t(:failure, scope: [:server, :pause])
+      end
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -39,7 +43,11 @@ module RocketJobMissionControl
     end
 
     def resume
-      @server.resume!
+      if @server.resume!
+        flash[:notice] = t(:success, scope: [:server, :resume])
+      else
+        flash[:alert]  = t(:failure, scope: [:server, :resume])
+      end
 
       respond_to do |format|
         format.html { redirect_to servers_path }

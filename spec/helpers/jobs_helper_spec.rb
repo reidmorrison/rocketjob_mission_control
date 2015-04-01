@@ -95,6 +95,7 @@ module RocketJobMissionControl
             }
           ]
         }
+
         it "returns a string with spacing and line breaks" do
           expected_output = "[<br />  42,<br />  {<br />    \"crew\": [<br />      \"leela\",<br />      \"fry\",<br />      \"bender\"<br />    ],<br />    \"created_at\": \"1999-03-28\"<br />  }<br />]"
           expect(helper_output).to eq(expected_output)
@@ -103,6 +104,7 @@ module RocketJobMissionControl
 
       context "when arguments isn't an array or hash" do
         let(:arguments) { 42 }
+
         it "returns the arguments" do
           expect(helper_output).to eq(arguments)
         end

@@ -17,14 +17,12 @@ module RocketJobMissionControl
 
     def job_class(job)
       case job.state
-      when :queued
+      when :queued, :aborted
         "warning"
       when :running
         "primary"
       when :completed
         "success"
-      when :aborted
-        "warning"
       when :failed
         "danger"
       else

@@ -7,7 +7,11 @@ module RocketJobMissionControl
     end
 
     def stop
-      @server.stop!
+      if @server.stop!
+        flash[:notice] = t(:success, scope: [:server, :stop])
+      else
+        flash[:alert]  = t(:failure, scope: [:server, :stop])
+      end
 
       respond_to do |format|
         format.html { redirect_to servers_path }

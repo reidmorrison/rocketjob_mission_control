@@ -37,6 +37,9 @@ en:
         one:   "1 year" # default was: "almost 1 year"
         other: "%{count} years" # default was: "almost %{count} years"
   server:
+    stop:
+      success: "Server successfully stopped."
+      failure: "Error attempting to stop server."
     destroy:
       success: "Server successfully destroyed."
       failure: "Error attempting to destroy server."

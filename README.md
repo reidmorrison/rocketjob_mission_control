@@ -49,8 +49,8 @@ Contributing
 Releasing a new version
 -----------------------
 
-1. Update the version in `delayed_job_web.gemspec`
-2. `git commit delayed_job_web.gemspec` with the following message format:
+1. Update the version in `lib/rocket_job_mission_control/version.rb`
+2. `lib/rocket_job_mission_control/version.rb` with the following message format:
 
         Version x.x.x
 

@@ -4,12 +4,13 @@ module RocketJobMissionControl
   RSpec.describe JobsHelper, type: :helper do
     #TODO: Timecop this for stability
     describe "#job_duration" do
-      let(:job) { double(:job, status: status, completed?: false, aborted?: false) }
+      let(:job) { double(:job, completed?: false, aborted?: false, started_at: Time.now) }
 
       context "when the job is completed" do
-        let(:status) { {started_at: Time.now, completed_at: 1.minute.from_now} }
-
-        before { allow(job).to receive(:completed?).and_return(true) }
+        before do
+          allow(job).to receive(:completed?).and_return(true)
+          allow(job).to receive(:completed_at).and_return(1.minute.from_now)
+        end
 
         it "returns the time between started at and completed at" do
           expect(helper.job_duration(job)).to eq('1 minute')
@@ -17,17 +18,20 @@ module RocketJobMissionControl
       end
 
       context "when the job is aborted" do
-        let(:status) { {started_at: Time.now, aborted_at: 2.minutes.from_now} }
-
-        before { allow(job).to receive(:aborted?).and_return(true) }
+        before do
+          allow(job).to receive(:aborted?).and_return(true)
+          allow(job).to receive(:completed_at).and_return(2.minutes.from_now)
+        end
 
         it "returns the time between started at and aborted at" do
           expect(helper.job_duration(job)).to eq('2 minutes')
         end
       end
 
-      context "when the job is not aborted or complated" do
-        let(:status) { {started_at: Time.now} }
+      context "when the job is not aborted or completed" do
+        before do
+          allow(job).to receive(:started_at).and_return(Time.now)
+        end
 
         it "returns the time between started at and now" do
           expect(helper.job_duration(job)).to eq('5 seconds')

@@ -44,8 +44,10 @@ module RocketJobMissionControl
 
     describe "GET #show" do
       describe "with a valid job id" do
+        let(:result) { spy(sort: []) }
+
         before do
-          allow(RocketJob::Job).to receive(:sort).and_return([])
+          allow(RocketJob::Job).to receive(:limit).and_return(result)
           allow(RocketJob::Job).to receive(:find).and_return('job')
           get :show, id: 42
         end
@@ -63,15 +65,17 @@ module RocketJobMissionControl
         end
 
         it "grabs a sorted list of rocket jobs" do
-          expect(RocketJob::Job).to have_received(:sort).with(created_at: :desc)
+          expect(result).to have_received(:sort).with(created_at: :desc)
         end
       end
     end
 
     describe "GET #index" do
       describe "with no jobs" do
+        let(:result) { spy(sort: []) }
+
         before do
-          allow(RocketJob::Job).to receive(:sort).and_return([])
+          allow(RocketJob::Job).to receive(:limit).and_return(result)
           get :index
         end
 
@@ -80,7 +84,7 @@ module RocketJobMissionControl
         end
 
         it "grabs a sorted list of rocket jobs" do
-          expect(RocketJob::Job).to have_received(:sort).with(created_at: :desc)
+          expect(result).to have_received(:sort).with(created_at: :desc)
         end
 
         it "returns no jobs" do
@@ -89,10 +93,11 @@ module RocketJobMissionControl
       end
 
       describe "with jobs" do
+        let(:result) { spy(sort: jobs) }
         let(:jobs) { ['fake_job1', 'fake_job2'] }
 
         before do
-          allow(RocketJob::Job).to receive(:sort).and_return(jobs)
+          allow(RocketJob::Job).to receive(:limit).and_return(result)
           get :index
         end
 
@@ -101,7 +106,7 @@ module RocketJobMissionControl
         end
 
         it "grabs a sorted list of rocket jobs" do
-          expect(RocketJob::Job).to have_received(:sort).with(created_at: :desc)
+          expect(result).to have_received(:sort).with(created_at: :desc)
         end
 
         it "returns the jobs" do

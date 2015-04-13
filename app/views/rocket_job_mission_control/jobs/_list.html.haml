@@ -9,10 +9,6 @@
     - @jobs.each do |job|
       = link_to job_path(id: job.id), class: 'card' do
         .inner
-          - if job._type == "RocketJob::SlicedJob" && job.input.queued_slices > 0
-            .batch
-              = job.input.queued_slices
-
           .title.float-left
             %h3
               %i.fa{class: job_state_icon(job.state)}

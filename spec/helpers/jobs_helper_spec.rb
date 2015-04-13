@@ -31,6 +31,7 @@ module RocketJobMissionControl
       context "when the job is not aborted or completed" do
         before do
           allow(job).to receive(:started_at).and_return(Time.now)
+          allow(job).to receive(:completed_at).and_return(nil)
         end
 
         it "returns the time between started at and now" do

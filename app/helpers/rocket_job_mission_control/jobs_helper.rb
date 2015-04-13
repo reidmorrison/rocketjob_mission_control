@@ -32,13 +32,7 @@ module RocketJobMissionControl
 
     def job_duration(job)
       started_at = job.started_at
-      time_to    = if job.completed?
-                     job.completed_at
-                   elsif job.aborted?
-                     job.completed_at
-                   else
-                     Time.now
-                   end
+      time_to    = job.completed_at || Time.now
       distance_of_time_in_words(started_at, time_to, highest_measure_only: true, include_seconds: true)
     end
 

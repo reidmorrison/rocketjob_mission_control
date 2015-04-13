@@ -21,12 +21,12 @@ module RocketJobMissionControl
     end
 
     def show
-      @jobs = RocketJob::Job.limit(100).sort(created_at: :desc)
+      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
       @job = RocketJob::Job.find(params[:id])
     end
 
     def index
-      @jobs = RocketJob::Job.limit(100).sort(created_at: :desc)
+      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
     end
 
     private

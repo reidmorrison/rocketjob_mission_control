@@ -31,11 +31,11 @@ module RocketJobMissionControl
     end
 
     def job_duration(job)
-      started_at = job.status[:started_at]
+      started_at = job.started_at
       time_to    = if job.completed?
-                     job.status[:completed_at]
+                     job.completed_at
                    elsif job.aborted?
-                     job.status[:aborted_at]
+                     job.completed_at
                    else
                      Time.now
                    end

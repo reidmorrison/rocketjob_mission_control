@@ -1,6 +1,6 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
-    before_filter :find_job, only: [:abort, :retry, :update]
+    before_filter :find_job_or_redirect, only: [:show, :abort, :retry, :update]
 
     def update
       @job.update_attributes!(job_params)
@@ -11,18 +11,17 @@ module RocketJobMissionControl
     def abort
       @job.abort!
 
-      redirect_to job_path(@job)
+      redirect_to(job_path(@job))
     end
 
     def retry
       @job.retry!
 
-      redirect_to job_path(@job)
+      redirect_to(job_path(@job))
     end
 
     def show
       @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
-      @job = RocketJob::Job.find(params[:id])
     end
 
     def index
@@ -31,8 +30,14 @@ module RocketJobMissionControl
 
     private
 
-    def find_job
+    def find_job_or_redirect
       @job = RocketJob::Job.find(params[:id])
+
+      if @job.nil?
+        flash[:alert] = t(:failure, scope: [:job, :find], id: params[:id])
+
+        redirect_to(jobs_path)
+      end
     end
 
     def job_params

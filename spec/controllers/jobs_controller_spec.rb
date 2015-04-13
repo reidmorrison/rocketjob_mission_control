@@ -1,10 +1,31 @@
 require 'rails_helper'
 
 module RocketJobMissionControl
+  RSpec.shared_examples "a jobs show controller" do
+    describe "with an invalid job id" do
+      before do
+        allow(RocketJob::Job).to receive(:find).and_return(nil)
+        do_action
+      end
+
+      it "redirects" do
+        expect(response).to redirect_to(jobs_path)
+      end
+
+      it "adds a flash alert message" do
+        expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:job, :find], id: 42))
+      end
+    end
+  end
+
   RSpec.describe JobsController do
     routes { Engine.routes }
 
     describe "PATCH #abort" do
+      it_behaves_like "a jobs show controller" do
+        let(:do_action) { patch :abort, id: 42, job: {id: 42, priority: 12} }
+      end
+
       describe "with a valid job id" do
         let(:job) { spy(id: 42, to_param: 42) }
 
@@ -24,6 +45,10 @@ module RocketJobMissionControl
     end
 
     describe "PATCH #update" do
+      it_behaves_like "a jobs show controller" do
+        let(:do_action) { patch :update, id: 42, job: {id: 42, priority: 12} }
+      end
+
       describe "with a valid job id" do
         let(:job) { spy(id: 42, to_param: 42) }
 
@@ -43,11 +68,29 @@ module RocketJobMissionControl
     end
 
     describe "GET #show" do
-      describe "with a valid job id" do
-        let(:result) { spy(sort: []) }
+      let(:result) { spy(sort: []) }
 
+      before do
+        allow(RocketJob::Job).to receive(:limit).and_return(result)
+      end
+
+      describe "with an invalid job id" do
         before do
-          allow(RocketJob::Job).to receive(:limit).and_return(result)
+          allow(RocketJob::Job).to receive(:find).and_return(nil)
+          get :show, id: 42
+        end
+
+        it "redirects" do
+          expect(response).to redirect_to(jobs_path)
+        end
+
+        it "adds a flash alert message" do
+          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:job, :find], id: 42))
+        end
+      end
+
+      describe "with a valid job id" do
+        before do
           allow(RocketJob::Job).to receive(:find).and_return('job')
           get :show, id: 42
         end

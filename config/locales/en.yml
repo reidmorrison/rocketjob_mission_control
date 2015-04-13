@@ -49,3 +49,6 @@ en:
     resume:
       success: "Server successfully resumed."
       failure: "Error attempting to resume server."
+  job:
+    find:
+      :failure: "Could not find job with id: %{id}!"

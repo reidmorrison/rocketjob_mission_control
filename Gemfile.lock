@@ -20,7 +20,7 @@ PATH
       mongo (~> 1.0)
       mongo_ha
       mongo_mapper (~> 0.13)
-      rails (~> 4.1.9)
+      rails (>= 4.0.0)
       rocket_job (>= 0.3.0)
       rubyzip
 
@@ -55,7 +55,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
-    autoprefixer-rails (5.1.7.1)
+    autoprefixer-rails (5.1.8)
       execjs
       json
     bootstrap-sass (3.3.4.1)

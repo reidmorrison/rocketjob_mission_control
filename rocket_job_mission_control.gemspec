@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.markdown"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "rails", ">= 4.1.9"
+  s.add_dependency "rails", ">= 4.0.0"
   s.add_dependency "bootstrap-sass", ">= 3.2.0.1"
   s.add_dependency "rubyzip"
   s.add_dependency "rocket_job", ">= 0.3.0"

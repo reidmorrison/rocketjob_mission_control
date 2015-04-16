@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module RocketJobMissionControl
-  RSpec.shared_examples "a jobs show controller" do
+  RSpec.shared_examples "a jobs update controller" do
     describe "with an invalid job id" do
       before do
         allow(RocketJob::Job).to receive(:find).and_return(nil)
@@ -21,31 +21,33 @@ module RocketJobMissionControl
   RSpec.describe JobsController do
     routes { Engine.routes }
 
-    describe "PATCH #abort" do
-      it_behaves_like "a jobs show controller" do
-        let(:do_action) { patch :abort, id: 42, job: {id: 42, priority: 12} }
-      end
-
-      describe "with a valid job id" do
-        let(:job) { spy(id: 42, to_param: 42) }
-
-        before do
-          allow(RocketJob::Job).to receive(:find).and_return(job)
-          patch :abort, id: 42, job: {id: 42, priority: 12}
+    [:pause, :resume, :abort, :retry].each do |state|
+      describe "PATCH ##{state}" do
+        it_behaves_like "a jobs update controller" do
+          let(:do_action) { patch state, id: 42, job: {id: 42, priority: 12} }
         end
 
-        it "redirects to the job" do
-          expect(response).to redirect_to(job_path(42))
-        end
+        describe "with a valid job id" do
+          let(:job) { spy(id: 42, to_param: 42) }
 
-        it "aborts the job" do
-          expect(job).to have_received(:abort!)
+          before do
+            allow(RocketJob::Job).to receive(:find).and_return(job)
+            patch state, id: 42, job: {id: 42, priority: 12}
+          end
+
+          it "redirects to the job" do
+            expect(response).to redirect_to(job_path(42))
+          end
+
+          it "transitions the job" do
+            expect(job).to have_received("#{state}!".to_sym)
+          end
         end
       end
     end
 
     describe "PATCH #update" do
-      it_behaves_like "a jobs show controller" do
+      it_behaves_like "a jobs update controller" do
         let(:do_action) { patch :update, id: 42, job: {id: 42, priority: 12} }
       end
 

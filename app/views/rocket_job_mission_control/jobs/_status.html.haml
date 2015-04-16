@@ -2,20 +2,12 @@
   #job
     %h3= "#{@job.klass}##{@job.perform_method}"
 
-    - if [:queued, :running, :failed].include?(@job.state)
-      .job-retry
-        = link_to "abort job", abort_job_path(@job), method: :patch, class: 'btn btn-sm btn-warning'
-
-    - if @job.state == :failed
-      .job-retry
-        = link_to "retry job", retry_job_path(@job), method: :patch, class: 'btn btn-sm btn-primary'
-
     .job-state.inline-block
       .left state
       .right{ class: job_class(@job) }
         = @job.state
 
-    .priority
+    .priority.pull-right
       = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
 
         .input-group.spinner{ "data-id" => @job.id }
@@ -29,6 +21,19 @@
               %i.fa.fa-caret-down
 
           = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
+
+    .job-retry.pull-right{ style: 'margin-right: 1em;' }
+      - if [:queued, :running, :failed].include?(@job.state)
+        = link_to "abort", abort_job_path(@job), method: :patch, class: 'btn btn-danger'
+
+      - if @job.failed?
+        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-primary'
+
+      - if @job.running?
+        = link_to "pause", pause_job_path(@job), method: :patch, class: 'btn btn-primary'
+
+      - if @job.paused?
+        = link_to "resume", resume_job_path(@job), method: :patch, class: 'btn btn-primary'
 
     .clearfix
 

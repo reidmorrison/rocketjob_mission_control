@@ -2,7 +2,7 @@ module RocketJobMissionControl
   module JobsHelper
     def job_state_icon(state)
       case state
-      when :queued
+      when :queued, :paused
         'fa-bed warning'
       when :running
         'fa-cog fa-spin primary'
@@ -17,7 +17,7 @@ module RocketJobMissionControl
 
     def job_class(job)
       case job.state
-      when :queued, :aborted
+      when :queued, :aborted, :paused
         "warning"
       when :running
         "primary"

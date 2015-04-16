@@ -1,6 +1,6 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
-    before_filter :find_job_or_redirect, only: [:show, :abort, :retry, :update]
+    before_filter :find_job_or_redirect, except: [:index]
 
     def update
       @job.update_attributes!(job_params)
@@ -16,6 +16,18 @@ module RocketJobMissionControl
 
     def retry
       @job.retry!
+
+      redirect_to(job_path(@job))
+    end
+
+    def pause
+      @job.pause!
+
+      redirect_to(job_path(@job))
+    end
+
+    def resume
+      @job.resume!
 
       redirect_to(job_path(@job))
     end

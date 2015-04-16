@@ -46,7 +46,8 @@ module RocketJobMissionControl
         running:    'fa-cog fa-spin primary',
         completed:  'fa-check-circle-o success',
         aborted:    'fa-times-circle-o warning',
-        unexpected: 'fa-times-circle-o danger'
+        unexpected: 'fa-times-circle-o danger',
+        paused:     'fa-bed warning',
       }.each do |state, expected_class|
 
         context "when the job state is #{state}" do
@@ -63,6 +64,7 @@ module RocketJobMissionControl
 
       {
         queued:     "warning",
+        paused:     "warning",
         running:    "primary",
         completed:  "success",
         aborted:    "warning",

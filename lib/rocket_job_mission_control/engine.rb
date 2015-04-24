@@ -7,5 +7,8 @@ module RocketJobMissionControl
     require 'mongo'
     require 'mongo_mapper'
     require 'mongo_ha'
+    require 'bootstrap-sass'
+    require 'sass-rails'
+    require 'coffee-rails'
   end
 end

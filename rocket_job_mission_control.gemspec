@@ -19,10 +19,14 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", ">= 4.0.0"
   s.add_dependency "bootstrap-sass", ">= 3.2.0.1"
+  s.add_dependency "coffee-rails"
+  s.add_dependency "jquery-rails"
+  s.add_dependency "sass-rails", ">=3.2"
   s.add_dependency "rubyzip"
   s.add_dependency "rocket_job", ">= 0.3.0"
   s.add_dependency 'mongo_ha'
   s.add_dependency 'mongo', '~>1.0'
   s.add_dependency 'mongo_mapper', '~> 0.13'
   s.add_dependency 'haml'
+  s.add_dependency 'rocket_job'
 end

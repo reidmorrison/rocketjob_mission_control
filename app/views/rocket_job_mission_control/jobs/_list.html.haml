@@ -13,7 +13,7 @@
             %h3
               %i.fa{class: job_state_icon(job.state)}
 
-              = "#{job.priority} - #{job.klass}##{job.perform_method}"
+              = job_title(job)
 
           .duration
             - if job.failed?
@@ -22,4 +22,3 @@
             - else
               %i.fa.fa-clock-o
               = job_duration(job)
-

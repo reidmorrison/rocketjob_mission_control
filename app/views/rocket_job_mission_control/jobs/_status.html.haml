@@ -47,10 +47,14 @@
     - @job.status.each_pair do |key, value|
       .status-message
         %label= "#{key.to_s.titleize}:"
-        = value
+        - if key == :exception
+          %pre
+            %code= pretty_print_array_or_hash(value)
+        - else
+          = value
     .clearfix
 
     .parameters
       %label Parameters:
       %pre
-        %code= pretty_print_arguments(@job.arguments)
+        %code= pretty_print_array_or_hash(@job.arguments)

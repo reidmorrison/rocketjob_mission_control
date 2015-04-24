@@ -36,7 +36,7 @@ module RocketJobMissionControl
       distance_of_time_in_words(started_at, time_to, highest_measure_only: true, include_seconds: true)
     end
 
-    def pretty_print_arguments(arguments)
+    def pretty_print_array_or_hash(arguments)
       return arguments unless arguments.kind_of?(Array) || arguments.kind_of?(Hash)
       json_string_options = {space: ' ', indent: '  ', array_nl: '<br />', object_nl: '<br />'}
       JSON.generate(arguments, json_string_options).html_safe

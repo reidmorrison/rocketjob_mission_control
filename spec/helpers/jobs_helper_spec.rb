@@ -82,9 +82,9 @@ module RocketJobMissionControl
       end
     end
 
-    describe "#pretty_print_arguments" do
+    describe "#pretty_print_array_or_hash" do
       let(:arguments) { [42, "muad'dib"] }
-      let(:helper_output) { helper.pretty_print_arguments(arguments) }
+      let(:helper_output) { helper.pretty_print_array_or_hash(arguments) }
 
       context "when arguments is a simple array" do
         it "returns a string with spacing and line breaks" do

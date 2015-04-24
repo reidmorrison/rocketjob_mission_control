@@ -42,6 +42,14 @@ module RocketJobMissionControl
       JSON.generate(arguments, json_string_options).html_safe
     end
 
+    def job_selected_class(job, selected_job = nil)
+      if selected_job.present? && job.id == selected_job.id
+        ' text-info'
+      else
+        ' text-muted'
+      end
+    end
+
     def job_title(job)
       perform_method = job.perform_method == :perform ? '' : "##{job.perform_method}"
       "#{job.priority} - #{job.klass}#{perform_method}"

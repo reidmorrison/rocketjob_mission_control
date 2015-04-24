@@ -1,16 +1,10 @@
-.col-md-6.job-list
-  .job-search-box.input-group
-    %input.form-control{ placeholder: "Search", type: "text" }
-      %span.input-group-btn
-        %button.btn.btn-default{ type: "button" }
-          %i.fa.fa-search
-
+.col-md-4.job-list
   .list
     - @jobs.each do |job|
-      = link_to job_path(id: job.id), class: 'card' do
+      = link_to job_path(id: job.id), class: 'card', style: 'min-height: 5em;' do
         .inner
-          .title.float-left
-            %h3
+          .title
+            .lead{class: job_selected_class(job, @job)}
               %i.fa{class: job_state_icon(job.state)}
 
               = job_title(job)

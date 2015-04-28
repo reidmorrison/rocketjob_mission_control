@@ -21,7 +21,7 @@ module RocketJobMissionControl
   RSpec.describe JobsController do
     routes { Engine.routes }
 
-    [:pause, :resume, :abort, :retry].each do |state|
+    [:pause, :resume, :abort, :retry, :fail].each do |state|
       describe "PATCH ##{state}" do
         it_behaves_like "a jobs update controller" do
           let(:do_action) { patch state, id: 42, job: {id: 42, priority: 12} }

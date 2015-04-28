@@ -6,6 +6,7 @@ RocketJobMissionControl::Engine.routes.draw do
       patch :abort
       patch :pause
       patch :resume
+      patch :fail
     end
   end
 

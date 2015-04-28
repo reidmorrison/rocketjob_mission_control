@@ -1,4 +1,4 @@
-$(document).on "ready page:change", ->
+readyMenuToggle = ->
   $('#menu-toggle').click (e) ->
     e.preventDefault()
     $('#wrapper').toggleClass 'toggled'
@@ -7,5 +7,9 @@ $(document).on "ready page:change", ->
     e.preventDefault()
     $('#wrapper').toggleClass 'toggled'
 
+
+$(document).load ->
+  readyMenuToggle()
+
 $(document).on 'ready page:change', ->
-  Prism.highlightAll()
+  readyMenuToggle()

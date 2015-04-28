@@ -67,7 +67,7 @@ module RocketJobMissionControl
         paused:     "warning",
         running:    "primary",
         completed:  "success",
-        aborted:    "warning",
+        aborted:    "danger",
         failed:     "danger",
         unexpected: "",
       }.each do |state, expected_class|

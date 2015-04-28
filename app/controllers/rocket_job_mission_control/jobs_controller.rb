@@ -32,6 +32,12 @@ module RocketJobMissionControl
       redirect_to(job_path(@job))
     end
 
+    def fail
+      @job.fail!
+
+      redirect_to(job_path(@job))
+    end
+
     def show
       @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
     end

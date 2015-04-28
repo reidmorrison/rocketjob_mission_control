@@ -1,0 +1,16 @@
+.job-list {
+  .list {
+    .progress {
+      width: 16em;
+      height: 1em;
+      margin: 5px 0px 0px 10px;
+      -webkit-border-radius: 0 !important;
+      -moz-border-radius: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    .progress-bar {
+      min-width: 1em;
+    }
+  }
+}

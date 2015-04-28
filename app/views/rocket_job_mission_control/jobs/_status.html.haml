@@ -22,18 +22,21 @@
 
           = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
 
-    .job-retry.pull-right{ style: 'margin-right: 1em;' }
+    .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
       - if [:queued, :running, :failed].include?(@job.state)
-        = link_to "abort", abort_job_path(@job), method: :patch, class: 'btn btn-danger'
+        = link_to "abort", abort_job_path(@job), method: :patch, class: 'btn btn-default'
+
+      - if [:queued, :running].include?(@job.state)
+        = link_to "fail", fail_job_path(@job), method: :patch, class: 'btn btn-default'
 
       - if @job.failed?
-        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-primary'
+        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-default'
 
       - if @job.running?
-        = link_to "pause", pause_job_path(@job), method: :patch, class: 'btn btn-primary'
+        = link_to "pause", pause_job_path(@job), method: :patch, class: 'btn btn-default'
 
       - if @job.paused?
-        = link_to "resume", resume_job_path(@job), method: :patch, class: 'btn btn-primary'
+        = link_to "resume", resume_job_path(@job), method: :patch, class: 'btn btn-default'
 
     .clearfix
 

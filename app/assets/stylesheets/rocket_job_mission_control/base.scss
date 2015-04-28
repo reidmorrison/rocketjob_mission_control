@@ -277,6 +277,7 @@ body.rocket_job {
 
     .card {
       border-bottom: 1px solid #ddd;
+      height: 7.5em;
 
       &:hover {
         cursor: pointer;
@@ -308,7 +309,7 @@ body.rocket_job {
           margin-bottom: 5px;
         }
 
-        .duration {
+        .duration, .description {
           color: #7C735C;
         }
 

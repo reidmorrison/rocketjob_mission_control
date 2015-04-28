@@ -1,7 +1,7 @@
 .col-md-4.job-list
   .list
     - @jobs.each do |job|
-      = link_to job_path(id: job.id), class: 'card', style: 'min-height: 5em;' do
+      = link_to job_path(id: job.id), class: 'card' do
         .inner
           .title
             .lead{class: job_selected_class(job, @job)}
@@ -9,10 +9,15 @@
 
               = job_title(job)
 
-          .duration
-            - if job.failed?
-              %i.fa.fa-bomb
-              failed
-            - else
-              %i.fa.fa-clock-o
-              = job_duration(job)
+          .description= job.description.try(:truncate, 50)
+          .info
+            .duration.pull-left
+              - if job.failed?
+                %i.fa.fa-bomb
+                failed
+              - else
+                %i.fa.fa-clock-o
+                = job_duration(job)
+            - if job.running?
+              .progress.pull-right
+                .progress-bar{ style: "width: #{job.percent_complete}%;"}

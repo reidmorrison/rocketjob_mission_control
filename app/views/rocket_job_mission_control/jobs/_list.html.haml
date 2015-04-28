@@ -20,4 +20,4 @@
                 = job_duration(job)
             - if job.running?
               .progress.pull-right
-                .progress-bar{ style: "width: #{job.percent_complete}%;"}
+                .progress-bar{ style: "width: #{job.percent_complete}%;", title: "#{job.percent_complete}% percent complete."}

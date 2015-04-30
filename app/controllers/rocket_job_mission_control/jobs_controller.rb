@@ -1,6 +1,7 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
     before_filter :find_job_or_redirect, except: [:index]
+    rescue_from StandardError, with: :error_occurred
 
     def update
       @job.update_attributes!(job_params)
@@ -62,5 +63,11 @@ module RocketJobMissionControl
       params.require(:job).permit(:priority)
     end
 
+    def error_occurred(exception)
+      logger.error "Error loading a job", exception
+      flash[:danger] = "Error loading jobs."
+      raise exception if Rails.env.development?
+      redirect_to :back
+    end
   end
 end

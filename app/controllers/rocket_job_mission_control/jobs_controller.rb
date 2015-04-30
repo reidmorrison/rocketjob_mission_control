@@ -40,14 +40,20 @@ module RocketJobMissionControl
     end
 
     def show
-      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
+      load_jobs
     end
 
     def index
-      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
+      load_jobs
     end
 
     private
+
+    def load_jobs
+      @states = jobs_params
+      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
+      @jobs = @jobs.where(state: @states) unless @states.empty?
+    end
 
     def find_job_or_redirect
       @job = RocketJob::Job.find(params[:id])
@@ -57,6 +63,10 @@ module RocketJobMissionControl
 
         redirect_to(jobs_path)
       end
+    end
+
+    def jobs_params
+      params.fetch(:states, [])
     end
 
     def job_params

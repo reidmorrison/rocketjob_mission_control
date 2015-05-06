@@ -1,23 +1,18 @@
 .col-md-4.job-list
-  .filter.pull-right
-    .btn-group
-      .btn.btn-default.dropdown-toggle{ data: {toggle: 'dropdown'} }
-        Filter
-        %span.caret
-      %ul.dropdown-menu
-        %li
-          = link_to "All", jobs_path
-        - %w( queued running failed completed ).each do |state|
-          %li
-            = link_to state.capitalize, jobs_path(states: [state])
+  .filter.pull-right.btn-group.btn-group-justified{ style: 'padding: 1px 1px 1px 1px;', data: { toggle: 'buttons' } }
+    - %w( queued running failed completed ).each do |state|
+      %label.btn.btn-default.state-toggle{ class: ('active' if @states.include?(state.to_s)) }
+        = check_box_tag(state, state, @states.include?(state.to_s))
+        %i.fa{class: job_state_icon(state.to_sym)}
+        = state.capitalize
   .clearfix
   .list
-    - if @jobs.empty?
+    - if jobs.empty?
       .card.inner
         .title
           .lead.text-center No Jobs Found.
     - else
-      - @jobs.each do |job|
+      - jobs.each do |job|
         = link_to job_path(id: job.id), class: 'card' do
           .inner
             .title

@@ -1,63 +1,21 @@
-.col-md-8.job-status
-  #job
-    .lead= "#{@job.klass}##{@job.perform_method}"
+.id
+  %label ID:
+  = job.id
+.created_at
+  %label Created At:
+  = job.created_at.in_time_zone('EST')
 
-    .job-state.inline-block
-      .left state
-      .right{ class: job_class(@job) }
-        = @job.state
-
-    .priority.pull-right
-      = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
-
-        .input-group.spinner{ "data-id" => @job.id }
-          = f.text_field(:priority, class: 'form-control')
-
-          .input-group-btn-vertical
-            %button.btn.btn-default.up{ type: 'button' }
-              %i.fa.fa-caret-up
-
-            %button.btn.btn-default.down{ type: 'button' }
-              %i.fa.fa-caret-down
-
-          = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
-
-    .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
-      - if [:queued, :running, :failed].include?(@job.state)
-        = link_to "abort", abort_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if [:queued, :running].include?(@job.state)
-        = link_to "fail", fail_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if @job.failed?
-        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if @job.running?
-        = link_to "pause", pause_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if @job.paused?
-        = link_to "resume", resume_job_path(@job), method: :patch, class: 'btn btn-default'
-
-    .clearfix
-
-    .id
-      %label ID:
-      = @job.id
-    .created_at
-      %label Created At:
-      = @job.created_at.in_time_zone('EST')
-
-    - @job.status.each do |key, value|
-      .status-message
-        %label= "#{key.to_s.titleize}:"
-        - if key == :exception
-          %pre
-            %code= pretty_print_array_or_hash(value)
-        - else
-          = value
-    .clearfix
-
-    .parameters
-      %label Parameters:
+- job.status.each do |key, value|
+  .status-message
+    %label= "#{key.to_s.titleize}:"
+    - if key == :exception
       %pre
-        %code= pretty_print_array_or_hash(@job.arguments)
+        %code= pretty_print_array_or_hash(value)
+    - else
+      = value
+.clearfix
+
+.parameters
+  %label Parameters:
+  %pre
+    %code= pretty_print_array_or_hash(job.arguments)

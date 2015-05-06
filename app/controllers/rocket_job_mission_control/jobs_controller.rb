@@ -1,7 +1,11 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
-    before_filter :find_job_or_redirect, except: [:index]
+    before_filter :find_job_or_redirect, except: [:index, :running]
     rescue_from StandardError, with: :error_occurred
+
+    def running
+      @jobs = RocketJob::Job.where(state: 'running')
+    end
 
     def update
       @job.update_attributes!(job_params)

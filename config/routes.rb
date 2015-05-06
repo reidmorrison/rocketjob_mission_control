@@ -8,6 +8,9 @@ RocketJobMissionControl::Engine.routes.draw do
       patch :resume
       patch :fail
     end
+    collection do
+      get :running
+    end
   end
 
   resources :servers, only: [:index, :destroy] do
@@ -15,11 +18,6 @@ RocketJobMissionControl::Engine.routes.draw do
     patch :pause,  on: :member
     patch :resume, on: :member
   end
-
-  get "/status" => "application#status", as: "status"
-  get "/scheduled" => "application#scheduled", as: "scheduled"
-  get "/overview" => "application#overview", as: "overview"
-  get "/:id/download" => "application#download", as: "download"
 
   root to: "jobs#index"
 end

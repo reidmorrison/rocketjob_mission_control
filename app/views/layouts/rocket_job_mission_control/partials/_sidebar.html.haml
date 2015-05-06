@@ -10,8 +10,11 @@
       = link_to jobs_path, class: active_page(jobs_path) do
         %i.fa.fa-home
         Jobs
-
     %li
       = link_to servers_path, class: active_page(servers_path) do
         %i.fa.fa-database
         Servers
+    %li
+      = link_to running_jobs_path, class: active_page(running_jobs_path) do
+        %i.fa.fa-circle-o-notch
+        Running

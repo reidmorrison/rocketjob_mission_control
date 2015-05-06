@@ -115,6 +115,23 @@ module RocketJobMissionControl
       end
     end
 
+    describe "GET #running" do
+      before do
+        allow(RocketJob::Job).to receive(:where).and_return([])
+        get :running
+      end
+
+      it { expect(response.status).to be(200) }
+
+      it "queries for running jobs" do
+        expect(RocketJob::Job).to have_received(:where).with(state: 'running')
+      end
+
+      it "returns expected jobs" do
+        expect(assigns[:jobs]).to eq([])
+      end
+    end
+
     describe "GET #index" do
       describe "with no jobs" do
         let(:result) { spy(sort: []) }

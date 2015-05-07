@@ -17,10 +17,10 @@
           = f.text_field(:priority, class: 'form-control')
 
           .input-group-btn-vertical
-            %button.btn.btn-default.up{ type: 'button' }
+            %button#increase_priority.btn.btn-default.up{ type: 'button' }
               %i.fa.fa-caret-up
 
-            %button.btn.btn-default.down{ type: 'button' }
+            %button#decrease_priority.btn.btn-default.down{ type: 'button' }
               %i.fa.fa-caret-down
 
           = submit_tag "set", class: "btn btn-sm btn-primary priority-set"

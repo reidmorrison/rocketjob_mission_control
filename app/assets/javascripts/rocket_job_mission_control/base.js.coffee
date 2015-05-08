@@ -21,5 +21,4 @@ registerJobPriority = ->
     $('#job_priority').val(parseInt($('#job_priority').val(), 10) + 1)
 
   $('#decrease_priority').on 'click', ->
-    console.log 'decreasing'
     $('#job_priority').val(parseInt($('#job_priority').val(), 10) - 1)

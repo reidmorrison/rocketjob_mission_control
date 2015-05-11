@@ -31,7 +31,7 @@ module RocketJobMissionControl
     end
 
     def job_duration(job)
-      started_at = job.started_at
+      started_at = job.started_at   || Time.now
       time_to    = job.completed_at || Time.now
       distance_of_time_in_words(started_at, time_to, highest_measure_only: true, include_seconds: true)
     end

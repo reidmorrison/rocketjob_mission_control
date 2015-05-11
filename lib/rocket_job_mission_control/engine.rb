@@ -3,6 +3,7 @@ module RocketJobMissionControl
     isolate_namespace RocketJobMissionControl
 
     require 'rocket_job'
+    require 'jquery-rails'
     require 'haml'
     require 'mongo'
     require 'mongo_mapper'

@@ -27,4 +27,15 @@
       #page-content-wrapper
         = render partial: 'layouts/rocket_job_mission_control/partials/header'
 
+        .flash
+          - flash.each do |key, msg|
+            - if msg
+              .alert{class: "alert-#{key}", role: 'alert'}
+                -if msg.kind_of? Array
+                  %ul.list-unstyled.margin-bottom-0
+                    - msg.each do |m|
+                      %li= m.html_safe
+                - else
+                  = msg.html_safe
+
         = yield

@@ -5,11 +5,13 @@ module RocketJobMissionControl
     require 'rocket_job'
     require 'jquery-rails'
     require 'haml'
+    require 'sass-rails'
+    require 'coffee-rails'
+    require 'react-rails'
     require 'mongo'
     require 'mongo_mapper'
     require 'mongo_ha'
     require 'bootstrap-sass'
-    require 'sass-rails'
-    require 'coffee-rails'
+    require 'active_model_serializers'
   end
 end

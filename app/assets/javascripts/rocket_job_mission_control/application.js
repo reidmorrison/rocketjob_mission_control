@@ -15,4 +15,6 @@
 //= require jquery.bootstrap-touchspin
 //= require bootstrap-sprockets
 //= require prism
+//= require react
+//= require react_ujs
 //= require_tree .

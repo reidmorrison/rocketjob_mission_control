@@ -1,46 +1,31 @@
-#queue
-  = render partial: 'list', locals: { jobs: @jobs }
+= react_component('Queue', jobs: ActiveModel::ArraySerializer.new(@jobs, each_serializer: JobSerializer).to_json)
 
-.col-md-8.job-status
-  #job
-    .lead= "#{@job.klass}##{@job.perform_method}"
-
-    .job-state.inline-block
-      .left state
-      .right{ class: job_class(@job) }
-        = @job.state
-
-    .priority.pull-right
-      = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
-
-        .input-group.spinner{ "data-id" => @job.id }
-          = f.text_field(:priority, class: 'form-control')
-
-          .input-group-btn-vertical
-            %button#increase_priority.btn.btn-default.up{ type: 'button' }
-              %i.fa.fa-caret-up
-
-            %button#decrease_priority.btn.btn-default.down{ type: 'button' }
-              %i.fa.fa-caret-down
-
-          = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
-
-    .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
-      - if [:queued, :running, :failed].include?(@job.state)
-        = link_to "abort", abort_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if [:queued, :running].include?(@job.state)
-        = link_to "fail", fail_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if @job.failed?
-        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if @job.running?
-        = link_to "pause", pause_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if @job.paused?
-        = link_to "resume", resume_job_path(@job), method: :patch, class: 'btn btn-default'
-
-    .clearfix
-
-    = render partial: 'status', locals: { job: @job }
+-# #queue
+-#   .col-md-4.job-list
+-#     .filter.pull-right.btn-group.btn-group-justified{ data: { toggle: 'buttons' } }
+-#       - %w(queued running failed completed).each do |state|
+-#         %label.btn.btn-default.state-toggle{ class: ('active' if @states.include?(state.to_s) || @states.empty?) }
+-#           = check_box_tag(state, state, (@states.include?(state.to_s) || @states.empty?))
+-#           %i.fa{class: job_state_icon(state.to_sym)}
+-#           = state.capitalize
+-#
+-#     .clearfix
+-#     .list
+-#       - if @jobs.empty?
+-#         .card.inner
+-#           .title
+-#             .lead.text-center No Jobs Found.
+-#
+-#       - else
+-#         - @jobs.each do |job|
+-#           = react_component('jobList',
+-#               {title: job_title(job),
+-#               description: job.description.try(:truncate, 50),
+-#               state: job.state,
+-#               duration: job_duration(job)},
+-#               {tag: 'a', class: 'card', href: job_path(job)},
+-#             )
+-#
+-#   .col-md-8.job-status
+-#     #job_details
+-#       = react_component('JobDetails', JobSerializer.new(@job).as_json, {})

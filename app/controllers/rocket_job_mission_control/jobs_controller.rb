@@ -45,6 +45,11 @@ module RocketJobMissionControl
 
     def show
       load_jobs
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @job, serializer: JobSerializer }
+      end
     end
 
     def index

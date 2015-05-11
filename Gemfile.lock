@@ -23,6 +23,7 @@ PATH
       mongo_ha
       mongo_mapper (~> 0.13)
       rails (>= 4.0.0)
+      react-rails (~> 1.0.0)
       rocket_job (>= 0.3.0)
       rubyzip
       sass-rails (>= 3.2)
@@ -77,6 +78,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1.1)
+    connection_pool (2.2.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
@@ -123,6 +125,13 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
+    react-rails (1.0.0)
+      coffee-script-source (~> 1.8)
+      connection_pool
+      execjs
+      rails (>= 3.1)
+      react-source (~> 0.13)
+    react-source (0.13.3)
     rspec-core (3.2.1)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.0)
@@ -151,9 +160,9 @@ GEM
     semantic_logger (2.14.0)
       sync_attr (~> 2.0)
       thread_safe (~> 0.1)
-    sprockets (3.0.3)
+    sprockets (3.1.0)
       rack (~> 1.0)
-    sprockets-rails (2.2.4)
+    sprockets-rails (2.3.0)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)

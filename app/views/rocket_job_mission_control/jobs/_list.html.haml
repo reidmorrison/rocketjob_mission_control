@@ -13,7 +13,7 @@
           .lead.text-center No Jobs Found.
     - else
       - jobs.each do |job|
-        = link_to job_path(id: job.id), class: 'card' do
+        = link_to job_path(id: job.id, states: @states), class: 'card' do
           .inner
             .title
               .lead{class: job_selected_class(job, @job)}

@@ -1,6 +1,6 @@
 #servers
-  .row
-    .col-md-2.col-md-offset-10.pull-right
+  - if @servers.present?
+    .col-lg-1
       .dropdown
         %button.btn.btn-primary.dropdown-toggle{ data: {toggle: 'dropdown'} }
           Actions
@@ -8,12 +8,11 @@
         %ul.dropdown-menu
           %li= link_to("Stop All",  update_all_servers_path(server_action: :stop),  method: :patch)
           %li= link_to("Pause All", update_all_servers_path(server_action: :pause), method: :patch)
-          %li= link_to("Start All", update_all_servers_path(server_action: :start), method: :patch)
+          %li= link_to("Resume All", update_all_servers_path(server_action: :start), method: :patch)
 
-  .grid
-    - if @servers.present?
+    .grid
       - @servers.each do |server|
-        .card.col-xs-6.col-sm-6.col-md-3.col-lg-2
+        .card.col-xs-12.col-sm-6.col-md-3.col-lg-3
           .inner
             .icon
               %i.fa.fa-database
@@ -41,12 +40,12 @@
             .actions
               = render partial: 'actions', locals: { server: server }
 
-    - else
-      .no-servers
-        There are currently no servers.
-        %br
-        You can start a server with the following command:
+  - else
+    .no-servers
+      There are currently no servers.
+      %br
+      You can start a server with the following command:
 
-        .code-block.col-md-6.col-md-offset-3
-          %pre
-            %code.language-bash bin/rake rocket_job:server
+      .code-block.col-md-6.col-md-offset-3
+        %pre
+          %code.language-bash bin/rake rocket_job:server

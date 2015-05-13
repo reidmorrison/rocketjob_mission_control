@@ -30,7 +30,9 @@
         .flash
           - flash.each do |key, msg|
             - if msg
-              .alert{class: "alert-#{key}", role: 'alert'}
+              .alert{class: "alert-#{key} alert-dismissable", role: 'alert'}
+                %button.close{ data: { dismiss: 'alert' } }
+                  %span &times;
                 -if msg.kind_of? Array
                   %ul.list-unstyled.margin-bottom-0
                     - msg.each do |m|

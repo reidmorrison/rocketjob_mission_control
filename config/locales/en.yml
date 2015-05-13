@@ -49,6 +49,9 @@ en:
     resume:
       success: "Server successfully resumed."
       failure: "Error attempting to resume server."
+    update_all:
+      success: "Servers have been %{server_action}."
+      invalid: "Action not allowed."
   job:
     find:
       :failure: "Could not find job with id: %{id}!"

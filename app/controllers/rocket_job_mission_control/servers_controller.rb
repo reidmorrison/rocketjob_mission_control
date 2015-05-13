@@ -6,6 +6,22 @@ module RocketJobMissionControl
       @servers = RocketJob::Server.sort(:name)
     end
 
+    VALID_STATES = { stop: 'stopped', pause: 'paused', resume: 'resumed' }
+
+    def update_all
+      server_action = params[:server_action].to_sym
+      if VALID_STATES.keys.include?(server_action)
+        RocketJob::Server.send("#{server_action}_all".to_sym)
+        flash[:notice] = t(:success, scope: [:server, :update_all], server_action: VALID_STATES[server_action])
+      else
+        flash[:alert]  = t(:invalid, scope: [:server, :update_all])
+      end
+
+      respond_to do |format|
+        format.html { redirect_to servers_path }
+      end
+    end
+
     def stop
       if @server.stop!
         flash[:notice] = t(:success, scope: [:server, :stop])

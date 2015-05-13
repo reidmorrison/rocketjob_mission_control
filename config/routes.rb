@@ -14,9 +14,14 @@ RocketJobMissionControl::Engine.routes.draw do
   end
 
   resources :servers, only: [:index, :destroy] do
-    patch :stop,   on: :member
-    patch :pause,  on: :member
-    patch :resume, on: :member
+    member do
+      patch :stop
+      patch :pause
+      patch :resume
+    end
+    collection do
+      patch :update_all
+    end
   end
 
   root to: "jobs#index"

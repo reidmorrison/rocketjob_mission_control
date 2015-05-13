@@ -6,9 +6,9 @@
           Actions
           %span.caret
         %ul.dropdown-menu
-          %li= link_to("Stop All",  update_all_servers_path(server_action: :stop),  method: :patch)
-          %li= link_to("Pause All", update_all_servers_path(server_action: :pause), method: :patch)
-          %li= link_to("Resume All", update_all_servers_path(server_action: :start), method: :patch)
+          %li= link_to("Stop All",   update_all_servers_path(server_action: :stop),   method: :patch)
+          %li= link_to("Pause All",  update_all_servers_path(server_action: :pause),  method: :patch)
+          %li= link_to("Resume All", update_all_servers_path(server_action: :resume), method: :patch)
 
     .grid
       - @servers.each do |server|

@@ -1,4 +1,15 @@
 #servers
+  .row
+    .col-md-2.col-md-offset-10.pull-right
+      .dropdown
+        %button.btn.btn-primary.dropdown-toggle{ data: {toggle: 'dropdown'} }
+          Actions
+          %span.caret
+        %ul.dropdown-menu
+          %li= link_to("Stop All",  update_all_servers_path(server_action: :stop),  method: :patch)
+          %li= link_to("Pause All", update_all_servers_path(server_action: :pause), method: :patch)
+          %li= link_to("Start All", update_all_servers_path(server_action: :start), method: :patch)
+
   .grid
     - if @servers.present?
       - @servers.each do |server|

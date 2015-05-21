@@ -1,0 +1,37 @@
+.col-md-10.col-md-offset-1
+  .jumbotron
+    %h3 There are currently #{@jobs.count} jobs running.
+  #accordion.panel-group
+  - @jobs.each do |job|
+    .panel.panel-default
+      .panel-heading
+        %h4.panel-title
+          %a.collapsed{href: "##{job.id}", data: {toggle: 'collapse', parent: '#accordion'} }
+            %i.fa.fa-plus-square-o{ style: 'font-size: 80%;'}
+            = job_title(job)
+      .panel-collapse.collapse{ id: job.id }
+        .panel-body
+          .info
+            .progress
+              .progress-bar{ style: "width: #{job.percent_complete}%; min-width: 1em;", title: "#{job.percent_complete}% percent complete."}
+          - if job.is_a?(RocketJob::SlicedJob)
+            .slice_count
+              %label Slices Running:
+              = job.input.find_all { |s| s.state == :running }.count
+          - else
+            .server
+              %label Server:
+              = job.server_name
+
+          = render partial: 'status', locals: { job: job }
+        - if job.is_a?(RocketJob::SlicedJob)
+          %table.table
+            %tr
+              %th server
+              %th parameters
+            - job.input.each('state' => 'running') do |slice|
+              %tr
+                %td= slice.server_name
+                %td
+                  %pre
+                    %code= pretty_print_array_or_hash(slice.to_a)

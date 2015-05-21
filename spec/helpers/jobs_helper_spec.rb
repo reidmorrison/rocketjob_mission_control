@@ -41,43 +41,39 @@ module RocketJobMissionControl
     end
 
     describe "#job_state_icon" do
-      {
-        queued:     'fa-bed warning',
-        running:    'fa-cog fa-spin primary',
-        completed:  'fa-check-circle-o success',
-        aborted:    'fa-times-circle-o warning',
-        unexpected: 'fa-times-circle-o danger',
-        paused:     'fa-bed warning',
-      }.each do |state, expected_class|
-
+      JobsHelper::STATE_ICON_MAP.each do |state, expected_class|
         context "when the job state is #{state}" do
           it "returns the correct class" do
             expect(helper.job_state_icon(state)).to eq(expected_class)
           end
         end
+      end
 
+      context "with an unexpected state" do
+        it "returns the default class" do
+          expect(helper.job_state_icon(:unexpected)).to eq('fa-times danger')
+        end
       end
     end
 
     describe "#job_class" do
       let(:job) { double(:job, state: job_state) }
 
-      {
-        queued:     "warning",
-        paused:     "warning",
-        running:    "primary",
-        completed:  "success",
-        aborted:    "danger",
-        failed:     "danger",
-        unexpected: "",
-      }.each do |state, expected_class|
+      JobsHelper::STATE_CLASS_MAP.each do |state, expected_class|
         context "when job state is #{state}" do
           let(:job_state) { state }
 
           it "returns the correct class" do
             expect(helper.job_class(job)).to eq(expected_class)
           end
+        end
+      end
 
+      context "with an unexpected state" do
+        let(:job_state) { :unexpected }
+
+        it "returns the default class" do
+          expect(helper.job_class(job)).to eq("")
         end
       end
     end
@@ -124,7 +120,7 @@ module RocketJobMissionControl
 
       context "with a job using the 'perform' perform_method" do
         it "returns the correct string without the perform method" do
-          expect(helper.job_title(job)).to eq('42 - TheJobClass')
+          expect(helper.job_title(job)).to eq('TheJobClass')
         end
       end
 
@@ -132,7 +128,7 @@ module RocketJobMissionControl
         let(:perform_method) { :bendit }
 
         it "returns the correct string with the perform method" do
-          expect(helper.job_title(job)).to eq("42 - TheJobClass##{perform_method}")
+          expect(helper.job_title(job)).to eq("TheJobClass##{perform_method}")
         end
       end
     end

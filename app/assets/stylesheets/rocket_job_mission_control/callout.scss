@@ -1,0 +1,40 @@
+.callout {
+  border: 1px solid #eee;
+  border-left-width: 0.5em;
+}
+
+.callout-top {
+  border: 1px solid #eee;
+  border-top-width: 5px;
+}
+
+.callout-info-top {
+  border-top-color: #1b809e;
+}
+
+.callout-success-top {
+  border-top-color: #3c763d;
+}
+
+.callout-warning-top {
+  border-top-color: #aa6708;
+}
+
+.callout-alert-top {
+  border-top-color: #ce4844;
+}
+.callout-info {
+  border-left-color: #1b809e;
+}
+
+.callout-success {
+  border-left-color: #3c763d;
+}
+
+.callout-warning {
+  border-left-color: #aa6708;
+}
+
+.callout-alert {
+  border-left-color: #ce4844;
+}

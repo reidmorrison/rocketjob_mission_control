@@ -2,7 +2,7 @@ module RocketJobMissionControl
   module JobsHelper
     STATE_ICON_MAP = {
       queued:    'fa-bed warning',
-      paused:    'fa-bed warning',
+      paused:    'fa-pause warning',
       running:   'fa-cog fa-spin primary',
       completed: 'fa-check success',
       aborted:   'fa-times warning',
@@ -42,8 +42,9 @@ module RocketJobMissionControl
         running:   'callout-info',
         completed: 'callout-success',
         failed:    'callout-alert',
+        aborted:   'callout-warning',
       }
-      "card callout " << map[job.state] || 'callout-warning'
+      "card callout " << map[job.state.to_sym].to_s
     end
 
     def job_selected_class(job, selected_job = nil)

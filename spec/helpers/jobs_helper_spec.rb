@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 module RocketJobMissionControl
+  class ::TheJobClass < OpenStruct; end
+
   RSpec.describe JobsHelper, type: :helper do
     #TODO: Timecop this for stability
     describe "#job_duration" do
@@ -116,7 +118,7 @@ module RocketJobMissionControl
 
     describe '#job_title' do
       let(:perform_method) { :perform }
-      let(:job) { OpenStruct.new(perform_method: perform_method, priority: 42, klass: 'TheJobClass') }
+      let(:job) { TheJobClass.new(perform_method: perform_method, priority: 42) }
 
       context "with a job using the 'perform' perform_method" do
         it "returns the correct string without the perform method" do

@@ -57,7 +57,7 @@ module RocketJobMissionControl
 
     def job_title(job)
       perform_method = job.perform_method == :perform ? '' : "##{job.perform_method}"
-      "#{job.klass}#{perform_method}"
+      "#{job.class.name}#{perform_method}"
     end
   end
 end

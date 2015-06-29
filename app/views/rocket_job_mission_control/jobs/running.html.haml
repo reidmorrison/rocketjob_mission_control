@@ -14,7 +14,7 @@
           .info
             .progress
               .progress-bar{ style: "width: #{job.percent_complete}%; min-width: 1em;", title: "#{job.percent_complete}% percent complete."}
-          - if job.is_a?(RocketJob::SlicedJob)
+          - if job.kind_of?(RocketJob::SlicedJob)
             .slice_count
               %label Slices Running:
               = job.input.find_all { |s| s.state == :running }.count
@@ -24,7 +24,7 @@
               = job.server_name
 
           = render partial: 'status', locals: { job: job }
-        - if job.is_a?(RocketJob::SlicedJob)
+        - if job.kind_of?(RocketJob::SlicedJob)
           %table.table
             %tr
               %th server

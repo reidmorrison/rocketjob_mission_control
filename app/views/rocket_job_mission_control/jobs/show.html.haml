@@ -3,7 +3,7 @@
 
 .col-md-8.job-status
   #job
-    .lead= "#{@job.klass}##{@job.perform_method}"
+    .lead= job_title(@job)
 
     .job-state.inline-block
       .left state

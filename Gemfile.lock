@@ -1,8 +1,8 @@
 GIT
-  remote: git@github.com:reidmorrison/rocket_job.git
-  revision: e454f4e1455e2c3da90b3e6402d7d0c266a7178a
+  remote: https://github.com/reidmorrison/rocket_job.git
+  revision: d2e330d7f8fc9c988aedf68d4475fa4f60110efc
   specs:
-    rocket_job (0.3.0)
+    rocket_job (0.6.0)
       aasm (~> 4.1)
       mongo (~> 1.11)
       mongo_ha (~> 1.11)
@@ -30,7 +30,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (4.1.0)
+    aasm (4.2.0)
     actionmailer (4.1.9)
       actionpack (= 4.1.9)
       actionview (= 4.1.9)

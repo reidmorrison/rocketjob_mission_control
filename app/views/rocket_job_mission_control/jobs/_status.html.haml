@@ -6,9 +6,9 @@
   = job.priority
 .created_at
   %label Created At:
-  = job.created_at.in_time_zone('Eastern Time (US & Canada)')
+  = job.created_at.in_time_zone(Time.zone)
 
-- job.status.each do |key, value|
+- job.status(Time.zone).each do |key, value|
   .status-message
     %label= "#{key.to_s.titleize}:"
     - if key == :exception

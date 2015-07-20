@@ -5,7 +5,7 @@ require "rocket_job_mission_control/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "rocket_job_mission_control"
+  s.name        = "rocketjob_mission_control"
   s.version     = RocketJobMissionControl::VERSION
   s.authors     = ["Michael Cloutier", "Chris Lamb"]
   s.email       = [""]

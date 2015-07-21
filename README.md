@@ -1,4 +1,4 @@
-# Rocket Job Mission Control ![](http://ruby-gem-downloads-badge.herokuapp.com/rocket_job_mission_control)
+# Rocket Job Mission Control[![Build Status](https://secure.travis-ci.org/rocketjob/rocketjob_mission_control.png?branch=master)](http://travis-ci.org/rocketjob/rocketjob_mission_control) ![](http://ruby-gem-downloads-badge.herokuapp.com/rocket_job_mission_control)
 
 The UI for [rocketjob][0].
 This gem is written to work with rails 4 applications using
@@ -21,7 +21,7 @@ Quick Start For Rails 4 Applications
 Add the dependency to your Gemfile
 
 ```ruby
-gem 'rocket_job_mission_control'
+gem 'rocketjob_mission_control'
 ```
 
 Install it...

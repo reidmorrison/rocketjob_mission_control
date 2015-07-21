@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rocket_job_mission_control (0.8.0)
+    rocketjob_mission_control (0.8.0)
       bootstrap-sass (>= 3.2.0.1)
       coffee-rails
       haml
@@ -192,7 +192,7 @@ PLATFORMS
 
 DEPENDENCIES
   bson_ext
-  rocket_job_mission_control!
+  rocketjob_mission_control!
   rspec-rails
 
 BUNDLED WITH

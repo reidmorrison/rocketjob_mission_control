@@ -5,7 +5,7 @@ require "action_mailer/railtie"
 require "sprockets/railtie"
 
 Bundler.require(*Rails.groups)
-require "rocket_job_mission_control"
+require "rocketjob_mission_control"
 
 module Dummy
   class Application < Rails::Application

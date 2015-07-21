@@ -26,20 +26,24 @@
           = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
 
     .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
-      - if [:queued, :running, :failed].include?(@job.state)
+      - valid_events = @job.aasm.events.collect{ |e| e.name }
+      - if valid_events.include?(:abort)
         = link_to "abort", abort_job_path(@job), method: :patch, class: 'btn btn-default'
 
-      - if [:queued, :running].include?(@job.state)
+      - if @job.completed? || @job.aborted?
+        = link_to "destroy", job_path(@job), method: :delete, class: 'btn btn-default'
+
+      - if valid_events.include?(:fail)
         = link_to "fail", fail_job_path(@job), method: :patch, class: 'btn btn-default'
 
-      - if @job.failed?
-        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-default'
-
-      - if @job.running?
+      - if valid_events.include?(:pause)
         = link_to "pause", pause_job_path(@job), method: :patch, class: 'btn btn-default'
 
-      - if @job.paused?
+      - if valid_events.include?(:resume)
         = link_to "resume", resume_job_path(@job), method: :patch, class: 'btn btn-default'
+
+      - if valid_events.include?(:retry)
+        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-default'
 
     .clearfix
 

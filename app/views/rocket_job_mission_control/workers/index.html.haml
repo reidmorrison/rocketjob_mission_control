@@ -1,0 +1,51 @@
+#workers
+  - if @workers.present?
+    .col-lg-1
+      .dropdown
+        %button.btn.btn-primary.dropdown-toggle{ data: {toggle: 'dropdown'} }
+          Actions
+          %span.caret
+        %ul.dropdown-menu
+          %li= link_to("Stop All",   update_all_workers_path(worker_action: :stop),   method: :patch)
+          %li= link_to("Pause All",  update_all_workers_path(worker_action: :pause),  method: :patch)
+          %li= link_to("Resume All", update_all_workers_path(worker_action: :resume), method: :patch)
+
+    .grid
+      - @workers.each do |worker|
+        .card.col-xs-12.col-sm-6.col-md-3.col-lg-3
+          .inner.callout-top{ class: worker_card_class(worker) }
+            .icon
+              %i.fa.fa-database
+
+            .title
+              %h3
+                = worker.name
+
+            .state
+              %b State:
+              = worker.state
+
+            .threads.max_threads
+              %b Max Threads:
+              = worker.max_threads
+
+            .threads.current_threads
+              %b Current Threads:
+              = worker.heartbeat.current_threads.present? ? worker.heartbeat.current_threads : 0
+
+            .time
+              %b Started:
+              = worker.started_at.strftime("%b, %d %Y at %l:%M %p")
+
+            .actions
+              = render partial: 'actions', locals: { worker: worker }
+
+  - else
+    .no-workers
+      There are currently no workers.
+      %br
+      You can start a worker with the following command:
+
+      .code-block.col-md-6.col-md-offset-3
+        %pre
+          %code.language-bash bin/rocketjob

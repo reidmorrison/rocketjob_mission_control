@@ -19,6 +19,16 @@ module RocketJobMissionControl
       redirect_to(job_path(@job))
     end
 
+    def destroy
+      if @job.completed? || @job.aborted?
+        @job.destroy
+        redirect_to(jobs_path)
+      else
+        flash[:alert] = "Cannot destroy a job unless it is completed or aborted"
+        redirect_to(job_path(@job))
+      end
+    end
+
     def retry
       @job.retry!
 

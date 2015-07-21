@@ -1,24 +1,39 @@
+- status = job.status(Time.zone)
 .id
   %label ID:
-  = job.id
-%div
-  %label Priority:
-  = job.priority
+  = status.delete('id')
+.status-message
+  %label Description:
+  = status.delete('description')
+.status-message
+  %label Duration:
+  = status.delete('duration')
+.status-message
+  %label Record Count:
+  = status.delete('record_count')
 .created_at
   %label Created At:
-  = job.created_at.in_time_zone(Time.zone)
+  = status.delete('created_at')
+.status-message
+  %label Started At:
+  = status.delete('started_at')
+.status-message
+  %label % Complete:
+  = status.delete('percent_complete')
 
-- job.status(Time.zone).each do |key, value|
+- remaining = {}
+- status.each_pair do |key, value|
   .status-message
+  - if ['state', '_type'].include?(key)
+  - elsif value.kind_of?(Hash) || value.kind_of?(Array)
+    - remaining[key] = value
+  - else
     %label= "#{key.to_s.titleize}:"
-    - if key == :exception
-      %pre
-        %code= pretty_print_array_or_hash(value)
-    - else
-      = value
+    = value
 .clearfix
 
-.parameters
-  %label Parameters:
-  %pre
-    %code= pretty_print_array_or_hash(job.arguments)
+- remaining.each_pair do |key, value|
+  .status-message
+    %label= "#{key.to_s.titleize}:"
+    %pre
+      %code= pretty_print_array_or_hash(value)

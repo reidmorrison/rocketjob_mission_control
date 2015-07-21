@@ -19,19 +19,19 @@
               %label Slices Running:
               = job.input.find_all { |s| s.state == :running }.count
           - else
-            .server
-              %label Server:
-              = job.server_name
+            .worker
+              %label Worker:
+              = job.worker_name
 
           = render partial: 'status', locals: { job: job }
         - if job.kind_of?(RocketJob::SlicedJob)
           %table.table
             %tr
-              %th server
+              %th worker
               %th parameters
             - job.input.each('state' => 'running') do |slice|
               %tr
-                %td= slice.server_name
+                %td= slice.worker_name
                 %td
                   %pre
                     %code= pretty_print_array_or_hash(slice.to_a)

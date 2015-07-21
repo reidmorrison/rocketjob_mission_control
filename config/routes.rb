@@ -13,7 +13,7 @@ RocketJobMissionControl::Engine.routes.draw do
     end
   end
 
-  resources :servers, only: [:index, :destroy] do
+  resources :workers, only: [:index, :destroy] do
     member do
       patch :stop
       patch :pause

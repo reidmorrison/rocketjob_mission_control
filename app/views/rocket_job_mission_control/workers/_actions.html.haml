@@ -1,0 +1,9 @@
+- if worker.stopping?
+  %p Worker is stopping...
+  = link_to "destroy", worker_path(worker), method: :delete, class: 'btn btn-danger'
+-else
+  = link_to "stop", stop_worker_path(worker), method: :patch, class: 'btn btn-danger'
+  - if worker.paused?
+    = link_to "resume", resume_worker_path(worker), method: :patch, class: 'btn btn-default'
+  - else
+    = link_to "pause", pause_worker_path(worker), method: :patch, class: 'btn btn-default'

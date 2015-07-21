@@ -34,7 +34,7 @@ Add the following route to your application for accessing the interface,
 and retrying failed jobs.
 
 ```ruby
-mount RocketJobMissionControl::Engine => 'rocket_job'
+mount RocketJobMissionControl::Engine => 'rocketjob'
 ```
 
 Contributing

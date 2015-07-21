@@ -1,4 +1,4 @@
-# Rocket Job Mission Control[![Build Status](https://secure.travis-ci.org/rocketjob/rocketjob_mission_control.png?branch=master)](http://travis-ci.org/rocketjob/rocketjob_mission_control) ![](http://ruby-gem-downloads-badge.herokuapp.com/rocket_job_mission_control)
+# Rocket Job Mission Control[![Build Status](https://secure.travis-ci.org/rocketjob/rocketjob_mission_control.png?branch=master)](http://travis-ci.org/rocketjob/rocketjob_mission_control) ![](http://ruby-gem-downloads-badge.herokuapp.com/rocketjob_mission_control)
 
 The UI for [rocketjob][0].
 This gem is written to work with rails 4 applications using
@@ -63,8 +63,8 @@ Releasing a new version
 Authors
 ------
 
-Michael Cloutier - [mjcloutier][1]
-Chris Lamb - [lambcr][2]
+* Michael Cloutier - [mjcloutier][1]
+* Chris Lamb - [lambcr][2]
 
 
 [0]: https://github.com/rocketjob/rocketjob

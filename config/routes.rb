@@ -1,12 +1,12 @@
 RocketJobMissionControl::Engine.routes.draw do
 
-  resources :jobs, only: [:index, :show, :update] do
+  resources :jobs, only: [:index, :show, :update, :destroy] do
     member do
-      patch :retry
       patch :abort
+      patch :fail
       patch :pause
       patch :resume
-      patch :fail
+      patch :retry
     end
     collection do
       get :running

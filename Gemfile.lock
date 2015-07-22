@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rocketjob_mission_control (0.9.0)
+    rocketjob_mission_control (0.9.1)
       bootstrap-sass (>= 3.2.0.1)
       coffee-rails
       haml
@@ -136,7 +136,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
-    rocketjob (0.9.0)
+    rocketjob (0.9.1)
       aasm (~> 4.1)
       mongo (~> 1.11)
       mongo_ha (~> 1.11)
@@ -196,4 +196,4 @@ DEPENDENCIES
   rspec-rails
 
 BUNDLED WITH
-   1.10.5
+   1.10.6

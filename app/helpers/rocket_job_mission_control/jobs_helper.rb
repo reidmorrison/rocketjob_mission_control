@@ -25,12 +25,6 @@ module RocketJobMissionControl
       STATE_CLASS_MAP[job.state.to_sym] || ""
     end
 
-    def job_duration(job)
-      started_at = job.started_at   || Time.now
-      time_to    = job.completed_at || Time.now
-      distance_of_time_in_words(started_at, time_to, highest_measure_only: true, include_seconds: true)
-    end
-
     def pretty_print_array_or_hash(arguments)
       return arguments unless arguments.kind_of?(Array) || arguments.kind_of?(Hash)
       json_string_options = {space: ' ', indent: '  ', array_nl: '<br />', object_nl: '<br />'}

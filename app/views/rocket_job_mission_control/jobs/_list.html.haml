@@ -27,7 +27,7 @@
                   failed
                 - else
                   %i.fa.fa-clock-o
-                  = job_duration(job)
+                  = job.duration
               - if job.running?
                 .progress.pull-right
                   .progress-bar{ style: "width: #{job.percent_complete}%;", title: "#{job.percent_complete}% percent complete."}

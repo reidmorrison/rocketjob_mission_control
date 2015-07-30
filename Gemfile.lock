@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rocketjob_mission_control (0.9.1)
+    rocketjob_mission_control (1.0.0)
       bootstrap-sass (>= 3.2.0.1)
       coffee-rails
       haml

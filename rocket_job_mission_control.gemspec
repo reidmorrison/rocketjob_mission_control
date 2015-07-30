@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "coffee-rails"
   s.add_dependency "sass-rails", ">=3.2"
   s.add_dependency "rubyzip"
-  s.add_dependency "rocketjob", "~> 0.9"
+  s.add_dependency "rocketjob", "~> 1.0"
   s.add_dependency 'mongo_ha'
   s.add_dependency 'mongo', '~>1.0'
   s.add_dependency 'mongo_mapper', '~> 0.13'

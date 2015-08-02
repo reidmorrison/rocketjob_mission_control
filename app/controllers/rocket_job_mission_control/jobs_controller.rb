@@ -24,7 +24,7 @@ module RocketJobMissionControl
         @job.destroy
         redirect_to(jobs_path)
       else
-        flash[:alert] = "Cannot destroy a job unless it is completed or aborted"
+        flash[:alert] = 'Cannot destroy a job unless it is completed or aborted'
         redirect_to(job_path(@job))
       end
     end
@@ -65,8 +65,8 @@ module RocketJobMissionControl
 
     def load_jobs
       @states = jobs_params
-      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
-      @jobs = @jobs.where(state: @states) unless @states.empty?
+      @jobs   = RocketJob::Job.limit(1000).sort(created_at: :desc)
+      @jobs   = @jobs.where(state: @states) unless @states.empty?
     end
 
     def find_job_or_redirect
@@ -88,8 +88,8 @@ module RocketJobMissionControl
     end
 
     def error_occurred(exception)
-      logger.error "Error loading a job", exception
-      flash[:danger] = "Error loading jobs."
+      logger.error 'Error loading a job', exception
+      flash[:danger] = 'Error loading jobs.'
       raise exception if Rails.env.development?
       redirect_to :back
     end

@@ -22,7 +22,7 @@ module RocketJobMissionControl
     end
 
     def job_class(job)
-      STATE_CLASS_MAP[job.state.to_sym] || ""
+      STATE_CLASS_MAP[job.state.to_sym] || ''
     end
 
     def pretty_print_array_or_hash(arguments)
@@ -38,7 +38,7 @@ module RocketJobMissionControl
         failed:    'callout-alert',
         aborted:   'callout-warning',
       }
-      "card callout " << map[job.state.to_sym].to_s
+      'card callout ' << map[job.state.to_sym].to_s
     end
 
     def job_selected_class(job, selected_job = nil)

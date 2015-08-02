@@ -23,6 +23,7 @@
 
 - remaining = {}
 - status.each_pair do |key, value|
+  - next if value.blank?
   .status-message
   - if ['state', '_type'].include?(key)
   - elsif value.kind_of?(Hash) || value.kind_of?(Array)

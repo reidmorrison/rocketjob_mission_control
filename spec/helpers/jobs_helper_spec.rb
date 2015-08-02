@@ -8,36 +8,8 @@ module RocketJobMissionControl
       JobsHelper::STATE_ICON_MAP.each do |state, expected_class|
         context "when the job state is #{state}" do
           it "returns the correct class" do
-            expect(helper.job_state_icon(state)).to eq(expected_class)
+            expect(helper.job_state_icon(state)).to eq("#{expected_class} #{state}")
           end
-        end
-      end
-
-      context "with an unexpected state" do
-        it "returns the default class" do
-          expect(helper.job_state_icon(:unexpected)).to eq('fa-times danger')
-        end
-      end
-    end
-
-    describe "#job_class" do
-      let(:job) { double(:job, state: job_state) }
-
-      JobsHelper::STATE_CLASS_MAP.each do |state, expected_class|
-        context "when job state is #{state}" do
-          let(:job_state) { state }
-
-          it "returns the correct class" do
-            expect(helper.job_class(job)).to eq(expected_class)
-          end
-        end
-      end
-
-      context "with an unexpected state" do
-        let(:job_state) { :unexpected }
-
-        it "returns the default class" do
-          expect(helper.job_class(job)).to eq("")
         end
       end
     end

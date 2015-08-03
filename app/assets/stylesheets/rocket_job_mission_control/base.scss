@@ -282,7 +282,8 @@ body.rocket_job {
 
     .card {
       border-bottom: 1px solid #ddd;
-      height: 7.5em;
+      height: 6em;
+      background-color: #F7F7F7;
 
       &:hover {
         cursor: pointer;
@@ -314,6 +315,7 @@ body.rocket_job {
 
         .lead {
           margin-bottom: 5px;
+          font-size: 18px;
         }
 
         .duration, .description {
@@ -332,6 +334,14 @@ body.rocket_job {
         }
       }
     }
+
+    .selected {
+      border-bottom: 2px solid blue;
+      border-right: 2px solid blue;
+      border-top: 2px solid blue;
+      background-color: lightcyan;
+    }
+
   }
 
   // Grid View

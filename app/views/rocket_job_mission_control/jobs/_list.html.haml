@@ -14,10 +14,10 @@
           .lead.text-center No Jobs Found.
     - else
       - jobs.each do |job|
-        = link_to job_path(id: job.id, states: @states), class: "card callout callout-#{job.state}" do
+        = link_to job_path(id: job.id, states: @states), class: "card callout callout-#{job.state} #{job_selected_class(job, @job)}" do
           .inner
             .title
-              .lead{class: job_selected_class(job, @job)}
+              .lead
                 %i.fa{class: job_icon(job), style: 'font-size: 75%;', title: job.state}
                 = job_title(job)
 

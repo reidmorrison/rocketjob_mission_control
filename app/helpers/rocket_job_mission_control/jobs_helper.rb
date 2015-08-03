@@ -35,11 +35,11 @@ module RocketJobMissionControl
       JSON.generate(arguments, json_string_options).html_safe
     end
 
-    def job_selected_class(job, selected_job = nil)
+    def job_selected_class(job, selected_job)
       if selected_job.present? && job.id == selected_job.id
-        ' text-info'
+        'selected'
       else
-        ' text-muted'
+        ''
       end
     end
 

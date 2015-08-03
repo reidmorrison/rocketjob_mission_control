@@ -6,13 +6,13 @@ Gem::Specification.new do |s|
   s.name        = 'rocketjob_mission_control'
   s.version     = RocketJobMissionControl::VERSION
   s.authors     = ['Michael Cloutier', 'Chris Lamb']
-  s.email       = [""]
+  s.email       = ['']
   s.homepage    = 'https://github.com/mjcloutier/rocket_job_mission_control'
-  s.summary     = 'Web UI for Rocket Job'
-  s.description = 'Adds a web interface for Rocket Job.'
+  s.summary     = 'Mission Control is the Web user interface to manage rocketjob jobs'
+  s.description = 'Rails Engine for adding the web interface for rocketjob to Rails apps'
   s.license     = 'MIT'
 
-  s.files = Dir["{app,config,db,lib,vendor}/**/*", 'MIT-LICENSE', 'Rakefile', 'README.markdown']
+  s.files = Dir['{app,config,db,lib,vendor}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.markdown']
   s.test_files = Dir['spec/**/*']
 
   s.add_dependency 'rails', '~> 4.0'

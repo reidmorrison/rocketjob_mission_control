@@ -9,3 +9,4 @@ spec/dummy/.sass-cache
 *.gem
 /nbproject/private/
 /.idea
+/Gemfile.lock

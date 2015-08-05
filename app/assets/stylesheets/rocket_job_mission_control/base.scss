@@ -35,9 +35,9 @@ body.rocket_job {
 
     .welcome_screen {
       text-align: center;
-      margin-top: 20%;
+      margin-top: 2%;
 
-      h1 { margin-bottom: 50px; }
+      h1 { margin-bottom: 10px; }
       p { font-size: 16px; }
     }
 
@@ -75,10 +75,12 @@ body.rocket_job {
         border-bottom-right-radius: 3px;
       }
 
-      .success { background-color: green; }
-      .danger { background-color: red; }
-      .warning { background-color: orange; }
-      .primary { background-color: #337ab7; }
+      .queued { background-color: darkgrey; }
+      .running { background-color: #337ab7; }
+      .completed { background-color: green; }
+      .paused { background-color: orange; }
+      .failed { background-color: red; }
+      .aborted { background-color: darkorange; }
     }
 
     .priority {
@@ -105,8 +107,8 @@ body.rocket_job {
   /* Header Styles */
 
   #header {
-    padding: 15px;
-    background-color: #262C37;//#526A95;
+    padding: 5px;
+    background-color: dimgrey;//#526A95;
     border-bottom: 1px solid #ddd;
 
     .first { left: 15px; }
@@ -119,16 +121,20 @@ body.rocket_job {
     }
 
     .brand {
-      font-size: 18px;
+      font-size: 23px;
       text-align: center;
 
-      a { color: #fff; }
+      a {
+        color: orange;
+        font-weight: bold;
+      }
 
       .color {
         display: inline-block;
         position: relative;
         left: -3px;
-        color: #83ADFA;
+        color: orangered;
+        font-weight: bold;
       }
     }
   }
@@ -276,7 +282,8 @@ body.rocket_job {
 
     .card {
       border-bottom: 1px solid #ddd;
-      height: 7.5em;
+      height: 6em;
+      background-color: #F7F7F7;
 
       &:hover {
         cursor: pointer;
@@ -292,10 +299,12 @@ body.rocket_job {
           display: inline-block;
           vertical-align: middle;
 
-          i.success { color: green; }
-          i.danger { color: red; }
-          i.warning { color: orange; }
-          i.primary { color: #337ab7; }
+          i.queued { color: darkgrey; }
+          i.running { color: #337ab7; }
+          i.completed { color: green; }
+          i.paused { color: orange; }
+          i.failed { color: red; }
+          i.aborted { color: darkorange; }
 
           h3 {
             font-weight: bold;
@@ -306,6 +315,7 @@ body.rocket_job {
 
         .lead {
           margin-bottom: 5px;
+          font-size: 18px;
         }
 
         .duration, .description {
@@ -324,6 +334,14 @@ body.rocket_job {
         }
       }
     }
+
+    .selected {
+      border-bottom: 2px solid blue;
+      border-right: 2px solid blue;
+      border-top: 2px solid blue;
+      background-color: lightcyan;
+    }
+
   }
 
   // Grid View

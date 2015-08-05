@@ -7,7 +7,7 @@
 
     .job-state.inline-block
       .left state
-      .right{ class: job_class(@job) }
+      .right{ class: @job.state.to_s }
         = @job.state
 
     .priority.pull-right

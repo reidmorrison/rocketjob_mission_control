@@ -2,16 +2,26 @@
 
   = render partial: 'list', locals: { jobs: @jobs }
 
-  .col-md-4
-    %h1 Edit
-    = form_for @dirmon_entry, url: dirmon_entry_path, method: :patch do |f|
-      = f.clarity_text_field :name, required: true
-      = f.clarity_text_field :path, required: true
-      = f.clarity_text_field :job_name, required: true
-      = f.clarity_text_field :arguments, required: true
-      = f.clarity_text_area :properties, :rows => "5"
-      .col-md-6
+.col-md-5
+  .title1.h3
+    Edit
+  = form_for @dirmon_entry, url: dirmon_entry_path, method: :patch do |f|
+    = f.clarity_text_field :name, required: true
+    = f.clarity_text_field :path, required: true
+    = f.clarity_text_field :job_name, required: true
+    = f.clarity_text_area :arguments, rows: 10
+    .row
+      .col-md-12
+        .arguments
+          = render 'arguments'
+    .buttons
       = f.submit :class => "btn btn-primary"
       = link_to 'Cancel', url_for(action: :index), class: 'btn btn-default'
+      = button_tag 'Properties', class: 'btn btn-default', id: 'expand'
 
-
+:coffee
+   $(document).ready ->
+    $('.col-md-12').hide()
+   $('#expand').click ->
+       $('.buttons').hide()
+       $('.col-md-12').show()

@@ -1,32 +1,15 @@
 module RocketJobMissionControl
   module JobsHelper
     STATE_ICON_MAP = {
-      queued:    'fa-bed warning',
-      paused:    'fa-pause warning',
-      running:   'fa-cog fa-spin primary',
-      completed: 'fa-check success',
-      aborted:   'fa-times warning',
-      false:     'fa-times danger',
-      true:      'fa-check success',
       queued:    'fa-inbox',
       paused:    'fa-pause',
       running:   'fa-play',
       completed: 'fa-check',
       aborted:   'fa-stop',
-      failed:    'fa-times',
-      scheduled: 'fa-clock-o'
-    }
-
-    STATE_CLASS_MAP = {
-      queued:    'warning',
-      paused:    'warning',
-      running:   'primary',
-      completed: 'success',
-      aborted:   'danger',
-      failed:    'danger',
-      true:      'success',
-      false:     'danger',
-
+      failed:    'fa-exclamation-triangle',
+      scheduled: 'fa-clock-o',
+      enabled:   'fa-check',
+      disabled:  'fa-stop'
     }
 
     def job_state_icon(state)
@@ -42,14 +25,6 @@ module RocketJobMissionControl
           job.state
         end
       job_state_icon(state)
-    end
-
-    def job_class_dir(job)
-      STATE_CLASS_MAP[job.enabled.to_s.to_sym] || ""
-    end
-
-    def job_state_icon_dir(job)
-      STATE_ICON_MAP[job.to_s.to_sym] || 'fa-times danger'
     end
 
     def job_duration(job)

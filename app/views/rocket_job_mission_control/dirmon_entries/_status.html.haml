@@ -1,19 +1,20 @@
 %div
-  %label Enabled:
-  = @dirmon_entry.enabled
-.id
-  %label ID:
-  = @dirmon_entry.id
+  %label Name:
+  = @dirmon_entry.name
 %div
   %label Path:
   = @dirmon_entry.path
 %div
-  %label Archive:
+  %label Archive Directory:
   = @dirmon_entry.archive_directory
-%div
-  %label Properties:
-  = @dirmon_entry.properties
 .parameters
-  %label Parameters:
+  %label Arguments:
   %pre
     %code= pretty_print_array_or_hash(@dirmon_entry.arguments)
+.parameters
+  %label Properties:
+  %pre
+    %code= pretty_print_array_or_hash(@dirmon_entry.properties)
+.id
+  %label ID:
+  = @dirmon_entry.id

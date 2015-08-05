@@ -81,8 +81,8 @@ body.rocket_job {
       .paused { background-color: orange; }
       .failed { background-color: red; }
       .aborted { background-color: darkorange; }
-      .true { background-color: green; }
-      .false { background-color: red; }
+      .enabled { background-color: green; }
+      .disabled { background-color: orange; }
     }
 
     .priority {
@@ -307,6 +307,8 @@ body.rocket_job {
           i.paused { color: orange; }
           i.failed { color: red; }
           i.aborted { color: darkorange; }
+          i.enabled { color: green; }
+          i.disabled { color: orange; }
 
           h3 {
             font-weight: bold;

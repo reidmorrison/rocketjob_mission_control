@@ -79,10 +79,10 @@ module RocketJobMissionControl
     end
 
     def load_jobs
-      @states = dirmons_params
-      @states.include? 'true' ? @state = true : @state = false
+      @states  = dirmons_params
+      @state   = @states.include?('enabled')
       @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
-      @dirmons = @dirmons.where(enabled: @state) unless @states.empty?
+      @dirmons = @dirmons.where(enabled: @state) unless @states.empty? || @states.size == 2
     end
 
     def find_job

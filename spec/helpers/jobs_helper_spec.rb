@@ -4,6 +4,44 @@ module RocketJobMissionControl
   class ::TheJobClass < OpenStruct; end
 
   RSpec.describe JobsHelper, type: :helper do
+    #TODO: Timecop this for stability
+    describe "#job_duration" do
+      let(:dirmon_entry) { double(:dirmon_entry, completed?: false, aborted?: false, started_at: Time.now) }
+
+      context "when the job is completed" do
+        before do
+          allow(job).to receive(:completed?).and_return(true)
+          allow(job).to receive(:completed_at).and_return(1.minute.from_now)
+        end
+
+        it "returns the time between started at and completed at" do
+          expect(helper.job_duration(job)).to eq('1 minute')
+        end
+      end
+
+      context "when the job is aborted" do
+        before do
+          allow(job).to receive(:aborted?).and_return(true)
+          allow(job).to receive(:completed_at).and_return(2.minutes.from_now)
+        end
+
+        it "returns the time between started at and aborted at" do
+          expect(helper.job_duration(job)).to eq('2 minutes')
+        end
+      end
+
+      context "when the job is not aborted or completed" do
+        before do
+          allow(job).to receive(:started_at).and_return(Time.now)
+          allow(job).to receive(:completed_at).and_return(nil)
+        end
+
+        it "returns the time between started at and now" do
+          expect(helper.job_duration(job)).to eq('5 seconds')
+        end
+      end
+    end
+
     describe "#job_state_icon" do
       JobsHelper::STATE_ICON_MAP.each do |state, expected_class|
         context "when the job state is #{state}" do
@@ -21,7 +59,7 @@ module RocketJobMissionControl
     end
 
     describe "#job_class" do
-      let(:job) { double(:job, state: job_state) }
+      let(:dirmon_entry) { double(:dirmon_entry, state: job_state) }
 
       JobsHelper::STATE_CLASS_MAP.each do |state, expected_class|
         context "when job state is #{state}" do
@@ -80,7 +118,7 @@ module RocketJobMissionControl
 
     describe '#job_title' do
       let(:perform_method) { :perform }
-      let(:job) { TheJobClass.new(perform_method: perform_method, priority: 42) }
+      let(:dirmon_entry) { TheJobClass.new(perform_method: perform_method, priority: 42) }
 
       context "with a job using the 'perform' perform_method" do
         it "returns the correct string without the perform method" do

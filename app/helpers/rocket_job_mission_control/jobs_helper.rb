@@ -6,6 +6,8 @@ module RocketJobMissionControl
       running:   'fa-cog fa-spin primary',
       completed: 'fa-check success',
       aborted:   'fa-times warning',
+      false:     'fa-times danger',
+      true:      'fa-check success',
     }
 
     STATE_CLASS_MAP = {
@@ -15,6 +17,9 @@ module RocketJobMissionControl
       completed: 'success',
       aborted:   'danger',
       failed:    'danger',
+      true:      'success',
+      false:     'danger',
+
     }
 
     def job_state_icon(state)
@@ -23,6 +28,20 @@ module RocketJobMissionControl
 
     def job_class(job)
       STATE_CLASS_MAP[job.state.to_sym] || ""
+    end
+
+    def job_class_dir(job)
+      STATE_CLASS_MAP[job.enabled.to_s.to_sym] || ""
+    end
+
+    def job_state_icon_dir(job)
+      STATE_ICON_MAP[job.to_s.to_sym] || 'fa-times danger'
+    end
+
+    def job_duration(job)
+      started_at = job.started_at   || Time.now
+      time_to    = job.completed_at || Time.now
+      distance_of_time_in_words(started_at, time_to, highest_measure_only: true, include_seconds: true)
     end
 
     def pretty_print_array_or_hash(arguments)

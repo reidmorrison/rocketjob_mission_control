@@ -1,0 +1,27 @@
+#queue
+
+  = render partial: 'list', locals: { jobs: @jobs }
+
+.col-md-5
+  .title1.h3
+    Create New Dirmon
+  = form_for :dirmon_entries, url: {action: "create"} do |f|
+    = f.clarity_text_field :name, required: true
+    = f.clarity_text_field :path, required: true
+    = f.clarity_text_field :job_name, required: true
+    = f.clarity_text_area :arguments, rows: 10, placeholder: '{"argument1"":"value1", "argument2":"value2", "argument3":"value3"}'
+    .row
+      .col-md-12
+        .arguments
+          = render 'arguments'
+    .buttons
+      = f.submit :class => "btn btn-primary"
+      = link_to 'Cancel', url_for(action: :index), class: 'btn btn-default'
+      = button_tag 'Properties', class: 'btn btn-default', id: 'expand'
+
+:coffee
+   $(document).ready ->
+    $('.col-md-12').hide()
+   $('#expand').click ->
+       $('.buttons').hide()
+       $('.col-md-12').show()

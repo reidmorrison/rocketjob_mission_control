@@ -1,0 +1,24 @@
+.col-md-4.job-list
+  .filter.btn-group.btn-group-justified{ style: 'padding: 1px 1px 1px 1px;', data: { toggle: 'buttons' } }
+    = link_to "Create", dirmon_entries_new_path(@dirmon_entry), method: :post, class: "btn btn-default"
+    - %w( false true).each do |state|
+      %label.btn.btn-default.state-toggle{ class: ('active' if @states.include?(state.to_s)), title: state.capitalize}
+        = check_box_tag(state, (state.to_s))
+        %i.fa{class: job_state_icon(state.to_sym)}
+
+  .clearfix
+  .list
+    - if @dirmons.empty?
+      .card.inner
+        .title
+          .lead.text-center No Dirmon Entries Found.
+    - else
+      - @dirmons.each do |job|
+        = link_to dirmon_entry_path(id: job.id) do
+          .card.inner{style: 'height: 5.5em;'}
+            .inner
+              .title
+                .lead{class: job_selected_class(job, @job)}
+                  %i.fa{class: job_state_icon_dir(job.enabled), style: 'font-size: 75%;', title: job.enabled}
+                  = job.name
+              .description= job.path.try(:truncate, 40)

@@ -1,0 +1,13 @@
+.title2.h3
+  Properties
+= form_for :dirmon_entries, url: {action: "create"} do |f|
+  = f.fields_for :properties do |x|
+    = x.clarity_text_field :description, value: @dirmon_entry.properties[:description], placeholder: "max length: 128"
+    = x.clarity_text_field :priority, value: @dirmon_entry.properties[:priority], placeholder: "e.g 1..100"
+    = x.clarity_text_field :login, value: @dirmon_entry.properties[:login], placeholder: "max 128 chars"
+    = x.clarity_text_field :location_ids, value: @dirmon_entry.properties[:location_ids], placeholder: "e.g 301,302,303"
+    = x.clarity_text_field :output_path, value: @dirmon_entry.properties[:output_path], placeholder: "max length: 1024"
+    = x.clarity_text_field :encrypt_output_file, value: @dirmon_entry.properties[:encrypt_output_file], placeholder: "true/false"
+    .buttons2
+      = f.submit :class => "btn btn-primary"
+

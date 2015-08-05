@@ -34,4 +34,4 @@
                 %td= slice.worker_name
                 %td
                   %pre
-                    %code= pretty_print_array_or_hash(slice.to_a)
+                    %code= display_slice_info(slice, job.encrypt?)

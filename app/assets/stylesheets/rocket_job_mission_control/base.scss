@@ -81,6 +81,8 @@ body.rocket_job {
       .paused { background-color: orange; }
       .failed { background-color: red; }
       .aborted { background-color: darkorange; }
+      .true { background-color: green; }
+      .false { background-color: red; }
     }
 
     .priority {

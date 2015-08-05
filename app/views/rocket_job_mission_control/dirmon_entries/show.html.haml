@@ -8,7 +8,7 @@
 
     .job-state.inline-block
       .left active
-      .right{ class: job_class_dir(@dirmon_entry) }
+      .right{ class: @dirmon_entry.enabled.to_s }
         = @dirmon_entry.enabled
 
     .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }

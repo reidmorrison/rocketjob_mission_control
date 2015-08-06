@@ -1,25 +1,27 @@
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     before_filter :find_job, except: [:index, :new, :edit, :update]
-    before_filter :load_jobs, only:  [:index, :show, :new, :edit]
     before_filter :check_for_cancel, :only => [:create, :update]
 
     def index
-
+    load_jobs
     end
 
     def show
-
+    load_jobs
     end
 
     def new
+      load_jobs
       @dirmon_entry = RocketJob::DirmonEntry.new
     end
 
     def create
+      locations_array = params[:dirmon_entries][:properties][:location_ids].split
       hash = JSON.parse(params[:dirmon_entries][:arguments])
       params[:dirmon_entries][:arguments] = []
       params[:dirmon_entries][:arguments] << hash
+      params[:dirmon_entries][:properties][:location_ids] = locations_array
 
       @dirmon_entry = RocketJob::DirmonEntry.new(params[:dirmon_entries])
       if @dirmon_entry.save
@@ -36,6 +38,7 @@ module RocketJobMissionControl
     end
 
     def edit
+      load_jobs
       @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
     end
 

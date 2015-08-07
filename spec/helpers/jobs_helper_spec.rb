@@ -53,7 +53,7 @@ module RocketJobMissionControl
 
     describe '#job_title' do
       let(:perform_method) { :perform }
-      let(:dirmon_entry) { TheJobClass.new(perform_method: perform_method, priority: 42) }
+      let(:job) { TheJobClass.new(perform_method: perform_method, priority: 42) }
 
       context "with a job using the 'perform' perform_method" do
         it 'returns the correct string without the perform method' do

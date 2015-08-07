@@ -13,7 +13,7 @@ module RocketJobMissionControl
       end
 
       it "adds a flash alert message" do
-        expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:dirmon_entry, :find], id: 42))
+        expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:job, :find], id: 42))
       end
     end
   end
@@ -24,15 +24,15 @@ module RocketJobMissionControl
     [:pause, :resume, :abort, :retry, :fail].each do |state|
       describe "PATCH ##{state}" do
         it_behaves_like "a jobs update controller" do
-          let(:do_action) { patch state, id: 42, dirmon_entry: {id: 42, priority: 12} }
+          let(:do_action) { patch state, id: 42, job: {id: 42, priority: 12} }
         end
 
         describe "with a valid job id" do
-          let(:dirmon_entry) { spy(id: 42, to_param: 42) }
+          let(:job) { spy(id: 42, to_param: 42) }
 
           before do
             allow(RocketJob::Job).to receive(:find).and_return(job)
-            patch state, id: 42, dirmon_entry: {id: 42, priority: 12}
+            patch state, id: 42, job: {id: 42, priority: 12}
           end
 
           it "redirects to the job" do
@@ -48,15 +48,15 @@ module RocketJobMissionControl
 
     describe "PATCH #update" do
       it_behaves_like "a jobs update controller" do
-        let(:do_action) { patch :update, id: 42, dirmon_entry: {id: 42, priority: 12} }
+        let(:do_action) { patch :update, id: 42, job: {id: 42, priority: 12} }
       end
 
       describe "with a valid job id" do
-        let(:dirmon_entry) { spy(id: 42, to_param: 42) }
+        let(:job) { spy(id: 42, to_param: 42) }
 
         before do
           allow(RocketJob::Job).to receive(:find).and_return(job)
-          patch :update, id: 42, dirmon_entry: {id: 42, priority: 12}
+          patch :update, id: 42, job: {id: 42, priority: 12}
         end
 
         it "redirects to the job" do
@@ -87,7 +87,7 @@ module RocketJobMissionControl
         end
 
         it "adds a flash alert message" do
-          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:dirmon_entry, :find], id: 42))
+          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:job, :find], id: 42))
         end
       end
 
@@ -102,7 +102,7 @@ module RocketJobMissionControl
         end
 
         it "assigns the job" do
-          expect(assigns(:dirmon_entry)).to be_present
+          expect(assigns(:job)).to be_present
         end
 
         it "assigns the jobs" do

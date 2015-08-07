@@ -4,11 +4,11 @@ module RocketJobMissionControl
     before_filter :check_for_cancel, :only => [:create, :update]
 
     def index
-    load_jobs
+      load_jobs
     end
 
     def show
-    load_jobs
+      load_jobs
     end
 
     def new
@@ -18,23 +18,31 @@ module RocketJobMissionControl
 
     def create
       locations_array = params[:dirmon_entries][:properties][:location_ids].split
-      hash = JSON.parse(params[:dirmon_entries][:arguments])
-      params[:dirmon_entries][:arguments] = []
-      params[:dirmon_entries][:arguments] << hash
-      params[:dirmon_entries][:properties][:location_ids] = locations_array
+      params[:dirmon_entries][:properties][:location_ids] = locations_array unless locations_array.empty?
+
+      arguments_hash = params[:dirmon_entries][:arguments]
+      hash = JSON.parse(arguments_hash) unless arguments_hash.empty?
+      arguments_hash = []
+      arguments_hash << hash
 
       @dirmon_entry = RocketJob::DirmonEntry.new(params[:dirmon_entries])
       if @dirmon_entry.save
-        flash[:alert] = "success"
+        flash[:success] = t(:success, scope: [:dirmon_entry, :create])
         redirect_to(dirmon_entries_path)
       else
+        flash[:alert]  = t(:invalid, scope: [:dirmon_entry, :create])
         redirect_to(new_dirmon_entry_path)
       end
     end
 
     def destroy
-      @dirmon_entry.destroy
-      redirect_to(dirmon_entries_path)
+      if @dirmon_entry.destroy
+        flash[:success] = t(:success, scope: [:dirmon_entry, :destroy])
+        redirect_to(dirmon_entries_path)
+      else
+        flash[:alert]  = t(:invalid, scope: [:dirmon_entry, :destroy])
+
+      end
     end
 
     def edit
@@ -46,9 +54,10 @@ module RocketJobMissionControl
       @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
 
       if @dirmon_entry.update_attributes(params[:rocket_job_dirmon_entry])
+        flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to dirmon_entries_path
       else
-        render 'new'
+        flash[:alert]  = t(:invalid, scope: [:dirmon_entry, :update])
       end
     end
 
@@ -56,9 +65,10 @@ module RocketJobMissionControl
       @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
 
       if  @dirmon_entry.update_attributes(enabled: true)
+        flash[:success] = t(:success, scope: [:dirmon_entry, :enable])
         redirect_to "/rocketjob/dirmon_entries/#{@dirmon_entry.id}"
       else
-        raise "error enabling dirmon"
+        flash[:alert]  = t(:failure, scope: [:dirmon_entry, :enable])
       end
     end
 
@@ -66,9 +76,10 @@ module RocketJobMissionControl
       @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
 
       if  @dirmon_entry.update_attributes(enabled: false)
+        flash[:success] = t(:success, scope: [:dirmon_entry, :disable])
         redirect_to "/rocketjob/dirmon_entries/#{@dirmon_entry.id}"
       else
-        raise "error disabling dirmon"
+        flash[:alert]  = t(:failure, scope: [:dirmon_entry, :disable])
       end
     end
 

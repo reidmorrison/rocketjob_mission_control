@@ -1,7 +1,8 @@
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
-    before_filter :find_job, except: [:index, :new, :edit, :update]
+    before_filter :find_job
     before_filter :check_for_cancel, :only => [:create, :update]
+    before_filter :clean_values, :only => [:create, :update]
 
     def index
       load_jobs
@@ -17,20 +18,11 @@ module RocketJobMissionControl
     end
 
     def create
-      locations_array = params[:dirmon_entries][:properties][:location_ids].split
-      params[:dirmon_entries][:properties][:location_ids] = locations_array unless locations_array.empty?
-
-      arguments_hash = params[:dirmon_entries][:arguments]
-      hash = JSON.parse(arguments_hash) unless arguments_hash.empty?
-      arguments_hash = []
-      arguments_hash << hash
-
-      @dirmon_entry = RocketJob::DirmonEntry.new(params[:dirmon_entries])
+      @dirmon_entry = RocketJob::DirmonEntry.new(params[:rocket_job_dirmon_entry])
       if @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :create])
         redirect_to(dirmon_entries_path)
       else
-        flash[:alert]  = t(:invalid, scope: [:dirmon_entry, :create])
         redirect_to(new_dirmon_entry_path)
       end
     end
@@ -47,12 +39,10 @@ module RocketJobMissionControl
 
     def edit
       load_jobs
-      @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
+      @dirmon_entry.arguments = pretty_print_array_or_hash(@dirmon_entry.arguments)
     end
 
     def update
-      @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
-
       if @dirmon_entry.update_attributes(params[:rocket_job_dirmon_entry])
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to dirmon_entries_path
@@ -62,8 +52,6 @@ module RocketJobMissionControl
     end
 
     def enable
-      @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
-
       if  @dirmon_entry.update_attributes(enabled: true)
         flash[:success] = t(:success, scope: [:dirmon_entry, :enable])
         redirect_to "/rocketjob/dirmon_entries/#{@dirmon_entry.id}"
@@ -73,8 +61,6 @@ module RocketJobMissionControl
     end
 
     def disable
-      @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
-
       if  @dirmon_entry.update_attributes(enabled: false)
         flash[:success] = t(:success, scope: [:dirmon_entry, :disable])
         redirect_to "/rocketjob/dirmon_entries/#{@dirmon_entry.id}"
@@ -83,8 +69,28 @@ module RocketJobMissionControl
       end
     end
 
-
     private
+
+    def clean_values
+      locations_array = params[:rocket_job_dirmon_entry][:properties][:location_ids].split
+      properties = params[:rocket_job_dirmon_entry][:properties]
+      arguments = params[:rocket_job_dirmon_entry][:arguments]
+      params[:rocket_job_dirmon_entry][:properties][:location_ids] = locations_array unless locations_array.empty?
+      params[:rocket_job_dirmon_entry][:properties] = properties.delete_if {|key, value| value.empty?}
+      if arguments.present?
+        hash = JSON.parse(arguments)
+        params[:rocket_job_dirmon_entry][:arguments] = []
+        params[:rocket_job_dirmon_entry][:arguments] << hash
+      else
+        params[:rocket_job_dirmon_entry][:arguments] = []
+      end
+    end
+
+    def pretty_print_array_or_hash(arguments)
+      return arguments unless arguments.kind_of?(Array) || arguments.kind_of?(Hash)
+      json_string_options = { }
+      JSON.generate(arguments, json_string_options).gsub(/\[|\]/, '').html_safe
+    end
 
     def check_for_cancel
       if params[:commit] == "Cancel"

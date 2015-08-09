@@ -6,7 +6,7 @@
   .title1.h2
     New Dirmon Entry
 .col-md-5
-  = form_for :dirmon_entries, url: {action: "create"} do |f|
+  = form_for :rocket_job_dirmon_entry, url: {action: "create"} do |f|
     = f.clarity_text_field :name, required: true
     = f.clarity_text_field :path, required: true
     = f.clarity_text_field :job_name, required: true

@@ -28,25 +28,25 @@
     .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
       - valid_events = @job.aasm.events.collect{ |e| e.name }
       - if valid_events.include?(:abort)
-        = link_to "abort", abort_job_path(@job), method: :patch, class: 'btn btn-default'
+        = job_action_link('abort', rocket_job_mission_control.abort_job_path(@job), :patch)
 
       - if @job.completed? || @job.aborted?
-        = link_to "destroy", job_path(@job), method: :delete, class: 'btn btn-default'
+        = job_action_link('destroy', rocket_job_mission_control.job_path(@job), :delete)
 
       - if valid_events.include?(:fail)
-        = link_to "fail", fail_job_path(@job), method: :patch, class: 'btn btn-default'
+        = job_action_link('fail', rocket_job_mission_control.fail_job_path(@job), :patch)
 
       - if valid_events.include?(:pause)
-        = link_to "pause", pause_job_path(@job), method: :patch, class: 'btn btn-default'
+        = job_action_link('pause', rocket_job_mission_control.pause_job_path(@job), :patch)
 
       - if valid_events.include?(:resume)
-        = link_to "resume", resume_job_path(@job), method: :patch, class: 'btn btn-default'
+        = job_action_link('resume', rocket_job_mission_control.resume_job_path(@job), :patch)
 
       - if valid_events.include?(:retry)
-        = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-default'
+        = job_action_link('retry', rocket_job_mission_control.retry_job_path(@job), :patch)
 
       - if @job.failed? && @job.kind_of?(RocketJob::SlicedJob)
-        = link_to "view errors", job_failures_path(@job), class: 'btn btn-default'
+        = link_to("view errors", job_failures_path(@job), class: 'btn btn-default')
 
     .clearfix
 

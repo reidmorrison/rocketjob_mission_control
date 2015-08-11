@@ -25,6 +25,16 @@ module RocketJobMissionControl
       job_state_icon(state)
     end
 
+    def job_action_link(action, path, http_method=:get)
+      link_to(
+        action,
+        path,
+        method: http_method,
+        class: 'btn btn-default',
+        data: { confirm: t(:confirm, scope: [:job, :action], action: action)}
+      )
+    end
+
     def job_states
       @job_states ||= RocketJob::Job.aasm.states.collect { |state| state.name.to_s }
     end

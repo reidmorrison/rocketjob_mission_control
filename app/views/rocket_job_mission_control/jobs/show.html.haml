@@ -45,6 +45,9 @@
       - if valid_events.include?(:retry)
         = link_to "retry", retry_job_path(@job), method: :patch, class: 'btn btn-default'
 
+      - if @job.failed? && @job.kind_of?(RocketJob::SlicedJob)
+        = link_to "view errors", job_failures_path(@job), class: 'btn btn-default'
+
     .clearfix
 
     = render partial: 'status', locals: { job: @job }

@@ -14,3 +14,23 @@
     }
   }
 }
+
+.error {
+  pre {
+    margin: 0px 0px 0px 0px;
+    border-bottom: 0;
+    border-radius: 0;
+  }
+
+  pre:last-child {
+    border: 1px solid #cccccc;
+  }
+}
+
+.pagination {
+  margin-top: 1em;
+
+  .btn {
+    border-radius: 0;
+  }
+}

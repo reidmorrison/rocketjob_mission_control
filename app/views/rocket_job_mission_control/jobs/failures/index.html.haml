@@ -21,6 +21,6 @@
       %pre
         %code= @failure_exception['message']
     .error
-      %pre.language-bash.small
-        - @failure_exception['backtrace'].each do |line|
-          %code= line
+      - @failure_exception['backtrace'].each do |line|
+        %pre.small
+          .stack-trace.small=line

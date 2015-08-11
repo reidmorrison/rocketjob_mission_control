@@ -14,7 +14,7 @@
           .lead.text-center No Jobs Found.
     - else
       - jobs.each do |job|
-        = link_to job_path(id: job.id, states: @states), class: "card callout callout-#{job.state} #{job_selected_class(job, @job)}" do
+        = link_to(job_path(id: job.id, states: @states), class: "card callout callout-#{job.state} #{job_selected_class(job, @job)}") do
           .inner
             .title
               .lead

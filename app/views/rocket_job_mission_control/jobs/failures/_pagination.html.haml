@@ -1,0 +1,16 @@
+- previous_offset = [0, pagination[:offset].pred].max
+- next_offset     = [pagination[:total], pagination[:offset].next].min
+
+%ul.pagination
+  %li
+    = link_to(job_failures_path(error_type: error_type, offset: 0), class: "btn btn-default #{page_nav_disabled_class(previous_offset, 0)}") do
+      %i.fa.fa-angle-double-left
+  %li
+    = link_to(job_failures_path(error_type: error_type, offset: previous_offset), class: "btn btn-default #{page_nav_disabled_class(previous_offset, 0)}") do
+      %i.fa.fa-angle-left
+  %li
+    = link_to(job_failures_path(error_type: error_type, offset: next_offset), class: "btn btn-default #{page_nav_disabled_class(next_offset, pagination[:total])}") do
+      %i.fa.fa-angle-right
+  %li
+    = link_to(job_failures_path(error_type: error_type, offset: pagination[:total]), class: "btn btn-default #{page_nav_disabled_class(next_offset, pagination[:total])}") do
+      %i.fa.fa-angle-double-right

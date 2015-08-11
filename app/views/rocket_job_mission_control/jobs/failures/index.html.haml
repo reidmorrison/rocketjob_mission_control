@@ -1,0 +1,26 @@
+.col-md-4.job-list
+  .list
+    - @slice_errors.each do |slice_error|
+      = link_to(job_failures_path(@job, error_type: slice_error['_id']['error_class']), class: "card callout") do
+        .inner
+          .title
+            .lead
+              = slice_error['_id']['error_class']
+
+          .description
+            = "Occurences: #{slice_error['count'].to_i}"
+
+- if @failure_exception
+  .col-md-8.job-status
+    .thing
+      .lead= @failure_exception['class_name']
+      .pagination.pull-right= render partial: 'pagination', locals: { error_type: @failure_exception['class_name'], pagination: @pagination }
+
+    .clearfix
+    .message
+      %pre
+        %code= @failure_exception['message']
+    .error
+      %pre.language-bash.small
+        - @failure_exception['backtrace'].each do |line|
+          %code= line

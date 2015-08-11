@@ -11,6 +11,7 @@ RocketJobMissionControl::Engine.routes.draw do
     collection do
       get :running
     end
+    resources :failures, controller: 'jobs/failures', only: [:index]
   end
 
   resources :workers, only: [:index, :destroy] do

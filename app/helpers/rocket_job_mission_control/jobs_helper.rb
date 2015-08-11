@@ -27,12 +27,6 @@ module RocketJobMissionControl
       job_state_icon(state)
     end
 
-    def job_duration(job)
-      started_at = job.started_at   || Time.now
-      time_to    = job.completed_at || Time.now
-      distance_of_time_in_words(started_at, time_to, highest_measure_only: true, include_seconds: true)
-    end
-
     def job_states
       @job_states ||= RocketJob::Job.aasm.states.collect { |state| state.name.to_s }
     end

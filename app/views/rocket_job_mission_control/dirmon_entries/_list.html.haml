@@ -2,8 +2,6 @@
   .filter.btn-group.btn-group-justified{ style: 'padding: 1px 1px 1px 1px;', data: { toggle: 'buttons' } }
     = link_to "Create", dirmon_entries_new_path(@dirmon_entry), method: :post, class: "btn btn-default"
     - [:enabled, :disabled].each do |state|
-      - ap @states
-      - p @states
       - enabled = @states.include?(state.to_s) || @states.empty?
       - title   = enabled ? 'Hide' : 'Show'
       %label.btn.btn-default.state-toggle{ class: ('active' if enabled), title: "#{title} #{state.to_s.capitalize}" }

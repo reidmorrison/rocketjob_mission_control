@@ -3,14 +3,14 @@
 
 %ul.pagination
   %li
-    = link_to(job_failures_path(error_type: error_type, offset: 0), class: "btn btn-default #{page_nav_disabled_class(previous_offset, 0)}", title: 'First') do
+    = link_to(job_failures_path(error_type: error_type, offset: 0), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], 0)}", title: 'First') do
       %i.fa.fa-angle-double-left
   %li
-    = link_to(job_failures_path(error_type: error_type, offset: previous_offset), class: "btn btn-default #{page_nav_disabled_class(previous_offset, 0)}", title: 'Previous') do
+    = link_to(job_failures_path(error_type: error_type, offset: previous_offset), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], 0)}", title: 'Previous') do
       %i.fa.fa-angle-left
   %li
-    = link_to(job_failures_path(error_type: error_type, offset: next_offset), class: "btn btn-default #{page_nav_disabled_class(next_offset, pagination[:total])}", title: 'Next') do
+    = link_to(job_failures_path(error_type: error_type, offset: next_offset), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], pagination[:total])}", title: 'Next') do
       %i.fa.fa-angle-right
   %li
-    = link_to(job_failures_path(error_type: error_type, offset: pagination[:total]), class: "btn btn-default #{page_nav_disabled_class(next_offset, pagination[:total])}", title: 'Last') do
+    = link_to(job_failures_path(error_type: error_type, offset: pagination[:total]), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], pagination[:total])}", title: 'Last') do
       %i.fa.fa-angle-double-right

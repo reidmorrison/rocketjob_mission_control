@@ -27,5 +27,5 @@
         %code= @failure_exception['message']
     .error
       - @failure_exception['backtrace'].each do |line|
-        %pre.small
+        %pre
           .stack-trace.small=line

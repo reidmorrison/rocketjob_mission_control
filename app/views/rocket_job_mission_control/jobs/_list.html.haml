@@ -1,5 +1,5 @@
 .col-md-4.job-list
-  .filter.btn-group.btn-group-justified{ style: 'padding: 1px 1px 1px 1px;', data: { toggle: 'buttons' } }
+  .filter.btn-group.btn-group-justified.list-top{ data: { toggle: 'buttons' } }
     - job_states.each do |state|
       - enabled = @states.include?(state.to_s) || @states.empty?
       - title   = enabled ? 'Hide' : 'Show'

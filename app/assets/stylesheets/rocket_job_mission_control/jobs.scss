@@ -1,4 +1,14 @@
 .job-list {
+  .list-top {
+    .breadcrumb {
+      margin-bottom: 0px;
+    }
+  }
+
+  .filter {
+    padding: 1px 1px 1px 1px;
+  }
+
   .list {
     .progress {
       width: 16em;

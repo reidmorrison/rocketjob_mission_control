@@ -1,4 +1,14 @@
 .job-list {
+  .list-top {
+    .breadcrumb {
+      margin-bottom: 0px;
+    }
+  }
+
+  .filter {
+    padding: 1px 1px 1px 1px;
+  }
+
   .list {
     .progress {
       width: 16em;
@@ -12,5 +22,26 @@
     .progress-bar {
       min-width: 1em;
     }
+  }
+}
+
+.error {
+  pre {
+    margin: 0px 0px 0px 0px;
+    border-bottom: 0;
+    border-radius: 0;
+    word-wrap: normal;
+  }
+
+  pre:last-child {
+    border: 1px solid #cccccc;
+  }
+}
+
+.pagination {
+  margin-top: 1em;
+
+  .btn {
+    border-radius: 0;
   }
 }

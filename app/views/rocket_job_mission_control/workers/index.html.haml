@@ -6,17 +6,14 @@
           Actions
           %span.caret
         %ul.dropdown-menu
-          %li= link_to("Stop All",   update_all_workers_path(worker_action: :stop),   method: :patch)
-          %li= link_to("Pause All",  update_all_workers_path(worker_action: :pause),  method: :patch)
-          %li= link_to("Resume All", update_all_workers_path(worker_action: :resume), method: :patch)
+          %li= link_to("Stop All",   rocket_job_mission_control.update_all_workers_path(worker_action: :stop),   method: :patch)
+          %li= link_to("Pause All",  rocket_job_mission_control.update_all_workers_path(worker_action: :pause),  method: :patch)
+          %li= link_to("Resume All", rocket_job_mission_control.update_all_workers_path(worker_action: :resume), method: :patch)
 
     .grid
       - @workers.each do |worker|
         .card.col-xs-12.col-sm-6.col-md-3.col-lg-3
           .inner.callout-top{ class: worker_card_class(worker) }
-            .icon
-              %i.fa.fa-database
-
             .title
               %h3
                 = worker.name
@@ -31,7 +28,7 @@
 
             .threads.current_threads
               %b Current Threads:
-              = worker.heartbeat.current_threads.present? ? worker.heartbeat.current_threads : 0
+              = worker.heartbeat.current_threads.to_i
 
             .time
               %b Started:

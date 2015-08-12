@@ -1,5 +1,5 @@
 .col-md-4.job-list
-  .filter.btn-group.btn-group-justified{ style: 'padding: 1px 1px 1px 1px;', data: { toggle: 'buttons' } }
+  .filter.btn-group.btn-group-justified.list-top{ data: { toggle: 'buttons' } }
     - job_states.each do |state|
       - enabled = @states.include?(state.to_s) || @states.empty?
       - title   = enabled ? 'Hide' : 'Show'
@@ -14,7 +14,7 @@
           .lead.text-center No Jobs Found.
     - else
       - jobs.each do |job|
-        = link_to job_path(id: job.id, states: @states), class: "card callout callout-#{job.state} #{job_selected_class(job, @job)}" do
+        = link_to(job_path(id: job.id, states: @states), class: "card callout callout-#{job.state} #{job_selected_class(job, @job)}") do
           .inner
             .title
               .lead

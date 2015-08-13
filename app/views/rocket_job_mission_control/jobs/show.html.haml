@@ -25,7 +25,7 @@
 
           = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
 
-    .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
+    .job-actions.btn-group.pull-right{ style: 'margin-right: 1em;' }
       - valid_events = @job.aasm.events.collect{ |e| e.name }
       - if valid_events.include?(:abort)
         = job_action_link('abort', rocket_job_mission_control.abort_job_path(@job), :patch)

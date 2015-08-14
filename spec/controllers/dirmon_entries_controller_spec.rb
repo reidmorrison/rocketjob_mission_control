@@ -30,6 +30,64 @@ module RocketJobMissionControl
       end
     end
 
+    describe 'PATCH #update' do
+      let(:existing_dirmon) do
+        RocketJob::DirmonEntry.create!(
+          name:      'Test',
+          job_name:  'FakeButGoodJob',
+          path:      'the_path',
+          arguments: [ 42 ].to_json
+        )
+      end
+
+      before do
+        patch :update, id: existing_dirmon.id, rocket_job_dirmon_entry: dirmon_params
+      end
+
+      context 'with valid parameters' do
+        let(:dirmon_params) do
+          {
+            path: 'the_path2',
+            job_name:  'FakeButGoodJob',
+            arguments: [ 42 ].to_json
+          }
+        end
+
+        it 'redirects to the updated entry' do
+          expect(response).to redirect_to(dirmon_entry_path(existing_dirmon))
+        end
+
+        it 'updates the entry' do
+          expect(existing_dirmon.reload.path).to eq('the_path2')
+        end
+
+        it 'displays a success message' do
+          expect(flash[:success]).to eq(I18n.t(:success, scope: [:dirmon_entry, :update]))
+        end
+      end
+
+      context 'with invalid parameters' do
+        let(:dirmon_params) do
+          {
+            job_name: 'FakeAndBadJob',
+          }
+        end
+
+        it 'renders the edit template' do
+          expect(response.status).to eq(200)
+          expect(response).to render_template(:edit)
+        end
+
+        it 'has errors on the entry' do
+          expect(assigns(:dirmon_entry)).to_not be_valid
+        end
+
+        it 'loads the other entries' do
+          expect(dirmon_list).to have_received(:sort)
+        end
+      end
+    end
+
     describe 'POST #create' do
       context 'with valid parameters' do
         let(:dirmon_params) do
@@ -155,6 +213,33 @@ module RocketJobMissionControl
 
         it "grabs a sorted list" do
           expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
+        end
+      end
+    end
+
+    describe 'DELETE #destroy' do
+      let(:existing_dirmon) do
+        RocketJob::DirmonEntry.create!(
+          name:      'Test',
+          job_name:  'FakeButGoodJob',
+          path:      'the_path',
+          arguments: [ 42 ].to_json
+        )
+      end
+
+      describe 'with a valid id' do
+        before { delete :destroy, id: existing_dirmon.id }
+
+        it 'redirects to index' do
+          expect(response).to redirect_to(dirmon_entries_path)
+        end
+
+        it 'displays a success message' do
+          expect(flash[:success]).to eq(I18n.t(:success, scope: [:dirmon_entry, :destroy]))
+        end
+
+        it 'deletes the entry' do
+          expect(RocketJob::DirmonEntry.find(existing_dirmon.id)).to eq(nil)
         end
       end
     end

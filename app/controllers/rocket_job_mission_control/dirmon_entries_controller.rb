@@ -27,12 +27,10 @@ module RocketJobMissionControl
     end
 
     def destroy
-      if @dirmon_entry.destroy
-        flash[:success] = t(:success, scope: [:dirmon_entry, :destroy])
-        redirect_to(dirmon_entries_path)
-      else
-        flash[:alert]  = t(:invalid, scope: [:dirmon_entry, :destroy])
-      end
+      @dirmon_entry.destroy
+      flash[:success] = t(:success, scope: [:dirmon_entry, :destroy])
+
+      redirect_to(dirmon_entries_path)
     end
 
     def edit
@@ -41,7 +39,7 @@ module RocketJobMissionControl
     def update
       if @dirmon_entry.update_attributes(params[:rocket_job_dirmon_entry])
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
-        redirect_to dirmon_entries_path
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         load_entries
         render :edit
@@ -99,7 +97,7 @@ module RocketJobMissionControl
     end
 
     def dirmon_params
-      params.require(:dirmon_entry).permit(:name, :archive_directory, :arguments, :path, {properties: []}, :enabled, :job_name)
+      params.require(:dirmon_entry).permit(:name, :archive_directory, {arguments: []}, :pattern, {properties: []}, :enabled, :job_class_name)
     end
 
   end

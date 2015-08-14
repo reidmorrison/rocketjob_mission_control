@@ -12,14 +12,15 @@
       .right{ class: state }
         = state
 
-    .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
-      = link_to "Destroy", dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', :data => { :confirm => 'Are you sure?' }
-      = link_to "Edit", edit_dirmon_entry_path(@dirmon_entry), method: :get, class: "btn btn-default"
-      - if @dirmon_entry.enabled == false
-        = link_to "Enable", enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default"
-      - else
-        = link_to "Disable", disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default", :data => { :confirm => 'Are you sure?' }
-    .job-retry.btn-group.pull-right{ style: 'margin-right: 1em;' }
+    .btn-toolbar.job-actions.pull-right
+      .btn-group{ style: 'margin-right: 1em;' }
+        = link_to "Destroy", dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', :data => { :confirm => 'Are you sure?' }
+        - if @dirmon_entry.enabled == false
+          = link_to "Enable", enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default"
+        - else
+          = link_to "Disable", disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default", :data => { :confirm => 'Are you sure?' }
+      .btn-group
+        = link_to "Edit", edit_dirmon_entry_path(@dirmon_entry), method: :get, class: "btn btn-default"
 
     .clearfix
 

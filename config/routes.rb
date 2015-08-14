@@ -25,16 +25,12 @@ RocketJobMissionControl::Engine.routes.draw do
     end
   end
 
-  resources :dirmon_entries, only: [:index, :show, :update, :destroy, :new, :create, :edit] do
+  resources :dirmon_entries do
     member do
       put :enable
       put :disable
-      patch :update
     end
   end
-
-  post "/dirmon_entries/new"
-  post "/dirmon_entries/edit"
 
   root to: "jobs#index"
 end

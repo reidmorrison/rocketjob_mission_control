@@ -1,0 +1,8 @@
+.arguments
+  = f.fields_for :properties do |properties|
+    .form-group
+      = properties.label :description
+      = properties.text_field :description, value: @dirmon_entry.properties[:description], placeholder: "max length: 128", class: 'form-control'
+    .form-group
+      = properties.label :priority
+      = properties.text_field :priority, value: @dirmon_entry.properties[:priority], placeholder: "e.g 1..100", class: 'form-control'

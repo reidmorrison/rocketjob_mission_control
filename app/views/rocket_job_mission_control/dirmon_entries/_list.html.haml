@@ -23,4 +23,4 @@
                 %i.fa{class: job_state_icon(state), style: 'font-size: 75%;', title: state}
                 = dirmon.name
 
-            .description= dirmon.path.try(:truncate, 80)
+            .description= dirmon.pattern.try(:truncate, 80)

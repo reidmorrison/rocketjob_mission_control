@@ -34,8 +34,8 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:      'Test',
-          job_name:  'FakeButGoodJob',
-          path:      'the_path',
+          job_class_name:  'FakeButGoodJob',
+          pattern:      'the_path',
           arguments: [ 42 ].to_json
         )
       end
@@ -47,8 +47,8 @@ module RocketJobMissionControl
       context 'with valid parameters' do
         let(:dirmon_params) do
           {
-            path: 'the_path2',
-            job_name:  'FakeButGoodJob',
+            pattern: 'the_path2',
+            job_class_name:  'FakeButGoodJob',
             arguments: [ 42 ].to_json
           }
         end
@@ -58,7 +58,7 @@ module RocketJobMissionControl
         end
 
         it 'updates the entry' do
-          expect(existing_dirmon.reload.path).to eq('the_path2')
+          expect(existing_dirmon.reload.pattern).to eq('the_path2')
         end
 
         it 'displays a success message' do
@@ -69,7 +69,7 @@ module RocketJobMissionControl
       context 'with invalid parameters' do
         let(:dirmon_params) do
           {
-            job_name: 'FakeAndBadJob',
+            job_class_name: 'FakeAndBadJob',
           }
         end
 
@@ -93,8 +93,8 @@ module RocketJobMissionControl
         let(:dirmon_params) do
           {
             name: 'Test',
-            path: '/files/',
-            job_name: 'FakeButGoodJob',
+            pattern: '/files/',
+            job_class_name: 'FakeButGoodJob',
             arguments: [ 42 ].to_json
           }
         end
@@ -119,7 +119,7 @@ module RocketJobMissionControl
           expect(dirmon_list).to_not have_received(:sort)
         end
 
-        [:name, :path, :job_name].each do |attribute|
+        [:name, :pattern, :job_class_name].each do |attribute|
           it "assigns the correct value for #{attribute}" do
             expect(assigns(:dirmon_entry)[attribute]).to eq(dirmon_params[attribute])
           end
@@ -134,7 +134,7 @@ module RocketJobMissionControl
         let(:dirmon_params) do
           {
             name: 'Test',
-            job_name: 'FakeAndBadJob',
+            job_class_name: 'FakeAndBadJob',
             arguments: [ 42 ].to_json
           }
         end
@@ -162,8 +162,8 @@ module RocketJobMissionControl
       before do
         @entry = RocketJob::DirmonEntry.create(
             name: 'Test',
-            path: '/files/',
-            job_name: 'FakeButGoodJob',
+            pattern: '/files/',
+            job_class_name: 'FakeButGoodJob',
             arguments: [ 42 ]
         )
         get :edit, id: @entry.id
@@ -221,8 +221,8 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:      'Test',
-          job_name:  'FakeButGoodJob',
-          path:      'the_path',
+          job_class_name:  'FakeButGoodJob',
+          pattern:   'the_path',
           arguments: [ 42 ].to_json
         )
       end

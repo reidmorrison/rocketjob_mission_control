@@ -4,7 +4,7 @@
 
 .col-md-8.job-status
   #job
-    .lead= @dirmon_entry.job_name + "#{'#' + @dirmon_entry.perform_method.to_s unless @dirmon_entry.perform_method == :perform }"
+    .lead= @dirmon_entry.job_class_name + "#{'#' + @dirmon_entry.perform_method.to_s unless @dirmon_entry.perform_method == :perform }"
 
     .job-state.inline-block
       .left status

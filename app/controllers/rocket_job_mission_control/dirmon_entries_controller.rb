@@ -15,7 +15,7 @@ module RocketJobMissionControl
     end
 
     def create
-      @dirmon_entry = RocketJob::DirmonEntry.new(params[:rocket_job_dirmon_entry])
+      @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
 
       if @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :create])
@@ -37,7 +37,7 @@ module RocketJobMissionControl
     end
 
     def update
-      if @dirmon_entry.update_attributes(params[:rocket_job_dirmon_entry])
+      if @dirmon_entry.update_attributes(dirmon_params)
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
@@ -67,7 +67,10 @@ module RocketJobMissionControl
     private
 
     def clean_values
-      arguments       = params[:rocket_job_dirmon_entry][:arguments]
+      params[:rocket_job_dirmon_entry].fetch(:properties, {}).each_pair do |param, value|
+        params[:rocket_job_dirmon_entry][:properties].delete(param) if value.blank?
+      end
+      arguments = params[:rocket_job_dirmon_entry][:arguments]
       if arguments.present?
         #FIXME: Rescue parse errors and return to user.
         arguments = JSON.parse(arguments)
@@ -78,7 +81,7 @@ module RocketJobMissionControl
     def load_entries
       @states  = dirmons_params
       @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
-      @dirmons = @dirmons.where(state: @states) unless @states.empty? || @states.size == 2
+      @dirmons = @dirmons.where(state: @states) unless @states.empty?
     end
 
     def find_entry_or_redirect
@@ -96,7 +99,11 @@ module RocketJobMissionControl
     end
 
     def dirmon_params
-      params.require(:dirmon_entry).permit(:name, :archive_directory, {arguments: []}, :pattern, {properties: []}, :enabled, :job_class_name)
+      params
+        .require(:rocket_job_dirmon_entry)
+        .permit(:name, :archive_directory, {arguments: []}, :pattern, :enabled, :job_class_name).tap do |whitelist|
+        whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params[:rocket_job_dirmon_entry][:properties]
+      end
     end
 
   end

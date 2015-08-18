@@ -95,7 +95,8 @@ module RocketJobMissionControl
             name: 'Test',
             pattern: '/files/',
             job_class_name: 'FakeButGoodJob',
-            arguments: [ 42 ].to_json
+            arguments: [ 42 ].to_json,
+            properties: { description: '', priority: 42 },
           }
         end
 
@@ -117,6 +118,14 @@ module RocketJobMissionControl
 
         it 'does not load all entries' do
           expect(dirmon_list).to_not have_received(:sort)
+        end
+
+        it 'does not save blank properties' do
+          expect(assigns(:dirmon_entry).properties[:description]).to eq(nil)
+        end
+
+        it 'saves properties' do
+          expect(assigns(:dirmon_entry).properties[:priority]).to eq('42')
         end
 
         [:name, :pattern, :job_class_name].each do |attribute|

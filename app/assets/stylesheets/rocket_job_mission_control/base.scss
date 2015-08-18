@@ -88,14 +88,12 @@ body.rocket_job {
         border-bottom-right-radius: 3px;
       }
 
-      .queued { background-color: darkgrey; }
+      .queued, .pending { background-color: darkgrey; }
       .running { background-color: #337ab7; }
-      .completed { background-color: green; }
-      .paused { background-color: orange; }
+      .completed, .enabled { background-color: green; }
+      .paused, .disabled { background-color: orange; }
       .failed { background-color: red; }
       .aborted { background-color: darkorange; }
-      .enabled { background-color: green; }
-      .disabled { background-color: orange; }
     }
 
     .priority {

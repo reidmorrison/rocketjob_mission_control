@@ -77,9 +77,8 @@ module RocketJobMissionControl
 
     def load_entries
       @states  = dirmons_params
-      @state   = @states.include?('enabled')
       @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
-      @dirmons = @dirmons.where(enabled: @state) unless @states.empty? || @states.size == 2
+      @dirmons = @dirmons.where(state: @states) unless @states.empty? || @states.size == 2
     end
 
     def find_entry_or_redirect

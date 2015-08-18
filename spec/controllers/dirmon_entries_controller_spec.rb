@@ -308,7 +308,7 @@ module RocketJobMissionControl
             it { expect(response.status).to be(200) }
 
             it "grabs a filtered list" do
-              expect(query_spy).to have_received(:where).with(enabled: true)
+              expect(query_spy).to have_received(:where).with(state: ['enabled'])
             end
 
             it "returns the entries" do

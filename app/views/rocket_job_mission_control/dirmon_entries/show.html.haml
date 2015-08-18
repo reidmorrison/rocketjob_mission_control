@@ -8,14 +8,14 @@
 
     .job-state.inline-block
       .left status
-      - state = @dirmon_entry.enabled ? 'enabled' : 'disabled'
+      - state = @dirmon_entry.enabled? ? 'enabled' : 'disabled'
       .right{ class: state }
         = state
 
     .btn-toolbar.job-actions.pull-right
       .btn-group{ style: 'margin-right: 1em;' }
         = link_to "Destroy", dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', :data => { :confirm => 'Are you sure?' }
-        - if @dirmon_entry.enabled == false
+        - if @dirmon_entry.disabled?
           = link_to "Enable", enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default"
         - else
           = link_to "Disable", disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default", :data => { :confirm => 'Are you sure?' }

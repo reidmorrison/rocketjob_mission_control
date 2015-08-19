@@ -1,7 +1,5 @@
 module RocketJobMissionControl
   class ApplicationController < ActionController::Base
-    include ActionController::Live
-
     around_action :with_time_zone
 
     private

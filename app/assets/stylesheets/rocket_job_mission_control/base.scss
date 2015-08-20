@@ -3,6 +3,13 @@
   overflow: hidden;
 }
 
+.footer {
+  position: relative;
+  height: 150px;
+  clear:both;
+  padding-top:20px;
+}
+
 body.rocket_job {
   padding: 0;
 
@@ -41,12 +48,18 @@ body.rocket_job {
       p { font-size: 16px; }
     }
 
-    .job-retry {
+    .job-actions {
       float: left;
       margin-top: 23px;
       margin-left: 20px;
 
       .btn { padding: 2px 6px; }
+    }
+
+    .pagination-buttons {
+      float: left;
+      margin-top: 23px;
+      margin-left: 20px;
     }
 
     .job-state {
@@ -75,10 +88,10 @@ body.rocket_job {
         border-bottom-right-radius: 3px;
       }
 
-      .queued { background-color: darkgrey; }
+      .queued, .pending { background-color: darkgrey; }
       .running { background-color: #337ab7; }
-      .completed { background-color: green; }
-      .paused { background-color: orange; }
+      .completed, .enabled { background-color: green; }
+      .paused, .disabled { background-color: orange; }
       .failed { background-color: red; }
       .aborted { background-color: darkorange; }
     }
@@ -305,6 +318,8 @@ body.rocket_job {
           i.paused { color: orange; }
           i.failed { color: red; }
           i.aborted { color: darkorange; }
+          i.enabled { color: green; }
+          i.disabled { color: orange; }
 
           h3 {
             font-weight: bold;

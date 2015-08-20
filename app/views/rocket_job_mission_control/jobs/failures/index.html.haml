@@ -19,7 +19,7 @@
   .col-md-8.job-status
     .failures
       .lead= @failure_exception['class_name']
-      .pagination.pull-right= render partial: 'pagination', locals: { error_type: @failure_exception['class_name'], pagination: @pagination }
+      .pagination-buttons.pull-right= render partial: 'pagination', locals: { error_type: @failure_exception['class_name'], pagination: @pagination }
 
     .clearfix
     .message

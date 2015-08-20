@@ -22,6 +22,14 @@
   border-left-color: darkorange;
 }
 
+/* Used by Dirmon Entries */
+.callout-enabled {
+  border-left-color: green;
+}
+.callout-disabled {
+  border-left-color: orange;
+}
+
 /* Used by Workers */
 .callout-top {
   border: 1px solid #eee;

@@ -2,6 +2,10 @@ require 'rails_helper'
 
 module RocketJobMissionControl
   RSpec.describe SlicesHelper, type: :helper do
+    before do
+      helper.extend(RocketJobMissionControl::ApplicationHelper)
+    end
+
     describe '#display_slice_info' do
       let(:slice) { { id: 42, name: 'test' } }
 

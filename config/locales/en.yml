@@ -54,6 +54,25 @@ en:
       invalid: "Action not allowed."
   job:
     find:
-      :failure: "Could not find job with id: %{id}!"
+      failure: "Could not find job with id: %{id}!"
     action:
       confirm: "Are you sure you want to %{action} this job?"
+
+  dirmon_entry:
+    find:
+      failure: "Could not find entry with id: %{id}!"
+    create:
+      success: "Dirmon successfully created."
+      failure: "Error attempting to create."
+    destroy:
+      success: "Dirmon successfully destroyed."
+      failure: "Error attempting to destroy Dirmon."
+    enable:
+      success: "Dirmon successfully enabled."
+      failure: "Error attempting to enable Dirmon."
+    disable:
+      success: "Dirmon successfully disabled."
+      failure: "Error attempting to disable Dirmon."
+    update:
+      success: "Dirmon has been updated."
+      invalid: "Error attempting to update Dirmon."

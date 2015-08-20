@@ -25,5 +25,12 @@ RocketJobMissionControl::Engine.routes.draw do
     end
   end
 
+  resources :dirmon_entries do
+    member do
+      put :enable
+      put :disable
+    end
+  end
+
   root to: "jobs#index"
 end

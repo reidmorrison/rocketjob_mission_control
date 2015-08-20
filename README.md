@@ -77,6 +77,7 @@ This project uses [Semantic Versioning](http://semver.org/).
 ## Contributors
 
 * [Reid Morrison][3] :: @reidmorrison
+* [Rafi](http://www.graphicsfuel.com/2012/02/space-rocket-icon-psd/)
 
 [0]: http://rocketjob.io
 [1]: https://github.com/mjcloutier

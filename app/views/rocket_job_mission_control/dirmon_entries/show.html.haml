@@ -1,0 +1,25 @@
+#queue
+  = render partial: 'list', locals: { jobs: @jobs }
+
+.col-md-8.job-status
+  #job
+    .lead= @dirmon_entry.job_class_name + "#{'#' + @dirmon_entry.perform_method.to_s unless @dirmon_entry.perform_method == :perform }"
+
+    .job-state.inline-block
+      .left status
+      .right{ class: @dirmon_entry.state }
+        = @dirmon_entry.state
+
+    .btn-toolbar.job-actions.pull-right
+      .btn-group{ style: 'margin-right: 1em;' }
+        = link_to "Destroy", dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', :data => { :confirm => 'Are you sure?' }
+        - if @dirmon_entry.disabled? || @dirmon_entry.pending?
+          = link_to "Enable", enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default"
+        - if @dirmon_entry.enabled?
+          = link_to "Disable", disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default", :data => { :confirm => 'Are you sure?' }
+      .btn-group
+        = link_to "Edit", edit_dirmon_entry_path(@dirmon_entry), class: "btn btn-default"
+
+    .clearfix
+
+    = render partial: 'status', locals: { dirmon_entry: @job }

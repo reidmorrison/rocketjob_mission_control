@@ -1,12 +1,16 @@
 .job-list {
-  .list-top {
-    .breadcrumb {
-      margin-bottom: 0px;
-    }
+  .breadcrumb {
+    margin-bottom: 0px;
   }
 
-  .filter {
-    padding: 1px 1px 1px 1px;
+  padding: 1px 1px 1px 1px;
+
+  .breadcrumb {
+    padding: 2px;
+
+    > li {
+      margin: 5px 0 0 5px;
+    }
   }
 
   .list {

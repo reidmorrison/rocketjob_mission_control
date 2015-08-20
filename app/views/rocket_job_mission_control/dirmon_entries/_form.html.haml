@@ -1,0 +1,36 @@
+- action ||= :create
+- if @dirmon_entry.errors.present?
+  .alert.alert-alert
+    Error saving entry!
+    - @dirmon_entry.errors.messages.each_pair do |field, message|
+      .message
+        = "#{field}: #{message}"
+= form_for @dirmon_entry, url: {action: action} do |f|
+  .name.form-group
+    = f.label :name
+    = f.text_field :name, class: 'form-control'
+  .path.form-group
+    = f.label :pattern
+    = f.text_field :pattern, class: 'form-control'
+  .path.form-group
+    = f.label :archive_directory
+    = f.text_field :archive_directory, class: 'form-control'
+  .job.form-group
+    = f.label :job_class_name
+    = f.text_field :job_class_name, class: 'form-control'
+  .job_arguments.form-group
+    = f.label :arguments
+    = f.text_area :arguments,
+      value: @dirmon_entry.arguments.empty? ? nil : @dirmon_entry.arguments.to_json,
+      rows: 10,
+      placeholder: '{"argument1"":"value1", "argument2":"value2", "argument3":"value3"}',
+      class: 'form-control'
+  .row
+    .col-md-12#properties{ style: 'display:none;' }
+      = render partial: 'properties', locals: { f: f }
+
+  .buttons
+    = f.submit action, class: 'btn btn-primary'
+    = link_to 'cancel', :back, class: 'btn btn-default'
+    = button_tag 'properties',type: 'button', class: 'btn btn-default', id: 'expand'
+    = button_tag 'collapse',type: 'button', class: 'btn btn-default', id: 'collapse', style: 'display:none;'

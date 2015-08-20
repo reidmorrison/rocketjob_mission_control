@@ -1,0 +1,23 @@
+%div
+  %label Name:
+  = @dirmon_entry.name
+%div
+  %label Pattern:
+  = @dirmon_entry.pattern
+%div
+  %label Job Class Name:
+  = @dirmon_entry.job_class_name
+%div
+  %label Archive Directory:
+  = @dirmon_entry.archive_directory
+.parameters
+  %label Arguments:
+  %pre
+    %code= pretty_print_array_or_hash(@dirmon_entry.arguments)
+.parameters
+  %label Properties:
+  %pre
+    %code= pretty_print_array_or_hash(@dirmon_entry.properties)
+.id
+  %label ID:
+  = @dirmon_entry.id

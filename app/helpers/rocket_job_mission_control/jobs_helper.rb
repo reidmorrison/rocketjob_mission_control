@@ -1,13 +1,16 @@
 module RocketJobMissionControl
   module JobsHelper
     STATE_ICON_MAP = {
-      queued:    'fa-inbox',
-      paused:    'fa-pause',
-      running:   'fa-play',
-      completed: 'fa-check',
       aborted:   'fa-stop',
-      failed:    'fa-times',
-      scheduled: 'fa-clock-o'
+      completed: 'fa-check',
+      disabled:  'fa-stop',
+      enabled:   'fa-check',
+      failed:    'fa-exclamation-triangle',
+      paused:    'fa-pause',
+      pending:   'fa-inbox',
+      queued:    'fa-inbox',
+      running:   'fa-play',
+      scheduled: 'fa-clock-o',
     }
 
     def job_state_icon(state)
@@ -36,13 +39,7 @@ module RocketJobMissionControl
     end
 
     def job_states
-      @job_states ||= RocketJob::Job.aasm.states.collect { |state| state.name.to_s }
-    end
-
-    def pretty_print_array_or_hash(arguments)
-      return arguments unless arguments.kind_of?(Array) || arguments.kind_of?(Hash)
-      json_string_options = { space: ' ', indent: '  ', array_nl: '<br />', object_nl: '<br />' }
-      JSON.generate(arguments, json_string_options).html_safe
+      @job_states ||= RocketJob::Job.aasm.states.map { |state| state.name.to_s }
     end
 
     def job_selected_class(job, selected_job)

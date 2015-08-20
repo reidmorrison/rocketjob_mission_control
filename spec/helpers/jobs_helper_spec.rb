@@ -5,6 +5,10 @@ module RocketJobMissionControl
   end
 
   RSpec.describe JobsHelper, type: :helper do
+    before do
+      helper.extend(RocketJobMissionControl::ApplicationHelper)
+    end
+
     describe '#job_state_icon' do
       JobsHelper::STATE_ICON_MAP.each do |state, expected_class|
         context "when the job state is #{state}" do

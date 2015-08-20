@@ -1,29 +1,32 @@
-.col-md-4.job-list
-  .list-top
-    %ol.breadcrumb
-      %li= link_to(job_title(@job), job_path(@job))
-      %li.active Failures
-  .clearfix
-  .list
-    - @slice_errors.each do |slice_error|
-      = link_to(job_failures_path(@job, error_type: slice_error['_id']['error_class']), class: "card callout") do
-        .inner
-          .title
-            .lead
-              = slice_error['_id']['error_class']
+.row
+  .col-md-4
+    .job-list
+      .list-top
+        %ol.breadcrumb
+          %li= link_to(job_title(@job), job_path(@job))
+          %li.active Failures
+      .clearfix
+      .list
+        - @slice_errors.each do |slice_error|
+          = link_to(job_failures_path(@job, error_type: slice_error['_id']['error_class']), class: "card callout") do
+            .inner
+              .title
+                .lead
+                  = slice_error['_id']['error_class']
 
-          .description
-            = "Occurences: #{slice_error['count'].to_i}"
+              .description
+                = "Occurences: #{slice_error['count'].to_i}"
 
-- if @failure_exception
-  .col-md-8.job-status
-    .failures
-      .lead= @failure_exception['class_name']
-      .pagination-buttons.pull-right= render partial: 'pagination', locals: { error_type: @failure_exception['class_name'], pagination: @pagination }
+  - if @failure_exception
+    .col-md-8
+      .job-status
+        .failures
+          .lead= @failure_exception['class_name']
+          .pagination-buttons.pull-right= render partial: 'pagination', locals: { error_type: @failure_exception['class_name'], pagination: @pagination }
 
-    .clearfix
-    .message
-      %pre
-        %code= @failure_exception['message']
-    .error
-      %pre.small= @failure_exception['backtrace'].join("\n")
+        .clearfix
+        .message
+          %pre
+            %code= @failure_exception['message']
+        .error
+          %pre.small= @failure_exception['backtrace'].join("\n")

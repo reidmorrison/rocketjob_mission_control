@@ -1,8 +1,9 @@
-#queue
+.row
+  #queue
 
-  = render partial: 'list', locals: { jobs: @jobs }
+    = render partial: 'list', locals: { jobs: @jobs }
 
-.col-md-6
-  .lead New Dirmon Entry
+  .col-md-6
+    .lead New Dirmon Entry
 
-  = render partial: 'form'
+    = render partial: 'form'

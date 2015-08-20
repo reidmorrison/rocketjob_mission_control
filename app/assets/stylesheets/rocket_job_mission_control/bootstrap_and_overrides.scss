@@ -5,6 +5,10 @@ $border-radius-large: 4px;
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+.alert {
+  margin-bottom: 0px;
+}
+
 .alert-notice {
   @extend .alert-info
 }

@@ -1,30 +1,31 @@
-.col-md-4.job-list
-  .filter
-    %ol.breadcrumb
-      %li.active Dirmon Entries
-      .pull-right
-        = link_to "Create", new_dirmon_entry_path, class: "btn btn-default"
-        .btn-group{ data: { toggle: 'buttons' } }
-          - RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state|
-            - enabled = @states.include?(state.to_s) || @states.empty?
-            - title   = enabled ? 'Hide' : 'Show'
-            %label.btn.btn-default.state-toggle{ class: ('active' if enabled), title: "#{title} #{state.to_s.capitalize}" }
-              = check_box_tag(state.to_s, state.to_s, enabled)
-              %i.fa{class: job_state_icon(state)}
-      .clearfix
-  .list
-    - if @dirmons.empty?
-      .card.inner
-        .title
-          .lead.text-center No Dirmon Entries Found.
-    - else
-      - @dirmons.each do |dirmon|
-        - state = dirmon.enabled? ? :enabled : :disabled
-        = link_to dirmon_entry_path(id: dirmon.id, states: @states), class: "card callout callout-#{dirmon.state} #{job_selected_class(dirmon, @dirmon_entry)}" do
-          .inner
-            .title
-              .lead
-                %i.fa{class: job_state_icon(dirmon.state), style: 'font-size: 75%;', title: dirmon.state}
-                = dirmon.name
+.col-md-4
+  .job-list
+    .filter
+      %ol.breadcrumb
+        %li.active Dirmon Entries
+        .pull-right
+          = link_to "Create", new_dirmon_entry_path, class: "btn btn-default"
+          .btn-group{ data: { toggle: 'buttons' } }
+            - RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state|
+              - enabled = @states.include?(state.to_s) || @states.empty?
+              - title   = enabled ? 'Hide' : 'Show'
+              %label.btn.btn-default.state-toggle{ class: ('active' if enabled), title: "#{title} #{state.to_s.capitalize}" }
+                = check_box_tag(state.to_s, state.to_s, enabled)
+                %i.fa{class: job_state_icon(state)}
+        .clearfix
+    .list
+      - if @dirmons.empty?
+        .card.inner
+          .title
+            .lead.text-center No Dirmon Entries Found.
+      - else
+        - @dirmons.each do |dirmon|
+          - state = dirmon.enabled? ? :enabled : :disabled
+          = link_to dirmon_entry_path(id: dirmon.id, states: @states), class: "card callout callout-#{dirmon.state} #{job_selected_class(dirmon, @dirmon_entry)}" do
+            .inner
+              .title
+                .lead
+                  %i.fa{class: job_state_icon(dirmon.state), style: 'font-size: 75%;', title: dirmon.state}
+                  = dirmon.name
 
-            .description= dirmon.pattern.try(:truncate, 80)
+              .description= dirmon.pattern.try(:truncate, 80)

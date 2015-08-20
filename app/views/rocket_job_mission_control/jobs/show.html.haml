@@ -1,53 +1,54 @@
-#queue
-  = render partial: 'list', locals: { jobs: @jobs }
+.row
+  #queue
+    = render partial: 'list', locals: { jobs: @jobs }
 
-.col-md-8.job-status
-  #job
-    .lead= job_title(@job)
+  .col-md-8.job-status
+    #job
+      .lead= job_title(@job)
 
-    .job-state.inline-block
-      .left state
-      .right{ class: @job.state.to_s }
-        = @job.state
+      .job-state.inline-block
+        .left state
+        .right{ class: @job.state.to_s }
+          = @job.state
 
-    .priority.pull-right
-      = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
+      .priority.pull-right
+        = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
 
-        .input-group.spinner{ "data-id" => @job.id }
-          = f.text_field(:priority, class: 'form-control')
+          .input-group.spinner{ "data-id" => @job.id }
+            = f.text_field(:priority, class: 'form-control')
 
-          .input-group-btn-vertical
-            %button#increase_priority.btn.btn-default.up{ type: 'button' }
-              %i.fa.fa-caret-up
+            .input-group-btn-vertical
+              %button#increase_priority.btn.btn-default.up{ type: 'button' }
+                %i.fa.fa-caret-up
 
-            %button#decrease_priority.btn.btn-default.down{ type: 'button' }
-              %i.fa.fa-caret-down
+              %button#decrease_priority.btn.btn-default.down{ type: 'button' }
+                %i.fa.fa-caret-down
 
-          = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
+            = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
 
-    .job-actions.btn-group.pull-right{ style: 'margin-right: 1em;' }
-      - valid_events = @job.aasm.events.collect{ |e| e.name }
-      - if valid_events.include?(:abort)
-        = job_action_link('abort', rocket_job_mission_control.abort_job_path(@job), :patch)
+      .job-actions.btn-group.pull-right{ style: 'margin-right: 1em;' }
+        - valid_events = @job.aasm.events.collect{ |e| e.name }
+        - if valid_events.include?(:abort)
+          = job_action_link('abort', rocket_job_mission_control.abort_job_path(@job), :patch)
 
-      - if @job.completed? || @job.aborted?
-        = job_action_link('destroy', rocket_job_mission_control.job_path(@job), :delete)
+        - if @job.completed? || @job.aborted?
+          = job_action_link('destroy', rocket_job_mission_control.job_path(@job), :delete)
 
-      - if valid_events.include?(:fail)
-        = job_action_link('fail', rocket_job_mission_control.fail_job_path(@job), :patch)
+        - if valid_events.include?(:fail)
+          = job_action_link('fail', rocket_job_mission_control.fail_job_path(@job), :patch)
 
-      - if valid_events.include?(:pause)
-        = job_action_link('pause', rocket_job_mission_control.pause_job_path(@job), :patch)
+        - if valid_events.include?(:pause)
+          = job_action_link('pause', rocket_job_mission_control.pause_job_path(@job), :patch)
 
-      - if valid_events.include?(:resume)
-        = job_action_link('resume', rocket_job_mission_control.resume_job_path(@job), :patch)
+        - if valid_events.include?(:resume)
+          = job_action_link('resume', rocket_job_mission_control.resume_job_path(@job), :patch)
 
-      - if valid_events.include?(:retry)
-        = job_action_link('retry', rocket_job_mission_control.retry_job_path(@job), :patch)
+        - if valid_events.include?(:retry)
+          = job_action_link('retry', rocket_job_mission_control.retry_job_path(@job), :patch)
 
-      - if @job.failed? && @job.kind_of?(RocketJob::SlicedJob)
-        = link_to("view errors", job_failures_path(@job), class: 'btn btn-default')
+        - if @job.failed? && @job.kind_of?(RocketJob::SlicedJob)
+          = link_to("view errors", job_failures_path(@job), class: 'btn btn-default')
 
-    .clearfix
+      .clearfix
 
-    = render partial: 'status', locals: { job: @job }
+      = render partial: 'status', locals: { job: @job }

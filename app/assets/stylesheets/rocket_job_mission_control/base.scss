@@ -17,8 +17,8 @@ body.rocket_job {
 
   .job-list {
     height: 100%;
+    min-height: 768px;
     border-right: 1px solid #ddd;
-    padding: 0;
   }
 
   .job-status {
@@ -291,7 +291,7 @@ body.rocket_job {
     a { display: block; }
 
     .card:nth-child(1) { border-top: 1px solid #ddd; }
-    .card:nth-child(odd) { background-color: #fff; }
+    .card:nth-child(odd):not(.selected) { background-color: #fff; }
 
     .card {
       border-bottom: 1px solid #ddd;
@@ -351,9 +351,9 @@ body.rocket_job {
     }
 
     .selected {
-      border-bottom: 2px solid blue;
-      border-right: 2px solid blue;
-      border-top: 2px solid blue;
+      border-bottom: 1px solid blue;
+      border-right: 1px solid blue;
+      border-top: 1px solid blue;
       background-color: lightcyan;
     }
 

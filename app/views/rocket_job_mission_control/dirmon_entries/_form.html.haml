@@ -26,24 +26,11 @@
       placeholder: '{"argument1"":"value1", "argument2":"value2", "argument3":"value3"}',
       class: 'form-control'
   .row
-    .col-md-12
+    .col-md-12#properties{ style: 'display:none;' }
       = render partial: 'properties', locals: { f: f }
 
   .buttons
     = f.submit action, class: 'btn btn-primary'
     = link_to 'cancel', :back, class: 'btn btn-default'
     = button_tag 'properties',type: 'button', class: 'btn btn-default', id: 'expand'
-    = button_tag 'collapse',type: 'button', class: 'btn btn-default', id: 'collapse'
-
-:coffee
-  $(document).ready ->
-    $('.col-md-12').hide()
-    $('#collapse').hide()
-  $('#expand').click ->
-    $('#expand').hide()
-    $('#collapse').show()
-    $('.col-md-12').show()
-  $('#collapse').click ->
-    $('.col-md-12').hide()
-    $('#collapse').hide()
-    $('#expand').show()
+    = button_tag 'collapse',type: 'button', class: 'btn btn-default', id: 'collapse', style: 'display:none;'

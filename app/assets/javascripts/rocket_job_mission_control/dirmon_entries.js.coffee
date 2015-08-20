@@ -5,3 +5,14 @@ $(document).on 'ready', ->
     active_states.each (_, state) ->
       param_string += "states[]=" + $(state).attr('id') + "&"
     window.location.href = window.location.href.replace( /[\?#].*|$/, param_string );
+
+  if $('#properties').length
+    $('#expand').on 'click', ->
+      $(this).hide()
+      $('#collapse').show()
+      $('#properties').show()
+    $('#collapse').on 'click', ->
+      $(this).hide()
+      $('#expand').show()
+      $('#properties').hide()
+

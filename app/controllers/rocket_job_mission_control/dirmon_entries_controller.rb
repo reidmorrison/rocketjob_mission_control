@@ -17,7 +17,9 @@ module RocketJobMissionControl
     def create
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
 
-      if @dirmon_entry.save
+      parse_and_assign_arguments
+
+      if @dirmon_entry.errors.empty? && @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :create])
         redirect_to(dirmon_entry_path(@dirmon_entry))
       else
@@ -37,7 +39,8 @@ module RocketJobMissionControl
     end
 
     def update
-      if @dirmon_entry.update_attributes(dirmon_params)
+      parse_and_assign_arguments
+      if @dirmon_entry.errors.empty? && @dirmon_entry.update_attributes(dirmon_params)
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
@@ -72,15 +75,21 @@ module RocketJobMissionControl
 
     private
 
+    def parse_and_assign_arguments
+      if arguments = params[:rocket_job_dirmon_entry][:arguments]
+        begin
+          arguments               = JSON.parse(arguments)
+          @dirmon_entry.arguments = arguments.kind_of?(Array) ? arguments : [arguments]
+        rescue JSON::ParserError => e
+          @dirmon_entry.errors.add(:arguments, e.message)
+        end
+      end
+
+    end
+
     def clean_values
       params[:rocket_job_dirmon_entry].fetch(:properties, {}).each_pair do |param, value|
         params[:rocket_job_dirmon_entry][:properties].delete(param) if value.blank?
-      end
-      arguments = params[:rocket_job_dirmon_entry][:arguments]
-      if arguments.present?
-        #FIXME: Rescue parse errors and return to user.
-        arguments = JSON.parse(arguments)
-        params[:rocket_job_dirmon_entry][:arguments] = arguments.kind_of?(Array) ? arguments : [arguments]
       end
     end
 
@@ -107,7 +116,7 @@ module RocketJobMissionControl
     def dirmon_params
       params
         .require(:rocket_job_dirmon_entry)
-        .permit(:name, :archive_directory, {arguments: []}, :pattern, :enabled, :job_class_name).tap do |whitelist|
+        .permit(:name, :archive_directory, :pattern, :enabled, :job_class_name).tap do |whitelist|
         whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params[:rocket_job_dirmon_entry][:properties]
       end
     end

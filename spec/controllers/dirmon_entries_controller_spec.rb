@@ -157,6 +157,29 @@ module RocketJobMissionControl
         it 'loads the other entries' do
           expect(dirmon_list).to have_received(:sort)
         end
+
+        context 'with invalid arguments json' do
+          let(:dirmon_params) do
+            {
+              name: 'Test',
+              job_class_name: 'FakeButGoodJob',
+              arguments: "['42']",
+            }
+          end
+
+          it 'renders the new template' do
+            expect(response.status).to eq(200)
+            expect(response).to render_template(:edit)
+          end
+
+          it 'has errors on arguments' do
+            expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
+          end
+
+          it 'loads the other entries' do
+            expect(dirmon_list).to have_received(:sort)
+          end
+        end
       end
     end
 
@@ -216,7 +239,7 @@ module RocketJobMissionControl
           {
             name: 'Test',
             job_class_name: 'FakeAndBadJob',
-            arguments: [ 42 ].to_json
+            arguments: [ 42 ].to_json,
           }
         end
 
@@ -224,17 +247,42 @@ module RocketJobMissionControl
           post :create, rocket_job_dirmon_entry: dirmon_params
         end
 
-        it 'renders the new template' do
-          expect(response.status).to eq(200)
-          expect(response).to render_template(:new)
+        context 'on model attributes' do
+          it 'renders the new template' do
+            expect(response.status).to eq(200)
+            expect(response).to render_template(:new)
+          end
+
+          it 'has errors on the entry' do
+            expect(assigns(:dirmon_entry)).to_not be_valid
+          end
+
+          it 'loads the other entries' do
+            expect(dirmon_list).to have_received(:sort)
+          end
         end
 
-        it 'has errors on the entry' do
-          expect(assigns(:dirmon_entry)).to_not be_valid
-        end
+        context 'with invalid arguments json' do
+          let(:dirmon_params) do
+            {
+              name: 'Test',
+              job_class_name: 'FakeButGoodJob',
+              arguments: "['42']",
+            }
+          end
 
-        it 'loads the other entries' do
-          expect(dirmon_list).to have_received(:sort)
+          it 'renders the new template' do
+            expect(response.status).to eq(200)
+            expect(response).to render_template(:new)
+          end
+
+          it 'has errors on arguments' do
+            expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
+          end
+
+          it 'loads the other entries' do
+            expect(dirmon_list).to have_received(:sort)
+          end
         end
       end
     end

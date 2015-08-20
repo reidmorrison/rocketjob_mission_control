@@ -20,7 +20,11 @@
     = f.text_field :job_class_name, class: 'form-control'
   .job_arguments.form-group
     = f.label :arguments
-    = f.text_area :arguments, value: @dirmon_entry.arguments.to_json,rows: 10, placeholder: '{"argument1"":"value1", "argument2":"value2", "argument3":"value3"}', class: 'form-control'
+    = f.text_area :arguments,
+      value: @dirmon_entry.arguments.empty? ? nil : @dirmon_entry.arguments.to_json,
+      rows: 10,
+      placeholder: '{"argument1"":"value1", "argument2":"value2", "argument3":"value3"}',
+      class: 'form-control'
   .row
     .col-md-12
       = render partial: 'properties', locals: { f: f }

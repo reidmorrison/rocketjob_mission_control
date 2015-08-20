@@ -14,7 +14,7 @@
       .priority.pull-right
         = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
 
-          .input-group.spinner{ "data-id" => @job.id }
+          .input-group.priority-group
             = f.text_field(:priority, class: 'form-control')
 
             .input-group-btn-vertical

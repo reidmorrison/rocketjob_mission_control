@@ -47,18 +47,18 @@ module RocketJobMissionControl
     end
 
     def enable
-      if  @dirmon_entry.update_attributes(enabled: true)
+      if  @dirmon_entry.enable!
         flash[:success] = t(:success, scope: [:dirmon_entry, :enable])
-        redirect_to "/rocketjob/dirmon_entries/#{@dirmon_entry.id}"
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert]  = t(:failure, scope: [:dirmon_entry, :enable])
       end
     end
 
     def disable
-      if  @dirmon_entry.update_attributes(enabled: false)
+      if  @dirmon_entry.disable!
         flash[:success] = t(:success, scope: [:dirmon_entry, :disable])
-        redirect_to "/rocketjob/dirmon_entries/#{@dirmon_entry.id}"
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert]  = t(:failure, scope: [:dirmon_entry, :disable])
       end

@@ -17,6 +17,50 @@ module RocketJobMissionControl
       allow(RocketJob::DirmonEntry).to receive(:limit).and_return(dirmon_list)
     end
 
+    describe 'PATCH #enable' do
+      let(:existing_dirmon) do
+        RocketJob::DirmonEntry.create!(
+          name:      'Test',
+          job_class_name:  'FakeButGoodJob',
+          pattern:      'the_path',
+          arguments: [ 42 ].to_json,
+          state: 'pending',
+        )
+      end
+
+      before do
+        patch :enable, id: existing_dirmon.id
+      end
+
+      it { expect(response).to redirect_to(dirmon_entry_path(existing_dirmon.id)) }
+
+      it 'changes the state to enabled' do
+        expect(existing_dirmon.reload.state).to eq(:enabled)
+      end
+    end
+
+    describe 'PATCH #disable' do
+      let(:existing_dirmon) do
+        RocketJob::DirmonEntry.create!(
+          name:      'Test',
+          job_class_name:  'FakeButGoodJob',
+          pattern:      'the_path',
+          arguments: [ 42 ].to_json,
+          state: :enabled,
+        )
+      end
+
+      before do
+        patch :disable, id: existing_dirmon.id
+      end
+
+      it { expect(response).to redirect_to(dirmon_entry_path(existing_dirmon.id)) }
+
+      it "changes the state to disabled" do
+        expect(existing_dirmon.reload.state).to eq(:disabled)
+      end
+    end
+
     describe 'GET #new' do
       before do
         get :new

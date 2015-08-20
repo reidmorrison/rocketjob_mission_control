@@ -52,6 +52,7 @@ en:
     update_all:
       success: "Workers have been %{worker_action}."
       invalid: "Action not allowed."
+      confirm: "Are you sure you want to %{action} all workers?"
   job:
     find:
       failure: "Could not find job with id: %{id}!"

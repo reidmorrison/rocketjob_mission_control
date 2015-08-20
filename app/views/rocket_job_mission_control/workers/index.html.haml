@@ -1,48 +1,56 @@
 #workers
   - if @workers.present?
-    .col-lg-1
-      .dropdown
-        %button.btn.btn-primary.dropdown-toggle{ data: {toggle: 'dropdown'} }
-          Actions
-          %span.caret
-        %ul.dropdown-menu
-          %li= link_to("Stop All",   rocket_job_mission_control.update_all_workers_path(worker_action: :stop),   method: :patch)
-          %li= link_to("Pause All",  rocket_job_mission_control.update_all_workers_path(worker_action: :pause),  method: :patch)
-          %li= link_to("Resume All", rocket_job_mission_control.update_all_workers_path(worker_action: :resume), method: :patch)
+    .row
+      .col-xs-12
+        %ol.breadcrumb{ style: 'margin-bottom: 0'}
+          %li.active Workers
+          .btn-group.pull-right
+            - [:stop, :pause, :resume].each do |action|
+              = link_to("#{action.to_s.capitalize} All",
+                rocket_job_mission_control.update_all_workers_path(worker_action: action),
+                method: :patch,
+                data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action) },
+                class: 'btn btn-default')
+          .clearfix
 
     .grid
-      - @workers.each do |worker|
-        .card.col-xs-12.col-sm-6.col-md-3.col-lg-3
-          .inner.callout-top{ class: worker_card_class(worker) }
-            .title
-              %h3
-                = worker.name
+      - @workers.each_slice(4) do |workers|
+        .row
+          - workers.each do |worker|
+            .card.col-xs-12.col-sm-6.col-md-3.col-lg-3
+              .inner.callout-top{ class: worker_card_class(worker) }
+                .title
+                  %h3
+                    = worker.name
 
-            .state
-              %b State:
-              = worker.state
+                .state
+                  %b State:
+                  = worker.state
 
-            .threads.max_threads
-              %b Max Threads:
-              = worker.max_threads
+                .threads.max_threads
+                  %b Max Threads:
+                  = worker.max_threads
 
-            .threads.current_threads
-              %b Current Threads:
-              = worker.heartbeat.current_threads.to_i
+                .threads.current_threads
+                  %b Current Threads:
+                  = worker.heartbeat.current_threads.to_i
 
-            .time
-              %b Started:
-              = worker.started_at.strftime("%b, %d %Y at %l:%M %p")
+                .time
+                  %b Started:
+                  = worker.started_at.strftime("%b, %d %Y at %l:%M %p")
 
-            .actions
-              = render partial: 'actions', locals: { worker: worker }
+                .actions
+                  = render partial: 'actions', locals: { worker: worker }
 
   - else
-    .no-workers
-      There are currently no workers.
-      %br
-      You can start a worker with the following command:
+    .row
+      .col-md-6.col-md-offset-3
+        .panel.panel-default
+          .panel-body
+            .lead
+              There are currently no workers.
+            You can start a worker with the following command:
 
-      .code-block.col-md-6.col-md-offset-3
-        %pre
-          %code.language-bash bin/rocketjob
+            .code-block
+              %pre
+                %code.language-bash bin/rocketjob

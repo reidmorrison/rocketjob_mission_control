@@ -5,7 +5,7 @@
 
 .footer {
   position: relative;
-  height: 150px;
+  height: 100px;
   clear:both;
   padding-top:20px;
 }
@@ -17,8 +17,8 @@ body.rocket_job {
 
   .job-list {
     height: 100%;
+    min-height: 768px;
     border-right: 1px solid #ddd;
-    padding: 0;
   }
 
   .job-status {
@@ -138,11 +138,18 @@ body.rocket_job {
       text-align: center;
 
       a {
+        display: inline-block;
         color: orange;
         font-weight: bold;
+
       }
 
-      .color {
+      a:hover, a:active {
+        text-decoration: none;
+      }
+
+
+      span {
         display: inline-block;
         position: relative;
         left: -3px;
@@ -291,7 +298,7 @@ body.rocket_job {
     a { display: block; }
 
     .card:nth-child(1) { border-top: 1px solid #ddd; }
-    .card:nth-child(odd) { background-color: #fff; }
+    .card:nth-child(odd):not(.selected) { background-color: #fff; }
 
     .card {
       border-bottom: 1px solid #ddd;
@@ -351,9 +358,9 @@ body.rocket_job {
     }
 
     .selected {
-      border-bottom: 2px solid blue;
-      border-right: 2px solid blue;
-      border-top: 2px solid blue;
+      border-bottom: 1px solid blue;
+      border-right: 1px solid blue;
+      border-top: 1px solid blue;
       background-color: lightcyan;
     }
 
@@ -404,7 +411,7 @@ body.rocket_job {
     }
   }
 
-  .spinner {
+  .priority-group {
     width: 67px;
     margin: 0 auto;
 
@@ -445,51 +452,9 @@ body.rocket_job {
     }
   }
 
-  .green.signal {
-    -webkit-animation: greenPulse 2s infinite;
-    -moz-animation: greenPulse 2s infinite;
-    -o-animation: greenPulse 2s infinite;
-    animation: greenPulse 2s infinite;
-    margin: 0 5px 0 10px;
-  }
-
   .code-block { margin-top: 25px; }
 
   .status {
     padding: 1em;
   }
-
-  // Warnings & Notifications
-
-  .no-servers {
-    text-align: center;
-    font-size: 23px;
-    padding-top: 50px;
-    color: #777;
-  }
-}
-
-// Rocket Job Animations
-@-webkit-keyframes greenPulse {
-  0% { color: #91bd09; -webkit-box-shadow: 0 0 9px #91bd09; border-radius: 30px; }
-  50% { color: rgb(107, 240, 123); -webkit-box-shadow: 0 0 18px rgb(107, 240, 123); border-radius: 30px; }
-  100% { color: #91bd09; -webkit-box-shadow: 0 0 9px #91bd09; border-radius: 30px; }
-}
-
-@-moz-keyframes greenPulse {
-  0% { background-color: #749a02; -moz-box-shadow: 0 0 9px #333; }
-  50% { background-color: lime; -moz-box-shadow: 0 0 18px #91bd09; }
-  100% { background-color: #749a02; -moz-box-shadow: 0 0 9px #333; }
-}
-
-@-o-keyframes greenPulse {
-  0% { background-color: #749a02; box-shadow: 0 0 9px #749a02; }
-  50% { background-color: #91bd09; box-shadow: 0 0 18px #91bd09; }
-  100% { background-color: #749a02; box-shadow: 0 0 9px #749a02; }
-}
-
-@keyframes greenPulse {
-  0% { background-color: #749a02; box-shadow: 0 0 9px #333; }
-  50% { background-color: #91bd09; box-shadow: 0 0 18px #91bd09; }
-  100% { background-color: #749a02; box-shadow: 0 0 9px #333; }
 }

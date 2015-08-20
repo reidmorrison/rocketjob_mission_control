@@ -18,24 +18,38 @@ module RocketJobMissionControl
     end
 
     describe 'PATCH #enable' do
+      before do
+        patch :enable, id: existing_dirmon.id
+      end
+
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:      'Test',
           job_class_name:  'FakeButGoodJob',
           pattern:      'the_path',
           arguments: [ 42 ].to_json,
-          state: 'pending',
+          state: starting_state,
         )
       end
 
-      before do
-        patch :enable, id: existing_dirmon.id
+      context 'when transition is allowed' do
+        let(:starting_state) { 'pending' }
+
+        it { expect(response).to redirect_to(dirmon_entry_path(existing_dirmon.id)) }
+
+        it 'changes the state to enabled' do
+          expect(existing_dirmon.reload.state).to eq(:enabled)
+        end
       end
 
-      it { expect(response).to redirect_to(dirmon_entry_path(existing_dirmon.id)) }
+      context 'when transition is not allowed' do
+        let(:starting_state) { 'enabled' }
 
-      it 'changes the state to enabled' do
-        expect(existing_dirmon.reload.state).to eq(:enabled)
+        it { expect(response).to render_template(:show) }
+
+        it 'alerts the user' do
+          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:dirmon_entry, :enable]))
+        end
       end
     end
 
@@ -46,7 +60,7 @@ module RocketJobMissionControl
           job_class_name:  'FakeButGoodJob',
           pattern:      'the_path',
           arguments: [ 42 ].to_json,
-          state: :enabled,
+          state: starting_state,
         )
       end
 
@@ -54,10 +68,24 @@ module RocketJobMissionControl
         patch :disable, id: existing_dirmon.id
       end
 
-      it { expect(response).to redirect_to(dirmon_entry_path(existing_dirmon.id)) }
+      context 'when transition is allowed' do
+        let(:starting_state) { :enabled }
 
-      it "changes the state to disabled" do
-        expect(existing_dirmon.reload.state).to eq(:disabled)
+        it { expect(response).to redirect_to(dirmon_entry_path(existing_dirmon.id)) }
+
+        it "changes the state to disabled" do
+          expect(existing_dirmon.reload.state).to eq(:disabled)
+        end
+      end
+
+      context 'when transition is not allowed' do
+        let(:starting_state) { :disabled }
+
+        it { expect(response).to render_template(:show) }
+
+        it 'alerts the user' do
+          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:dirmon_entry, :disable]))
+        end
       end
     end
 

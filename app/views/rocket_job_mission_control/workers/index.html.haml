@@ -38,11 +38,14 @@
               = render partial: 'actions', locals: { worker: worker }
 
   - else
-    .no-workers
-      There are currently no workers.
-      %br
-      You can start a worker with the following command:
+    .row
+      .col-md-6.col-md-offset-3
+        .panel.panel-default
+          .panel-body
+            .lead
+              There are currently no workers.
+            You can start a worker with the following command:
 
-      .code-block.col-md-6.col-md-offset-3
-        %pre
-          %code.language-bash bin/rocketjob
+            .code-block
+              %pre
+                %code.language-bash bin/rocketjob

@@ -6,12 +6,17 @@ module RocketJobMissionControl
       @workers = RocketJob::Worker.sort(:name)
     end
 
-    VALID_STATES = { stop: 'stopped', pause: 'paused', resume: 'resumed' }
+    VALID_STATES = {
+      stop_all:        'stopped',
+      pause_all:       'paused',
+      resume_all:      'resumed',
+      destroy_zombies: 'destroyed if zombified',
+    }
 
     def update_all
       worker_action = params[:worker_action].to_sym
       if VALID_STATES.keys.include?(worker_action)
-        RocketJob::Worker.send("#{worker_action}_all".to_sym)
+        RocketJob::Worker.send(worker_action.to_sym)
         flash[:notice] = t(:success, scope: [:worker, :update_all], worker_action: VALID_STATES[worker_action])
       else
         flash[:alert]  = t(:invalid, scope: [:worker, :update_all])

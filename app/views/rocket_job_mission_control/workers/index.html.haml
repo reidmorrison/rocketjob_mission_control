@@ -37,7 +37,11 @@
 
                 .time
                   %b Started:
-                  = worker.started_at.strftime("%b, %d %Y at %l:%M %p")
+                  = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
+
+                .heartbeat
+                  %b Last Heartbeat:
+                  = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
 
                 .actions
                   = render partial: 'actions', locals: { worker: worker }

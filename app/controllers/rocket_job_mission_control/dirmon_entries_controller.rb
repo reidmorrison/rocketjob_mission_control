@@ -116,7 +116,7 @@ module RocketJobMissionControl
     def dirmon_params
       params
         .require(:rocket_job_dirmon_entry)
-        .permit(:name, :archive_directory, :pattern, :job_class_name).tap do |whitelist|
+        .permit(:name, :archive_directory, :pattern, :job_class_name, :perform_method).tap do |whitelist|
         whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params[:rocket_job_dirmon_entry][:properties]
       end
     end

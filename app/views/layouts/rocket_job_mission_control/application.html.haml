@@ -27,7 +27,7 @@
       #page-content-wrapper
         = render partial: 'layouts/rocket_job_mission_control/partials/header'
 
-        .flash
+        .flash.text-center
           - flash.each do |key, msg|
             - if msg
               .alert{class: "alert-#{key} alert-dismissable", role: 'alert'}

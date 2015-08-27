@@ -58,6 +58,8 @@ en:
       failure: "Could not find job with id: %{id}!"
     action:
       confirm: "Are you sure you want to %{action} this job?"
+    failures:
+      no_errors: 'No slice failures present.'
 
   dirmon_entry:
     find:

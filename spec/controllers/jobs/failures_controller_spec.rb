@@ -29,17 +29,39 @@ module RocketJobMissionControl
           get :index, job_id: job.id
         end
 
-        it 'succeeds' do
-          expect(response).to be_success
+        context 'with slice errors' do
+          it 'succeeds' do
+            expect(response).to be_success
+          end
+          it 'returns the job' do
+            expect(assigns(:job)).to eq(job)
+          end
+          it 'returns the errors' do
+            expect(assigns(:slice_errors)).to eq(slice_errors)
+          end
+          it 'returns the first exception' do
+            expect(assigns(:failure_exception)).to eq(current_failure['exception'])
+          end
         end
-        it 'returns the job' do
-          expect(assigns(:job)).to eq(job)
-        end
-        it 'returns the errors' do
-          expect(assigns(:slice_errors)).to eq(slice_errors)
-        end
-        it 'returns the first exception' do
-          expect(assigns(:failure_exception)).to eq(current_failure['exception'])
+
+        context 'with no slice errors' do
+          let(:slice_errors) { [] }
+
+          it 'succeeds' do
+            expect(response).to be_success
+          end
+          it 'returns the job' do
+            expect(assigns(:job)).to eq(job)
+          end
+          it 'returns no errors' do
+            expect(assigns(:slice_errors)).to eq(slice_errors)
+          end
+          it 'returns no exception' do
+            expect(assigns(:failure_exception)).to be_nil
+          end
+          it 'notifies the user' do
+            expect(flash[:notice]).to eq(I18n.t(:no_errors, scope: [:job, :failures]))
+          end
         end
       end
 

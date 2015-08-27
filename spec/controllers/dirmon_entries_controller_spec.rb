@@ -5,6 +5,11 @@ class FakeButGoodJob < RocketJob::Job
   def perform(id)
     id
   end
+
+  def perform_with_no_params
+    100_000
+  end
+
 end
 
 module RocketJobMissionControl
@@ -185,52 +190,61 @@ module RocketJobMissionControl
 
     describe 'POST #create' do
       context 'with valid parameters' do
-        let(:dirmon_params) do
-          {
-            name: 'Test',
-            pattern: '/files/',
-            job_class_name: 'FakeButGoodJob',
-            arguments: [ 42 ].to_json,
-            properties: { description: '', priority: 42 },
-          }
-        end
 
-        before do
-          post :create, rocket_job_dirmon_entry: dirmon_params
-        end
+        {
+          perform: { argument: [42].to_json, expected_value: [42] },
+          perform_with_no_params: { argument: '', expected_value: [] },
+        }.each_pair do |perform_method, arguments|
+          context "and arguments are '#{arguments}'" do
+            let(:dirmon_params) do
+              {
+                name: 'Test',
+                pattern: '/files/',
+                job_class_name: 'FakeButGoodJob',
+                arguments: arguments[:argument],
+                properties: { description: '', priority: 42 },
+                perform_method: perform_method,
+              }
+            end
 
-        it 'creates the entry' do
-          expect(assigns(:dirmon_entry)).to be_persisted
-        end
+            before do
+              post :create, rocket_job_dirmon_entry: dirmon_params
+            end
 
-        it 'has no errors' do
-          expect(assigns(:dirmon_entry).errors.messages).to be_empty
-        end
+            it 'creates the entry' do
+              expect(assigns(:dirmon_entry)).to be_persisted
+            end
 
-        it 'redirects to created entry' do
-          expect(response).to redirect_to(dirmon_entry_path(assigns(:dirmon_entry)))
-        end
+            it 'has no errors' do
+              expect(assigns(:dirmon_entry).errors.messages).to be_empty
+            end
 
-        it 'does not load all entries' do
-          expect(dirmon_list).to_not have_received(:sort)
-        end
+            it 'redirects to created entry' do
+              expect(response).to redirect_to(dirmon_entry_path(assigns(:dirmon_entry)))
+            end
 
-        it 'does not save blank properties' do
-          expect(assigns(:dirmon_entry).properties[:description]).to eq(nil)
-        end
+            it 'does not load all entries' do
+              expect(dirmon_list).to_not have_received(:sort)
+            end
 
-        it 'saves properties' do
-          expect(assigns(:dirmon_entry).properties[:priority]).to eq('42')
-        end
+            it 'does not save blank properties' do
+              expect(assigns(:dirmon_entry).properties[:description]).to eq(nil)
+            end
 
-        [:name, :pattern, :job_class_name].each do |attribute|
-          it "assigns the correct value for #{attribute}" do
-            expect(assigns(:dirmon_entry)[attribute]).to eq(dirmon_params[attribute])
+            it 'saves properties' do
+              expect(assigns(:dirmon_entry).properties[:priority]).to eq('42')
+            end
+
+            [:name, :pattern, :job_class_name].each do |attribute|
+              it "assigns the correct value for #{attribute}" do
+                expect(assigns(:dirmon_entry)[attribute]).to eq(dirmon_params[attribute])
+              end
+            end
+
+            it 'persists arguments correctly' do
+              expect(assigns(:dirmon_entry).arguments).to eq(arguments[:expected_value])
+            end
           end
-        end
-
-        it 'persists arguments correctly' do
-          expect(assigns(:dirmon_entry).arguments).to eq([42])
         end
       end
 

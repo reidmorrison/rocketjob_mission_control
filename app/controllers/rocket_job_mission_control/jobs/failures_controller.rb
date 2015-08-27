@@ -9,7 +9,7 @@ module RocketJobMissionControl
           @slice_errors = job_failures.list
           @error_type   = params[:error_type] || @slice_errors.first['_id']['error_class']
 
-          offset             = params.fetch(:offset, 1).to_i
+          offset             = params.fetch(:offset, 0).to_i
           selected_exception = job_failures.for_error(@error_type, offset)
           current_failure    = selected_exception.first
 

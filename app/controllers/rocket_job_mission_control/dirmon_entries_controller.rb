@@ -76,15 +76,14 @@ module RocketJobMissionControl
     private
 
     def parse_and_assign_arguments
-      if arguments = params[:rocket_job_dirmon_entry][:arguments]
-        begin
-          arguments               = JSON.parse(arguments)
-          @dirmon_entry.arguments = arguments.kind_of?(Array) ? arguments : [arguments]
-        rescue JSON::ParserError => e
-          @dirmon_entry.errors.add(:arguments, e.message)
-        end
+      arguments = params[:rocket_job_dirmon_entry][:arguments]
+      arguments = arguments.blank? ? '[]' : arguments
+      begin
+        arguments               = JSON.parse(arguments)
+        @dirmon_entry.arguments = arguments.kind_of?(Array) ? arguments : [arguments]
+      rescue JSON::ParserError => e
+        @dirmon_entry.errors.add(:arguments, e.message)
       end
-
     end
 
     def clean_values
@@ -116,7 +115,7 @@ module RocketJobMissionControl
     def dirmon_params
       params
         .require(:rocket_job_dirmon_entry)
-        .permit(:name, :archive_directory, :pattern, :job_class_name).tap do |whitelist|
+        .permit(:name, :archive_directory, :pattern, :job_class_name, :perform_method).tap do |whitelist|
         whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params[:rocket_job_dirmon_entry][:properties]
       end
     end

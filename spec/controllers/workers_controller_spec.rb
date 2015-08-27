@@ -49,7 +49,7 @@ module RocketJobMissionControl
       RocketJobMissionControl::WorkersController::VALID_STATES.each do |worker_action, action_message|
         context "with '#{worker_action}' as the worker_action param" do
           before do
-            allow(RocketJob::Worker).to receive("#{worker_action}_all".to_sym)
+            allow(RocketJob::Worker).to receive(worker_action.to_sym)
             patch :update_all, worker_action: worker_action
           end
 

@@ -5,11 +5,11 @@
         %ol.breadcrumb{ style: 'margin-bottom: 0'}
           %li.active Workers
           .btn-group.pull-right
-            - [:stop, :pause, :resume].each do |action|
-              = link_to("#{action.to_s.capitalize} All",
+            - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
+              = link_to("#{action.to_s.humanize.capitalize}",
                 rocket_job_mission_control.update_all_workers_path(worker_action: action),
                 method: :patch,
-                data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action) },
+                data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
                 class: 'btn btn-default')
           .clearfix
 
@@ -37,7 +37,11 @@
 
                 .time
                   %b Started:
-                  = worker.started_at.strftime("%b, %d %Y at %l:%M %p")
+                  = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
+
+                .heartbeat
+                  %b Last Heartbeat:
+                  = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
 
                 .actions
                   = render partial: 'actions', locals: { worker: worker }

@@ -13,6 +13,9 @@ class JobFailures
     @slice_errors ||= job.input.collection.aggregate(
       [
         {
+          '$match' => { state: 'failed' }
+        },
+        {
           '$group' => {
             _id:      { error_class: '$exception.class_name' },
             messages: { '$addToSet' => '$exception.message' },

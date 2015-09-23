@@ -1,8 +1,35 @@
 .arguments
+  .job_arguments.form-group
+    - count = @dirmon_entry.job_class.argument_count(@dirmon_entry.perform_method)
+    - @dirmon_entry.arguments.each_with_index do |argument, counter|
+      = f.label "Argument #{counter + 1}:"
+      = f.text_field :arguments,
+        value: argument.is_a?(Hash) || argument.is_a?(Array) ? argument.to_json : argument,
+        name: 'arguments[]',
+        rows: 10,
+        placeholder: '{"argument1":"value1", "argument2":"value2", "argument3":"value3"}',
+        class: 'form-control'
   = f.fields_for :properties do |properties|
-    .form-group
-      = properties.label :description
-      = properties.text_field :description, value: @dirmon_entry.properties[:description], placeholder: "max length: 128", class: 'form-control'
-    .form-group
-      = properties.label :priority
-      = properties.text_field :priority, value: @dirmon_entry.properties[:priority], placeholder: "e.g 1..100", class: 'form-control'
+    - @dirmon_entry.job_class.rocket_job_properties.each do |property_name|
+      - next if [:arguments, :perform_method].include?(property_name)
+      - key = @dirmon_entry.job_class.keys[property_name.to_s]
+      - next unless key
+      - placeholder = key.default? ? key.default : nil
+      .form-group
+        = properties.label property_name.to_s
+        - case key.type.name
+        - when 'Integer'
+          = properties.number_field property_name, value: @dirmon_entry.properties[property_name], class: 'form-control', placeholder: placeholder
+        - when 'Array'
+          = properties.text_field property_name, value: @dirmon_entry.properties[property_name], class: 'form-control', placeholder: placeholder
+        - when 'Boolean'
+          - name = "#{property_name}_true".to_sym
+          .radio-buttons
+            = properties.label name, 'true'
+            = properties.radio_button(property_name, 'true', checked: @dirmon_entry.properties[property_name] == 'true')
+            = properties.label name, 'false'
+            = properties.radio_button(property_name, 'false', checked: @dirmon_entry.properties[property_name] == 'false')
+            = properties.label name, 'none'
+            = properties.radio_button(property_name, '', checked: @dirmon_entry.properties[property_name].blank?)
+        - else
+          = properties.text_field property_name, value: @dirmon_entry.properties[property_name], class: 'form-control', placeholder: placeholder

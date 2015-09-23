@@ -1,3 +1,4 @@
+require 'csv'
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     before_filter :find_entry_or_redirect, except: [:index, :new, :create]
@@ -11,13 +12,16 @@ module RocketJobMissionControl
     end
 
     def new
-      @dirmon_entry = RocketJob::DirmonEntry.new(arguments: nil)
+      # TODO: Load properties dynamically based on job_class_name and perform_method
+      name          = defined?(DirectMarketingJob) ? 'DirectMarketingJob' : 'DirmonJob'
+      @dirmon_entry = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: 'DirectMarketingJob', perform: :perform)
     end
 
     def create
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
 
       parse_and_assign_arguments
+      parse_and_assign_properties
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :create])
@@ -39,8 +43,10 @@ module RocketJobMissionControl
     end
 
     def update
+      @dirmon_entry.attributes = dirmon_params
       parse_and_assign_arguments
-      if @dirmon_entry.errors.empty? && @dirmon_entry.update_attributes(dirmon_params)
+      parse_and_assign_properties
+      if @dirmon_entry.errors.empty? && @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
@@ -55,7 +61,7 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :enable])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert]  = t(:failure, scope: [:dirmon_entry, :enable])
+        flash[:alert] = t(:failure, scope: [:dirmon_entry, :enable])
         load_entries
         render(:show)
       end
@@ -67,7 +73,7 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :disable])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert]  = t(:failure, scope: [:dirmon_entry, :disable])
+        flash[:alert] = t(:failure, scope: [:dirmon_entry, :disable])
         load_entries
         render(:show)
       end
@@ -76,13 +82,48 @@ module RocketJobMissionControl
     private
 
     def parse_and_assign_arguments
-      arguments = params[:rocket_job_dirmon_entry][:arguments]
-      arguments = arguments.blank? ? '[]' : arguments
+      arguments = params[:arguments] || []
+      @dirmon_entry.arguments = arguments.collect do |argument|
+        begin
+          JSON.parse(argument)
+        rescue JSON::ParserError => e
+          argument
+        end
+      end
+    end
+
+    def parse_and_assign_properties
+      properties = params[:rocket_job_dirmon_entry][:properties]
+      return if properties.blank?
+      properties.each_pair do |property, value|
+        if key = @dirmon_entry.job_class.keys[property]
+          case key.type.name
+          when 'Array'
+            value = parse_array_element(value)
+            @dirmon_entry.properties[property] = value.kind_of?(Array) ? value : [value]
+          when 'Hash'
+            begin
+              @dirmon_entry.properties[property] = JSON.parse(value)
+            rescue JSON::ParserError => e
+              @dirmon_entry.errors.add(:properties, e.message)
+            end
+          end
+        end
+      end
+    end
+
+    # Returns [Array<String>] an array from the supplied string
+    # String can also be in JSON format
+    def parse_array_element(value)
       begin
-        arguments               = JSON.parse(arguments)
-        @dirmon_entry.arguments = arguments.kind_of?(Array) ? arguments : [arguments]
+        JSON.parse(value)
       rescue JSON::ParserError => e
-        @dirmon_entry.errors.add(:arguments, e.message)
+        begin
+          CSV.parse(value).first.collect(&:strip)
+        rescue Exception => exc
+          @dirmon_entry.errors.add(:properties, e.message)
+          @dirmon_entry.errors.add(:properties, exc.message)
+        end
       end
     end
 

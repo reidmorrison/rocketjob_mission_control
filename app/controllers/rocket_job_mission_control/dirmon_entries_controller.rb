@@ -13,8 +13,9 @@ module RocketJobMissionControl
 
     def new
       # TODO: Load properties dynamically based on job_class_name and perform_method
-      name          = defined?(DirectMarketingJob) ? 'DirectMarketingJob' : 'DirmonJob'
-      @dirmon_entry = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: 'DirectMarketingJob', perform: :perform)
+      name                      = defined?(DirectMarketingJob) ? 'DirectMarketingJob' : 'DirmonJob'
+      @dirmon_entry             = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: 'DirectMarketingJob', perform: :perform)
+      @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
     end
 
     def create
@@ -79,16 +80,19 @@ module RocketJobMissionControl
       end
     end
 
+    def properties
+      @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
+      render json: @dirmon_entry
+    end
+
     private
 
     def parse_and_assign_arguments
-      arguments = params[:arguments] || []
-      @dirmon_entry.arguments = arguments.collect do |argument|
-        begin
-          JSON.parse(argument)
-        rescue JSON::ParserError => e
-          argument
-        end
+      arguments               = params[:rocket_job_dirmon_entry][:arguments] || []
+      @dirmon_entry.arguments = arguments.collect do |value|
+        cleansed = parse_array_element(value, :arguments, true)
+        @dirmon_entry.errors.add(:arguments, 'All arguments are mandatory') unless cleansed
+        cleansed
       end
     end
 
@@ -99,8 +103,9 @@ module RocketJobMissionControl
         if key = @dirmon_entry.job_class.keys[property]
           case key.type.name
           when 'Array'
-            value = parse_array_element(value)
-            @dirmon_entry.properties[property] = value.kind_of?(Array) ? value : [value]
+            if value = parse_array_element(value, :properties)
+              @dirmon_entry.properties[property] = value.kind_of?(Array) ? value : [value]
+            end
           when 'Hash'
             begin
               @dirmon_entry.properties[property] = JSON.parse(value)
@@ -114,15 +119,18 @@ module RocketJobMissionControl
 
     # Returns [Array<String>] an array from the supplied string
     # String can also be in JSON format
-    def parse_array_element(value)
+    def parse_array_element(value, attribute, could_be_singleton = false)
+      return if value.blank?
       begin
         JSON.parse(value)
       rescue JSON::ParserError => e
         begin
-          CSV.parse(value).first.collect(&:strip)
+          values = CSV.parse(value).first.collect { |col| JSON.parse("[#{col.to_s.strip}]").first }
+          could_be_singleton && (values.size == 1) ? values.first : values
         rescue Exception => exc
-          @dirmon_entry.errors.add(:properties, e.message)
-          @dirmon_entry.errors.add(:properties, exc.message)
+          @dirmon_entry.errors.add(attribute, e.message)
+          @dirmon_entry.errors.add(attribute, exc.message)
+          value
         end
       end
     end

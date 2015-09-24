@@ -1,11 +1,12 @@
 .arguments
   .job_arguments.form-group
     - count = @dirmon_entry.job_class.argument_count(@dirmon_entry.perform_method)
-    - @dirmon_entry.arguments.each_with_index do |argument, counter|
+    - count.times do |counter|
+      - argument = @dirmon_entry.arguments[counter]
       = f.label "Argument #{counter + 1}:"
       = f.text_field :arguments,
         value: argument.is_a?(Hash) || argument.is_a?(Array) ? argument.to_json : argument,
-        name: 'arguments[]',
+        name: 'rocket_job_dirmon_entry[arguments][]',
         rows: 10,
         placeholder: '{"argument1":"value1", "argument2":"value2", "argument3":"value3"}',
         class: 'form-control'

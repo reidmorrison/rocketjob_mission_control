@@ -8,4 +8,3 @@ gem 'rocketjob', git: 'https://github.com/rocketjob/rocketjob.git'
 gem 'rspec-rails'
 gem 'rubyzip'
 gem 'awesome_print'
-

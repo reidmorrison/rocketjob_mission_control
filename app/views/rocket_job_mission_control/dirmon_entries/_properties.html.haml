@@ -22,7 +22,8 @@
         - when 'Integer'
           = properties.number_field property_name, value: @dirmon_entry.properties[property_name], class: 'form-control', placeholder: placeholder
         - when 'Array'
-          = properties.text_field property_name, value: @dirmon_entry.properties[property_name], class: 'form-control', placeholder: placeholder
+          - options = Array(@dirmon_entry.properties[property_name])
+          = properties.select property_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true}
         - when 'Boolean'
           - name = "#{property_name}_true".to_sym
           .radio-buttons

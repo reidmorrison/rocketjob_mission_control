@@ -97,21 +97,17 @@ module RocketJobMissionControl
     end
 
     def parse_and_assign_properties
-      properties = params[:rocket_job_dirmon_entry][:properties]
-      return if properties.blank?
+      properties = params[:rocket_job_dirmon_entry].fetch(:properties, {})
       properties.each_pair do |property, value|
         if key = @dirmon_entry.job_class.keys[property]
-          case key.type.name
-          when 'Array'
-            if value = parse_array_element(value, :properties)
-              @dirmon_entry.properties[property] = value.kind_of?(Array) ? value : [value]
-            end
-          when 'Hash'
+          if key.type == Hash
             begin
               @dirmon_entry.properties[property] = JSON.parse(value)
             rescue JSON::ParserError => e
               @dirmon_entry.errors.add(:properties, e.message)
             end
+          else
+            @dirmon_entry.properties[property] = value
           end
         end
       end

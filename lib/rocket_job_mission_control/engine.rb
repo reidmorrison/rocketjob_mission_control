@@ -11,5 +11,6 @@ module RocketJobMissionControl
     require 'bootstrap-sass'
     require 'sass-rails'
     require 'coffee-rails'
+    require 'selectize-rails'
   end
 end

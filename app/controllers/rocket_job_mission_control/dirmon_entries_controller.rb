@@ -1,3 +1,4 @@
+require 'csv'
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     before_filter :find_entry_or_redirect, except: [:index, :new, :create]
@@ -11,13 +12,21 @@ module RocketJobMissionControl
     end
 
     def new
-      @dirmon_entry = RocketJob::DirmonEntry.new(arguments: nil)
+      job_class_name            = params[:job_class_name]
+      perform_method            = params[:perform_method] || :perform
+      @dirmon_entry             = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: job_class_name, perform: perform_method)
+      @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
+
+      if job_class_name && !@dirmon_entry.job_class
+        @dirmon_entry.errors.add(:job_class_name, 'Invalid Job Class')
+      end
     end
 
     def create
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
 
       parse_and_assign_arguments
+      parse_and_assign_properties
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :create])
@@ -39,8 +48,10 @@ module RocketJobMissionControl
     end
 
     def update
+      @dirmon_entry.attributes = dirmon_params
       parse_and_assign_arguments
-      if @dirmon_entry.errors.empty? && @dirmon_entry.update_attributes(dirmon_params)
+      parse_and_assign_properties
+      if @dirmon_entry.errors.empty? && @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
@@ -55,7 +66,7 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :enable])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert]  = t(:failure, scope: [:dirmon_entry, :enable])
+        flash[:alert] = t(:failure, scope: [:dirmon_entry, :enable])
         load_entries
         render(:show)
       end
@@ -67,22 +78,60 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :disable])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert]  = t(:failure, scope: [:dirmon_entry, :disable])
+        flash[:alert] = t(:failure, scope: [:dirmon_entry, :disable])
         load_entries
         render(:show)
       end
     end
 
+    def properties
+      @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
+      render json: @dirmon_entry
+    end
+
     private
 
     def parse_and_assign_arguments
-      arguments = params[:rocket_job_dirmon_entry][:arguments]
-      arguments = arguments.blank? ? '[]' : arguments
+      arguments               = params[:rocket_job_dirmon_entry][:arguments] || []
+      @dirmon_entry.arguments = arguments.collect do |value|
+        cleansed = parse_array_element(value, :arguments, true)
+        @dirmon_entry.errors.add(:arguments, 'All arguments are mandatory') unless cleansed
+        cleansed
+      end
+    end
+
+    def parse_and_assign_properties
+      properties = params[:rocket_job_dirmon_entry].fetch(:properties, {})
+      properties.each_pair do |property, value|
+        if key = @dirmon_entry.job_class.keys[property]
+          if key.type == Hash
+            begin
+              @dirmon_entry.properties[property] = JSON.parse(value)
+            rescue JSON::ParserError => e
+              @dirmon_entry.errors.add(:properties, e.message)
+            end
+          else
+            @dirmon_entry.properties[property] = value
+          end
+        end
+      end
+    end
+
+    # Returns [Array<String>] an array from the supplied string
+    # String can also be in JSON format
+    def parse_array_element(value, attribute, could_be_singleton = false)
+      return if value.blank?
       begin
-        arguments               = JSON.parse(arguments)
-        @dirmon_entry.arguments = arguments.kind_of?(Array) ? arguments : [arguments]
+        JSON.parse(value)
       rescue JSON::ParserError => e
-        @dirmon_entry.errors.add(:arguments, e.message)
+        begin
+          values = CSV.parse(value).first.collect { |col| JSON.parse("[#{col.to_s.strip}]").first }
+          could_be_singleton && (values.size == 1) ? values.first : values
+        rescue Exception => exc
+          @dirmon_entry.errors.add(attribute, e.message)
+          @dirmon_entry.errors.add(attribute, exc.message)
+          value
+        end
       end
     end
 

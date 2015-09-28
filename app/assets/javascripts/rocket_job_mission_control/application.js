@@ -15,4 +15,5 @@
 //= require jquery.bootstrap-touchspin
 //= require bootstrap-sprockets
 //= require prism
+//= require selectize
 //= require_tree .

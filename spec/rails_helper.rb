@@ -1,7 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
-require 'spec_helper'
-require File.expand_path('../../spec/dummy/config/environment.rb', __FILE__)
+require_relative 'spec_helper'
+require_relative 'dummy/config/environment'
 
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!

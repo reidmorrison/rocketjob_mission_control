@@ -88,7 +88,11 @@ module RocketJobMissionControl
     end
 
     def error_occurred(exception)
-      logger.error 'Error loading a job', exception
+      if defined?(SemanticLogger::Logger) && logger.is_a?(SemanticLogger::Logger)
+        logger.error 'Error loading a job', exception
+      else
+        logger.error "Error loading a job. #{log.exception.class}: #{log.exception.message}\n#{(log.exception.backtrace || []).join("\n")}"
+      end
       flash[:danger] = 'Error loading jobs.'
       raise exception if Rails.env.development?
       redirect_to :back

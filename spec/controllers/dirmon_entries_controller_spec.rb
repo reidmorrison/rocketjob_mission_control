@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../rails_helper'
 
 class FakeButGoodJob < RocketJob::Job
 
@@ -29,11 +29,11 @@ module RocketJobMissionControl
 
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
-          name:      'Test',
-          job_class_name:  'FakeButGoodJob',
-          pattern:      'the_path',
-          arguments: [ 42 ].to_json,
-          state: starting_state,
+          name:           'Test',
+          job_class_name: 'FakeButGoodJob',
+          pattern:        'the_path',
+          arguments:      ['42'],
+          state:          starting_state,
         )
       end
 
@@ -61,11 +61,11 @@ module RocketJobMissionControl
     describe 'PATCH #disable' do
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
-          name:      'Test',
-          job_class_name:  'FakeButGoodJob',
-          pattern:      'the_path',
-          arguments: [ 42 ].to_json,
-          state: starting_state,
+          name:           'Test',
+          job_class_name: 'FakeButGoodJob',
+          pattern:        'the_path',
+          arguments:      ['42'],
+          state:          starting_state,
         )
       end
 
@@ -78,7 +78,7 @@ module RocketJobMissionControl
 
         it { expect(response).to redirect_to(dirmon_entry_path(existing_dirmon.id)) }
 
-        it "changes the state to disabled" do
+        it 'changes the state to disabled' do
           expect(existing_dirmon.reload.state).to eq(:disabled)
         end
       end
@@ -95,8 +95,10 @@ module RocketJobMissionControl
     end
 
     describe 'GET #new' do
+      let(:entry_params) { {} }
+
       before do
-        get :new
+        get :new, entry_params
       end
 
       it { expect(response.status).to eq(200) }
@@ -105,15 +107,37 @@ module RocketJobMissionControl
         expect(assigns(:dirmon_entry)).to be_present
         expect(assigns(:dirmon_entry)).to_not be_persisted
       end
+
+      context 'with a valid job_class_name' do
+        let(:entry_params) { { job_class_name: 'FakeButGoodJob' } }
+
+        it { expect(response.status).to eq(200) }
+
+        it 'assigns the job class' do
+          expect(assigns(:dirmon_entry)).to be_present
+          expect(assigns(:dirmon_entry).job_class).to eq(FakeButGoodJob)
+        end
+      end
+
+      context 'with an invalid job_class_name' do
+        let(:entry_params) { { job_class_name: 'BadJob' } }
+
+        it { expect(response.status).to eq(200) }
+
+        it 'adds an error' do
+          expect(assigns(:dirmon_entry)).to be_present
+          expect(assigns(:dirmon_entry).errors[:job_class_name]).to be_present
+        end
+      end
     end
 
     describe 'PATCH #update' do
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
-          name:      'Test',
-          job_class_name:  'FakeButGoodJob',
-          pattern:      'the_path',
-          arguments: [ 42 ].to_json
+          name:           'Test',
+          job_class_name: 'FakeButGoodJob',
+          pattern:        'the_path',
+          arguments:      ['{"argument1":"value1", "argument2":"value2", "argument3":"value3"}']
         )
       end
 
@@ -124,9 +148,9 @@ module RocketJobMissionControl
       context 'with valid parameters' do
         let(:dirmon_params) do
           {
-            pattern: 'the_path2',
-            job_class_name:  'FakeButGoodJob',
-            arguments: [ 42 ].to_json
+            pattern:        'the_path2',
+            job_class_name: 'FakeButGoodJob',
+            arguments:      ['42']
           }
         end
 
@@ -166,9 +190,9 @@ module RocketJobMissionControl
         context 'with invalid arguments json' do
           let(:dirmon_params) do
             {
-              name: 'Test',
+              name:           'Test',
               job_class_name: 'FakeButGoodJob',
-              arguments: "['42']",
+              arguments:      [],
             }
           end
 
@@ -192,17 +216,18 @@ module RocketJobMissionControl
       context 'with valid parameters' do
 
         {
-          perform: { argument: [42].to_json, expected_value: [42] },
-          perform_with_no_params: { argument: '', expected_value: [] },
+          perform:                {argument: ['42'], expected_value: [42]},
+          perform:                {argument: ['{"argument1":"value1", "argument2":"value2", "argument3":"value3"}'], expected_value: [{"argument1" => "value1", "argument2" => "value2", "argument3" => "value3"}]},
+          perform_with_no_params: {argument: [], expected_value: []},
         }.each_pair do |perform_method, arguments|
           context "and arguments are '#{arguments}'" do
             let(:dirmon_params) do
               {
-                name: 'Test',
-                pattern: '/files/',
+                name:           'Test',
+                pattern:        '/files/*',
                 job_class_name: 'FakeButGoodJob',
-                arguments: arguments[:argument],
-                properties: { description: '', priority: 42 },
+                arguments:      arguments[:argument],
+                properties:     {description: '', priority: 42},
                 perform_method: perform_method,
               }
             end
@@ -251,9 +276,9 @@ module RocketJobMissionControl
       context 'with invalid parameters' do
         let(:dirmon_params) do
           {
-            name: 'Test',
+            name:           'Test',
             job_class_name: 'FakeAndBadJob',
-            arguments: [ 42 ].to_json,
+            arguments:      [[42].to_json],
           }
         end
 
@@ -279,9 +304,9 @@ module RocketJobMissionControl
         context 'with invalid arguments json' do
           let(:dirmon_params) do
             {
-              name: 'Test',
+              name:           'Test',
               job_class_name: 'FakeButGoodJob',
-              arguments: "['42']",
+              arguments:      ['{"bad" "json"}'],
             }
           end
 
@@ -304,10 +329,10 @@ module RocketJobMissionControl
     describe 'GET #edit' do
       before do
         @entry = RocketJob::DirmonEntry.create(
-            name: 'Test',
-            pattern: '/files/',
-            job_class_name: 'FakeButGoodJob',
-            arguments: [ 42 ]
+          name:           'Test',
+          pattern:        '/files/',
+          job_class_name: 'FakeButGoodJob',
+          arguments:      [42]
         )
         get :edit, id: @entry.id
       end
@@ -321,40 +346,40 @@ module RocketJobMissionControl
     end
 
     describe 'GET #show' do
-      describe "with an invalid id" do
+      describe 'with an invalid id' do
         before do
           allow(RocketJob::DirmonEntry).to receive(:find).and_return(nil)
           get :show, id: 42
         end
 
-        it "redirects" do
+        it 'redirects' do
           expect(response).to redirect_to(dirmon_entries_path)
         end
 
-        it "adds a flash alert message" do
+        it 'adds a flash alert message' do
           expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:dirmon_entry, :find], id: 42))
         end
       end
 
-      describe "with a valid id" do
+      describe 'with a valid id' do
         before do
           allow(RocketJob::DirmonEntry).to receive(:find).and_return('entry')
           get :show, id: 42
         end
 
-        it "succeeds" do
+        it 'succeeds' do
           expect(response.status).to be(200)
         end
 
-        it "assigns the entry" do
+        it 'assigns the entry' do
           expect(assigns(:dirmon_entry)).to be_present
         end
 
-        it "assigns the entries" do
+        it 'assigns the entries' do
           expect(assigns(:dirmons)).to eq([])
         end
 
-        it "grabs a sorted list" do
+        it 'grabs a sorted list' do
           expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
         end
       end
@@ -363,10 +388,10 @@ module RocketJobMissionControl
     describe 'DELETE #destroy' do
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
-          name:      'Test',
-          job_class_name:  'FakeButGoodJob',
-          pattern:   'the_path',
-          arguments: [ 42 ].to_json
+          name:           'Test',
+          job_class_name: 'FakeButGoodJob',
+          pattern:        'the_path',
+          arguments:      [42].to_json
         )
       end
 
@@ -388,73 +413,73 @@ module RocketJobMissionControl
     end
 
     describe 'GET #index' do
-      describe "with no entries" do
+      describe 'with no entries' do
         before do
           get :index
         end
 
-        it "succeeds" do
+        it 'succeeds' do
           expect(response.status).to be(200)
         end
 
-        it "grabs a sorted list of entries" do
+        it 'grabs a sorted list of entries' do
           expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
         end
 
-        it "returns no entries" do
+        it 'returns no entries' do
           expect(assigns(:dirmons)).to eq([])
         end
       end
 
-      describe "with jobs" do
+      describe 'with jobs' do
         let(:dirmon_list) { spy(sort: dirmons) }
         let(:dirmons) { ['fake_dirmon1', 'fake_dirmon2'] }
 
-        describe "with no parameters" do
+        describe 'with no parameters' do
           before { get :index }
 
-          it "succeeds" do
+          it 'succeeds' do
             expect(response.status).to be(200)
           end
 
-          it "grabs a sorted list of entries" do
+          it 'grabs a sorted list of entries' do
             expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
           end
 
-          it "returns the entries" do
+          it 'returns the entries' do
             expect(assigns(:dirmons)).to match_array(dirmons)
           end
         end
 
-        describe "with a state filter" do
-          before { get :index, states: states}
+        describe 'with a state filter' do
+          before { get :index, states: states }
 
-          context "that is empty" do
+          context 'that is empty' do
             let(:states) { [] }
 
             it { expect(response.status).to be(200) }
 
-            it "grabs a sorted list" do
+            it 'grabs a sorted list' do
               expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
             end
 
-            it "returns the entries" do
+            it 'returns the entries' do
               expect(assigns(:dirmons)).to match_array(dirmons)
             end
           end
 
-          context "with a state" do
+          context 'with a state' do
             let(:query_spy) { spy(where: dirmons) }
             let(:dirmon_list) { spy(sort: query_spy) }
             let(:states) { ['enabled'] }
 
             it { expect(response.status).to be(200) }
 
-            it "grabs a filtered list" do
+            it 'grabs a filtered list' do
               expect(query_spy).to have_received(:where).with(state: ['enabled'])
             end
 
-            it "returns the entries" do
+            it 'returns the entries' do
               expect(assigns(:dirmons)).to match_array(dirmons)
             end
           end

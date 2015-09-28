@@ -95,8 +95,10 @@ module RocketJobMissionControl
     end
 
     describe 'GET #new' do
+      let(:entry_params) { {} }
+
       before do
-        get :new
+        get :new, entry_params
       end
 
       it { expect(response.status).to eq(200) }
@@ -104,6 +106,28 @@ module RocketJobMissionControl
       it 'assigns a new entry' do
         expect(assigns(:dirmon_entry)).to be_present
         expect(assigns(:dirmon_entry)).to_not be_persisted
+      end
+
+      context 'with a valid job_class_name' do
+        let(:entry_params) { { job_class_name: 'FakeButGoodJob' } }
+
+        it { expect(response.status).to eq(200) }
+
+        it 'assigns the job class' do
+          expect(assigns(:dirmon_entry)).to be_present
+          expect(assigns(:dirmon_entry).job_class).to eq(FakeButGoodJob)
+        end
+      end
+
+      context 'with an invalid job_class_name' do
+        let(:entry_params) { { job_class_name: 'BadJob' } }
+
+        it { expect(response.status).to eq(200) }
+
+        it 'adds an error' do
+          expect(assigns(:dirmon_entry)).to be_present
+          expect(assigns(:dirmon_entry).errors[:job_class_name]).to be_present
+        end
       end
     end
 

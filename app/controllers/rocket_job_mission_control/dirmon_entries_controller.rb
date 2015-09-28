@@ -16,6 +16,10 @@ module RocketJobMissionControl
       perform_method            = params[:perform_method] || :perform
       @dirmon_entry             = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: job_class_name, perform: perform_method)
       @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
+
+      if job_class_name && !@dirmon_entry.job_class
+        @dirmon_entry.errors.add(:job_class_name, 'Invalid Job Class')
+      end
     end
 
     def create

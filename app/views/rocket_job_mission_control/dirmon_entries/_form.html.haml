@@ -1,7 +1,7 @@
 - action ||= :create
 - if @dirmon_entry.errors.present?
   .alert.alert-alert
-    Error saving entry!
+    Invalid Dirmon entry!
     - @dirmon_entry.errors.messages.each_pair do |field, message|
       .message
         = "#{field}: #{message}"
@@ -14,10 +14,10 @@
     = f.text_field :pattern, class: 'form-control'
   .job.form-group
     = f.label :job_class_name
-    = f.text_field :job_class_name, class: 'form-control'
+    = f.text_field :job_class_name, class: 'form-control', disabled: action != :create
   .job.form-group
     = f.label :perform_method
-    = f.text_field :perform_method, class: 'form-control'
+    = f.text_field :perform_method, class: 'form-control', disabled: action != :create
   .path.form-group
     = f.label :archive_directory
     = f.text_field :archive_directory, class: 'form-control'
@@ -28,8 +28,9 @@
   .buttons
     = f.submit action, class: 'btn btn-primary'
     = link_to 'cancel', :back, class: 'btn btn-default'
-    = button_tag 'properties',
-        type: 'button',
-        class: 'btn btn-default',
-        id: 'properties',
-        data: { url: rocket_job_mission_control.new_dirmon_entry_path }
+    - if action == :create
+      = button_tag 'properties',
+          type: 'button',
+          class: 'btn btn-default',
+          id: 'properties',
+          data: { url: rocket_job_mission_control.new_dirmon_entry_path }

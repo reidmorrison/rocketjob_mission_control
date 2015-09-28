@@ -22,11 +22,14 @@
     = f.label :archive_directory
     = f.text_field :archive_directory, class: 'form-control'
   .row
-    .col-md-12#properties{ style: 'display:none;' }
+    .col-md-12
       = render partial: 'properties', locals: { f: f }
 
   .buttons
     = f.submit action, class: 'btn btn-primary'
     = link_to 'cancel', :back, class: 'btn btn-default'
-    = button_tag 'properties',type: 'button', class: 'btn btn-default', id: 'expand'
-    = button_tag 'collapse',type: 'button', class: 'btn btn-default', id: 'collapse', style: 'display:none;'
+    = button_tag 'properties',
+        type: 'button',
+        class: 'btn btn-default',
+        id: 'properties',
+        data: { url: rocket_job_mission_control.new_dirmon_entry_path }

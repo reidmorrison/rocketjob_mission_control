@@ -12,9 +12,9 @@ module RocketJobMissionControl
     end
 
     def new
-      # TODO: Load properties dynamically based on job_class_name and perform_method
-      name                      = defined?(DirectMarketingJob) ? 'DirectMarketingJob' : 'DirmonJob'
-      @dirmon_entry             = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: 'DirectMarketingJob', perform: :perform)
+      job_class_name            = params[:job_class_name]
+      perform_method            = params[:perform_method] || :perform
+      @dirmon_entry             = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: job_class_name, perform: perform_method)
       @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
     end
 

@@ -24,7 +24,6 @@ PATH
       rails (~> 4.0)
       rocketjob (~> 1.1)
       sass-rails (>= 3.2)
-      selectize-rails
 
 GEM
   remote: https://rubygems.org/
@@ -177,7 +176,6 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    selectize-rails (0.12.1)
     semantic_logger (2.15.0)
       sync_attr (~> 2.0)
       thread_safe (~> 0.1)

@@ -108,27 +108,39 @@ module RocketJobMissionControl
         expect(assigns(:dirmon_entry)).to_not be_persisted
       end
 
-      context 'with a valid job_class_name' do
-        let(:entry_params) { { job_class_name: 'FakeButGoodJob' } }
+      context 'with form params' do
+        let(:entry_params) { { rocket_job_dirmon_entry: { name: 'new entry' } } }
 
         it { expect(response.status).to eq(200) }
 
-        it 'assigns the job class' do
+        it 'assigns the params to new entry' do
           expect(assigns(:dirmon_entry)).to be_present
-          expect(assigns(:dirmon_entry).job_class).to eq(FakeButGoodJob)
+          expect(assigns(:dirmon_entry).name).to eq('new entry')
+        end
+
+        context 'with a valid job_class_name' do
+          let(:entry_params) { { rocket_job_dirmon_entry: { job_class_name: 'FakeButGoodJob' } } }
+
+          it { expect(response.status).to eq(200) }
+
+          it 'assigns the job class' do
+            expect(assigns(:dirmon_entry)).to be_present
+            expect(assigns(:dirmon_entry).job_class).to eq(FakeButGoodJob)
+          end
+        end
+
+        context 'with an invalid job_class_name' do
+          let(:entry_params) { { rocket_job_dirmon_entry: { job_class_name: 'BadJob' } } }
+
+          it { expect(response.status).to eq(200) }
+
+          it 'adds an error' do
+            expect(assigns(:dirmon_entry)).to be_present
+            expect(assigns(:dirmon_entry).errors[:job_class_name]).to be_present
+          end
         end
       end
 
-      context 'with an invalid job_class_name' do
-        let(:entry_params) { { job_class_name: 'BadJob' } }
-
-        it { expect(response.status).to eq(200) }
-
-        it 'adds an error' do
-          expect(assigns(:dirmon_entry)).to be_present
-          expect(assigns(:dirmon_entry).errors[:job_class_name]).to be_present
-        end
-      end
     end
 
     describe 'PATCH #update' do

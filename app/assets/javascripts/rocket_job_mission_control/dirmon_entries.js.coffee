@@ -8,8 +8,7 @@ $(document).on 'ready', ->
 
   if $('#properties').length
     $('#properties').on 'click', ->
-      job_class_name  = $('#rocket_job_dirmon_entry_job_class_name').val()
-      perform_method  = $('#rocket_job_dirmon_entry_perform_method').val()
-      new_dirmon_path = $('#properties').data('url') + "?job_class_name=#{job_class_name}&perform_method=#{perform_method}"
+      params = $('#new_rocket_job_dirmon_entry').serialize()
+      new_dirmon_path = $('#properties').data('url') + "?#{params}"
       window.location = new_dirmon_path
 

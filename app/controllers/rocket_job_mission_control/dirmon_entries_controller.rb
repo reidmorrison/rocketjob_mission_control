@@ -12,12 +12,11 @@ module RocketJobMissionControl
     end
 
     def new
-      job_class_name            = params[:job_class_name]
-      perform_method            = params[:perform_method] || :perform
-      @dirmon_entry             = RocketJob::DirmonEntry.new(arguments: nil, job_class_name: job_class_name, perform: perform_method)
+      dirmon_params.reverse_merge!(perform_method: :perform)
+      @dirmon_entry             = RocketJob::DirmonEntry.new(dirmon_params)
       @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
 
-      if job_class_name && !@dirmon_entry.job_class
+      if dirmon_params[:job_class_name] && !@dirmon_entry.job_class
         @dirmon_entry.errors.add(:job_class_name, 'Invalid Job Class')
       end
     end
@@ -163,9 +162,9 @@ module RocketJobMissionControl
 
     def dirmon_params
       params
-        .require(:rocket_job_dirmon_entry)
+        .fetch(:rocket_job_dirmon_entry, {})
         .permit(:name, :archive_directory, :pattern, :job_class_name, :perform_method).tap do |whitelist|
-        whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params[:rocket_job_dirmon_entry][:properties]
+        whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params.fetch(:rocket_job_dirmon_entry, {})[:properties]
       end
     end
 

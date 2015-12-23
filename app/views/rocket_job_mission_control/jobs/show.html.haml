@@ -15,7 +15,7 @@
         = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
 
           .input-group.priority-group
-            = f.text_field(:priority, class: 'form-control')
+            = f.text_field(:priority, value: @job.priority, class: 'form-control')
 
             .input-group-btn-vertical
               %button#increase_priority.btn.btn-default.up{ type: 'button' }

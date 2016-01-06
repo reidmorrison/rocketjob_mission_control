@@ -1,7 +1,7 @@
 - if @dirmon_entry.job_class
   .arguments
     .job_arguments.form-group
-      - count = @dirmon_entry.job_class.argument_count(@dirmon_entry.perform_method)
+      - count = @dirmon_entry.job_class.rocket_job_argument_count
       - count.times do |counter|
         - argument = @dirmon_entry.arguments[counter]
         = f.label "Argument #{counter + 1}:"
@@ -13,7 +13,7 @@
           class: 'form-control'
     = f.fields_for :properties do |properties|
       - @dirmon_entry.job_class.rocket_job_properties.each do |property_name|
-        - next if [:arguments, :perform_method].include?(property_name)
+        - next if property_name == :arguments
         - key = @dirmon_entry.job_class.keys[property_name.to_s]
         - next unless key
         - placeholder = key.default? ? key.default : nil

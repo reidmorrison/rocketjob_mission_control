@@ -12,7 +12,6 @@ module RocketJobMissionControl
     end
 
     def new
-      dirmon_params.reverse_merge!(perform_method: :perform)
       @dirmon_entry             = RocketJob::DirmonEntry.new(dirmon_params)
       @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
 
@@ -163,7 +162,7 @@ module RocketJobMissionControl
     def dirmon_params
       params
         .fetch(:rocket_job_dirmon_entry, {})
-        .permit(:name, :archive_directory, :pattern, :job_class_name, :perform_method).tap do |whitelist|
+        .permit(:name, :archive_directory, :pattern, :job_class_name).tap do |whitelist|
         whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params.fetch(:rocket_job_dirmon_entry, {})[:properties]
       end
     end

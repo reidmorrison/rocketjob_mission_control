@@ -8,7 +8,7 @@
         %h4.panel-title
           %a.collapsed{href: "##{job.id}", data: {toggle: 'collapse', parent: '#accordion'} }
             %i.fa.fa-plus-square-o{ style: 'font-size: 80%;'}
-            = job_title(job)
+            = job.class.name
       .panel-collapse.collapse{ id: job.id }
         .panel-body
           .info

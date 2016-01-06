@@ -4,7 +4,7 @@
 
   .col-md-8.job-status
     #job
-      .lead= job_title(@job)
+      .lead= @job.class.name
 
       .job-state.inline-block
         .left state

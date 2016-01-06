@@ -78,23 +78,5 @@ module RocketJobMissionControl
       end
     end
 
-    describe '#job_title' do
-      let(:perform_method) { :perform }
-      let(:job) { TheJobClass.new(perform_method: perform_method, priority: 42) }
-
-      context "with a job using the 'perform' perform_method" do
-        it 'returns the correct string without the perform method' do
-          expect(helper.job_title(job)).to eq('TheJobClass')
-        end
-      end
-
-      context "with a job using a perform method that is not 'perform'" do
-        let(:perform_method) { :bendit }
-
-        it 'returns the correct string with the perform method' do
-          expect(helper.job_title(job)).to eq("TheJobClass##{perform_method}")
-        end
-      end
-    end
   end
 end

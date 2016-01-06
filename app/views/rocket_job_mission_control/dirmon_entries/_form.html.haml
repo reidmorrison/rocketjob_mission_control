@@ -15,9 +15,6 @@
   .job.form-group
     = f.label :job_class_name
     = f.text_field :job_class_name, class: 'form-control', disabled: action != :create
-  .job.form-group
-    = f.label :perform_method
-    = f.text_field :perform_method, class: 'form-control', disabled: action != :create
   .path.form-group
     = f.label :archive_directory
     = f.text_field :archive_directory, class: 'form-control'

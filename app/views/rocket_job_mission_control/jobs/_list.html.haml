@@ -23,7 +23,7 @@
               .title
                 .lead
                   %i.fa{class: job_icon(job), style: 'font-size: 75%;', title: job.state}
-                  = job_title(job)
+                  = job.class.name
 
               .description= job.description.try(:truncate, 50)
               .info

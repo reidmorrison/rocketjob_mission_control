@@ -3,7 +3,7 @@
     .job-list
       .list-top
         %ol.breadcrumb
-          %li= link_to(job_title(@job), job_path(@job))
+          %li= link_to(@job.class.name, job_path(@job))
           %li.active Failures
       .clearfix
       .list
@@ -15,7 +15,7 @@
                   = slice_error['_id']['error_class']
 
               .description
-                = "Occurences: #{slice_error['count'].to_i}"
+                = "Occurrences: #{slice_error['count'].to_i}"
 
   - if @failure_exception
     .col-md-8

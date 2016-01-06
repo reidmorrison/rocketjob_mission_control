@@ -1,15 +1,15 @@
 require_relative '../rails_helper'
 
-class FakeButGoodJob < RocketJob::Job
-
+class OneParamJob < RocketJob::Job
   def perform(id)
     id
   end
+end
 
-  def perform_with_no_params
+class NoParamsJob < RocketJob::Job
+  def perform
     100_000
   end
-
 end
 
 module RocketJobMissionControl
@@ -30,7 +30,7 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'FakeButGoodJob',
+          job_class_name: 'OneParamJob',
           pattern:        'the_path',
           arguments:      ['42'],
           state:          starting_state,
@@ -62,7 +62,7 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'FakeButGoodJob',
+          job_class_name: 'OneParamJob',
           pattern:        'the_path',
           arguments:      ['42'],
           state:          starting_state,
@@ -119,13 +119,13 @@ module RocketJobMissionControl
         end
 
         context 'with a valid job_class_name' do
-          let(:entry_params) { { rocket_job_dirmon_entry: { job_class_name: 'FakeButGoodJob' } } }
+          let(:entry_params) { { rocket_job_dirmon_entry: { job_class_name: 'OneParamJob' } } }
 
           it { expect(response.status).to eq(200) }
 
           it 'assigns the job class' do
             expect(assigns(:dirmon_entry)).to be_present
-            expect(assigns(:dirmon_entry).job_class).to eq(FakeButGoodJob)
+            expect(assigns(:dirmon_entry).job_class).to eq(OneParamJob)
           end
         end
 
@@ -147,7 +147,7 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'FakeButGoodJob',
+          job_class_name: 'OneParamJob',
           pattern:        'the_path',
           arguments:      ['{"argument1":"value1", "argument2":"value2", "argument3":"value3"}']
         )
@@ -161,7 +161,7 @@ module RocketJobMissionControl
         let(:dirmon_params) do
           {
             pattern:        'the_path2',
-            job_class_name: 'FakeButGoodJob',
+            job_class_name: 'OneParamJob',
             arguments:      ['42']
           }
         end
@@ -203,7 +203,7 @@ module RocketJobMissionControl
           let(:dirmon_params) do
             {
               name:           'Test',
-              job_class_name: 'FakeButGoodJob',
+              job_class_name: 'OneParamJob',
               arguments:      [],
             }
           end
@@ -227,20 +227,19 @@ module RocketJobMissionControl
     describe 'POST #create' do
       context 'with valid parameters' do
 
-        {
-          perform:                {argument: ['42'], expected_value: [42]},
-          perform:                {argument: ['{"argument1":"value1", "argument2":"value2", "argument3":"value3"}'], expected_value: [{"argument1" => "value1", "argument2" => "value2", "argument3" => "value3"}]},
-          perform_with_no_params: {argument: [], expected_value: []},
-        }.each_pair do |perform_method, arguments|
+        [
+          {job_class_name: 'OneParamJob', argument: ['42'], expected_value: [42]},
+          {job_class_name: 'OneParamJob', argument: ['{"argument1":"value1", "argument2":"value2", "argument3":"value3"}'], expected_value: [{"argument1" => "value1", "argument2" => "value2", "argument3" => "value3"}]},
+          {job_class_name: 'NoParamsJob', argument: [], expected_value: []}
+        ].each do |arguments|
           context "and arguments are '#{arguments}'" do
             let(:dirmon_params) do
               {
                 name:           'Test',
                 pattern:        '/files/*',
-                job_class_name: 'FakeButGoodJob',
+                job_class_name: arguments[:job_class_name],
                 arguments:      arguments[:argument],
                 properties:     {description: '', priority: 42},
-                perform_method: perform_method,
               }
             end
 
@@ -317,7 +316,7 @@ module RocketJobMissionControl
           let(:dirmon_params) do
             {
               name:           'Test',
-              job_class_name: 'FakeButGoodJob',
+              job_class_name: 'OneParamJob',
               arguments:      ['{"bad" "json"}'],
             }
           end
@@ -343,7 +342,7 @@ module RocketJobMissionControl
         @entry = RocketJob::DirmonEntry.create(
           name:           'Test',
           pattern:        '/files/',
-          job_class_name: 'FakeButGoodJob',
+          job_class_name: 'OneParamJob',
           arguments:      [42]
         )
         get :edit, id: @entry.id
@@ -401,7 +400,7 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'FakeButGoodJob',
+          job_class_name: 'OneParamJob',
           pattern:        'the_path',
           arguments:      [42].to_json
         )

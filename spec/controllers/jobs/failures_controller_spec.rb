@@ -10,10 +10,10 @@ module RocketJobMissionControl
         let(:slice_errors) do
           [
             {
-              '_id' =>
-              {
-                'error_class' => 'BoomError',
-              },
+              '_id'     =>
+                {
+                  'error_class' => 'BoomError',
+                },
               'message' => ['boom'],
               'count'   => '1337',
             },

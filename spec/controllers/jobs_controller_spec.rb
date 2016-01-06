@@ -179,7 +179,7 @@ module RocketJobMissionControl
         end
 
         describe "with a state filter" do
-          before { get :index, states: states}
+          before { get :index, states: states }
 
           context "that is empty" do
             let(:states) { [] }

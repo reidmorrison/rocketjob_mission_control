@@ -13,13 +13,13 @@ class JobFailures
     @slice_errors ||= job.input.collection.aggregate(
       [
         {
-          '$match' => { state: 'failed' }
+          '$match' => {state: 'failed'}
         },
         {
           '$group' => {
-            _id:      { error_class: '$exception.class_name' },
-            messages: { '$addToSet' => '$exception.message' },
-            count:    { '$sum' => 1 }
+            _id:      {error_class: '$exception.class_name'},
+            messages: {'$addToSet' => '$exception.message'},
+            count:    {'$sum' => 1}
           },
         }
       ]
@@ -27,7 +27,7 @@ class JobFailures
   end
 
   def for_error(error_type, page_offset=0)
-    query  = { 'state' => 'failed', 'exception.class_name' => error_type }
+    query = {'state' => 'failed', 'exception.class_name' => error_type}
     @job.input.collection.find(query).limit(1).skip(page_offset)
   end
 end

@@ -29,7 +29,7 @@ module RocketJobMissionControl
         end
 
         context 'that does not contain a time zone' do
-          let(:session_params) { { 'user_id' => '42' } }
+          let(:session_params) { {'user_id' => '42'} }
 
           it 'sets the time zone correctly' do
             expect(assigns(:time_zone).name).to eq(expected_time_zone)

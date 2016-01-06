@@ -19,7 +19,7 @@ module RocketJobMissionControl
         RocketJob::Worker.send(worker_action.to_sym)
         flash[:notice] = t(:success, scope: [:worker, :update_all], worker_action: VALID_STATES[worker_action])
       else
-        flash[:alert]  = t(:invalid, scope: [:worker, :update_all])
+        flash[:alert] = t(:invalid, scope: [:worker, :update_all])
       end
 
       respond_to do |format|
@@ -31,7 +31,7 @@ module RocketJobMissionControl
       if @worker.stop!
         flash[:notice] = t(:success, scope: [:worker, :stop])
       else
-        flash[:alert]  = t(:failure, scope: [:worker, :stop])
+        flash[:alert] = t(:failure, scope: [:worker, :stop])
       end
 
       respond_to do |format|
@@ -43,7 +43,7 @@ module RocketJobMissionControl
       if @worker.destroy
         flash[:notice] = t(:success, scope: [:worker, :destroy])
       else
-        flash[:alert]  = t(:failure, scope: [:worker, :destroy])
+        flash[:alert] = t(:failure, scope: [:worker, :destroy])
       end
 
       respond_to do |format|
@@ -55,7 +55,7 @@ module RocketJobMissionControl
       if @worker.pause!
         flash[:notice] = t(:success, scope: [:worker, :pause])
       else
-        flash[:alert]  = t(:failure, scope: [:worker, :pause])
+        flash[:alert] = t(:failure, scope: [:worker, :pause])
       end
 
       respond_to do |format|
@@ -67,7 +67,7 @@ module RocketJobMissionControl
       if @worker.resume!
         flash[:notice] = t(:success, scope: [:worker, :resume])
       else
-        flash[:alert]  = t(:failure, scope: [:worker, :resume])
+        flash[:alert] = t(:failure, scope: [:worker, :resume])
       end
 
       respond_to do |format|

@@ -33,8 +33,8 @@ module RocketJobMissionControl
         action,
         path,
         method: http_method,
-        class: 'btn btn-default',
-        data: { confirm: t(:confirm, scope: [:job, :action], action: action)}
+        class:  'btn btn-default',
+        data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
       )
     end
 

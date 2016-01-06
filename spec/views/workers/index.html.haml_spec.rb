@@ -8,8 +8,8 @@ module RocketJobMissionControl
     before do
       assign(:workers, [
         FakeWorker.new(
-          name: 'Worker42',
-          heartbeat: spy(current_threads: 42, updated_at: 1.second.ago),
+          name:       'Worker42',
+          heartbeat:  spy(current_threads: 42, updated_at: 1.second.ago),
           started_at: 1.minute.ago,
         ),
       ])

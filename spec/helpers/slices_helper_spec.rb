@@ -7,7 +7,7 @@ module RocketJobMissionControl
     end
 
     describe '#display_slice_info' do
-      let(:slice) { { id: 42, name: 'test' } }
+      let(:slice) { {id: 42, name: 'test'} }
 
       context "when encrypted" do
         it { expect(helper.display_slice_info(slice, true)).to eq('encrypted') }

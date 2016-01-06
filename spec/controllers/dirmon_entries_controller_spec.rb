@@ -109,7 +109,7 @@ module RocketJobMissionControl
       end
 
       context 'with form params' do
-        let(:entry_params) { { rocket_job_dirmon_entry: { name: 'new entry' } } }
+        let(:entry_params) { {rocket_job_dirmon_entry: {name: 'new entry'}} }
 
         it { expect(response.status).to eq(200) }
 
@@ -119,7 +119,7 @@ module RocketJobMissionControl
         end
 
         context 'with a valid job_class_name' do
-          let(:entry_params) { { rocket_job_dirmon_entry: { job_class_name: 'OneParamJob' } } }
+          let(:entry_params) { {rocket_job_dirmon_entry: {job_class_name: 'OneParamJob'}} }
 
           it { expect(response.status).to eq(200) }
 
@@ -130,7 +130,7 @@ module RocketJobMissionControl
         end
 
         context 'with an invalid job_class_name' do
-          let(:entry_params) { { rocket_job_dirmon_entry: { job_class_name: 'BadJob' } } }
+          let(:entry_params) { {rocket_job_dirmon_entry: {job_class_name: 'BadJob'}} }
 
           it { expect(response.status).to eq(200) }
 

@@ -10,451 +10,313 @@
   padding-top:20px;
 }
 
-body.rocket_job {
-  padding: 0;
+#queue { height: 100%; }
 
-  #queue { height: 100%; }
+.job-list {
+  height: 100%;
+  min-height: 768px;
+}
 
-  .job-list {
-    height: 100%;
-    min-height: 768px;
-    border-right: 1px solid #ddd;
+.job-status {
+  .lead {
+    color: #50555b;
+    float: left;
+    margin-top: 1em;
+    vertical-align: middle;
   }
 
-  .job-status {
-    padding: 0 3em;
-    height: 100%;
-    background-color: #fff;
-    overflow: scroll;
-    padding-bottom: 100px;
-
-    .lead {
-      color: #50555b;
-      float: left;
-      margin-top: 1em;
-      vertical-align: middle;
-    }
-
-    p {
-      font-size: 14px;
-      color: #666;
-    }
-
-    .welcome_screen {
-      text-align: center;
-      margin-top: 2%;
-
-      h1 { margin-bottom: 10px; }
-      p { font-size: 16px; }
-    }
-
-    .job-actions {
-      float: left;
-      margin-top: 23px;
-      margin-left: 20px;
-
-      .btn { padding: 2px 6px; }
-    }
-
-    .pagination-buttons {
-      float: left;
-      margin-top: 23px;
-      margin-left: 20px;
-    }
-
-    .job-state {
-      margin-left: 20px;
-      padding: 0;
-      font-size: 12px;
-      margin-top: 25px;
-      vertical-align: middle;
-      float: left;
-
-      .left {
-        float: left;
-        text-shadow: 0 2px 3px #000;
-        background-color: #404650;
-        color: #fff;
-        padding: 2px 6px;
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-      }
-
-      .right {
-        float: left;
-        color: #fff;
-        padding: 2px 6px;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-      }
-
-      .queued, .pending { background-color: darkgrey; }
-      .running { background-color: #337ab7; }
-      .completed, .enabled { background-color: green; }
-      .paused, .disabled { background-color: orange; }
-      .failed { background-color: red; }
-      .aborted { background-color: darkorange; }
-    }
-
-    .priority {
-      display: inline-block;
-      vertical-align: middle;
-      float: right;
-      margin-top: 20px;
-
-      .form-control {
-        width: 47px;
-        height: 34px;
-      }
-    }
-
-    .priority-set {
-      float: right;
-      padding: 7px 14px;
-      font-weight: bold;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
+  p {
+    font-size: 14px;
+    color: #666;
   }
 
-  /* Header Styles */
+  .welcome_screen {
+    text-align: center;
+    margin-top: 2%;
 
-  #header {
-    padding: 5px;
-    background-color: dimgrey;//#526A95;
-    border-bottom: 1px solid #ddd;
-
-    .first { left: 15px; }
-    .last { right: 15px; }
-
-    .btn {
-      color: #fff;
-      position: absolute;
-      z-index: 2;
-    }
-
-    .brand {
-      font-size: 23px;
-      text-align: center;
-
-      a {
-        display: inline-block;
-        color: orange;
-        font-weight: bold;
-
-      }
-
-      a:hover, a:active {
-        text-decoration: none;
-      }
-
-
-      span {
-        display: inline-block;
-        position: relative;
-        left: -3px;
-        color: orangered;
-        font-weight: bold;
-      }
-    }
+    h1 { margin-bottom: 10px; }
+    p { font-size: 16px; }
   }
 
-  /* Toggle Styles */
+  .job-actions {
+    float: left;
+    margin-top: 23px;
+    margin-left: 20px;
 
-  #wrapper {
-    padding-left: 0;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    .btn { padding: 2px 6px; }
   }
 
-  #wrapper.toggled { padding-left: 250px; }
-
-  #sidebar-wrapper {
-    z-index: 1000;
-    position: fixed;
-    left: 215px;
-    width: 0;
-    height: 100%;
-    margin-left: -215px;
-    overflow-y: auto;
-    background: #4D628A;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-    border-right: 1px solid #fff;
-
-    .active {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
+  .pagination-buttons {
+    float: left;
+    margin-top: 23px;
+    margin-left: 20px;
   }
 
-  #wrapper.toggled #sidebar-wrapper {
-    width: 250px;
-    border: 0;
-  }
-
-  #page-content-wrapper {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    overflow: auto;
-  }
-
-  #wrapper.toggled #page-content-wrapper {
-    position: absolute;
-    margin-right: -215px;
-  }
-
-  /* Sidebar Styles */
-
-  .sidebar-nav {
-    position: absolute;
-    top: 0;
-    width: 215px;
-    margin: 0;
+  .job-state {
+    margin-left: 20px;
     padding: 0;
-    list-style: none;
+    font-size: 12px;
+    margin-top: 25px;
+    vertical-align: middle;
+    float: left;
 
-    li {
-      text-indent: 20px;
-      line-height: 40px;
-
-      a {
-        display: block;
-        text-decoration: none;
-        color: #C3D3E3;
-
-        &:hover {
-          text-decoration: none;
-          color: #fff;
-          background: rgba(255,255,255,0.2);
-        }
-
-        &:active, &:focus { text-decoration: none; }
-      }
+    .left {
+      float: left;
+      text-shadow: 0 2px 3px #000;
+      background-color: #404650;
+      color: #fff;
+      padding: 2px 6px;
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
     }
 
-    .sidebar-brand {
-      height: 65px;
-      font-size: 18px;
-      line-height: 60px;
+    .right {
+      float: left;
+      color: #fff;
+      padding: 2px 6px;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+
+    .queued, .pending { background-color: darkgrey; }
+    .running { background-color: #337ab7; }
+    .completed, .enabled { background-color: green; }
+    .paused, .disabled { background-color: orange; }
+    .failed { background-color: red; }
+    .aborted { background-color: darkorange; }
+  }
+
+  .priority {
+    display: inline-block;
+    vertical-align: middle;
+    float: right;
+    margin-top: 20px;
+
+    .form-control {
+      width: 47px;
+      height: 34px;
     }
   }
 
-  .sidebar-nav > .sidebar-brand a {
-    color: #fff;
+  .priority-set {
+    float: right;
+    padding: 7px 14px;
+    font-weight: bold;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+/* Header Styles */
+
+#header {
+  padding: 5px;
+  // background-color: #46484a;
+  border-bottom: 1px solid #ddd;
+
+  .navbar {
+    position: relative;
+  }
+
+  .brand {
+      position: absolute;
+      left: 50%;
+      margin-left: -90px !important;
+      display: block;
+  }
+
+  .first { left: 15px; }
+  .last { right: 15px; }
+
+  a.navbar-brand.brand {
+    font-size: 23px;
+    color: orange;
+    font-weight: bold;
+    margin-top: -5px;
+
+    span {
+      display: inline-block;
+      position: relative;
+      left: -3px;
+      color: orangered;
+      font-weight: bold;
+    }
+  }
+}
+
+#jobs-menu {
+  margin-top: 1.5em;
+  background-color: #B3B3B3;
+  border-color: white;
+}
+
+// List View
+
+.job-search-box { padding: 20px 100px; }
+
+.list {
+  a { display: block; }
+
+  .card:nth-child(1) { border-top: 1px solid #ddd; }
+  .card:nth-child(odd):not(.selected) { background-color: #fff; }
+
+  .card {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    height: 100%;
+    background-color: #F7F7F7;
 
     &:hover {
-      color: #fff;
-      background: none;
+      cursor: pointer;
+      background-color: #E7F4FF;
     }
-  }
 
-  .panel-footer {
-    background-color: #fff;
-    border-top: 1px solid #eee;
-  }
-
-  .pagination { margin: 0; }
-
-  @media(min-width:768px) {
-    #wrapper { padding-left: 215px; }
-
-    #wrapper.toggled { padding-left: 0; }
-
-    #sidebar-wrapper { width: 215px; }
-
-    #wrapper.toggled #sidebar-wrapper { width: 0; }
-
-    #page-content-wrapper { position: relative; }
-
-    #wrapper.toggled #page-content-wrapper {
+    .inner {
+      padding: 0.5em;
       position: relative;
-      margin-right: 0;
-    }
-  }
+      margin: 0 0 0 10px;
 
-  .btn-blank {
-    background: none;
-    border: none;
-  }
-
-  .menu-close {
-    position: absolute;
-    right: 20px;
-    color: #C3D3E3 !important;
-
-    &:hover { color: #fff !important; }
-  }
-
-  // List View
-
-  .job-search-box { padding: 20px 100px; }
-
-  .list {
-    a { display: block; }
-
-    .card:nth-child(1) { border-top: 1px solid #ddd; }
-    .card:nth-child(odd):not(.selected) { background-color: #fff; }
-
-    .card {
-      border-bottom: 1px solid #ddd;
-      height: 6em;
-      background-color: #F7F7F7;
-
-      &:hover {
-        cursor: pointer;
-        background-color: #E7F4FF;
-      }
-
-      .inner {
-        padding: 0.5em;
-        position: relative;
-        margin: 0 0 0 10px;
-
-        .title {
-          display: inline-block;
-          vertical-align: middle;
-
-          i.queued { color: darkgrey; }
-          i.running { color: #337ab7; }
-          i.completed { color: green; }
-          i.paused { color: orange; }
-          i.failed { color: red; }
-          i.aborted { color: darkorange; }
-          i.enabled { color: green; }
-          i.disabled { color: orange; }
-
-          h3 {
-            font-weight: bold;
-            margin: 0;
-            font-size: 16px;
-          }
-        }
-
-        .lead {
-          margin-bottom: 5px;
-          font-size: 18px;
-        }
-
-        .duration, .description {
-          color: #7C735C;
-        }
-
-        .batch {
-          position: absolute;
-          right: -10px;
-          top: -10px;
-          background-color: #444;
-          border-radius: 30px;
-          padding: 4px 10px;
-          color: #fff;
-          z-index: 2;
-        }
-      }
-    }
-
-    .selected {
-      border-bottom: 1px solid blue;
-      border-right: 1px solid blue;
-      border-top: 1px solid blue;
-      background-color: lightcyan;
-    }
-
-  }
-
-  // Grid View
-
-  .grid {
-    padding: 1em;
-    font-size: .85em;
-
-    .card {
-      padding: 1em;
-
-      .inner {
-        padding: 1em;
-        border-radius: 3px;
+      .title {
         display: inline-block;
-        background: #fff;
-        width: 100%;
-        min-height: 250px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        box-shadow: 0px 1px 2px 0 #ccc;
-        position: relative;
+        vertical-align: middle;
+
+        i.queued { color: darkgrey; }
+        i.running { color: #337ab7; }
+        i.completed { color: green; }
+        i.paused { color: orange; }
+        i.failed { color: red; }
+        i.aborted { color: darkorange; }
+        i.enabled { color: green; }
+        i.disabled { color: orange; }
+
+        h3 {
+          font-weight: bold;
+          margin: 0;
+          font-size: 16px;
+        }
+      }
+
+      .lead {
+        margin-bottom: 5px;
+        font-size: 18px;
+      }
+
+      .duration, .description, .completion {
+        color: #7C735C;
+        font-size: 18px;
+        font-weight: 200;
+      }
+
+      .batch {
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        background-color: #444;
+        border-radius: 30px;
+        padding: 4px 10px;
+        color: #fff;
+        z-index: 2;
+      }
+    }
+  }
+
+  .selected {
+    border-bottom: 1px solid blue;
+    border-right: 1px solid blue;
+    border-top: 1px solid blue;
+    background-color: lightcyan;
+  }
+
+}
+
+// Grid View
+
+.grid {
+  padding: 1em;
+  font-size: .85em;
+
+  .card {
+    padding: 1em;
+
+    .inner {
+      padding: 1em;
+      border-radius: 3px;
+      display: inline-block;
+      background: #fff;
+      width: 100%;
+      min-height: 250px;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-shadow: 0px 1px 2px 0 #ccc;
+      position: relative;
+      text-align: center;
+
+      .title, .state, .threads, .time { margin-bottom: 10px; }
+
+      .actions {
+        padding: 10px 0;
+        background: #f5f5f5;
+        border: 1px solid #eee;
+        border-radius: 2px;
+      }
+
+      .title {
         text-align: center;
 
-        .title, .state, .threads, .time { margin-bottom: 10px; }
-
-        .actions {
-          padding: 10px 0;
-          background: #f5f5f5;
-          border: 1px solid #eee;
-          border-radius: 2px;
-        }
-
-        .title {
-          text-align: center;
-
-          h3 {
-            font-weight: bold;
-            margin: 0;
-            font-size: 16px;
-          }
+        h3 {
+          font-weight: bold;
+          margin: 0;
+          font-size: 16px;
         }
       }
     }
   }
+}
 
-  .priority-group {
-    width: 67px;
-    margin: 0 auto;
+.priority-group {
+  width: 67px;
+  margin: 0 auto;
 
-    input { text-align: right; }
+  input { text-align: right; }
 
-    .input-group-btn-vertical {
-      position: relative;
-      white-space: nowrap;
-      width: 1%;
-      vertical-align: middle;
-      display: table-cell;
-    }
-
-    .input-group-btn-vertical > .btn {
-      display: block;
-      float: none;
-      width: 100%;
-      max-width: 100%;
-      padding: 8px;
-      margin-left: -1px;
-      position: relative;
-      border-radius: 0;
-    }
-
-    .input-group-btn-vertical > .btn:first-child {
-      border-right: 0;
-    }
-
-    .input-group-btn-vertical > .btn:last-child {
-      margin-top: -2px;
-      border-right: 0;
-    }
-
-    .input-group-btn-vertical i{
-      position: absolute;
-      top: 0;
-      left: 4px;
-    }
+  .input-group-btn-vertical {
+    position: relative;
+    white-space: nowrap;
+    width: 1%;
+    vertical-align: middle;
+    display: table-cell;
   }
 
-  .code-block { margin-top: 25px; }
-
-  .status {
-    padding: 1em;
+  .input-group-btn-vertical > .btn {
+    display: block;
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin-left: -1px;
+    position: relative;
+    border-radius: 0;
   }
+
+  .input-group-btn-vertical > .btn:first-child {
+    border-right: 0;
+  }
+
+  .input-group-btn-vertical > .btn:last-child {
+    margin-top: -2px;
+    border-right: 0;
+  }
+
+  .input-group-btn-vertical i{
+    position: absolute;
+    top: 0;
+    left: 4px;
+  }
+}
+
+.code-block { margin-top: 25px; }
+
+.status {
+  padding: 1em;
 }

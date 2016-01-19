@@ -1,8 +1,5 @@
 .row
-  #queue
-    = render partial: 'list', locals: { jobs: @jobs }
-
-  .col-md-8.job-status
+  .col-md-14.col-md-offset-1.job-status
     #job
       .lead= @job.class.name
 

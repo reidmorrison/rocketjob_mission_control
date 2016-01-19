@@ -5,21 +5,39 @@
 }
 .callout-queued {
   border-left-color: darkgrey;
+  .lead {
+    color: darkgrey;
+  }
 }
 .callout-running {
   border-left-color: #337ab7;
+  .lead {
+    color: #337ab7;
+  }
 }
 .callout-completed {
   border-left-color: green;
+  .lead {
+    color: green;
+  }
 }
 .callout-paused {
   border-left-color: orange;
+  .lead {
+    color: orange;
+  }
 }
 .callout-failed {
   border-left-color: red;
+  .lead {
+    color: red;
+  }
 }
 .callout-aborted {
   border-left-color: darkorange;
+  .lead {
+    color: darkorange;
+  }
 }
 
 /* Used by Dirmon Entries */

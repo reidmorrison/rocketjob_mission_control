@@ -18,9 +18,8 @@ module RocketJobMissionControl
     end
 
     def job_icon(job)
-      # TODO move this logic to RocketJob::Job
       state =
-        if job.queued? && job.run_at && (job.run_at > Time.now)
+        if job.scheduled?
           :scheduled
         else
           job.state
@@ -36,6 +35,10 @@ module RocketJobMissionControl
         class:  'btn btn-default',
         data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
       )
+    end
+
+    def current_states
+      @state.split.join(' & ').titlecase + ' Jobs'
     end
 
     def job_states

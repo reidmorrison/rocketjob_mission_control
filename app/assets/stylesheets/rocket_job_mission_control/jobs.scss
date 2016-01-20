@@ -15,7 +15,7 @@
 
   .list {
     .progress {
-      width: 16em;
+      width: 10em;
       height: 1em;
       margin: 5px 0px 0px 10px;
       display: inline-block;
@@ -25,7 +25,7 @@
     }
 
     .progress-bar {
-      min-width: 1em;
+      min-width: 0em;
     }
   }
 }

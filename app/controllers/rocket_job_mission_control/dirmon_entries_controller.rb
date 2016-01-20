@@ -3,6 +3,7 @@ module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     before_filter :find_entry_or_redirect, except: [:index, :new, :create]
     before_filter :clean_values, only: [:create, :update]
+    before_filter :show_sidebar
     before_action :load_entries, only: [:index, :show, :new, :edit]
 
     def index
@@ -88,6 +89,10 @@ module RocketJobMissionControl
     end
 
     private
+
+    def show_sidebar
+      @dirmon_sidebar = true
+    end
 
     def parse_and_assign_arguments
       arguments               = params[:rocket_job_dirmon_entry][:arguments] || []

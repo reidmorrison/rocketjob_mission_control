@@ -1,11 +1,20 @@
-.row
-  #queue
-    = render partial: 'list', locals: { jobs: @jobs }
+#queue
+  .job-list
+    .list
+      - if @dirmons.empty?
+        .title
+          .lead.text-center No Dirmon Entries Found.
+      - else
+        %h2 Dirmon Entries
+        - @dirmons.each do |dirmon|
+          = link_to dirmon_entry_path(id: dirmon.id, states: @states), class: "card callout callout-#{dirmon.state} #{job_selected_class(dirmon, @dirmon_entry)}" do
+            .inner
+              .row
+                .title.col-md-5
+                  .lead
+                    %i.fa{class: job_state_icon(dirmon.state), style: 'font-size: 75%;', title: dirmon.state}
+                    = dirmon.name
 
-    .col-md-8
-      .job-status
-        #job
-          .welcome_screen
-            = link_to image_tag('rocket_job_mission_control/rocket-icon-512x512.png'), 'http://rocketjob.io'
-            %h1 Welcome to rocketjob
-            %p High volume, priority based, Enterprise Batch Processing solution for Ruby
+                .description.col-md-5
+                  = dirmon.pattern.try(:truncate, 80)
+

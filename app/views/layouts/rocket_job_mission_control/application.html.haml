@@ -22,24 +22,24 @@
 
   %body.rocket_job
     #wrapper
-
-      #page-content-wrapper
-        = render partial: 'layouts/rocket_job_mission_control/partials/header'
-
       .container-fluid
-        .flash.text-center
-          - flash.each do |key, msg|
-            - if msg
-              .alert{class: "alert-#{key} alert-dismissable", role: 'alert'}
-                %button.close{ data: { dismiss: 'alert' } }
-                  %span &times;
-                -if msg.kind_of? Array
-                  %ul.list-unstyled.margin-bottom-0
-                    - msg.each do |m|
-                      %li= m.html_safe
-                - else
-                  = msg.html_safe
+        .row.row-offcanvas.row-offcanvas-left
+          = render partial: 'layouts/rocket_job_mission_control/partials/sidebar'
 
-        = yield
+          .col-sm-14.col-xs-15.white-background#main
+            = render partial: 'layouts/rocket_job_mission_control/partials/header'
 
-    %footer.footer
+            .flash.text-center
+              - flash.each do |key, msg|
+                - if msg
+                  .alert{class: "alert-#{key} alert-dismissable", role: 'alert'}
+                    %button.close{ data: { dismiss: 'alert' } }
+                      %span &times;
+                    -if msg.kind_of? Array
+                      %ul.list-unstyled.margin-bottom-0
+                        - msg.each do |m|
+                          %li= m.html_safe
+                    - else
+                      = msg.html_safe
+            #content
+              = yield

@@ -1,6 +1,7 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
     before_filter :find_job_or_redirect, except: [:index, :running]
+    before_filter :show_sidebar
     rescue_from StandardError, with: :error_occurred
 
     def running
@@ -66,6 +67,10 @@ module RocketJobMissionControl
     end
 
     private
+
+    def show_sidebar
+      @jobs_sidebar = true
+    end
 
     def find_job_or_redirect
       @job = RocketJob::Job.find(params[:id])

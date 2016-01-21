@@ -14,7 +14,7 @@ module RocketJobMissionControl
     }
 
     def job_state_icon(state)
-      STATE_ICON_MAP[state.downcase.to_sym] + ' ' + state.to_s
+      STATE_ICON_MAP[state.to_sym] + ' ' + state.to_s
     end
 
     def job_icon(job)

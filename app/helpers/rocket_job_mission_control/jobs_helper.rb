@@ -37,8 +37,8 @@ module RocketJobMissionControl
       )
     end
 
-    def current_states
-      @state.split.join(' & ').titlecase + ' Jobs'
+    def current_state
+      @state.to_s.capitalize + ' Jobs'
     end
 
     def job_states

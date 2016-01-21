@@ -58,12 +58,20 @@ module RocketJobMissionControl
     end
 
     def index
-      @state = params[:state] || [:running, :queued]
+      @state = params[:state] || :running
+      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
       unless @state == 'all'
-        @jobs = RocketJob::Job.where(state: @state).limit(1000).sort(created_at: :desc)
-      else
-        @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
+        if @state == 'scheduled'
+          @jobs = @jobs.scheduled
+        else
+          @jobs = @jobs.where(state: @state)
+        end
       end
+
+      # respond_to do |format|
+      #   format.html
+      #   format.json { render(json: @jobs) }
+      # end
     end
 
     private

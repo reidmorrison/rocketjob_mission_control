@@ -3,7 +3,7 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
 }
 
 #wrapper {
-  overflow: hidden;
+  background-color: #f7f7f7;
 }
 
 .footer {
@@ -11,6 +11,10 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   height: 100px;
   clear:both;
   padding-top:20px;
+}
+
+table.datatable {
+  border-collapse: collapse;
 }
 
 #queue { height: 100%; }
@@ -110,10 +114,6 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   }
 }
 
-#wrapper {
-  background-color: #46484a;
-}
-
 #content {
   margin-top: 60px;
   padding: 20px;
@@ -132,17 +132,18 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
 #sidebar {
   padding:0px;
   padding-top:15px;
+  margin-top: 5em;
 }
 
 #sidebar, #sidebar a {
-  color: #fff;
-  text-shadow: 0 0 2px #000;
+  color: #555;
+  // text-shadow: 0 0 2px #000;
   background-color: transparent;
   padding-left: 5px;
 }
 
 #sidebar .nav li > a:hover {
-    color: #eee;
+    color: #000;
 }
 
 @media screen and (max-width: 768px) {
@@ -177,8 +178,9 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   border-radius: 0;
   border-bottom: 1px solid #ddd;
   position: fixed;
-  width: inherit;
   z-index: 1000;
+  right: 0;
+  left: 0;
 
   .navbar {
     position: relative;

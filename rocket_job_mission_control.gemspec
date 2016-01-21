@@ -25,4 +25,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'rocketjob', '~> 2.0.0.alpha'
   s.add_dependency 'haml'
   s.add_dependency 'kaminari'
+  s.add_dependency 'jquery-datatables-rails'
 end

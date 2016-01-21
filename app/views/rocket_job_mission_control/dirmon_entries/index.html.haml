@@ -6,15 +6,17 @@
           .lead.text-center No Dirmon Entries Found.
       - else
         %h2 Dirmon Entries
-        - @dirmons.each do |dirmon|
-          = link_to dirmon_entry_path(id: dirmon.id, states: @states), class: "card callout callout-#{dirmon.state} #{job_selected_class(dirmon, @dirmon_entry)}" do
-            .inner
-              .row
-                .title.col-md-5
-                  .lead
-                    %i.fa{class: job_state_icon(dirmon.state), style: 'font-size: 75%;', title: dirmon.state}
+        %table.table.datatable.dirmon-datatable
+          %thead
+            %tr
+              %th Name
+              %th Pattern
+          %tbody
+            - @dirmons.each do |dirmon|
+              %tr{ class: "card callout callout-#{dirmon.state}"}
+                %td.title.col-md-5
+                  = link_to(dirmon_entry_path(dirmon.id)) do
+                    %i.fa{ class: job_state_icon(dirmon.state), style: 'font-size: 75%', title: dirmon.state }
                     = dirmon.name
-
-                .description.col-md-5
+                %td.description.col-md-5
                   = dirmon.pattern.try(:truncate, 80)
-

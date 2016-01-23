@@ -46,8 +46,8 @@
         - if valid_events.include?(:retry)
           = job_action_link('retry', rocket_job_mission_control.retry_job_path(@job), :patch)
 
-        - if @job.failed? && defined?(RocketJob::SlicedJob) && @job.kind_of?(RocketJob::SlicedJob) && @job.input.failed_count > 0
-          = link_to("view errors", job_failures_path(@job), class: 'btn btn-default')
+        - if @job.respond_to?(:input_categories) && @job.input.failed_count > 0
+          = link_to('view errors', job_failures_path(@job), class: 'btn btn-default')
 
       .clearfix
 

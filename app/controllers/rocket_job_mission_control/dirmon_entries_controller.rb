@@ -33,7 +33,6 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :create])
         redirect_to(dirmon_entry_path(@dirmon_entry))
       else
-        load_entries
         render :new
       end
     end
@@ -56,7 +55,6 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        load_entries
         render :edit
       end
     end
@@ -68,7 +66,6 @@ module RocketJobMissionControl
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :enable])
-        load_entries
         render(:show)
       end
     end
@@ -80,7 +77,6 @@ module RocketJobMissionControl
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :disable])
-        load_entries
         render(:show)
       end
     end

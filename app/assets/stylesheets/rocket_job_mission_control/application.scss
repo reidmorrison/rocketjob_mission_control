@@ -12,6 +12,8 @@
  *
  *= require selectize
  *= require selectize.default
+ *= require dataTables/extras/dataTables.responsive
+ *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
  *= require_self
  *= require_tree .
  */

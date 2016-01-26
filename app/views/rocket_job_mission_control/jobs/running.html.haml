@@ -1,4 +1,4 @@
-.col-md-10.col-md-offset-1
+.col-md-14.col-md-offset-1
   .jumbotron
     %h3 There are currently #{@jobs.count} jobs running.
   #accordion.panel-group
@@ -14,7 +14,7 @@
           .info
             .progress
               .progress-bar{ style: "width: #{job.percent_complete}%; min-width: 1em;", title: "#{job.percent_complete}% percent complete."}
-          - if defined?(RocketJob::SlicedJob) && job.kind_of?(RocketJob::SlicedJob)
+          - if job.respond_to?(:input_categories)
             .slice_count
               %label Slices Running:
               = job.input.find_all { |s| s.state == :running }.count
@@ -24,7 +24,7 @@
               = job.worker_name
 
           = render partial: 'status', locals: { job: job }
-        - if defined?(RocketJob::SlicedJob) && job.kind_of?(RocketJob::SlicedJob)
+        - if job.respond_to?(:input_categories)
           %table.table
             %tr
               %th worker

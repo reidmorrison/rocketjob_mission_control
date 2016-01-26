@@ -1,18 +1,33 @@
-#header
-  %a#menu-toggle.btn.btn-default.btn-blank.first{href: ""}
-    %i.fa.fa-bars
-    Menu
-
-
-  = link_to '..', class: 'btn btn-default btn-blank last' do
-    %i.fa.fa-reply
-    Back Home
-
-
-  .clearfix
-
-  .brand
-    = link_to root_path, class: 'text-center' do
-      = image_tag('rocket_job_mission_control/rocket-icon-64x64.png', size: '32x32')
-      rocket
-      %span job
+%nav.navbar.navbar-default#header
+  .container-fluid
+    .navbar-header
+      %button.navbar-toggle.collapsed{ "aria-expanded" => "false", "data-target" => ".navbar-collapse", "data-toggle" => "collapse", :type => "button" }
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand.brand{ :href => root_path }
+        = image_tag('rocket_job_mission_control/rocket-icon-64x64.png', size: '32x32')
+        rocket
+        %span job
+    .navbar-collapse.collapse
+      %ul.nav.navbar-nav
+        %li
+          = link_to jobs_path, class: active_page(jobs_path) do
+            %i.fa.fa-home
+            Jobs
+        %li
+          = link_to workers_path, class: active_page(workers_path) do
+            %i.fa.fa-database
+            Workers
+        %li
+          = link_to running_jobs_path, class: active_page(running_jobs_path) do
+            %i.fa.fa-circle-o-notch
+            Running
+        %li
+          = link_to dirmon_entries_path, class: active_page(dirmon_entries_path) do
+            %i.fa.fa-folder-o
+            Dirmon
+      %ul.nav.navbar-nav.navbar-right
+        %li
+          %a{:href => main_app.root_path } Home

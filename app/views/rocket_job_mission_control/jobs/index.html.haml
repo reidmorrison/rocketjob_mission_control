@@ -1,11 +1,34 @@
-.row
-  #queue
-    = render partial: 'list', locals: { jobs: @jobs }
-
-    .col-md-8
-      .job-status
-        #job
-          .welcome_screen
-            = link_to image_tag('rocket_job_mission_control/rocket-icon-512x512.png'), 'http://rocketjob.io'
-            %h1 Welcome to rocketjob
-            %p High volume, priority based, Enterprise Batch Processing solution for Ruby
+#queue
+  .job-list
+    .list
+      - if @jobs.empty?
+        .title
+          .lead.text-center No Jobs Found.
+      - else
+        %h2
+          = current_state
+        %table.table.datatable.jobs-datatable{ style: "width: 100%" }
+          %thead
+            %tr
+              %th Class
+              %th Description
+              %th Completion
+              %th Duration
+          %tbody
+            - @jobs.each do |job|
+              %tr{ class: "card callout callout-#{job.state}" }
+                %td.title.col-md-4
+                  = link_to(job_path(job.id)) do
+                    %i.fa{class: job_icon(job), style: 'font-size: 75%;', title: job.state}
+                    = job.class.name
+                %td.description.col-md-6
+                  = job.description.try(:truncate, 50)
+                %td.completion.col-md-2
+                  - if job.completed?
+                    = job.completed_at
+                  - if job.running?
+                    .progress
+                      .progress-bar{ style: "width: #{job.percent_complete}%;", title: "#{job.percent_complete}% percent complete."}
+                %td.duration.col-md-2
+                  %i.fa.fa-clock-o
+                  = job.duration

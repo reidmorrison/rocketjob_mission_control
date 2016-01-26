@@ -19,16 +19,3 @@ $(document).ready ->
     $('#lg-menu').toggleClass('hidden-xs').toggleClass 'visible-xs'
     $('#xs-menu').toggleClass('visible-xs').toggleClass 'hidden-xs'
     $('#btnShow').toggle()
-
-  $('.jobs-datatable').DataTable
-    # ajax: $('.jobs-datatable').data('source')
-    pagingType: 'full_numbers'
-    scrollCollapse: true
-    # processing: true
-    # serverSide: true
-
-  $('.dirmon-datatable').DataTable
-    # ajax: $('.jobs-datatable').data('source')
-    pagingType: 'full_numbers'
-    # processing: true
-    # serverSide: true

@@ -20,7 +20,6 @@ PATH
       haml
       jquery-datatables-rails
       jquery-rails
-      kaminari
       rails (~> 4.0)
       rocketjob (~> 2.0.0.alpha)
       sass-rails (>= 3.2)
@@ -73,6 +72,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     bson (1.12.5)
+    bson (1.12.5-java)
     bson_ext (1.12.5)
       bson (~> 1.12.5)
     builder (3.2.2)
@@ -108,9 +108,6 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.3)
     json (1.8.3-java)
-    kaminari (0.16.3)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)

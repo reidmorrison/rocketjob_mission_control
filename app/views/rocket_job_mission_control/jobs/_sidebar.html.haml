@@ -11,7 +11,7 @@
     %li{class: state}
       = link_to(jobs_path(state: state)) do
         %i.fa{class: job_state_icon(state)}
-        = state.capitalize!
+        = state.capitalize
 / tiny only nav
 %ul#xs-menu.nav.visible-xs
   %li

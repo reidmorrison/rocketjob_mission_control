@@ -1,5 +1,9 @@
 %ul#lg-menu.nav.hidden-xs
-  %li.active
+  %li
+    = link_to(new_dirmon_entry_path) do
+      %i.fa.fa-plus
+      New Entry
+  %li
     = link_to(dirmon_entries_path(state: 'all')) do
       %i.fa.fa-list
       All
@@ -10,6 +14,9 @@
         = state.to_s.capitalize!
 / tiny only nav
 %ul#xs-menu.nav.visible-xs
+  %li
+    = link_to(new_dirmon_entry_path) do
+      %i.fa.fa-plus
   %li
     = link_to(dirmon_entries_path(state: 'all')) do
       %i.fa.fa-list

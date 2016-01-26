@@ -67,11 +67,6 @@ module RocketJobMissionControl
           @jobs = @jobs.where(state: @state)
         end
       end
-
-      # respond_to do |format|
-      #   format.html
-      #   format.json { render(json: @jobs) }
-      # end
     end
 
     private

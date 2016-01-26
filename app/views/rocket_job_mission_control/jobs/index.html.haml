@@ -7,7 +7,7 @@
       - else
         %h2
           = current_state
-        %table.table.datatable.jobs-datatable{ data: { source: "#{jobs_url(format: 'json')}" } }
+        %table.table.datatable.jobs-datatable{ style: "width: 100%" }
           %thead
             %tr
               %th Class

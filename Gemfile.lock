@@ -15,6 +15,8 @@ PATH
   remote: .
   specs:
     rocketjob_mission_control (1.2.4)
+      active_model_serializers
+      ajax-datatables-rails
       bootstrap-sass (>= 3.2.0.1)
       coffee-rails
       haml
@@ -48,6 +50,8 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    active_model_serializers (0.9.4)
+      activemodel (>= 3.2)
     activejob (4.2.5)
       activesupport (= 4.2.5)
       globalid (>= 0.3.0)
@@ -64,6 +68,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    ajax-datatables-rails (0.3.1)
+      railties (>= 3.1)
     arel (6.0.3)
     autoprefixer-rails (6.3.1)
       execjs
@@ -73,6 +79,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     bson (1.12.5)
+    bson (1.12.5-java)
     bson_ext (1.12.5)
       bson (~> 1.12.5)
     builder (3.2.2)

@@ -4,9 +4,11 @@ module RocketJobMissionControl
     before_filter :find_entry_or_redirect, except: [:index, :new, :create]
     before_filter :clean_values, only: [:create, :update]
     before_filter :show_sidebar
-    before_action :load_entries, only: [:index, :show, :new, :edit]
 
     def index
+      @state = params[:state] || :pending
+      @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
+      @dirmons = @dirmons.where(state: @state) unless @state == 'all'
     end
 
     def show
@@ -142,12 +144,6 @@ module RocketJobMissionControl
       params[:rocket_job_dirmon_entry].fetch(:properties, {}).each_pair do |param, value|
         params[:rocket_job_dirmon_entry][:properties].delete(param) if value.blank?
       end
-    end
-
-    def load_entries
-      @states  = dirmons_params
-      @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
-      @dirmons = @dirmons.where(state: @states) unless @states.empty?
     end
 
     def find_entry_or_redirect

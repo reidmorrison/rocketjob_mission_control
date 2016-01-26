@@ -1,8 +1,4 @@
-.row
-  #queue
-    = render partial: 'list', locals: { jobs: @jobs }
+.col-md-6
+  .lead Edit Dirmon Entry
 
-  .col-md-6
-    .lead Edit Dirmon Entry
-
-    = render partial: 'form', locals: { action: :update }
+  = render partial: 'form', locals: { action: :update }

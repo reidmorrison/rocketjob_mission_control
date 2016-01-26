@@ -12,3 +12,8 @@ $(document).on 'ready', ->
       new_dirmon_path = $('#properties').data('url') + "?#{params}"
       window.location = new_dirmon_path
 
+  $('.dirmon-datatable').DataTable
+    # ajax: $('.jobs-datatable').data('source')
+    pagingType: 'full_numbers'
+    # processing: true
+    # serverSide: true

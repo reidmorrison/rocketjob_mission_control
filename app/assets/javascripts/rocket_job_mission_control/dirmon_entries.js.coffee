@@ -12,3 +12,7 @@ $(document).on 'ready', ->
       new_dirmon_path = $('#properties').data('url') + "?#{params}"
       window.location = new_dirmon_path
 
+  $('.dirmon-datatable').DataTable
+    pagingType: 'full_numbers'
+    responsive: true
+

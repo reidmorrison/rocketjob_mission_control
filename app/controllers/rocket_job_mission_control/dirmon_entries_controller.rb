@@ -3,9 +3,12 @@ module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     before_filter :find_entry_or_redirect, except: [:index, :new, :create]
     before_filter :clean_values, only: [:create, :update]
-    before_action :load_entries, only: [:index, :show, :new, :edit]
+    before_filter :show_sidebar
 
     def index
+      @state = params[:state] || :pending
+      @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
+      @dirmons = @dirmons.where(state: @state) unless @state == 'all'
     end
 
     def show
@@ -30,7 +33,6 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :create])
         redirect_to(dirmon_entry_path(@dirmon_entry))
       else
-        load_entries
         render :new
       end
     end
@@ -53,7 +55,6 @@ module RocketJobMissionControl
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        load_entries
         render :edit
       end
     end
@@ -65,7 +66,6 @@ module RocketJobMissionControl
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :enable])
-        load_entries
         render(:show)
       end
     end
@@ -77,7 +77,6 @@ module RocketJobMissionControl
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :disable])
-        load_entries
         render(:show)
       end
     end
@@ -88,6 +87,10 @@ module RocketJobMissionControl
     end
 
     private
+
+    def show_sidebar
+      @dirmon_sidebar = true
+    end
 
     def parse_and_assign_arguments
       arguments               = params[:rocket_job_dirmon_entry][:arguments] || []
@@ -137,12 +140,6 @@ module RocketJobMissionControl
       params[:rocket_job_dirmon_entry].fetch(:properties, {}).each_pair do |param, value|
         params[:rocket_job_dirmon_entry][:properties].delete(param) if value.blank?
       end
-    end
-
-    def load_entries
-      @states  = dirmons_params
-      @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
-      @dirmons = @dirmons.where(state: @states) unless @states.empty?
     end
 
     def find_entry_or_redirect

@@ -1,6 +1,7 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
     before_filter :find_job_or_redirect, except: [:index, :running]
+    before_filter :show_sidebar
     rescue_from StandardError, with: :error_occurred
 
     def running
@@ -54,19 +55,24 @@ module RocketJobMissionControl
     end
 
     def show
-      load_jobs
     end
 
     def index
-      load_jobs
+      @state = params[:state] || :running
+      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
+      unless @state == 'all'
+        if @state == 'scheduled'
+          @jobs = @jobs.scheduled
+        else
+          @jobs = @jobs.where(state: @state)
+        end
+      end
     end
 
     private
 
-    def load_jobs
-      @states = jobs_params
-      @jobs   = RocketJob::Job.limit(1000).sort(created_at: :desc)
-      @jobs   = @jobs.where(state: @states) unless @states.empty?
+    def show_sidebar
+      @jobs_sidebar = true
     end
 
     def find_job_or_redirect

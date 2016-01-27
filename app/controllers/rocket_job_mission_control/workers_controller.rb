@@ -4,7 +4,9 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @workers = RocketJob::Worker.sort(:name)
+      @state = params[:state] || 'all'
+      @workers = RocketJob::Worker.where()
+      @workers = @workers.where(state: @state) unless @state == 'all'
     end
 
     VALID_STATES = {

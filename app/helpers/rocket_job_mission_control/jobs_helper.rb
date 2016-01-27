@@ -1,22 +1,5 @@
 module RocketJobMissionControl
   module JobsHelper
-    STATE_ICON_MAP = {
-      aborted:   'fa-stop',
-      completed: 'fa-check',
-      disabled:  'fa-stop',
-      enabled:   'fa-check',
-      failed:    'fa-exclamation-triangle',
-      paused:    'fa-pause',
-      pending:   'fa-inbox',
-      queued:    'fa-inbox',
-      running:   'fa-play',
-      scheduled: 'fa-clock-o',
-    }
-
-    def job_state_icon(state)
-      STATE_ICON_MAP[state.to_sym] + ' ' + state.to_s
-    end
-
     def job_icon(job)
       state =
         if job.scheduled?
@@ -24,7 +7,7 @@ module RocketJobMissionControl
         else
           job.state
         end
-      job_state_icon(state)
+      state_icon(state)
     end
 
     def job_action_link(action, path, http_method=:get)

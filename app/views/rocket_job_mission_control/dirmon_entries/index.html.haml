@@ -16,7 +16,7 @@
               %tr{ class: "card callout callout-#{dirmon.state}"}
                 %td.title.col-md-5
                   = link_to(dirmon_entry_path(dirmon.id)) do
-                    %i.fa{ class: job_state_icon(dirmon.state), style: 'font-size: 75%', title: dirmon.state }
+                    %i.fa{ class: state_icon(dirmon.state), style: 'font-size: 75%', title: dirmon.state }
                     = dirmon.name
                 %td.description.col-md-5
                   = dirmon.pattern.try(:truncate, 80)

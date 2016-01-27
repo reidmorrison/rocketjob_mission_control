@@ -9,11 +9,11 @@ module RocketJobMissionControl
       helper.extend(RocketJobMissionControl::ApplicationHelper)
     end
 
-    describe '#job_state_icon' do
+    describe '#state_icon' do
       JobsHelper::STATE_ICON_MAP.each do |state, expected_class|
         context "when the job state is #{state}" do
           it 'returns the correct class' do
-            expect(helper.job_state_icon(state)).to eq("#{expected_class} #{state}")
+            expect(helper.state_icon(state)).to eq("#{expected_class} #{state}")
           end
         end
       end

@@ -10,7 +10,7 @@
   - RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state|
     %li{class: state}
       = link_to(dirmon_entries_path(state: state)) do
-        %i.fa{class: job_state_icon(state)}
+        %i.fa{class: state_icon(state)}
         = state.to_s.capitalize!
 / tiny only nav
 %ul#xs-menu.nav.visible-xs
@@ -23,4 +23,4 @@
   - RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state|
     %li{class: state}
       = link_to(dirmon_entries_path(state: state)) do
-        %i.fa{class: job_state_icon(state)}
+        %i.fa{class: state_icon(state)}

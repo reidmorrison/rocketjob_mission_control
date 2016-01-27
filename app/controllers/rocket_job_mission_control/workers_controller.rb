@@ -1,6 +1,7 @@
 module RocketJobMissionControl
   class WorkersController < RocketJobMissionControl::ApplicationController
     before_filter :find_worker, only: [:stop, :pause, :resume, :destroy]
+    before_filter :show_sidebar
 
     def index
       @workers = RocketJob::Worker.sort(:name)
@@ -79,6 +80,10 @@ module RocketJobMissionControl
 
     def find_worker
       @worker = RocketJob::Worker.find(params[:id])
+    end
+
+    def show_sidebar
+      @workers_sidebar = true
     end
   end
 end

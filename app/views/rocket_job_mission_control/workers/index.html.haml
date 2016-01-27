@@ -12,28 +12,28 @@
                 data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
                 class: 'btn btn-default')
           .clearfix
-    .worker-list
-      .list
-        %h2
-          = current_state
-        %table.table.datatable.workers-datatable{ style: "width: 100%" }
-          %thead
-            %tr
-              %th ID
-              %th Max/Current Threads
-              %th Started
-              %th Last Heartbeat
-              %th Actions
-          %tbody
-            - @workers.each do |worker|
-              %tr{ class: "card callout #{worker_card_class(worker)}" }
-                %td.title
-                  = worker.name
-                %td.max-current-threads
-                  = "#{worker.max_threads}/#{worker.heartbeat.current_threads.to_i}"
-                %td.time
-                  = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
-                %td.heartbeat
-                  = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
-                %td.actions
-                  = render partial: 'actions', locals: { worker: worker }
+  .worker-list
+    .list
+      %h2
+        Workers
+      %table.table.datatable.workers-datatable{ style: "width: 100%" }
+        %thead
+          %tr
+            %th ID
+            %th Max/Current Threads
+            %th Started
+            %th Last Heartbeat
+            %th Actions
+        %tbody
+          - @workers.each do |worker|
+            %tr{ class: "card callout #{worker_card_class(worker)}" }
+              %td.title
+                = worker.name
+              %td.max-current-threads
+                = "#{worker.max_threads}/#{worker.heartbeat.current_threads.to_i}"
+              %td.time
+                = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
+              %td.heartbeat
+                = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
+              %td.actions
+                = render partial: 'actions', locals: { worker: worker }

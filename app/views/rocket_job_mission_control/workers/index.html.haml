@@ -1,21 +1,21 @@
 #workers
-  - if @workers.present?
-    .row
-      .col-xs-12
-        %ol.breadcrumb{ style: 'margin-bottom: 0'}
-          %li.active Workers
-          .btn-group.pull-right
-            - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
-              = link_to("#{action.to_s.humanize.capitalize}",
-                rocket_job_mission_control.update_all_workers_path(worker_action: action),
-                method: :patch,
-                data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
-                class: 'btn btn-default')
-          .clearfix
   .worker-list
     .list
-      %h2
-        Worker Processes
+      .row
+        .col-md-6
+          %h2
+            Worker Processes
+        .col-md-6.worker-collection-actions
+          - if @workers.present?
+            %ol.pull-right
+              .btn-group
+                - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
+                  = link_to("#{action.to_s.humanize.capitalize}",
+                    rocket_job_mission_control.update_all_workers_path(worker_action: action),
+                    method: :patch,
+                    data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
+                    class: 'btn btn-default')
+              .clearfix
       %table.table.datatable.workers-datatable{ style: "width: 100%" }
         %thead
           %tr

@@ -17,6 +17,10 @@ table.datatable {
   border-collapse: collapse;
 }
 
+.dataTables_wrapper {
+  margin-top: 2em;
+}
+
 #queue { height: 100%; }
 
 .job-list {

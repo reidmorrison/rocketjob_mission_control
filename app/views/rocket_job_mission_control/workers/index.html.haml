@@ -12,49 +12,28 @@
                 data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
                 class: 'btn btn-default')
           .clearfix
-
-    .grid
-      - @workers.each_slice(4) do |workers|
-        .row
-          - workers.each do |worker|
-            .card.col-xs-12.col-sm-6.col-md-3.col-lg-3
-              .inner.callout-top{ class: worker_card_class(worker) }
-                .title
-                  %h3
-                    = worker.name
-
-                .state
-                  %b State:
-                  = worker.state
-
-                .threads.max_threads
-                  %b Max Threads:
-                  = worker.max_threads
-
-                .threads.current_threads
-                  %b Current Threads:
-                  = worker.heartbeat.current_threads.to_i
-
-                .time
-                  %b Started:
+    .worker-list
+      .list
+        %h2
+          = current_state
+        %table.table.datatable.workers-datatable{ style: "width: 100%" }
+          %thead
+            %tr
+              %th ID
+              %th Max/Current Threads
+              %th Started
+              %th Last Heartbeat
+              %th Actions
+          %tbody
+            - @workers.each do |worker|
+              %tr{ class: "card callout #{worker_card_class(worker)}" }
+                %td.title
+                  = worker.name
+                %td.max-current-threads
+                  = "#{worker.max_threads}/#{worker.heartbeat.current_threads.to_i}"
+                %td.time
                   = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
-
-                .heartbeat
-                  %b Last Heartbeat:
+                %td.heartbeat
                   = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
-
-                .actions
+                %td.actions
                   = render partial: 'actions', locals: { worker: worker }
-
-  - else
-    .row
-      .col-md-6.col-md-offset-3
-        .panel.panel-default
-          .panel-body
-            .lead
-              There are currently no workers.
-            You can start a worker with the following command:
-
-            .code-block
-              %pre
-                %code.language-bash bin/rocketjob

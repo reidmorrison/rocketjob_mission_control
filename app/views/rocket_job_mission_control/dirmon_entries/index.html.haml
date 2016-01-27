@@ -1,22 +1,18 @@
 #queue
   .job-list
     .list
-      - if @dirmons.empty?
-        .title
-          .lead.text-center No Dirmon Entries Found.
-      - else
-        %h2 Dirmon Entries
-        %table.table.datatable.dirmon-datatable
-          %thead
-            %tr
-              %th Name
-              %th Pattern
-          %tbody
-            - @dirmons.each do |dirmon|
-              %tr{ class: "card callout callout-#{dirmon.state}"}
-                %td.title.col-md-5
-                  = link_to(dirmon_entry_path(dirmon.id)) do
-                    %i.fa{ class: state_icon(dirmon.state), style: 'font-size: 75%', title: dirmon.state }
-                    = dirmon.name
-                %td.description.col-md-5
-                  = dirmon.pattern.try(:truncate, 80)
+      %h2 Directory Monitor Entries
+      %table.table.datatable.dirmon-datatable
+        %thead
+          %tr
+            %th Name
+            %th Pattern
+        %tbody
+          - @dirmons.each do |dirmon|
+            %tr{ class: "card callout callout-#{dirmon.state}"}
+              %td.title.col-md-5
+                = link_to(dirmon_entry_path(dirmon.id)) do
+                  %i.fa{ class: state_icon(dirmon.state), style: 'font-size: 75%', title: dirmon.state }
+                  = dirmon.name
+              %td.description.col-md-5
+                = dirmon.pattern.try(:truncate, 80)

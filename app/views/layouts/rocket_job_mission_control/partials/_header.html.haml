@@ -6,7 +6,7 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      %a.navbar-brand.brand{ :href => root_path }
+      %a.navbar-brand.brand{ href: 'http://rocketjob.io', target: '_blank'}
         = image_tag('rocket_job_mission_control/rocket-icon-64x64.png', size: '32x32')
         rocket
         %span job
@@ -19,7 +19,7 @@
         %li
           = link_to workers_path, class: active_page(workers_path) do
             %i.fa.fa-database
-            Workers
+            Worker Processes
         %li
           = link_to running_jobs_path, class: active_page(running_jobs_path) do
             %i.fa.fa-circle-o-notch
@@ -27,7 +27,7 @@
         %li
           = link_to dirmon_entries_path, class: active_page(dirmon_entries_path) do
             %i.fa.fa-folder-o
-            Dirmon
+            Directory Monitors
       %ul.nav.navbar-nav.navbar-right
         %li
           %a{:href => main_app.root_path } Home

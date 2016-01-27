@@ -195,10 +195,6 @@ module RocketJobMissionControl
           expect(assigns(:dirmon_entry)).to_not be_valid
         end
 
-        it 'loads the other entries' do
-          expect(dirmon_list).to have_received(:sort)
-        end
-
         context 'with invalid arguments json' do
           let(:dirmon_params) do
             {
@@ -215,10 +211,6 @@ module RocketJobMissionControl
 
           it 'has errors on arguments' do
             expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
-          end
-
-          it 'loads the other entries' do
-            expect(dirmon_list).to have_received(:sort)
           end
         end
       end
@@ -306,10 +298,6 @@ module RocketJobMissionControl
           it 'has errors on the entry' do
             expect(assigns(:dirmon_entry)).to_not be_valid
           end
-
-          it 'loads the other entries' do
-            expect(dirmon_list).to have_received(:sort)
-          end
         end
 
         context 'with invalid arguments json' do
@@ -328,10 +316,6 @@ module RocketJobMissionControl
 
           it 'has errors on arguments' do
             expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
-          end
-
-          it 'loads the other entries' do
-            expect(dirmon_list).to have_received(:sort)
           end
         end
       end
@@ -384,14 +368,6 @@ module RocketJobMissionControl
 
         it 'assigns the entry' do
           expect(assigns(:dirmon_entry)).to be_present
-        end
-
-        it 'assigns the entries' do
-          expect(assigns(:dirmons)).to eq([])
-        end
-
-        it 'grabs a sorted list' do
-          expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
         end
       end
     end

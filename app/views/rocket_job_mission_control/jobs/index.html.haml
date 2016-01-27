@@ -8,8 +8,26 @@
           %tr
             %th Class
             %th Description
-            %th Completion
-            %th Duration
+            - case current_state
+            - when 'Completed Jobs'
+              %th Duration
+              %th Completed
+            - when 'Running Jobs'
+              %th Progress
+            - when 'Scheduled Jobs'
+              %th Runs in
+              %th Cron Schedule
+            - when 'Queued Jobs'
+              %th Priority
+              %th Queued For
+            - when 'Paused Jobs'
+              %th Paused
+            - when 'Failed Jobs'
+              %th Failed
+            - when 'Aborted Jobs'
+              %th Aborted
+            - else
+              %th Duration
         %tbody
           - @jobs.each do |job|
             %tr{ class: "card callout callout-#{job.state}" }
@@ -19,12 +37,32 @@
                   = job.class.name
               %td.description.col-md-6
                 = job.description.try(:truncate, 50)
-              %td.completion.col-md-2
-                - if job.completed?
-                  = job.completed_at
-                - if job.running?
+              - case current_state
+              - when 'All Jobs'
+                %td.duration.col-md-2
+                  = job.duration
+              - when 'Completed Jobs'
+                %td.duration.col-md-2
+                  = job.duration
+                %td.completion.col-md-2
+                  = "#{RocketJob.seconds_as_duration(Time.now - job.completed_at)} ago"
+              - when 'Running Jobs'
+                %td.completion.col-md-2
                   .progress
                     .progress-bar{ style: "width: #{job.percent_complete}%;", title: "#{job.percent_complete}% percent complete."}
-              %td.duration.col-md-2
-                %i.fa.fa-clock-o
-                = job.duration
+              - when 'Scheduled Jobs'
+                %td.completion.col-md-2
+                  = RocketJob.seconds_as_duration(job.run_at - Time.now)
+                %td.completion.col-md-2
+                  = job.cron_schedule if job.respond_to?(:cron_schedule)
+              - when 'Paused Jobs', 'Failed Jobs', 'Aborted Jobs'
+                %td.duration.col-md-2
+                  = "#{RocketJob.seconds_as_duration(Time.now - job.completed_at)} ago"
+              - when 'Queued Jobs'
+                %td.completion.col-md-2
+                  = job.priority
+                %td.duration.col-md-2
+                  = job.duration
+              - else
+                %td.duration.col-md-2
+                  = job.duration

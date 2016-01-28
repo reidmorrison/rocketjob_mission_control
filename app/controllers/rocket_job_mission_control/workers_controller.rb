@@ -5,7 +5,7 @@ module RocketJobMissionControl
 
     def index
       @state = params[:state] || 'all'
-      @workers = RocketJob::Worker.where()
+      @workers = RocketJob::Worker.sort(:name)
       @workers = @workers.where(state: @state) unless @state == 'all'
     end
 

@@ -19,10 +19,10 @@
       %table.table.datatable.workers-datatable{ style: "width: 100%" }
         %thead
           %tr
-            %th ID
-            %th Max/Current Threads
+            %th Hostname : PID
+            %th Workers (Current/Max)
             %th Started
-            %th Last Heartbeat
+            %th Heartbeat
             %th Actions
         %tbody
           - @workers.each do |worker|
@@ -30,7 +30,7 @@
               %td.title
                 = worker.name
               %td.max-current-threads
-                = "#{worker.max_threads}/#{worker.heartbeat.current_threads.to_i}"
+                = "#{worker.heartbeat.current_threads.to_i}/#{worker.max_threads}"
               %td.time
                 = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
               %td.heartbeat

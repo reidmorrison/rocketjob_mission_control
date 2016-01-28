@@ -5,7 +5,7 @@ module RocketJobMissionControl
     rescue_from StandardError, with: :error_occurred
 
     def running
-      @jobs = RocketJob::Job.where(state: 'running')
+      @jobs = RocketJob::Job.where(state: 'running').sort(_id: -1)
     end
 
     def update

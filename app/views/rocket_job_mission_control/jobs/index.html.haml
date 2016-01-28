@@ -14,6 +14,8 @@
               %th Completed
             - when 'Running Jobs'
               %th Progress
+              %th Priority
+              %th Started
             - when 'Scheduled Jobs'
               %th Runs in
               %th Cron Schedule
@@ -50,6 +52,10 @@
                 %td.completion.col-md-2
                   .progress
                     .progress-bar{ style: "width: #{job.percent_complete}%;", title: "#{job.percent_complete}% percent complete."}
+                %td.completion.col-md-2
+                  = job.priority
+                %td.duration.col-md-2
+                  = "#{RocketJob.seconds_as_duration(Time.now - job.started_at)} ago" if job.started_at
               - when 'Scheduled Jobs'
                 %td.completion.col-md-2
                   = RocketJob.seconds_as_duration(job.run_at - Time.now)

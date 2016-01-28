@@ -110,7 +110,7 @@ module RocketJobMissionControl
         end
 
         it "grabs a sorted list of rocket jobs" do
-          expect(result).to have_received(:sort).with(created_at: :desc)
+          expect(result).to have_received(:sort).with(_id: :desc)
         end
       end
     end
@@ -146,7 +146,7 @@ module RocketJobMissionControl
         end
 
         it "grabs a sorted list of rocket jobs" do
-          expect(result).to have_received(:sort).with(created_at: :desc)
+          expect(result).to have_received(:sort).with(_id: :desc)
         end
 
         it "returns no jobs" do
@@ -170,7 +170,7 @@ module RocketJobMissionControl
           end
 
           it "grabs a sorted list of rocket jobs" do
-            expect(result).to have_received(:sort).with(created_at: :desc)
+            expect(result).to have_received(:sort).with(_id: :desc)
           end
 
           it "returns the jobs" do
@@ -187,7 +187,7 @@ module RocketJobMissionControl
             it { expect(response.status).to be(200) }
 
             it "grabs a sorted list of rocket jobs" do
-              expect(result).to have_received(:sort).with(created_at: :desc)
+              expect(result).to have_received(:sort).with(_id: :desc)
             end
 
             it "returns the jobs" do

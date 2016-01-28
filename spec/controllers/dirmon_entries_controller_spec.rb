@@ -410,7 +410,7 @@ module RocketJobMissionControl
         end
 
         it 'grabs a sorted list of entries' do
-          expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
+          expect(dirmon_list).to have_received(:sort).with(name: :desc)
         end
 
         it 'returns no entries' do
@@ -430,7 +430,7 @@ module RocketJobMissionControl
           end
 
           it 'grabs a sorted list of entries' do
-            expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
+            expect(dirmon_list).to have_received(:sort).with(name: :desc)
           end
 
           it 'returns the entries' do
@@ -447,7 +447,7 @@ module RocketJobMissionControl
             it { expect(response.status).to be(200) }
 
             it 'grabs a sorted list' do
-              expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
+              expect(dirmon_list).to have_received(:sort).with(name: :desc)
             end
 
             it 'returns the entries' do

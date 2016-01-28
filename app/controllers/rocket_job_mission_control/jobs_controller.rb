@@ -59,7 +59,7 @@ module RocketJobMissionControl
 
     def index
       @state = params[:state] || 'running'
-      @jobs = RocketJob::Job.limit(1000).sort(created_at: :desc)
+      @jobs = RocketJob::Job.limit(1000).sort(_id: :desc)
       unless @state == 'all'
         if @state == 'scheduled'
           @jobs = @jobs.scheduled

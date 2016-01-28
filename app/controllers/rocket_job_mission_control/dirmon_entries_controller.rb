@@ -7,7 +7,7 @@ module RocketJobMissionControl
 
     def index
       @state = params[:state] || :pending
-      @dirmons = RocketJob::DirmonEntry.limit(1000).sort(created_at: :desc)
+      @dirmons = RocketJob::DirmonEntry.limit(1000).sort(name: :asc)
       @dirmons = @dirmons.where(state: @state) unless @state == 'all'
     end
 

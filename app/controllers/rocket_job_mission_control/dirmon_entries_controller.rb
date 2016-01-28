@@ -163,6 +163,5 @@ module RocketJobMissionControl
         whitelist[:properties] = params[:rocket_job_dirmon_entry][:properties] if params.fetch(:rocket_job_dirmon_entry, {})[:properties]
       end
     end
-
   end
 end

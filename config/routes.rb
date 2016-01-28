@@ -8,11 +8,10 @@ RocketJobMissionControl::Engine.routes.draw do
       patch :resume
       patch :retry
     end
-    collection do
-      get :running
-    end
-    resources :failures, controller: 'jobs/failures', only: [:index]
+    resources :failures, controller: 'jobs/failures', only: :index
   end
+
+  resources :active_processes, only: :index
 
   resources :workers, only: [:index, :destroy] do
     member do

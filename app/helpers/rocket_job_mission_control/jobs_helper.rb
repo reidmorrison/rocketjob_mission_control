@@ -20,10 +20,6 @@ module RocketJobMissionControl
       )
     end
 
-    def current_state
-      @state.to_s.capitalize + ' Jobs'
-    end
-
     def job_states
       @job_states ||= RocketJob::Job.aasm.states.map { |state| state.name.to_s }
     end

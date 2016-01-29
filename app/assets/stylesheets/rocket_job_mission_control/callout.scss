@@ -61,16 +61,31 @@
 }
 .callout-info {
   border-left-color: #1b809e;
+  .title {
+    color: #1b809e;
+  }
 }
 .callout-success {
   border-left-color: #3c763d;
+  .title {
+    color: #3c763d;
+  }
 }
 .callout-warning {
   border-left-color: #aa6708;
+  .title {
+    color: #aa6708;
+  }
 }
 .callout-alert {
   border-left-color: #ce4844;
+  .title {
+    color: #ce4844;
+  }
 }
 .callout-zombie {
   border-left-color: darkred;
+  .title {
+    color: darkred;
+  }
 }

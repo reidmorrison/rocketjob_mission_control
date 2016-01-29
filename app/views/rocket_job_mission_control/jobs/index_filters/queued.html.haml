@@ -1,13 +1,15 @@
 #queue
   .job-list
     .list
-      %h2 Jobs
+      %h2
+        = current_state
       %table.table.datatable.jobs-datatable{ style: "width: 100%" }
         %thead
           %tr
             %th Class
             %th Description
-            %th Duration
+            %th Priority
+            %th Queued For
         %tbody
           - @jobs.each do |job|
             %tr{ class: "card callout callout-#{job.state}" }
@@ -17,5 +19,7 @@
                   = job.class.name
               %td.description.col-md-6
                 = job.description.try(:truncate, 50)
+              %td.completion.col-md-2
+                = job.priority
               %td.duration.col-md-2
                 = job.duration

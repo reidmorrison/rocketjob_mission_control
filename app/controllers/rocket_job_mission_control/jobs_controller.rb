@@ -1,8 +1,12 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
-    before_filter :find_job_or_redirect, except: [:index, :running]
+    before_filter :find_job_or_redirect, except: [:index]
     before_filter :show_sidebar
     rescue_from StandardError, with: :error_occurred
+
+    def index
+      @jobs  = RocketJob::Job.sort(_id: :desc).limit(1000)
+    end
 
     def update
       @job.update_attributes!(job_params)
@@ -51,20 +55,6 @@ module RocketJobMissionControl
     end
 
     def show
-    end
-
-    def index
-      @state = params[:state] || 'running'
-      @jobs  = RocketJob::Job.limit(1000).sort(_id: :desc)
-      unless @state == 'all'
-        if @state == 'scheduled'
-          @jobs = @jobs.scheduled
-        elsif @state == 'queued'
-          @jobs = @jobs.queued_now
-        else
-          @jobs = @jobs.where(state: @state)
-        end
-      end
     end
 
     private

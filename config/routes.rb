@@ -1,6 +1,16 @@
 RocketJobMissionControl::Engine.routes.draw do
 
   resources :jobs, only: [:index, :show, :update, :destroy] do
+    collection do
+      get :running,   to: 'jobs/index_filters#running'
+      get :scheduled, to: 'jobs/index_filters#scheduled'
+      get :completed, to: 'jobs/index_filters#completed'
+      get :queued,    to: 'jobs/index_filters#queued'
+      get :paused,    to: 'jobs/index_filters#paused'
+      get :failed,    to: 'jobs/index_filters#failed'
+      get :aborted,   to: 'jobs/index_filters#aborted'
+    end
+
     member do
       patch :abort
       patch :fail

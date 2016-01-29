@@ -1,13 +1,14 @@
 #queue
   .job-list
     .list
-      %h2 Jobs
+      %h2 Scheduled Jobs
       %table.table.datatable.jobs-datatable{ style: "width: 100%" }
         %thead
           %tr
             %th Class
             %th Description
-            %th Duration
+            %th Runs in
+            %th Cron Schedule
         %tbody
           - @jobs.each do |job|
             %tr{ class: "card callout callout-#{job.state}" }
@@ -17,5 +18,7 @@
                   = job.class.name
               %td.description.col-md-6
                 = job.description.try(:truncate, 50)
-              %td.duration.col-md-2
-                = job.duration
+              %td.completion.col-md-2
+                = RocketJob.seconds_as_duration(job.run_at - Time.now)
+              %td.completion.col-md-2
+                = job.cron_schedule if job.respond_to?(:cron_schedule)

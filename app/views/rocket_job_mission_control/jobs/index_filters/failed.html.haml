@@ -1,13 +1,13 @@
 #queue
   .job-list
     .list
-      %h2 Jobs
+      %h2 Failed Jobs
       %table.table.datatable.jobs-datatable{ style: "width: 100%" }
         %thead
           %tr
             %th Class
             %th Description
-            %th Duration
+            %th Failed
         %tbody
           - @jobs.each do |job|
             %tr{ class: "card callout callout-#{job.state}" }
@@ -18,4 +18,4 @@
               %td.description.col-md-6
                 = job.description.try(:truncate, 50)
               %td.duration.col-md-2
-                = job.duration
+                = "#{RocketJob.seconds_as_duration(Time.now - job.completed_at)} ago"

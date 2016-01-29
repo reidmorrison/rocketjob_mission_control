@@ -41,6 +41,12 @@
 }
 
 /* Used by Dirmon Entries */
+.callout-pending {
+  border-color: #9BCE33;
+  a {
+    color: #9BCE33;
+  }
+}
 .callout-enabled {
   border-left-color: green;
   a {

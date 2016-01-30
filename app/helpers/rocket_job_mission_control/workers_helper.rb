@@ -1,5 +1,14 @@
 module RocketJobMissionControl
   module WorkersHelper
+    def worker_icon(worker)
+      state =
+        if worker.zombie?
+          'zombie'
+        else
+          worker.state
+        end
+      state_icon(state)
+    end
 
     def worker_card_class(worker)
       if worker.zombie?

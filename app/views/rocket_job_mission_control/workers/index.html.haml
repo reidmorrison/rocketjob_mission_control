@@ -28,6 +28,7 @@
           - @workers.each do |worker|
             %tr{ class: "card callout #{worker_card_class(worker)}" }
               %td.title
+                %i.fa{class: worker_icon(worker), style: 'font-size: 75%', title: worker.state}
                 = worker.name
               %td.max-current-threads
                 = "#{worker.heartbeat.current_threads.to_i}/#{worker.max_threads}"

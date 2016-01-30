@@ -12,7 +12,8 @@ module RocketJobMissionControl
       running:   'fa-play',
       scheduled: 'fa-clock-o',
       starting:  'fa-cogs',
-      stopping:  'fa-stop'
+      stopping:  'fa-stop',
+      zombie:    'fa-hourglass-o'
     }
 
     def state_icon(state)

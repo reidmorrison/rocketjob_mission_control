@@ -1,19 +1,19 @@
 %ul#lg-menu.nav.hidden-xs
   %li
-    = link_to(workers_path(state: 'all')) do
+    = link_to(workers_path) do
       %i.fa.fa-list
       All
   - RocketJob::Worker.aasm.states.map { |s| s.name.to_s }.each do |state|
     %li{class: state}
-      = link_to(workers_path(state: state)) do
+      = link_to("#{state}_workers".to_sym) do
         %i.fa{class: state_icon(state)}
         = state.to_s.capitalize!
 / tiny only nav
 %ul#xs-menu.nav.visible-xs
   %li
-    = link_to(dirmon_entries_path(state: 'all')) do
+    = link_to(workers_path) do
       %i.fa.fa-list
   - RocketJob::Worker.aasm.states.map { |s| s.name.to_s }.each do |state|
     %li{class: state}
-      = link_to(workers_path(state: state)) do
+      = link_to("#{state}_workers".to_sym) do
         %i.fa{class: state_icon(state)}

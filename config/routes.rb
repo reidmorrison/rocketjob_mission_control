@@ -24,6 +24,13 @@ RocketJobMissionControl::Engine.routes.draw do
   resources :active_processes, only: :index
 
   resources :workers, only: [:index, :destroy] do
+    collection do
+      get :starting, to: 'workers/index_filters#starting'
+      get :running, to: 'workers/index_filters#running'
+      get :paused, to: 'workers/index_filters#paused'
+      get :stopping, to: 'workers/index_filters#stopping'
+    end
+
     member do
       patch :stop
       patch :pause

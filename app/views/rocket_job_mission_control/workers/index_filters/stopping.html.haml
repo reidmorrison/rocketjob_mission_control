@@ -3,12 +3,12 @@
     .list
       .row
         .col-md-6
-          %h2 Worker Processes
+          %h2 Stopping Worker Processes
         .col-md-6.worker-collection-actions
           - if @workers.present?
             %ol.pull-right
               .btn-group
-                - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
+                - [:pause_all, :resume_all, :destroy_zombies].each do |action|
                   = link_to("#{action.to_s.humanize.capitalize}",
                     rocket_job_mission_control.update_all_workers_path(worker_action: action),
                     method: :patch,
@@ -36,4 +36,4 @@
               %td.heartbeat
                 = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
               %td.actions
-                = render partial: 'actions', locals: { worker: worker }
+                = render partial: 'rocket_job_mission_control/workers/actions', locals: { worker: worker }

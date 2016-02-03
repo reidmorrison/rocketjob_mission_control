@@ -1,21 +1,10 @@
-#queue
-  .job-list
-    .list
-      %h2 Paused Jobs
-      %table.table.datatable.jobs-datatable{ style: "width: 100%" }
-        %thead
-          %tr
-            %th Class
-            %th Description
-            %th Paused
-        %tbody
-          - @jobs.each do |job|
-            %tr{ class: "card callout callout-#{job.state}" }
-              %td.title.col-md-4
-                = link_to(job_path(job.id)) do
-                  %i.fa{class: job_icon(job), style: 'font-size: 75%;', title: job.state}
-                  = job.class.name
-              %td.description.col-md-6
-                = job.description.try(:truncate, 50)
-              %td.duration.col-md-2
-                = "#{RocketJob.seconds_as_duration(Time.now - job.completed_at)} ago"
+.job-list
+  .list
+    %h2 Paused Jobs
+    %table.table.datatable.jobs-datatable{ style: "width: 100%", data: { source: "#{paused_jobs_url(format: 'json')}" } }
+      %thead
+        %tr
+          %th Class
+          %th Description
+          %th Paused
+      %tbody

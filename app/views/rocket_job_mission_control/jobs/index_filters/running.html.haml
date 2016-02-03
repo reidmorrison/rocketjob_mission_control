@@ -1,28 +1,12 @@
-#queue
-  .job-list
-    .list
-      %h2 Running Jobs
-      %table.table.datatable.jobs-datatable{ style: "width: 100%" }
-        %thead
-          %tr
-            %th Class
-            %th Description
-            %th Progress
-            %th Priority
-            %th Started
-        %tbody
-          - @jobs.each do |job|
-            %tr{ class: "card callout callout-#{job.state}" }
-              %td.title.col-md-4
-                = link_to(job_path(job.id)) do
-                  %i.fa{class: job_icon(job), style: 'font-size: 75%;', title: job.state}
-                  = job.class.name
-              %td.description.col-md-6
-                = job.description.try(:truncate, 50)
-                %td.completion.col-md-2
-                  .progress
-                    .progress-bar{ style: "width: #{job.percent_complete}%;", title: "#{job.percent_complete}% percent complete."}
-                %td.completion.col-md-2
-                  = job.priority
-                %td.duration.col-md-2
-                  = "#{RocketJob.seconds_as_duration(Time.now - job.started_at)} ago" if job.started_at
+.job-list
+  .list
+    %h2 Running Jobs
+    %table.table.datatable.jobs-datatable{ style: "width: 100%", data: { source: "#{running_jobs_url(format: 'json')}" } }
+      %thead
+        %tr
+          %th Class
+          %th Description
+          %th Progress
+          %th Priority
+          %th Started
+      %tbody

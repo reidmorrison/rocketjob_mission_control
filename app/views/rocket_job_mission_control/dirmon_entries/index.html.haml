@@ -1,21 +1,20 @@
-#queue
-  .job-list
-    .list
-      %h2 Directory Monitor Entries
-      %table.table.datatable.dirmon-datatable{ style: "width: 100%" }
-        %thead
-          %tr
-            %th Name
-            %th Job Class
-            %th Pattern
-        %tbody
-          - @dirmons.each do |dirmon|
-            %tr{ class: "card callout callout-#{dirmon.state}"}
-              %td.title.col-md-3
-                = link_to(dirmon_entry_path(dirmon.id)) do
-                  %i.fa{ class: state_icon(dirmon.state), style: 'font-size: 75%', title: dirmon.state }
-                  = dirmon.name
-              %td.title.col-md-4
-                = dirmon.job_class_name
-              %td.description.col-md-5
-                = dirmon.pattern.try(:truncate, 80)
+.job-list
+  .list
+    %h2 Directory Monitor Entries
+    %table.table.datatable.dirmon-datatable{ style: "width: 100%" }
+      %thead
+        %tr
+          %th Name
+          %th Job Class
+          %th Pattern
+      %tbody
+        - @dirmons.each do |dirmon|
+          %tr{ class: "card callout callout-#{dirmon.state}"}
+            %td.title.col-md-3
+              = link_to(dirmon_entry_path(dirmon.id)) do
+                %i.fa{ class: state_icon(dirmon.state), style: 'font-size: 75%', title: dirmon.state }
+                = dirmon.name
+            %td.title.col-md-4
+              = dirmon.job_class_name
+            %td.description.col-md-5
+              = dirmon.pattern.try(:truncate, 80)

@@ -5,7 +5,11 @@ module RocketJobMissionControl
     rescue_from StandardError, with: :error_occurred
 
     def index
-      @jobs  = RocketJob::Job.sort(_id: :desc).limit(1000)
+      @jobs  = RocketJob::Job.where()
+      respond_to do |format|
+        format.html
+        format.json { render(json: JobsDatatable.new(view_context, @jobs)) }
+      end
     end
 
     def update

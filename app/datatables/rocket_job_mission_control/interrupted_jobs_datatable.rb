@@ -1,5 +1,5 @@
 module RocketJobMissionControl
-  class FailedJobsDatatable < JobsDatatable
+  class InterruptedJobsDatatable < JobsDatatable
     private
 
     def data

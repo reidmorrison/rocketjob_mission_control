@@ -1,8 +1,12 @@
 .job-list
   .list
-    %h2
-      Workers actively working on jobs
-    %table.table.datatable.jobs-datatable{ style: "width: 100%" }
+    .row
+      .col-sm-10
+        %h2 Active Processes
+      .col-sm-2
+        .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
+          %i.fa.fa-refresh
+    %table.table.datatable.active-processes-datatable{ style: "width: 100%", data: { source: "#{active_processes_url(format: 'json')}", column_num: 4 } }
       %thead
         %tr
           %th Hostname : PID
@@ -10,15 +14,3 @@
           %th Description
           %th Started
       %tbody
-        - @busy.each do |worker_name, job, started_at|
-          %tr{ class: "card callout callout-running" }
-            %td.title.col-md-4
-              %i.fa{class: job_icon(job), style: 'font-size: 75%;', title: job.state}
-              = worker_name
-            %td.title.col-md-4
-              = link_to(job_path(job.id)) do
-                = job.class.name
-            %td.description.col-md-6
-              = job.description.try(:truncate, 50)
-            %td.duration.col-md-2
-              = "#{RocketJob.seconds_as_duration(Time.now - started_at)} ago" if started_at

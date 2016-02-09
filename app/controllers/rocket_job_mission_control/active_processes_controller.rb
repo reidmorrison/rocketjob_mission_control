@@ -17,6 +17,10 @@ module RocketJobMissionControl
         end
       end
       @busy = sorted ? busy : busy.sort_by { |result| result.first }
+      respond_to do |format|
+        format.html
+        format.json { render(json: ActiveProcessesDatatable.new(view_context, @busy)) }
+      end
     end
   end
 end

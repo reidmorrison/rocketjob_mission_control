@@ -4,12 +4,13 @@ module RocketJobMissionControl
 
     def data
       jobs.map do |job|
-        [
-          class_with_link(job),
-          h(job.description.try(:truncate, 50)),
-          h(time_till_run(job)),
-          h(cron_schedule(job))
-        ]
+        {
+          '0' => class_with_link(job),
+          '1' => h(job.description.try(:truncate, 50)),
+          '2' => h(time_till_run(job)),
+          '3' => h(cron_schedule(job)),
+          'DT_RowClass' => "card callout callout-#{job.state}"
+        }
       end
     end
 

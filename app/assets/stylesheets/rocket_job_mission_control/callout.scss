@@ -42,9 +42,9 @@
 
 /* Used by Dirmon Entries */
 .callout-pending {
-  border-color: #9BCE33;
+  border-color: orange;
   a {
-    color: #9BCE33;
+    color: orange;
   }
 }
 .callout-enabled {
@@ -54,9 +54,9 @@
   }
 }
 .callout-disabled {
-  border-left-color: orange;
+  border-left-color: grey;
   a {
-    color: darkorange;
+    color: grey;
   }
 }
 

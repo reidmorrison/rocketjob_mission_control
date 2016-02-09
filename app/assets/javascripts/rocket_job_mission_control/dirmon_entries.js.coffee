@@ -12,9 +12,20 @@ $(document).on 'ready', ->
       new_dirmon_path = $('#properties').data('url') + "?#{params}"
       window.location = new_dirmon_path
 
-  $('.dirmon-datatable').DataTable
+  table = $('.dirmon-datatable').DataTable
     pagingType: 'full_numbers'
     responsive: true
-    # ajax: $('.jobs-datatable').data('source')
-    # processing: true
-    # serverSide: true
+    ajax: $('.dirmon-datatable').data('source')
+    processing: true
+    serverSide: true
+    columns: [
+      { data: '0' }
+      { data: '1' }
+      { data: '2' }
+    ]
+
+  $('[data-behavior~=reload]').on 'click', ->
+    icon = $(this).find('i')
+    icon.addClass('fa-spin')
+    table.ajax.reload ->
+      icon.removeClass('fa-spin')

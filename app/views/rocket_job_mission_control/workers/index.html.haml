@@ -4,18 +4,22 @@
       .row
         .col-md-6
           %h2 Worker Processes
-        .col-md-6.worker-collection-actions
-          - if @workers.present?
-            %ol.pull-right
-              .btn-group
-                - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
-                  = link_to("#{action.to_s.humanize.capitalize}",
-                    rocket_job_mission_control.update_all_workers_path(worker_action: action),
-                    method: :patch,
-                    data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
-                    class: 'btn btn-default')
-              .clearfix
-      %table.table.datatable.workers-datatable{ style: "width: 100%" }
+        .col-md-6
+          .col-sm-10
+            .worker-collection-actions
+              - if @workers.present?
+                %ol
+                  .btn-group
+                    - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
+                      = link_to("#{action.to_s.humanize.capitalize}",
+                        rocket_job_mission_control.update_all_workers_path(worker_action: action),
+                        method: :patch,
+                        data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
+                        class: 'btn btn-default')
+          .col-sm-2.pull-right
+            .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
+              %i.fa.fa-refresh
+      %table.table.datatable.workers-datatable{ style: "width: 100%", data: { source: "#{workers_url(format: 'json')}" } }
         %thead
           %tr
             %th Hostname : PID
@@ -24,16 +28,3 @@
             %th Heartbeat
             %th Actions
         %tbody
-          - @workers.each do |worker|
-            %tr{ class: "card callout #{worker_card_class(worker)}" }
-              %td.title
-                %i.fa{class: worker_icon(worker), style: 'font-size: 75%', title: worker.state}
-                = worker.name
-              %td.max-current-threads
-                = "#{worker.heartbeat.current_threads.to_i}/#{worker.max_threads}"
-              %td.time
-                = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
-              %td.heartbeat
-                = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
-              %td.actions
-                = render partial: 'actions', locals: { worker: worker }

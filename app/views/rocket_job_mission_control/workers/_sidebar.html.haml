@@ -8,6 +8,7 @@
       = link_to("#{state}_workers".to_sym) do
         %i.fa{class: state_icon(state)}
         = state.to_s.capitalize!
+        = "(#{worker_counts_by_state(state)})"
 / tiny only nav
 %ul#xs-menu.nav.visible-xs
   %li

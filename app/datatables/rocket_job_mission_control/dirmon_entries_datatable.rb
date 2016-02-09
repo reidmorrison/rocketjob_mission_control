@@ -1,11 +1,16 @@
 module RocketJobMissionControl
-  class JobsDatatable
-    delegate :params, :link_to, :job_path, :job_icon, to: :@view
+  class DirmonEntriesDatatable
+    delegate :params,
+             :link_to,
+             :dirmon_entry_path,
+             :state_icon,
+             :render, to: :@view
+
     delegate :h, to: 'ERB::Util'
 
-    def initialize(view, jobs)
+    def initialize(view, dirmons)
       @view = view
-      @unfiltered_jobs = jobs
+      @unfiltered_dirmons = dirmons
     end
 
     def as_json(options = {})
@@ -20,40 +25,30 @@ module RocketJobMissionControl
     private
 
     def data
-      jobs.map do |job|
+      dirmons.map do |dirmon|
         {
-          '0' => class_with_link(job),
-          '1' => h(job.description.try(:truncate, 50)),
-          '2' => h(job.completed_at),
-          '3' => h(job.duration),
-          'DT_RowClass' => "card callout callout-#{job.state}"
+          '0' => name_with_link(dirmon),
+          '1' => h(dirmon.job_class_name),
+          '2' => h(dirmon.pattern.try(:truncate, 80)),
+          'DT_RowClass' => "card callout callout-#{dirmon.state}"
         }
       end
     end
 
     def get_raw_records
-      @unfiltered_jobs
+      @unfiltered_dirmons
     end
 
-    def jobs
-      @jobs ||= fetch_jobs
+    def dirmons
+      @dirmons ||= fetch_dirmons
     end
 
-    def fetch_jobs
+    def fetch_dirmons
       records = get_raw_records
       records = sort_records(records) if params[:order].present?
       records = filter_records(records) if params[:search].present?
       records = paginate_records(records) unless params[:length].present? && params[:length] == '-1'
       records
-    end
-
-    def class_with_link(job)
-      <<-EOS
-        <a href="#{job_path(job.id)}">
-          <i class="fa #{job_icon(job)}" style="font-size: 75%" title="#{job.state}"></i>
-          #{job.class.name}
-        </a>
-      EOS
     end
 
     def page
@@ -72,24 +67,29 @@ module RocketJobMissionControl
       records.sort(sort_by)
     end
 
-    def counts
-      RocketJob::Job.counts_by_state
-    end
-
     def sort_column(index)
-      columns = %w[_type description completed_at duration]
+      columns = %w[name max_threads started_at heartbeat.updated_at]
       columns[index.to_i]
     end
 
     def filter_records(records)
       return records unless (params[:search].present? && params[:search][:value].present?)
       conditions = params[:search][:value]#build_conditions_for(params[:search][:value])
-      records = RocketJobMissionControl::Jobs::Search.new(conditions, records).execute if conditions
+      records = RocketJobMissionControl::DirmonEntries::Search.new(conditions, records).execute if conditions
       records
     end
 
     def paginate_records(records)
       Kaminari.paginate_array(records.all).page(page).per(per_page)
+    end
+
+    def name_with_link(dirmon)
+      <<-EOS
+        <a href="#{dirmon_entry_path(dirmon.id)}">
+          <i class="fa #{state_icon(dirmon.state)}" style="font-size: 75%" title="#{dirmon.state}"></i>
+          #{dirmon.name}
+        </a>
+      EOS
     end
   end
 end

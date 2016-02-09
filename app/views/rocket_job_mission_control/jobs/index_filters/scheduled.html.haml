@@ -1,7 +1,12 @@
 .job-list
   .list
-    %h2 Scheduled Jobs
-    %table.table.datatable.jobs-datatable{ style: "width: 100%", data: { source: "#{scheduled_jobs_url(format: 'json')}" } }
+    .row
+      .col-sm-10
+        %h2 Scheduled Jobs
+      .col-sm-2
+        .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
+          %i.fa.fa-refresh
+    %table.table.datatable.jobs-datatable{ style: "width: 100%", data: { source: "#{scheduled_jobs_url(format: 'json')}", column_num: 4 } }
       %thead
         %tr
           %th Class
@@ -9,15 +14,3 @@
           %th Runs in
           %th Cron Schedule
       %tbody
-        -# - @jobs.each do |job|
-        -#   %tr{ class: "card callout callout-#{job.state}" }
-        -#     %td.title.col-md-4
-        -#       = link_to(job_path(job.id)) do
-        -#         %i.fa{class: job_icon(job), style: 'font-size: 75%;', title: job.state}
-        -#         = job.class.name
-        -#     %td.description.col-md-6
-        -#       = job.description.try(:truncate, 50)
-        -#     %td.completion.col-md-2
-        -#       = RocketJob.seconds_as_duration(job.run_at - Time.now)
-        -#     %td.completion.col-md-2
-        -#       = job.cron_schedule if job.respond_to?(:cron_schedule)

@@ -6,9 +6,11 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @state = params[:state] || :pending
-      @dirmons = RocketJob::DirmonEntry.limit(1000).sort(name: :asc)
-      @dirmons = @dirmons.where(state: @state) unless @state == 'all'
+      @dirmons  = RocketJob::DirmonEntry.where()
+      respond_to do |format|
+        format.html
+        format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+      end
     end
 
     def show

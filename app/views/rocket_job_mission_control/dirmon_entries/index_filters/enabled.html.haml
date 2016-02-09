@@ -1,0 +1,10 @@
+.dirmon-list
+  .list
+    %h2 Enabled Entries
+    %table.table.datatable.dirmon-datatable{ style: "width: 100%", data: { source: "#{enabled_dirmon_entries_url(format: 'json')}" } }
+      %thead
+        %tr
+          %th Name
+          %th Job Class
+          %th Pattern
+      %tbody

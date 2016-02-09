@@ -5,6 +5,10 @@ module RocketJobMissionControl
 
     def index
       @workers = RocketJob::Worker.sort(:name)
+      respond_to do |format|
+        format.html
+        format.json { render(json: WorkersDatatable.new(view_context, @workers)) }
+      end
     end
 
     VALID_STATES = {

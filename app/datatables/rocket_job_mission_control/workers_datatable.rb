@@ -112,14 +112,14 @@ module RocketJobMissionControl
       actions = '<div class="actions">'
       if worker.stopping?
         actions += "Worker is stopping..."
-        actions += "#{ link_to "destroy", worker_path(worker), method: :delete, class: 'btn btn-danger' }"
+        actions += "#{ link_to "destroy", worker_path(worker), method: :delete, class: 'btn btn-danger', data: { confirm: "Destroy this worker?"}  }"
       else
         if worker.paused?
-          actions += "#{ link_to "resume", resume_worker_path(worker), method: :patch, class: 'btn btn-default' }"
+          actions += "#{ link_to "resume", resume_worker_path(worker), method: :patch, class: 'btn btn-default', data: { confirm: "Resume this worker?"}  }"
         else
-          actions += "#{ link_to "pause", pause_worker_path(worker), method: :patch, class: 'btn btn-default' }"
+          actions += "#{ link_to "pause", pause_worker_path(worker), method: :patch, class: 'btn btn-default', data: { confirm: "Pause this worker?"} }"
         end
-        actions += "#{ link_to "stop", stop_worker_path(worker), method: :patch, class: 'btn btn-danger' }"
+        actions += "#{ link_to "stop", stop_worker_path(worker), method: :patch, class: 'btn btn-danger', data: { confirm: "Stop this worker?"} }"
       end
       actions += '</div>'
     end

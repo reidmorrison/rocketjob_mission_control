@@ -13,7 +13,7 @@
     .navbar-collapse.collapse
       %ul.nav.navbar-nav
         %li
-          = link_to jobs_path, class: active_page(jobs_path) do
+          = link_to running_jobs_path, class: active_page(running_jobs_path) do
             %i.fa.fa-home
             Jobs
         %li
@@ -25,7 +25,7 @@
             %i.fa.fa-circle-o-notch
             Activity
         %li
-          = link_to dirmon_entries_path, class: active_page(dirmon_entries_path) do
+          = link_to enabled_dirmon_entries_path, class: active_page(enabled_dirmon_entries_path) do
             %i.fa.fa-folder-o
             Directory Monitors
       %ul.nav.navbar-nav.navbar-right

@@ -55,5 +55,5 @@ RocketJobMissionControl::Engine.routes.draw do
     end
   end
 
-  root to: "jobs#index"
+  root to: "jobs/index_filters#running"
 end

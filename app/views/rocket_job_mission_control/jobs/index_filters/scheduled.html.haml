@@ -6,7 +6,7 @@
       .col-sm-2
         .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
           %i.fa.fa-refresh
-    %table.table.datatable.jobs-datatable{ style: "width: 100%", data: { source: "#{scheduled_jobs_url(format: 'json')}", column_num: 4 } }
+    %table.table.datatable.jobs-datatable{ style: "width: 100%", data: { source: "#{scheduled_jobs_url(format: 'json')}" } }
       %thead
         %tr
           %th Class
@@ -14,3 +14,10 @@
           %th Runs in
           %th Cron Schedule
       %tbody
+
+:javascript
+  jQuery(function() {
+    new RjmcDatatable(
+      $(".jobs-datatable"),
+      [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}]);
+  });

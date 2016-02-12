@@ -28,3 +28,10 @@
             %th Heartbeat
             %th Actions
         %tbody
+
+:javascript
+  jQuery(function() {
+    new RjmcDatatable(
+      $('.workers-datatable'),
+      [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}, {data: '4'}]);
+  });

@@ -21,7 +21,7 @@ PATH
       jquery-datatables-rails
       jquery-rails
       kaminari
-      rails (~> 4.0)
+      rails (>= 4.0)
       rocketjob (~> 2.0.0.alpha)
       sass-rails (>= 3.2)
 

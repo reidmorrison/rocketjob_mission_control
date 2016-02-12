@@ -8,3 +8,11 @@
           %th Job Class
           %th Pattern
       %tbody
+
+
+:javascript
+  jQuery(function() {
+    new RjmcDatatable(
+      $('.dirmon-datatable'),
+      [{data: '0'}, {data: '1'}, {data: '2'}]);
+  });

@@ -25,6 +25,23 @@ table.datatable {
   margin: 1em 0;
 }
 
+table.dataTable thead .sorting_asc:after {
+    content: "\e155";
+}
+
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    opacity: 0.5;
+}
+
+table.dataTable thead > tr > th {
+    padding-left: 30px;
+}
+
 .job-list {
   height: 100%;
   min-height: 768px;

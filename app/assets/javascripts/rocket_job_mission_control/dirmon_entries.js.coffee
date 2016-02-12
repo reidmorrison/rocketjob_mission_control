@@ -11,21 +11,3 @@ $(document).on 'ready', ->
       params = $('#new_rocket_job_dirmon_entry').serialize()
       new_dirmon_path = $('#properties').data('url') + "?#{params}"
       window.location = new_dirmon_path
-
-  table = $('.dirmon-datatable').DataTable
-    pagingType: 'full_numbers'
-    responsive: true
-    ajax: $('.dirmon-datatable').data('source')
-    processing: true
-    serverSide: true
-    columns: [
-      { data: '0' }
-      { data: '1' }
-      { data: '2' }
-    ]
-
-  $('[data-behavior~=reload]').on 'click', ->
-    icon = $(this).find('i')
-    icon.addClass('fa-spin')
-    table.ajax.reload ->
-      icon.removeClass('fa-spin')

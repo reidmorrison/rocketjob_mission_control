@@ -15,7 +15,7 @@
       - @dirmon_entry.job_class.rocket_job_properties.each do |property_name|
         - next if property_name == :arguments
         - key = @dirmon_entry.job_class.keys[property_name.to_s]
-        - next unless key
+        - next unless key && key.type
         - placeholder = key.default? ? key.default : nil
         .form-group
           = properties.label property_name.to_s

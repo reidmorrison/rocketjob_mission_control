@@ -7,7 +7,7 @@ module RocketJobMissionControl
       t      = Time.new
       busy   = []
       RocketJob::Job.running.sort(:worker_name).collect do |job|
-        if job.respond_to?(:input_categories)
+        if job.respond_to?(:input)
           sorted = false
           job.input.each('state' => 'running') do |slice|
             busy << [slice.worker_name, job, slice.started_at]

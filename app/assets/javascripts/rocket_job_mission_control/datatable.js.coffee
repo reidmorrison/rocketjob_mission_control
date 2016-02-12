@@ -4,6 +4,7 @@ class @RjmcDatatable
     @columns = columns
     @ordering = opts.ordering ? true
     @searching = opts.searching ? true
+    @order = opts.order ? []
     @reload = $("[data-behavior='reload']")
     @initializeTable()
     @setEvents()
@@ -18,6 +19,7 @@ class @RjmcDatatable
       columns: @columns
       ordering: @ordering
       searching: @searching
+      order: @order
 
   setEvents: ->
     @reload.on 'click', @reloadTable

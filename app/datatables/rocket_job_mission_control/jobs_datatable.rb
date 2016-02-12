@@ -77,7 +77,7 @@ module RocketJobMissionControl
     end
 
     def sort_column(index)
-      columns = %w[_type description completed_at duration]
+      columns = %w[_type description completed_at]
       columns[index.to_i]
     end
 

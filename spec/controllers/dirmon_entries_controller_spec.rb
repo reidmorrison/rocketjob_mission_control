@@ -409,67 +409,29 @@ module RocketJobMissionControl
           expect(response.status).to be(200)
         end
 
-        it 'grabs a sorted list of entries' do
-          expect(dirmon_list).to have_received(:sort).with(name: :desc)
-        end
-
-        it 'returns no entries' do
-          expect(assigns(:dirmons)).to eq([])
-        end
+        # it 'returns no entries' do
+        #   expect(assigns(:dirmons).count).to eq(0)
+        # end
       end
 
       describe 'with jobs' do
-        let(:dirmon_list) { spy(sort: dirmons) }
         let(:dirmons) { ['fake_dirmon1', 'fake_dirmon2'] }
 
-        describe 'with no parameters' do
-          before { get :index }
-
-          it 'succeeds' do
-            expect(response.status).to be(200)
-          end
-
-          it 'grabs a sorted list of entries' do
-            expect(dirmon_list).to have_received(:sort).with(name: :desc)
-          end
-
-          it 'returns the entries' do
-            expect(assigns(:dirmons)).to match_array(dirmons)
-          end
+        before do
+          allow(RocketJob::DirmonEntry).to receive(:where).and_return(dirmons)
+          get :index
         end
 
-        describe 'with a state filter' do
-          before { get :index, states: states }
+        it 'succeeds' do
+          expect(response.status).to be(200)
+        end
 
-          context 'that is empty' do
-            let(:states) { [] }
+        it 'grabs a sorted list of entries' do
+          expect(RocketJob::DirmonEntry).to have_received(:where)
+        end
 
-            it { expect(response.status).to be(200) }
-
-            it 'grabs a sorted list' do
-              expect(dirmon_list).to have_received(:sort).with(name: :desc)
-            end
-
-            it 'returns the entries' do
-              expect(assigns(:dirmons)).to match_array(dirmons)
-            end
-          end
-
-          context 'with a state' do
-            let(:query_spy) { spy(where: dirmons) }
-            let(:dirmon_list) { spy(sort: query_spy) }
-            let(:states) { ['enabled'] }
-
-            it { expect(response.status).to be(200) }
-
-            it 'grabs a filtered list' do
-              expect(query_spy).to have_received(:where).with(state: ['enabled'])
-            end
-
-            it 'returns the entries' do
-              expect(assigns(:dirmons)).to match_array(dirmons)
-            end
-          end
+        it 'returns the entries' do
+          expect(assigns(:dirmons)).to eq(dirmons)
         end
       end
     end

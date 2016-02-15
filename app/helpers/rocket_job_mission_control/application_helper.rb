@@ -38,6 +38,5 @@ module RocketJobMissionControl
       json_string_options = {space: ' ', indent: '  ', array_nl: '<br />', object_nl: '<br />'}
       JSON.generate(arguments, json_string_options).html_safe
     end
-
   end
 end

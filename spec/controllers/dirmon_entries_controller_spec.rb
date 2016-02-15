@@ -402,6 +402,7 @@ module RocketJobMissionControl
     describe 'GET #index' do
       describe 'with no entries' do
         before do
+          RocketJob::DirmonEntry.destroy_all
           get :index
         end
 
@@ -409,9 +410,9 @@ module RocketJobMissionControl
           expect(response.status).to be(200)
         end
 
-        # it 'returns no entries' do
-        #   expect(assigns(:dirmons).count).to eq(0)
-        # end
+        it 'returns no entries' do
+          expect(assigns(:dirmons).count).to eq(0)
+        end
       end
 
       describe 'with jobs' do
@@ -426,7 +427,7 @@ module RocketJobMissionControl
           expect(response.status).to be(200)
         end
 
-        it 'grabs a sorted list of entries' do
+        it 'grabs all dirmons with empty where' do
           expect(RocketJob::DirmonEntry).to have_received(:where)
         end
 

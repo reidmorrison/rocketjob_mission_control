@@ -104,40 +104,29 @@ module RocketJobMissionControl
         it "assigns the job" do
           expect(assigns(:job)).to be_present
         end
-
-        it "assigns the jobs" do
-          expect(assigns(:jobs)).to eq([])
-        end
-
-        it "grabs a sorted list of rocket jobs" do
-          expect(result).to have_received(:sort).with(created_at: :desc)
-        end
-      end
-    end
-
-    describe "GET #running" do
-      before do
-        allow(RocketJob::Job).to receive(:where).and_return([])
-        get :running
-      end
-
-      it { expect(response.status).to be(200) }
-
-      it "queries for running jobs" do
-        expect(RocketJob::Job).to have_received(:where).with(state: 'running')
-      end
-
-      it "returns expected jobs" do
-        expect(assigns[:jobs]).to eq([])
       end
     end
 
     describe "GET #index" do
       describe "with no jobs" do
-        let(:result) { spy(sort: []) }
+        before do
+          get :index
+        end
+
+        it "succeeds" do
+          expect(response.status).to be(200)
+        end
+
+        it "returns no jobs" do
+          expect(assigns(:jobs).count).to eq(0)
+        end
+      end
+
+      describe "with jobs" do
+        let(:jobs) { ['fake_job1', 'fake_job2'] }
 
         before do
-          allow(RocketJob::Job).to receive(:limit).and_return(result)
+          allow(RocketJob::Job).to receive(:sort).and_return(jobs)
           get :index
         end
 
@@ -146,70 +135,11 @@ module RocketJobMissionControl
         end
 
         it "grabs a sorted list of rocket jobs" do
-          expect(result).to have_received(:sort).with(created_at: :desc)
+          expect(RocketJob::Job).to have_received(:sort).with(_id: :desc)
         end
 
-        it "returns no jobs" do
-          expect(assigns(:jobs)).to eq([])
-        end
-      end
-
-      describe "with jobs" do
-        let(:result) { spy(sort: jobs) }
-        let(:jobs) { ['fake_job1', 'fake_job2'] }
-
-        before do
-          allow(RocketJob::Job).to receive(:limit).and_return(result)
-        end
-
-        describe "with no parameters" do
-          before { get :index }
-
-          it "succeeds" do
-            expect(response.status).to be(200)
-          end
-
-          it "grabs a sorted list of rocket jobs" do
-            expect(result).to have_received(:sort).with(created_at: :desc)
-          end
-
-          it "returns the jobs" do
-            expect(assigns(:jobs)).to match_array(jobs)
-          end
-        end
-
-        describe "with a state filter" do
-          before { get :index, states: states }
-
-          context "that is empty" do
-            let(:states) { [] }
-
-            it { expect(response.status).to be(200) }
-
-            it "grabs a sorted list of rocket jobs" do
-              expect(result).to have_received(:sort).with(created_at: :desc)
-            end
-
-            it "returns the jobs" do
-              expect(assigns(:jobs)).to match_array(jobs)
-            end
-          end
-
-          context "with a state" do
-            let(:query_spy) { spy(where: jobs) }
-            let(:result) { spy(sort: query_spy) }
-            let(:states) { ['completed', 'running'] }
-
-            it { expect(response.status).to be(200) }
-
-            it "grabs a filtered list of rocket jobs" do
-              expect(query_spy).to have_received(:where).with(state: states)
-            end
-
-            it "returns the jobs" do
-              expect(assigns(:jobs)).to match_array(jobs)
-            end
-          end
+        it "returns the jobs" do
+          expect(assigns(:jobs)).to eq(jobs)
         end
       end
     end

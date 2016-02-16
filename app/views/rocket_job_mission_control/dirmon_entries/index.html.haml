@@ -1,11 +1,18 @@
-.row
-  #queue
-    = render partial: 'list', locals: { jobs: @jobs }
+.dirmon-list
+  .list
+    %h2 All Entries
+    %table.table.datatable.dirmon-datatable{ style: "width: 100%", data: { source: "#{dirmon_entries_url(format: 'json')}" } }
+      %thead
+        %tr
+          %th Name
+          %th Job Class
+          %th Pattern
+      %tbody
 
-    .col-md-8
-      .job-status
-        #job
-          .welcome_screen
-            = link_to image_tag('rocket_job_mission_control/rocket-icon-512x512.png'), 'http://rocketjob.io'
-            %h1 Welcome to rocketjob
-            %p High volume, priority based, Enterprise Batch Processing solution for Ruby
+
+:javascript
+  jQuery(function() {
+    new RjmcDatatable(
+      $('.dirmon-datatable'),
+      [{data: '0'}, {data: '1'}, {data: '2'}]);
+  });

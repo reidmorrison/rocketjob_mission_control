@@ -1,9 +1,6 @@
-.row
-  #queue
+.container-fluid
+  .row
+    .col-xm-14
+      .lead New Dirmon Entry
 
-    = render partial: 'list', locals: { jobs: @jobs }
-
-  .col-md-6
-    .lead New Dirmon Entry
-
-    = render partial: 'form'
+      = render partial: 'form'

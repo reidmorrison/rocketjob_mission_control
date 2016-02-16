@@ -5,48 +5,93 @@
 }
 .callout-queued {
   border-left-color: darkgrey;
+  a {
+    color: darkgrey;
+  }
 }
 .callout-running {
   border-left-color: #337ab7;
+  a {
+    color: #337ab7;
+  }
 }
 .callout-completed {
   border-left-color: green;
+  a {
+    color: green;
+  }
 }
 .callout-paused {
   border-left-color: orange;
+  a {
+    color: orange;
+  }
 }
 .callout-failed {
   border-left-color: red;
+  a {
+    color: red;
+  }
 }
 .callout-aborted {
   border-left-color: darkorange;
+  a {
+    color: darkorange;
+  }
 }
 
 /* Used by Dirmon Entries */
+.callout-pending {
+  border-color: orange;
+  a {
+    color: orange;
+  }
+}
 .callout-enabled {
   border-left-color: green;
+  a {
+    color: green;
+  }
 }
 .callout-disabled {
-  border-left-color: orange;
+  border-left-color: grey;
+  a {
+    color: grey;
+  }
 }
 
 /* Used by Workers */
 .callout-top {
   border: 1px solid #eee;
-  border-top-width: 5px;
+  border-left-width: 5px;
 }
-.callout-info-top {
-  border-top-color: #1b809e;
+.callout-info {
+  border-left-color: #1b809e;
+  .title {
+    color: #1b809e;
+  }
 }
-.callout-success-top {
-  border-top-color: #3c763d;
+.callout-success {
+  border-left-color: #3c763d;
+  .title {
+    color: #3c763d;
+  }
 }
-.callout-warning-top {
-  border-top-color: #aa6708;
+.callout-warning {
+  border-left-color: #aa6708;
+  .title {
+    color: #aa6708;
+  }
 }
-.callout-alert-top {
-  border-top-color: #ce4844;
+.callout-alert {
+  border-left-color: #ce4844;
+  .title {
+    color: #ce4844;
+  }
 }
-.callout-zombie-top {
-  border-top-color: darkred;
+.callout-zombie {
+  border-left-color: darkred;
+  .title {
+    color: darkred;
+  }
 }

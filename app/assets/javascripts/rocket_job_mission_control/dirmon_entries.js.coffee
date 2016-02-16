@@ -11,4 +11,3 @@ $(document).on 'ready', ->
       params = $('#new_rocket_job_dirmon_entry').serialize()
       new_dirmon_path = $('#properties').data('url') + "?#{params}"
       window.location = new_dirmon_path
-

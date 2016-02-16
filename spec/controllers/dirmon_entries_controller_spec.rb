@@ -195,10 +195,6 @@ module RocketJobMissionControl
           expect(assigns(:dirmon_entry)).to_not be_valid
         end
 
-        it 'loads the other entries' do
-          expect(dirmon_list).to have_received(:sort)
-        end
-
         context 'with invalid arguments json' do
           let(:dirmon_params) do
             {
@@ -215,10 +211,6 @@ module RocketJobMissionControl
 
           it 'has errors on arguments' do
             expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
-          end
-
-          it 'loads the other entries' do
-            expect(dirmon_list).to have_received(:sort)
           end
         end
       end
@@ -306,10 +298,6 @@ module RocketJobMissionControl
           it 'has errors on the entry' do
             expect(assigns(:dirmon_entry)).to_not be_valid
           end
-
-          it 'loads the other entries' do
-            expect(dirmon_list).to have_received(:sort)
-          end
         end
 
         context 'with invalid arguments json' do
@@ -328,10 +316,6 @@ module RocketJobMissionControl
 
           it 'has errors on arguments' do
             expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
-          end
-
-          it 'loads the other entries' do
-            expect(dirmon_list).to have_received(:sort)
           end
         end
       end
@@ -385,14 +369,6 @@ module RocketJobMissionControl
         it 'assigns the entry' do
           expect(assigns(:dirmon_entry)).to be_present
         end
-
-        it 'assigns the entries' do
-          expect(assigns(:dirmons)).to eq([])
-        end
-
-        it 'grabs a sorted list' do
-          expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
-        end
       end
     end
 
@@ -426,6 +402,7 @@ module RocketJobMissionControl
     describe 'GET #index' do
       describe 'with no entries' do
         before do
+          RocketJob::DirmonEntry.destroy_all
           get :index
         end
 
@@ -433,67 +410,29 @@ module RocketJobMissionControl
           expect(response.status).to be(200)
         end
 
-        it 'grabs a sorted list of entries' do
-          expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
-        end
-
         it 'returns no entries' do
-          expect(assigns(:dirmons)).to eq([])
+          expect(assigns(:dirmons).count).to eq(0)
         end
       end
 
       describe 'with jobs' do
-        let(:dirmon_list) { spy(sort: dirmons) }
         let(:dirmons) { ['fake_dirmon1', 'fake_dirmon2'] }
 
-        describe 'with no parameters' do
-          before { get :index }
-
-          it 'succeeds' do
-            expect(response.status).to be(200)
-          end
-
-          it 'grabs a sorted list of entries' do
-            expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
-          end
-
-          it 'returns the entries' do
-            expect(assigns(:dirmons)).to match_array(dirmons)
-          end
+        before do
+          allow(RocketJob::DirmonEntry).to receive(:where).and_return(dirmons)
+          get :index
         end
 
-        describe 'with a state filter' do
-          before { get :index, states: states }
+        it 'succeeds' do
+          expect(response.status).to be(200)
+        end
 
-          context 'that is empty' do
-            let(:states) { [] }
+        it 'grabs all dirmons with empty where' do
+          expect(RocketJob::DirmonEntry).to have_received(:where)
+        end
 
-            it { expect(response.status).to be(200) }
-
-            it 'grabs a sorted list' do
-              expect(dirmon_list).to have_received(:sort).with(created_at: :desc)
-            end
-
-            it 'returns the entries' do
-              expect(assigns(:dirmons)).to match_array(dirmons)
-            end
-          end
-
-          context 'with a state' do
-            let(:query_spy) { spy(where: dirmons) }
-            let(:dirmon_list) { spy(sort: query_spy) }
-            let(:states) { ['enabled'] }
-
-            it { expect(response.status).to be(200) }
-
-            it 'grabs a filtered list' do
-              expect(query_spy).to have_received(:where).with(state: ['enabled'])
-            end
-
-            it 'returns the entries' do
-              expect(assigns(:dirmons)).to match_array(dirmons)
-            end
-          end
+        it 'returns the entries' do
+          expect(assigns(:dirmons)).to eq(dirmons)
         end
       end
     end

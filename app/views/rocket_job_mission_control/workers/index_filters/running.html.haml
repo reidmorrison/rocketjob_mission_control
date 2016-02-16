@@ -1,0 +1,37 @@
+#workers
+  .worker-list
+    .list
+      .row
+        .col-md-6
+          %h2 Running Worker Processes
+        .col-md-6
+          .col-sm-10
+            .worker-collection-actions
+              - if @workers.present?
+                %ol.pull-right
+                  .btn-group
+                    - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
+                      = link_to("#{action.to_s.humanize.capitalize}",
+                        rocket_job_mission_control.update_all_workers_path(worker_action: action),
+                        method: :patch,
+                        data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
+                        class: 'btn btn-default')
+          .col-sm-2.pull-right
+            .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
+              %i.fa.fa-refresh
+      %table.table.datatable.workers-datatable{ style: "width: 100%", data: { source: "#{running_workers_url(format: 'json')}" } }
+        %thead
+          %tr
+            %th Hostname : PID
+            %th Workers (Current/Max)
+            %th Started
+            %th Heartbeat
+            %th Actions
+        %tbody
+
+:javascript
+  jQuery(function() {
+    new RjmcDatatable(
+      $('.workers-datatable'),
+      [{data: '0'}, {data: '1', orderable: false}, {data: '2', orderable: false}, {data: '3', orderable: false}, {data: '4', orderable: false}]);
+  });

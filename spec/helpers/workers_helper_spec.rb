@@ -7,7 +7,7 @@ module RocketJobMissionControl
         let(:worker) { spy(zombie?: true) }
 
         it 'returns the correct class' do
-          expect(helper.worker_card_class(worker)).to eq('callout-zombie-top')
+          expect(helper.worker_card_class(worker)).to eq('callout-zombie')
         end
       end
 

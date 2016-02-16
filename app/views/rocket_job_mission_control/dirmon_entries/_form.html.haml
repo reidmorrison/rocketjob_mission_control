@@ -5,16 +5,20 @@
     - @dirmon_entry.errors.messages.each_pair do |field, message|
       .message
         = "#{field}: #{message}"
+
 = form_for @dirmon_entry, url: {action: action} do |f|
-  .name.form-group
-    = f.label :name
-    = f.text_field :name, class: 'form-control'
+  .row
+    .col-md-6
+      .name.form-group
+        = f.label :name
+        = f.text_field :name, class: 'form-control'
+    .col-md-6
+      .job.form-group
+        = f.label :job_class_name
+        = f.text_field :job_class_name, class: 'form-control', disabled: action != :create
   .path.form-group
     = f.label :pattern
     = f.text_field :pattern, class: 'form-control'
-  .job.form-group
-    = f.label :job_class_name
-    = f.text_field :job_class_name, class: 'form-control', disabled: action != :create
   .path.form-group
     = f.label :archive_directory
     = f.text_field :archive_directory, class: 'form-control'
@@ -22,7 +26,7 @@
     .col-md-12
       = render partial: 'properties', locals: { f: f }
 
-  .buttons
+  .buttons.pull-right
     = f.submit action, class: 'btn btn-primary'
     = link_to 'cancel', :back, class: 'btn btn-default'
     - if action == :create

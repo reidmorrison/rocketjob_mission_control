@@ -1,0 +1,17 @@
+.dirmon-list
+  .list
+    %h2 Pending Entries
+    %table.table.datatable.dirmon-datatable{ style: "width: 100%", data: { source: "#{pending_dirmon_entries_url(format: 'json')}" } }
+      %thead
+        %tr
+          %th Name
+          %th Job Class
+          %th Pattern
+      %tbody
+
+:javascript
+  jQuery(function() {
+    new RjmcDatatable(
+      $('.dirmon-datatable'),
+      [{data: '0'}, {data: '1'}, {data: '2'}]);
+  });

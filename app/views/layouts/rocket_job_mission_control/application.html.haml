@@ -21,25 +21,25 @@
     %link{href: "//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css", rel: "stylesheet"}/
 
   %body.rocket_job
-    #wrapper.toggled
-      = render partial: 'layouts/rocket_job_mission_control/partials/sidebar'
+    #wrapper
+      .container-fluid
+        .row.row-offcanvas.row-offcanvas-left
+          = render partial: 'layouts/rocket_job_mission_control/partials/sidebar'
 
-      #page-content-wrapper
-        = render partial: 'layouts/rocket_job_mission_control/partials/header'
+          .col-sm-10.col-xs-11.white-background#main
+            = render partial: 'layouts/rocket_job_mission_control/partials/header'
 
-        .flash.text-center
-          - flash.each do |key, msg|
-            - if msg
-              .alert{class: "alert-#{key} alert-dismissable", role: 'alert'}
-                %button.close{ data: { dismiss: 'alert' } }
-                  %span &times;
-                -if msg.kind_of? Array
-                  %ul.list-unstyled.margin-bottom-0
-                    - msg.each do |m|
-                      %li= m.html_safe
-                - else
-                  = msg.html_safe
-
-        = yield
-
-    %footer.footer
+            .flash.text-center
+              - flash.each do |key, msg|
+                - if msg
+                  .alert{class: "alert-#{key} alert-dismissable", role: 'alert'}
+                    %button.close{ data: { dismiss: 'alert' } }
+                      %span &times;
+                    -if msg.kind_of? Array
+                      %ul.list-unstyled.margin-bottom-0
+                        - msg.each do |m|
+                          %li= m.html_safe
+                    - else
+                      = msg.html_safe
+            #content
+              = yield

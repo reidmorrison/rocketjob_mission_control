@@ -1,8 +1,5 @@
 .row
-  #queue
-    = render partial: 'list', locals: { jobs: @jobs }
-
-  .col-md-8.job-status
+  .col-md-14.col-md-offset-1.job-status
     #job
       .lead= @job.class.name
 
@@ -46,7 +43,7 @@
         - if valid_events.include?(:retry)
           = job_action_link('retry', rocket_job_mission_control.retry_job_path(@job), :patch)
 
-        - if @job.respond_to?(:input_categories) && @job.input.failed_count > 0
+        - if @job.respond_to?(:input) && @job.input.failed_count > 0
           = link_to('view errors', job_failures_path(@job), class: 'btn btn-default')
 
       .clearfix

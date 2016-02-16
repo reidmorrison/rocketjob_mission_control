@@ -15,13 +15,16 @@
       - @dirmon_entry.job_class.rocket_job_properties.each do |property_name|
         - next if property_name == :arguments
         - key = @dirmon_entry.job_class.keys[property_name.to_s]
-        - next unless key
+        - next unless key && key.type
         - placeholder = key.default? ? key.default : nil
         .form-group
           = properties.label property_name.to_s
           - case key.type.name
           - when 'Integer'
             = properties.number_field property_name, value: @dirmon_entry.properties[property_name], class: 'form-control', placeholder: placeholder
+          - when 'Hash'
+            - value = @dirmon_entry.properties[property_name]
+            = properties.text_field property_name, value: value ? value.to_json : '', class: 'form-control', placeholder: '{"argument1":"value1", "argument2":"value2", "argument3":"value3"}'
           - when 'Array'
             - options = Array(@dirmon_entry.properties[property_name])
             = properties.select property_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true}

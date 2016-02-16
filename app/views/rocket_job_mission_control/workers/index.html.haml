@@ -1,60 +1,37 @@
 #workers
-  - if @workers.present?
-    .row
-      .col-xs-12
-        %ol.breadcrumb{ style: 'margin-bottom: 0'}
-          %li.active Workers
-          .btn-group.pull-right
-            - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
-              = link_to("#{action.to_s.humanize.capitalize}",
-                rocket_job_mission_control.update_all_workers_path(worker_action: action),
-                method: :patch,
-                data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
-                class: 'btn btn-default')
-          .clearfix
+  .worker-list
+    .list
+      .row
+        .col-md-6
+          %h2 Worker Processes
+        .col-md-6
+          .col-sm-10
+            .worker-collection-actions
+              - if @workers.present?
+                %ol
+                  .btn-group
+                    - [:stop_all, :pause_all, :resume_all, :destroy_zombies].each do |action|
+                      = link_to("#{action.to_s.humanize.capitalize}",
+                        rocket_job_mission_control.update_all_workers_path(worker_action: action),
+                        method: :patch,
+                        data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
+                        class: 'btn btn-default')
+          .col-sm-2.pull-right
+            .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
+              %i.fa.fa-refresh
+      %table.table.datatable.workers-datatable{ style: "width: 100%", data: { source: "#{workers_url(format: 'json')}" } }
+        %thead
+          %tr
+            %th Hostname : PID
+            %th Workers (Current/Max)
+            %th Started
+            %th Heartbeat
+            %th Actions
+        %tbody
 
-    .grid
-      - @workers.each_slice(4) do |workers|
-        .row
-          - workers.each do |worker|
-            .card.col-xs-12.col-sm-6.col-md-3.col-lg-3
-              .inner.callout-top{ class: worker_card_class(worker) }
-                .title
-                  %h3
-                    = worker.name
-
-                .state
-                  %b State:
-                  = worker.state
-
-                .threads.max_threads
-                  %b Max Threads:
-                  = worker.max_threads
-
-                .threads.current_threads
-                  %b Current Threads:
-                  = worker.heartbeat.current_threads.to_i
-
-                .time
-                  %b Started:
-                  = "#{RocketJob.seconds_as_duration(Time.now - worker.started_at)} ago"
-
-                .heartbeat
-                  %b Last Heartbeat:
-                  = "#{RocketJob.seconds_as_duration(Time.now - worker.heartbeat.updated_at)} ago"
-
-                .actions
-                  = render partial: 'actions', locals: { worker: worker }
-
-  - else
-    .row
-      .col-md-6.col-md-offset-3
-        .panel.panel-default
-          .panel-body
-            .lead
-              There are currently no workers.
-            You can start a worker with the following command:
-
-            .code-block
-              %pre
-                %code.language-bash bin/rocketjob
+:javascript
+  jQuery(function() {
+    new RjmcDatatable(
+      $('.workers-datatable'),
+      [{data: '0'}, {data: '1', orderable: false}, {data: '2', orderable: false}, {data: '3', orderable: false}, {data: '4', orderable: false}]);
+  });

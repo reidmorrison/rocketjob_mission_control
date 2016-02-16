@@ -1,0 +1,28 @@
+%ul#lg-menu.nav.hidden-xs
+  %li.active
+    = link_to(jobs_path) do
+      %i.fa.fa-list
+      All
+  %li
+    = link_to(scheduled_jobs_path) do
+      %i.fa.fa-clock-o
+      Scheduled
+      = "(#{job_counts_by_state("scheduled")})"
+  - job_states.each do |state|
+    %li{class: state}
+      = link_to("#{state}_jobs".to_sym) do
+        %i.fa{class: state_icon(state)}
+        = state.capitalize
+        = "(#{job_counts_by_state(state)})"
+/ tiny only nav
+%ul#xs-menu.nav.visible-xs
+  %li
+    = link_to(jobs_path) do
+      %i.fa.fa-list
+  %li
+    = link_to(scheduled_jobs_path) do
+      %i.fa.fa-clock-o
+  - job_states.each do |state|
+    %li{class: state}
+      = link_to("#{state}_jobs".to_sym) do
+        %i.fa{class: state_icon(state)}

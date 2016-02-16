@@ -30,7 +30,7 @@ module RocketJobMissionControl
     end
 
     def run_now(job)
-      "#{ link_to 'Run', run_now_job_path(job), method: :patch, class: 'btn btn-default btn-xs', data: { confirm: 'Destroy this worker?' } }"
+      "#{ link_to 'Run', run_now_job_path(job), method: :patch, class: 'btn btn-default btn-xs', data: { confirm: "Run #{job.class.name} now?" } }"
     end
   end
 end

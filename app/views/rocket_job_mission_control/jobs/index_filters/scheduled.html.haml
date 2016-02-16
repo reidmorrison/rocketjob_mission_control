@@ -13,11 +13,12 @@
           %th Description
           %th Runs in
           %th Cron Schedule
+          %th Run Now
       %tbody
 
 :javascript
   jQuery(function() {
     new RjmcDatatable(
       $(".jobs-datatable"),
-      [{data: '0'}, {data: '1'}, {data: '2', orderable: false}, {data: '3'}]);
+      [{data: '0'}, {data: '1'}, {data: '2', orderable: false}, {data: '3'}, {data: '4', orderable: false}]);
   });

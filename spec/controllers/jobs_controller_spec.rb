@@ -46,6 +46,24 @@ module RocketJobMissionControl
       end
     end
 
+    describe 'PATCH #run_now' do
+      let(:scheduled_job) { spy(id: 12, run_at: 2.days.from_now) }
+
+      before do
+        allow(RocketJob::Job).to receive(:find).and_return(scheduled_job)
+        patch :run_now, id: 12
+      end
+
+      it 'redirects to the scheduled_jobs_path' do
+        expect(response).to redirect_to(scheduled_jobs_path)
+      end
+
+      it 'updates run_at' do
+        expect(scheduled_job).to have_received(:update_attribute).with(:run_at, nil)
+      end
+    end
+
+
     describe "PATCH #update" do
       it_behaves_like "a jobs update controller" do
         let(:do_action) { patch :update, id: 42, job: {id: 42, priority: 12} }

@@ -52,6 +52,11 @@ module RocketJobMissionControl
       redirect_to(job_path(@job))
     end
 
+    def run_now
+      @job.update_attribute(:run_at, nil) if @job.scheduled?
+      redirect_to scheduled_jobs_path
+    end
+
     def fail
       @job.fail!
 

@@ -5,12 +5,12 @@ module RocketJobMissionControl
 
       def initialize(search_term, search_subset)
         @search_term = search_term
-        @results = search_subset
+        @results     = search_subset
       end
 
       def execute
         if !search_term.blank?
-          @results = @results.where('$or' => [{name: /#{search_term}/}] )
+          @results = @results.where('$or' => [{name: /#{search_term}/i}])
         end
         @results
       end

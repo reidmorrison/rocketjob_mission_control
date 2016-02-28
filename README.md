@@ -3,7 +3,7 @@
 
 Web based management interface for [rocketjob][0].
 
-![Screen shot](http://rocketjob.io/images/rjmc.png)
+![Screen shot](http://rocketjob.io/images/rjmc_running.png)
 
 ## Status
 
@@ -73,13 +73,14 @@ This project uses [Semantic Versioning](http://semver.org/).
 
 * [Michael Cloutier][1]
 * [Chris Lamb][2]
+* [Jonathan Whittington][4]
 
 ## Contributors
 
 * [Reid Morrison][3] :: @reidmorrison
-* [Rafi](http://www.graphicsfuel.com/2012/02/space-rocket-icon-psd/)
 
 [0]: http://rocketjob.io
 [1]: https://github.com/mjcloutier
 [2]: https://github.com/lambcr
 [3]: https://github.com/reidmorrison
+[4]: https://github.com/jtwhittington

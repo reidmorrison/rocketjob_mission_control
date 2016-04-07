@@ -1,6 +1,6 @@
 module RocketJobMissionControl
   class ActiveProcessesDatatable
-    delegate :params, :link_to, :job_path, :job_icon, to: :@view
+    delegate :params, :link_to, :job_path, :state_icon, to: :@view
     delegate :h, to: 'ERB::Util'
 
     def initialize(view, processes)
@@ -20,12 +20,12 @@ module RocketJobMissionControl
     private
 
     def data
-      processes.map do |worker_name, job, started_at|
+      processes.map do |h|
         {
-          '0' => worker_name_with_icon(worker_name, job),
-          '1' => job_name_with_link(job),
-          '2' => h(job.description.try(:truncate, 50)),
-          '3' => h(duration(started_at)),
+          '0' => worker_name_with_icon(h[:worker_name]),
+          '1' => job_name_with_link(h[:klass], h[:id]),
+          '2' => h(h[:description].try!(:truncate, 50)),
+          '3' => h(duration(h[:started_at])),
           'DT_RowClass' => "card callout callout-running"
         }
       end
@@ -57,17 +57,17 @@ module RocketJobMissionControl
       Kaminari.paginate_array(records).page(page).per(per_page)
     end
 
-    def worker_name_with_icon(worker_name, job)
+    def worker_name_with_icon(worker_name)
       <<-EOS
-        <i class="fa #{job_icon(job)}" style="font-size: 75%" title="#{job.state}"></i>
+        <i class="fa #{state_icon(:running)}" style="font-size: 75%" title="running"></i>
         #{worker_name}
       EOS
     end
 
-    def job_name_with_link(job)
+    def job_name_with_link(job_class_name, job_id)
       <<-EOS
-        <a href="#{job_path(job.id)}">
-          #{job.class.name}
+        <a href="#{job_path(job_id)}">
+          #{job_class_name}
         </a>
       EOS
     end

@@ -24,7 +24,7 @@ module RocketJobMissionControl
         {
           '0' => class_with_link(job),
           '1' => h(job.description.try(:truncate, 50)),
-          '2' => h(job.completed_at),
+          '2' => h(job.created_at),
           '3' => h(job.duration),
           'DT_RowClass' => "card callout callout-#{job.state}"
         }

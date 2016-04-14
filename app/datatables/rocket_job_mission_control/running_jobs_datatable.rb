@@ -10,6 +10,7 @@ module RocketJobMissionControl
           '2' => progress(job),
           '3' => h(job.priority),
           '4' => h(started(job)),
+          '5' => action_buttons(job),
           'DT_RowClass' => "card callout callout-#{job.state}"
         }
       end

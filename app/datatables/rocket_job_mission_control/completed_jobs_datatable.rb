@@ -9,13 +9,14 @@ module RocketJobMissionControl
           '1' => h(job.description.try(:truncate, 50)),
           '2' => h(job.duration),
           '3' => h(completed_ago(job)),
+          '4' => action_buttons(job),
           'DT_RowClass' => "card callout callout-#{job.state}"
         }
       end
     end
 
     def sort_column(index)
-      columns = %w[_type description duration completed_at]
+      columns = %w[_type description machine_duration completed_at]
       columns[index.to_i]
     end
 

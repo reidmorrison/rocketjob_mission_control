@@ -13,6 +13,8 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   padding-top:20px;
 }
 
+/* Datatables */
+
 table.datatable {
   border-collapse: collapse;
 }
@@ -42,9 +44,33 @@ table.dataTable thead > tr > th {
     padding-left: 30px;
 }
 
+.datatable .card td {
+    vertical-align: middle;
+}
+
+.inline-job-actions > a {
+  display: inline-block;
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 1px;
+}
+
 .job-list {
   height: 100%;
   min-height: 768px;
+}
+
+
+/* Job Edit Page */
+
+.edit_job {
+  textarea.description-block {
+    height: 166px;
+  }
+  .buttons {
+    margin-top: 1em;
+  }
 }
 
 .job-status {
@@ -246,8 +272,6 @@ table.dataTable thead > tr > th {
 .job-search-box { padding: 20px 100px; }
 
 .list {
-  a { display: block; }
-
   .card:nth-child(1) { border-top: 1px solid #ddd; }
   .card:nth-child(odd) { background-color: #fff; }
 

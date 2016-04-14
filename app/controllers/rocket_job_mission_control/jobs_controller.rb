@@ -13,9 +13,11 @@ module RocketJobMissionControl
     end
 
     def update
-      @job.update_attributes!(job_params)
-
-      redirect_to job_path(@job)
+      if @job.update_attributes(job_params)
+        redirect_to job_path(@job)
+      else
+        render :edit
+      end
     end
 
     def abort
@@ -66,6 +68,9 @@ module RocketJobMissionControl
     def show
     end
 
+    def edit
+    end
+
     private
 
     def show_sidebar
@@ -87,7 +92,7 @@ module RocketJobMissionControl
     end
 
     def job_params
-      params.require(:job).permit(:priority)
+      params.require(:job).permit(RocketJob::Job.rocket_job_properties)
     end
 
     def error_occurred(exception)

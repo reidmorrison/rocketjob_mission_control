@@ -8,44 +8,31 @@
         .right{ class: @job.state.to_s }
           = @job.state
 
-      .priority.pull-right
-        = form_for(@job, as: :job, url: job_path(@job), html: {method: :patch}) do |f|
+      .btn-toolbar.job-actions.pull-right
+        .btn-group
+          - valid_events = @job.aasm.events.collect{ |e| e.name }
+          - if valid_events.include?(:abort)
+            = job_action_link('Abort', rocket_job_mission_control.abort_job_path(@job), :patch)
 
-          .input-group.priority-group
-            = f.text_field(:priority, value: @job.priority, class: 'form-control')
+          - if @job.completed? || @job.aborted?
+            = job_action_link('Destroy', rocket_job_mission_control.job_path(@job), :delete)
 
-            .input-group-btn-vertical
-              %button#increase_priority.btn.btn-default.up{ type: 'button' }
-                %i.fa.fa-caret-up
+          - if valid_events.include?(:fail)
+            = job_action_link('Fail', rocket_job_mission_control.fail_job_path(@job), :patch)
 
-              %button#decrease_priority.btn.btn-default.down{ type: 'button' }
-                %i.fa.fa-caret-down
+          - if valid_events.include?(:pause)
+            = job_action_link('Pause', rocket_job_mission_control.pause_job_path(@job), :patch)
 
-            = submit_tag "set", class: "btn btn-sm btn-primary priority-set"
+          - if valid_events.include?(:resume)
+            = job_action_link('Resume', rocket_job_mission_control.resume_job_path(@job), :patch)
 
-      .job-actions.btn-group.pull-right{ style: 'margin-right: 1em;' }
-        - valid_events = @job.aasm.events.collect{ |e| e.name }
-        - if valid_events.include?(:abort)
-          = job_action_link('abort', rocket_job_mission_control.abort_job_path(@job), :patch)
+          - if valid_events.include?(:retry)
+            = job_action_link('Retry', rocket_job_mission_control.retry_job_path(@job), :patch)
 
-        - if @job.completed? || @job.aborted?
-          = job_action_link('destroy', rocket_job_mission_control.job_path(@job), :delete)
+          - if @job.respond_to?(:input) && @job.input.failed_count > 0
+            = link_to('view errors', job_failures_path(@job), class: 'btn btn-default')
+        .btn-group
+          = link_to "Edit", edit_job_path(@job), class: "btn btn-default"
 
-        - if valid_events.include?(:fail)
-          = job_action_link('fail', rocket_job_mission_control.fail_job_path(@job), :patch)
-
-        - if valid_events.include?(:pause)
-          = job_action_link('pause', rocket_job_mission_control.pause_job_path(@job), :patch)
-
-        - if valid_events.include?(:resume)
-          = job_action_link('resume', rocket_job_mission_control.resume_job_path(@job), :patch)
-
-        - if valid_events.include?(:retry)
-          = job_action_link('retry', rocket_job_mission_control.retry_job_path(@job), :patch)
-
-        - if @job.respond_to?(:input) && @job.input.failed_count > 0
-          = link_to('view errors', job_failures_path(@job), class: 'btn btn-default')
-
-      .clearfix
-
-      = render partial: 'status', locals: { job: @job }
+      .col-md-12
+        = render partial: 'status', locals: { job: @job }

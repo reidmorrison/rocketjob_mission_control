@@ -9,6 +9,7 @@ module RocketJobMissionControl
           '1' => h(job.description.try(:truncate, 50)),
           '2' => h(job.priority),
           '3' => h(job.duration),
+          '4' => action_buttons(job),
           'DT_RowClass' => "card callout callout-#{job.state}"
         }
       end

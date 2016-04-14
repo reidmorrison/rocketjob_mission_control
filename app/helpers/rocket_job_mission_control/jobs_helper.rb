@@ -20,6 +20,7 @@ module RocketJobMissionControl
         action,
         path,
         method: http_method,
+        title: "#{action} job",
         class:  'btn btn-default',
         data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
       )

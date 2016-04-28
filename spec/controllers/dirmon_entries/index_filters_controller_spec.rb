@@ -1,15 +1,21 @@
 require 'rails_helper'
 
+class AJob < RocketJob::Job
+  def perform(id)
+    id
+  end
+end
+
 module RocketJobMissionControl
-  module Jobs
+  module DirmonEntries
     RSpec.describe IndexFiltersController do
       routes { Engine.routes }
 
-      states = %w(running paused completed aborted failed queued scheduled)
+      states = %w(pending enabled failed disabled)
 
       states.each_with_index do |state, i|
         describe "GET ##{state}" do
-          describe "with no #{state} jobs" do
+          describe "with no #{state} dirmons" do
             before do
               get state.to_sym
             end
@@ -23,22 +29,24 @@ module RocketJobMissionControl
             end
 
             it "returns no jobs" do
-              expect(assigns(:jobs).count).to eq(0)
+              expect(assigns(:dirmons).count).to eq(0)
             end
           end
 
-          describe "with #{state} jobs" do
+          describe "with #{state} dirmons" do
             let(:not_state) { states[i-1] }
-            let(:state_job) {
-              if state == 'scheduled'
-                RocketJob::Job.create(state: :queued, run_at: Date.tomorrow)
-              else
-                RocketJob::Job.create(state: state)
-              end
-            }
+            let!(:state_dirmon) { RocketJob::DirmonEntry.create!(state: state,
+              pattern: '21',
+              arguments: ['42'],
+              job_class_name: 'AJob') }
 
             before do
-              RocketJob::Job.create(state: not_state)
+              RocketJob::DirmonEntry.create!(
+              name: 'Test',
+              state: not_state,
+              arguments: ['42'],
+              pattern: '21',
+              job_class_name: 'AJob')
               get state.to_sym
             end
 
@@ -54,8 +62,9 @@ module RocketJobMissionControl
               expect(response).to render_template(state)
             end
 
-            it "grabs a filtered list of rocket jobs" do
-              expect(assigns(:jobs)).to match_array([state_job])
+            it "grabs a filtered list of dirmons" do
+              expect(assigns(:dirmons)).to match_array([state_dirmon])
+
             end
           end
         end

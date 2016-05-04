@@ -26,4 +26,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml'
   s.add_dependency 'kaminari'
   s.add_dependency 'jquery-datatables-rails'
+
+  s.add_development_dependency 'database_cleaner'
 end

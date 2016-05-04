@@ -1,6 +1,6 @@
 RocketJobMissionControl::Engine.routes.draw do
 
-  resources :jobs, only: [:index, :show, :update, :destroy] do
+  resources :jobs, only: [:index, :show, :update, :destroy, :edit] do
     collection do
       get :running,   to: 'jobs/index_filters#running'
       get :scheduled, to: 'jobs/index_filters#scheduled'

@@ -1,0 +1,34 @@
+.container-fluid
+  .lead= "Edit #{@job._type}"
+
+  - if @job.errors.present?
+    .alert.alert-alert
+      Invalid Job!
+      - @job.errors.messages.each_pair do |field, message|
+        .message
+          = "#{field.to_s.humanize} is not valid."
+
+  = form_for(@job, as: :job, url: job_path(@job)) do |f|
+    .row
+      .col-md-8
+        = f.label :description
+        = f.text_area :description, value: @job.description, class: 'form-control description-block'
+      .col-md-4
+        = f.label :priority
+        = f.number_field :priority, value: @job.priority, class: 'form-control'
+      .col-md-4
+        = f.label :log_level
+        = f.select :log_level, ['', 'trace', 'debug', 'info', 'warn', 'error', 'fatal'], {}, { class: 'form-control' }
+      - if @job.method_exists?(:max_active_workers)
+        .col-md-4
+          = f.label :max_active_workers
+          = f.number_field :max_active_workers, class: 'form-control'
+      - if @job.method_exists?(:cron_schedule)
+        .col-md-4
+          = f.label :cron_schedule
+          = f.text_field :cron_schedule, class: 'form-control'
+    .row
+      .col-md-12
+        .buttons
+          = f.submit 'Update', class: 'btn btn-primary'
+          = link_to 'Cancel', :back, class: 'btn btn-default'

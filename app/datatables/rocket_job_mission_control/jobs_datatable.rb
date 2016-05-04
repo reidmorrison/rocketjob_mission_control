@@ -1,6 +1,8 @@
 module RocketJobMissionControl
   class JobsDatatable
-    delegate :params, :link_to, :job_path, :job_icon, to: :@view
+    delegate :params, :link_to, :job_path, :job_icon, :edit_job_path,
+    :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
+    :resume_job_path, :retry_job_path, :job_failures_path, :job_action_link, to: :@view
     delegate :h, to: 'ERB::Util'
 
     def initialize(view, jobs)
@@ -26,6 +28,7 @@ module RocketJobMissionControl
           '1' => h(job.description.try(:truncate, 50)),
           '2' => h(job.created_at),
           '3' => h(job.duration),
+          '4' => action_buttons(job),
           'DT_RowClass' => "card callout callout-#{job.state}"
         }
       end
@@ -49,11 +52,46 @@ module RocketJobMissionControl
 
     def class_with_link(job)
       <<-EOS
-        <a href="#{job_path(job.id)}">
+        <a class='job-link' href="#{job_path(job.id)}">
           <i class="fa #{job_icon(job)}" style="font-size: 75%" title="#{job.state}"></i>
           #{job.class.name}
         </a>
       EOS
+    end
+
+    def action_buttons(job)
+      events = valid_events(job)
+      buttons = "<div class='inline-job-actions'>"
+      buttons += "#{ link_to( 'Edit', edit_job_path(job), class: 'btn btn-default', title: 'Edit job') }"
+      if job.scheduled?
+        buttons += "#{ job_action_link('Run', run_now_job_path(job), :patch) }"
+      end
+      if events.include?(:abort)
+        buttons += "#{ job_action_link('Abort', abort_job_path(job), :patch) }"
+      end
+      if job.completed? || job.aborted?
+        buttons += "#{ job_action_link('Destroy', job_path(job), :delete) }"
+      end
+      if events.include?(:fail)
+        buttons += "#{ job_action_link('Fail', fail_job_path(job), :patch) }"
+      end
+      if events.include?(:pause)
+        buttons += "#{ job_action_link('Pause', pause_job_path(job), :patch) }"
+      end
+      if events.include?(:resume)
+        buttons += "#{ job_action_link('Resume', resume_job_path(job), :patch) }"
+      end
+      if events.include?(:retry)
+        buttons += "#{ job_action_link('Retry', retry_job_path(job), :patch) }"
+      end
+      if job.respond_to?(:input) && job.input.failed_count > 0
+        buttons += "#{ link_to('view errors', job_failures_path(job), class: 'btn btn-default') }"
+      end
+      buttons += "</div>"
+    end
+
+    def valid_events(job)
+      job.aasm.events.collect{ |e| e.name }
     end
 
     def page

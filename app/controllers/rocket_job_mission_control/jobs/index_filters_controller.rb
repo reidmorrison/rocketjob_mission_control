@@ -4,58 +4,58 @@ module RocketJobMissionControl
       before_filter :show_sidebar
 
       def running
-        running_jobs = RocketJob::Job.where(state: :running).sort(_id: :desc)
+        @jobs = RocketJob::Job.where(state: :running).sort(_id: :desc)
         respond_to do |format|
           format.html
-          format.json { render(json: RunningJobsDatatable.new(view_context, running_jobs)) }
+          format.json { render(json: RunningJobsDatatable.new(view_context, @jobs)) }
         end
       end
 
       def paused
-        paused_jobs = RocketJob::Job.where(state: :paused).sort(_id: :desc)
+        @jobs = RocketJob::Job.where(state: :paused).sort(_id: :desc)
         respond_to do |format|
           format.html
-          format.json { render(json: InterruptedJobsDatatable.new(view_context, paused_jobs)) }
+          format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
         end
       end
 
       def completed
-        completed_jobs = RocketJob::Job.where(state: :completed).sort(_id: :desc)
+        @jobs = RocketJob::Job.where(state: :completed).sort(_id: :desc)
         respond_to do |format|
           format.html
-          format.json { render(json: CompletedJobsDatatable.new(view_context, completed_jobs)) }
+          format.json { render(json: CompletedJobsDatatable.new(view_context, @jobs)) }
         end
       end
 
       def aborted
-        aborted_jobs = RocketJob::Job.where(state: :aborted).sort(_id: :desc)
+        @jobs = RocketJob::Job.where(state: :aborted).sort(_id: :desc)
         respond_to do |format|
           format.html
-          format.json { render(json: InterruptedJobsDatatable.new(view_context, aborted_jobs)) }
+          format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
         end
       end
 
       def failed
-        failed_jobs = RocketJob::Job.where(state: :failed).sort(_id: :desc)
+        @jobs = RocketJob::Job.where(state: :failed).sort(_id: :desc)
         respond_to do |format|
           format.html
-          format.json { render(json: InterruptedJobsDatatable.new(view_context, failed_jobs)) }
+          format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
         end
       end
 
       def queued
-        queued_jobs = RocketJob::Job.queued_now.sort(_id: :desc)
+        @jobs = RocketJob::Job.queued_now.sort(_id: :desc)
         respond_to do |format|
           format.html
-          format.json { render(json: QueuedJobsDatatable.new(view_context, queued_jobs)) }
+          format.json { render(json: QueuedJobsDatatable.new(view_context, @jobs)) }
         end
       end
 
       def scheduled
-        scheduled_jobs = RocketJob::Job.scheduled.sort(_id: :desc)
+        @jobs = RocketJob::Job.scheduled.sort(_id: :desc)
         respond_to do |format|
           format.html
-          format.json { render(json: ScheduledJobsDatatable.new(view_context, scheduled_jobs)) }
+          format.json { render(json: ScheduledJobsDatatable.new(view_context, @jobs)) }
         end
       end
 

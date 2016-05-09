@@ -51,7 +51,6 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     bson (1.12.5)
-    bson (1.12.5-java)
     bson_ext (1.12.5)
       bson (~> 1.12.5)
     builder (3.2.2)
@@ -191,4 +190,4 @@ DEPENDENCIES
   rubyzip
 
 BUNDLED WITH
-   1.11.2
+   1.12.3

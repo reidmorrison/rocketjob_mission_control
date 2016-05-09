@@ -2,6 +2,10 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   height: 100%
 }
 
+.navbar-default {
+  background-image: linear-gradient(90deg, #000000, #99120f);
+}
+
 #wrapper {
   background-color: #f7f7f7;
 }
@@ -193,6 +197,7 @@ table.dataTable thead > tr > th {
 
 #sidebar .nav li > a:hover {
     color: #000;
+    background-color: #dddddd;
 }
 
 @media screen and (max-width: 768px) {
@@ -240,16 +245,20 @@ table.dataTable thead > tr > th {
       left: 50%;
       margin-left: -96px !important;
       display: block;
+      img {
+        display: inline;
+        height: 40px;
+      }
   }
 
   .first { left: 15px; }
   .last { right: 15px; }
 
   a.navbar-brand.brand {
-    font-size: 28px;
-    color: orange;
+    font-size: 36px;
+    color: white;
     font-weight: bold;
-    margin-top: -5px;
+    margin-top: -10px;
 
     span {
       display: inline-block;

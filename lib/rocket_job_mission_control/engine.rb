@@ -13,5 +13,11 @@ module RocketJobMissionControl
     require 'coffee-rails'
     require 'kaminari'
     require 'jquery-datatables-rails'
+
+    config.to_prepare do
+      Rails.application.config.assets.precompile += %w(
+        rocket_job_mission_control/rocket-icon-64x64.png
+      )
+    end
   end
 end

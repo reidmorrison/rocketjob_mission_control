@@ -45,7 +45,7 @@ module RocketJobMissionControl
     end
 
     def destroy
-      if @worker.destroy
+      if @worker.nil? || @worker.destroy
         flash[:notice] = t(:success, scope: [:worker, :destroy])
       else
         flash[:alert] = t(:failure, scope: [:worker, :destroy])

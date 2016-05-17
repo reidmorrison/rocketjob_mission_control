@@ -22,8 +22,8 @@ matrix:
       gemfile: gemfiles/rails5_0.gemfile
     - rvm: jruby-9.1.0.0
       gemfile: gemfiles/rails5_0.gemfile
- allow_failures:
-    - gemfile: gemfiles/rails5_0.gemfile
+allow_failures:
+  - gemfile: gemfiles/rails5_0.gemfile
 
 services:
   - mongodb

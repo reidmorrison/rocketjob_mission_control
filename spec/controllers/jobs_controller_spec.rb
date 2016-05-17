@@ -4,6 +4,7 @@ module RocketJobMissionControl
   RSpec.shared_examples "a jobs update controller" do
     describe "with an invalid job id" do
       before do
+        RocketJob::Job.delete_all
         allow(RocketJob::Job).to receive(:find).and_return(nil)
         do_action
       end

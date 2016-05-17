@@ -43,7 +43,8 @@ module RocketJobMissionControl
             end
 
             after do
-              DatabaseCleaner.clean
+              RocketJob::Worker.delete_all
+              RocketJob::Job.delete_all
             end
 
             it "succeeds" do

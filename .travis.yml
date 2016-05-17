@@ -2,12 +2,28 @@ language: ruby
 sudo: false
 bundler_args: --without development --jobs 3 --retry 3
 
+gemfile:
+  - gemfiles/rails4_1.gemfile
+  - gemfiles/rails4_2.gemfile
+  - gemfiles/rails5_0.gemfile
+
 rvm:
-  - 2.0
-  - 2.2
-  - 2.3.0
-  - jruby-1.7
-  - jruby-9.0.4.0
+  - 2.1.8
+  - 2.2.4
+  - 2.3.1
+  - jruby-1.7.23
+  - jruby-9.1.0.0
+
+matrix:
+  exclude:
+    - rvm: 2.1.8
+      gemfile: gemfiles/rails5_0.gemfile
+    - rvm: jruby-1.7.23
+      gemfile: gemfiles/rails5_0.gemfile
+    - rvm: jruby-9.1.0.0
+      gemfile: gemfiles/rails5_0.gemfile
+ allow_failures:
+    - gemfile: gemfiles/rails5_0.gemfile
 
 services:
   - mongodb

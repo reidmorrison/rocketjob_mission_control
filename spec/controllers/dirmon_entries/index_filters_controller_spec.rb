@@ -35,23 +35,28 @@ module RocketJobMissionControl
 
           describe "with #{state} dirmons" do
             let(:not_state) { states[i-1] }
-            let!(:state_dirmon) { RocketJob::DirmonEntry.create!(state: state,
-              pattern: '21',
-              arguments: ['42'],
-              job_class_name: 'AJob') }
+            let!(:state_dirmon) {
+              RocketJob::DirmonEntry.create!(
+                state:          state,
+                pattern:        '21',
+                arguments:      ['42'],
+                job_class_name: 'AJob'
+              )
+            }
 
             before do
               RocketJob::DirmonEntry.create!(
-              name: 'Test',
-              state: not_state,
-              arguments: ['42'],
-              pattern: '21',
-              job_class_name: 'AJob')
+                name:           'Test',
+                state:          not_state,
+                arguments:      ['42'],
+                pattern:        '21',
+                job_class_name: 'AJob'
+              )
               get state.to_sym
             end
 
             after do
-              DatabaseCleaner.clean
+              RocketJob::DirmonEntry.delete_all
             end
 
             it "succeeds" do

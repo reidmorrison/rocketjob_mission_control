@@ -7,7 +7,7 @@ require 'rocket_job_mission_control/version'
 Gem::Specification.new do |s|
   s.name        = 'rocketjob_mission_control'
   s.version     = RocketJobMissionControl::VERSION
-  s.authors     = ['Michael Cloutier', 'Chris Lamb']
+  s.authors     = ['Michael Cloutier', 'Chris Lamb', 'Jonathan Whittington']
   s.email       = ['support@rocketjob.io']
   s.homepage    = 'http://rocketjob.io'
   s.summary     = 'Enterprise Batch Processing System for Ruby.'
@@ -26,6 +26,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml'
   s.add_dependency 'kaminari'
   s.add_dependency 'jquery-datatables-rails', '~> 3.3.0'
-
-  s.add_development_dependency 'database_cleaner'
 end

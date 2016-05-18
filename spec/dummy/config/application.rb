@@ -7,7 +7,6 @@ require 'rails/test_unit/railtie'
 
 
 Bundler.require
-require 'rails_semantic_logger'
 
 module Dummy
   class Application < Rails::Application

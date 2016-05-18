@@ -26,5 +26,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml'
   s.add_dependency 'kaminari'
   s.add_dependency 'jquery-datatables-rails', '~> 3.3.0'
-
 end

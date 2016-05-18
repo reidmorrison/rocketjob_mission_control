@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files      = Dir['{app,config,db,lib,vendor}/**/*', 'LICENSE.txt', 'Rakefile', 'README.md']
   s.test_files = Dir['spec/**/*']
 
-  s.add_dependency 'rails', '>= 4.0'
+  s.add_dependency 'rails', '~> 4.2'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'bootstrap-sass', '>= 3.2.0.1'
   s.add_dependency 'coffee-rails'
@@ -26,4 +26,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml'
   s.add_dependency 'kaminari'
   s.add_dependency 'jquery-datatables-rails', '~> 3.3.0'
+
 end

@@ -1,3 +1,5 @@
+source 'https://rubygems.org'
+
 gemspec
 
 gem 'autoprefixer-rails', '~> 6.0.0'

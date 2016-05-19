@@ -1,5 +1,6 @@
-gemspec :path => '../'
+gemspec :path => '..'
 
 gem 'rails', '~> 5.0.0.rc1'
+
+gem 'rails-controller-testing', github: 'rails/rails-controller-testing'
 gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
-gem 'rails-controller-testing'

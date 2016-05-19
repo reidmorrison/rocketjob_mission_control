@@ -1,4 +1,4 @@
-gemspec :path => '../'
+gemspec :path => '..'
 
 gem 'rails', '~> 4.1.0'
 # mime-types v3 requires Ruby v2

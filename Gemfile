@@ -1,9 +1,3 @@
-source 'https://rubygems.org'
+eval File.read(File.expand_path('../gemfiles/base.gemfile', __FILE__)), nil, 'base.gemfile'
 
 gemspec
-
-gem 'autoprefixer-rails', '~> 6.0.0'
-gem 'bson_ext', platform: :ruby
-gem 'rake'
-
-gem 'rspec-rails'

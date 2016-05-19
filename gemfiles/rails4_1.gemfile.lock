@@ -13,6 +13,7 @@ PATH
       sass-rails (>= 3.2)
 
 GEM
+  remote: https://rubygems.org/
   specs:
     aasm (4.10.1)
     actionmailer (4.1.14.2)
@@ -49,6 +50,8 @@ GEM
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
     bson (1.12.5)
+    bson_ext (1.12.5)
+      bson (~> 1.12.5)
     builder (3.2.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -62,6 +65,7 @@ GEM
     concurrent-ruby (1.0.2)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.6.0)
     haml (4.0.7)
@@ -120,6 +124,23 @@ GEM
       mongo_mapper (~> 0.13)
       semantic_logger (~> 3.1)
       symmetric-encryption (>= 3.0)
+    rspec-core (3.2.3)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-rails (3.2.1)
+      actionpack (>= 3.0, < 4.3)
+      activesupport (>= 3.0, < 4.3)
+      railties (>= 3.0, < 4.3)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.2)
     sass (3.4.21)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -148,9 +169,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  autoprefixer-rails (~> 6.0.0)
+  bson_ext
   mime-types (~> 2.0)
   rails (~> 4.1.0)
   rocketjob_mission_control!
+  rspec-rails
 
 BUNDLED WITH
    1.11.2

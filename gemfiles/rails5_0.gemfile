@@ -1,6 +1,9 @@
-eval File.read(File.expand_path('../Gemfile.common.rb', __FILE__)), nil, 'Gemfile.common.rb'
-gemspec :path => '../'
+eval File.read(File.expand_path('../base.gemfile', __FILE__)), nil, 'base.gemfile'
 
+gemspec :path => '..'
+
+gem 'rspec-rails', '3.5.0.beta3'
 gem 'rails', '~> 5.0.0.rc1'
-gem 'activemodel-serializers-xml'
+
 gem 'rails-controller-testing'
+gem 'activemodel-serializers-xml'

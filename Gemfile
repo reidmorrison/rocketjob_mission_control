@@ -1,12 +1,9 @@
-eval File.read(File.expand_path('../gemfiles/Gemfile.common.rb', __FILE__)), nil, 'Gemfile.common.rb'
+eval File.read(File.expand_path('../gemfiles/base.gemfile', __FILE__)), nil, 'base.gemfile'
 
-# For Rails 5 once rspec tests work on Rails 5
-# gem 'rails', '~> 5.0.0.rc1'
-# gem 'activemodel-serializers-xml'
-# gem 'rails-controller-testing'
+gem 'rspec-rails', '3.5.0.beta3'
+gem 'rails', '~> 5.0.0.rc1'
 
-gem 'rails', '~> 4.2.0'
-# mime-types v3 requires Ruby v2
-gem 'mime-types', '~> 2.0'
+gem 'rails-controller-testing'
+gem 'activemodel-serializers-xml'
 
 gemspec

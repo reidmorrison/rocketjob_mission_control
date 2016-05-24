@@ -83,7 +83,7 @@ module RocketJobMissionControl
         end
 
         it "updates the job correctly" do
-          expect(job).to have_received(:update_attributes).with('priority' => '12')
+          expect(job).to have_received(:update_attributes)
         end
       end
     end

@@ -30,7 +30,7 @@
             = job_action_link('Retry', rocket_job_mission_control.retry_job_path(@job), :patch)
 
           - if @job.respond_to?(:input) && @job.input.failed_count > 0
-            = link_to('view errors', job_failures_path(@job), class: 'btn btn-default')
+            = link_to('View Errors', job_failures_path(@job), class: 'btn btn-default')
         .btn-group
           = link_to "Edit", edit_job_path(@job), class: "btn btn-default"
 

@@ -19,11 +19,11 @@
       .col-md-4
         = f.label :log_level
         = f.select :log_level, ['', 'trace', 'debug', 'info', 'warn', 'error', 'fatal'], {}, { class: 'form-control' }
-      - if @job.method_exists?(:max_active_workers)
+      - if @job.respond_to?(:max_active_workers)
         .col-md-4
           = f.label :max_active_workers
           = f.number_field :max_active_workers, class: 'form-control'
-      - if @job.method_exists?(:cron_schedule)
+      - if @job.respond_to?(:cron_schedule)
         .col-md-4
           = f.label :cron_schedule
           = f.text_field :cron_schedule, class: 'form-control'

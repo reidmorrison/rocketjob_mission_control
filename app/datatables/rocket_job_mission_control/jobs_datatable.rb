@@ -85,7 +85,7 @@ module RocketJobMissionControl
         buttons += "#{ job_action_link('Retry', retry_job_path(job), :patch) }"
       end
       if job.respond_to?(:input) && job.input.failed_count > 0
-        buttons += "#{ link_to('view errors', job_failures_path(job), class: 'btn btn-default') }"
+        buttons += "#{ link_to('View Errors', job_failures_path(job), class: 'btn btn-default') }"
       end
       buttons += "</div>"
     end

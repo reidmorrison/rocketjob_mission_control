@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'bson_ext', platform: :ruby
-gem 'rspec-rails'
+gem 'rspec-rails', '3.5.0.beta3'
+gem 'sqlite3'
 
 # Support Ruby 1.9
 gem 'autoprefixer-rails', '~> 6.0.0'

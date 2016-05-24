@@ -7,9 +7,11 @@ gemfile:
   - gemfiles/rails5_0.gemfile
 
 rvm:
-  - 2.1.8
-  - 2.2.4
+  - 2.1.10
+  - 2.2.5
   - 2.3.1
+  - jruby-1.7.23
+  - jruby-9.0.5.0
 
 # Patch for RSpec to work with multiple Gemfiles
 before_script:
@@ -17,7 +19,11 @@ before_script:
 
 matrix:
   exclude:
-    - rvm: 2.1.8
+    - rvm: 2.1.10
+      gemfile: gemfiles/rails5_0.gemfile
+    - rvm: jruby-1.7.23
+      gemfile: gemfiles/rails5_0.gemfile
+    - rvm: jruby-9.0.5.0
       gemfile: gemfiles/rails5_0.gemfile
 
 services:

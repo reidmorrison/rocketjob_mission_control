@@ -11,12 +11,11 @@ rvm:
   - 2.2.4
   - 2.3.1
 
+# Patch for RSpec to work with multiple Gemfiles
+before_script:
+  - rm Gemfile
+
 matrix:
-  allow_failures:
-    - rvm: 2.2.4
-      gemfile: gemfiles/rails5_0.gemfile
-    - rvm: 2.3.1
-      gemfile: gemfiles/rails5_0.gemfile
   exclude:
     - rvm: 2.1.8
       gemfile: gemfiles/rails5_0.gemfile

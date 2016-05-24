@@ -5,7 +5,8 @@ eval File.read(File.expand_path('../gemfiles/base.gemfile', __FILE__)), nil, 'ba
  #gem 'activemodel-serializers-xml'
  #gem 'rails-controller-testing'
 
-# gem 'rails', '~> 4.2'
+# gem 'rails', '~> 4.2.0'
+gem 'rspec-rails'
 # mime-types v3 requires Ruby v2
 gem 'mime-types', '~> 2.0'
 

@@ -31,17 +31,29 @@ table.datatable {
   margin: 1em 0;
 }
 
+table.dataTable thead .sorting:after {
+    content: "";
+}
+
 table.dataTable thead .sorting_asc:after {
-    content: "\e155";
+    content: "\f160";
+}
+
+table.dataTable thead .sorting_desc:after {
+    content: "\f161";
 }
 
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    display: block;
-    font-family: 'Glyphicons Halflings';
-    opacity: 0.5;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: block;
+  // display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 table.dataTable thead > tr > th {

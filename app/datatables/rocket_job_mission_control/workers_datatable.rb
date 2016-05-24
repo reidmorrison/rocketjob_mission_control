@@ -80,7 +80,7 @@ module RocketJobMissionControl
 
     def filter_records(records)
       return records unless (params[:search].present? && params[:search][:value].present?)
-      conditions = params[:search][:value]#build_conditions_for(params[:search][:value])
+      conditions = params[:search][:value]
       records = RocketJobMissionControl::Workers::Search.new(conditions, records).execute if conditions
       records
     end

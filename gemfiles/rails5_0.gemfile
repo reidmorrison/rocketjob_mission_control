@@ -2,6 +2,7 @@ eval File.read(File.expand_path('../base.gemfile', __FILE__)), nil, 'base.gemfil
 
 gemspec :path => '..'
 
+gem 'rspec-rails', '3.5.0.beta3'
 gem 'rails', '~> 5.0.0.rc1'
 
 gem 'rails-controller-testing', github: 'rails/rails-controller-testing'

@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bson_ext', platform: :ruby
-gem 'rspec-rails', '3.5.0.beta3'
+gem 'rspec-rails'
 gem 'sqlite3', platform: :ruby
 
 platform :jruby do

@@ -1,8 +1,7 @@
 language: ruby
-sudo: false
-bundler_args: --without development --jobs 3 --retry 3
 
 gemfile:
+  - gemfiles/rails4_0.gemfile
   - gemfiles/rails4_1.gemfile
   - gemfiles/rails4_2.gemfile
   - gemfiles/rails5_0.gemfile
@@ -13,11 +12,14 @@ rvm:
   - 2.3.1
 
 matrix:
+  allow_failures:
+    - rvm: 2.2.4
+      gemfile: gemfiles/rails5_0.gemfile
+    - rvm: 2.3.1
+      gemfile: gemfiles/rails5_0.gemfile
   exclude:
     - rvm: 2.1.8
       gemfile: gemfiles/rails5_0.gemfile
-allow_failures:
-  - gemfile: gemfiles/rails5_0.gemfile
 
 services:
   - mongodb

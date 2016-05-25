@@ -31,8 +31,9 @@
 
           - if @job.respond_to?(:input) && @job.input.failed_count > 0
             = link_to('View Errors', job_failures_path(@job), class: 'btn btn-default')
-        .btn-group
-          = link_to "Edit", edit_job_path(@job), class: "btn btn-default"
+        - unless @job.completed? || @job.aborted?
+          .btn-group
+            = link_to "Edit", edit_job_path(@job), class: "btn btn-default"
 
       .col-md-12
         = render partial: 'status', locals: { job: @job }

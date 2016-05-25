@@ -62,7 +62,9 @@ module RocketJobMissionControl
     def action_buttons(job)
       events = valid_events(job)
       buttons = "<div class='inline-job-actions'>"
-      buttons += "#{ link_to( 'Edit', edit_job_path(job), class: 'btn btn-default', title: 'Edit job') }"
+      unless job.completed? || job.aborted?
+        buttons += "#{ link_to( 'Edit', edit_job_path(job), class: 'btn btn-default', title: 'Edit job') }"
+      end
       if job.scheduled?
         buttons += "#{ job_action_link('Run', run_now_job_path(job), :patch) }"
       end

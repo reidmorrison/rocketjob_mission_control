@@ -4,7 +4,7 @@ module RocketJobMissionControl
       attr_reader :results, :search_term
 
       def initialize(search_term, search_subset)
-        @search_term = search_term
+        @search_term = Regexp.escape(search_term)
         @results     = search_subset
       end
 

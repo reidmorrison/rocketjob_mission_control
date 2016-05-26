@@ -88,10 +88,6 @@ module RocketJobMissionControl
       end
     end
 
-    def nil_if_blank
-      params[:job][:log_level] = nil if params[:job][:log_level].blank?
-    end
-
     def jobs_params
       params.fetch(:states, [])
     end

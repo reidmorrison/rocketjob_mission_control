@@ -18,15 +18,15 @@
         = f.number_field :priority, value: @job.priority, class: 'form-control'
       .col-md-4
         = f.label :log_level
-        = f.select :log_level, ['', 'trace', 'debug', 'info', 'warn', 'error', 'fatal'], {}, { class: 'form-control' }
+        = f.select :log_level, ['trace', 'debug', 'info', 'warn', 'error', 'fatal'], { include_blank: true }, { class: 'form-control' }
       - if @job.respond_to?(:max_active_workers)
         .col-md-4
           = f.label :max_active_workers
-          = f.number_field :max_active_workers, class: 'form-control'
+          = f.number_field :max_active_workers, value: @job.max_active_workers, min: 0,  class: 'form-control'
       - if @job.respond_to?(:cron_schedule)
         .col-md-4
           = f.label :cron_schedule
-          = f.text_field :cron_schedule, class: 'form-control'
+          = f.text_field :cron_schedule, value: @job.cron_schedule, class: 'form-control'
     .row
       .col-md-12
         .buttons

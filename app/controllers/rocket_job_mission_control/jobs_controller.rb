@@ -13,6 +13,7 @@ module RocketJobMissionControl
     end
 
     def update
+      nil_if_blank
       if @job.update_attributes(job_params)
         redirect_to job_path(@job)
       else
@@ -85,6 +86,10 @@ module RocketJobMissionControl
 
         redirect_to(jobs_path)
       end
+    end
+
+    def nil_if_blank
+      params[:job][:log_level] = nil if params[:job][:log_level].blank?
     end
 
     def jobs_params

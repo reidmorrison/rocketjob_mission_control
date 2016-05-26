@@ -13,7 +13,7 @@ module RocketJobMissionControl
     end
 
     def update
-      nil_if_blank
+      JobSanitizer.new(params).sanitize
       if @job.update_attributes(job_params)
         redirect_to job_path(@job)
       else

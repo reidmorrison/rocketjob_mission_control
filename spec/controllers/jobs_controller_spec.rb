@@ -72,9 +72,11 @@ module RocketJobMissionControl
 
       describe "with a valid job id" do
         let(:job) { spy(id: 42, to_param: 42) }
+        let(:job_sanitizer) { spy() }
 
         before do
           allow(RocketJob::Job).to receive(:find).and_return(job)
+          allow(JobSanitizer).to receive(:new).and_return(job_sanitizer)
           patch :update, id: 42, job: {id: 42, priority: 12}
         end
 
@@ -84,6 +86,10 @@ module RocketJobMissionControl
 
         it "updates the job correctly" do
           expect(job).to have_received(:update_attributes)
+        end
+
+        it "calls sanitize" do
+          expect(job_sanitizer).to have_received(:sanitize)
         end
       end
     end

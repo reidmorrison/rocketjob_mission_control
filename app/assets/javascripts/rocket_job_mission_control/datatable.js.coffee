@@ -12,6 +12,7 @@ class @RjmcDatatable
   initializeTable: ->
     @data = @table.DataTable
       pagingType: 'full_numbers'
+      pageLength: 100
       responsive: true
       ajax: @table.data('source')
       processing: true

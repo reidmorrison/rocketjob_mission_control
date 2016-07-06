@@ -4,6 +4,7 @@ class @RjmcDatatable
     @columns = columns
     @ordering = opts.ordering ? true
     @searching = opts.searching ? true
+    @pageLength = opts.pageLength ? 100
     @order = opts.order ? []
     @reload = $("[data-behavior='reload']")
     @initializeTable()
@@ -12,7 +13,7 @@ class @RjmcDatatable
   initializeTable: ->
     @data = @table.DataTable
       pagingType: 'full_numbers'
-      pageLength: 100
+      pageLength: @pageLength
       responsive: true
       ajax: @table.data('source')
       processing: true

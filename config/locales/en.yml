@@ -38,21 +38,21 @@ en:
         other: "%{count} years" # default was: "almost %{count} years"
   worker:
     stop:
-      success: "Worker successfully stopped."
-      failure: "Error attempting to stop worker."
+      success: "Server successfully stopped."
+      failure: "Error attempting to stop server."
     destroy:
-      success: "Worker successfully destroyed."
-      failure: "Error attempting to destroy worker."
+      success: "Server successfully destroyed."
+      failure: "Error attempting to destroy server."
     pause:
-      success: "Worker successfully paused."
-      failure: "Error attempting to pause worker."
+      success: "Server successfully paused."
+      failure: "Error attempting to pause server."
     resume:
-      success: "Worker successfully resumed."
-      failure: "Error attempting to resume worker."
+      success: "Server successfully resumed."
+      failure: "Error attempting to resume server."
     update_all:
-      success: "Workers have been %{worker_action}."
+      success: "Servers have been %{worker_action}."
       invalid: "Action not allowed."
-      confirm: "Are you sure you want to %{action} workers?"
+      confirm: "Are you sure you want to %{action} servers?"
   job:
     find:
       failure: "Could not find job with id: %{id}!"

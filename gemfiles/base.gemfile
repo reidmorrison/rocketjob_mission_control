@@ -7,6 +7,3 @@ platform :jruby do
   gem 'jdbc-sqlite3'
   gem 'activerecord-jdbcsqlite3-adapter'
 end
-
-# Support Ruby 1.9
-gem 'autoprefixer-rails', '~> 6.0.0'

@@ -14,7 +14,6 @@ rvm:
 # Patch for RSpec to work with multiple Gemfiles
 before_script:
   - rm Gemfile
-  - jruby-9.1.5.0
 
 matrix:
   exclude:

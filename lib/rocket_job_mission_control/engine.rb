@@ -4,6 +4,7 @@ module RocketJobMissionControl
 
     require 'rocketjob'
     require 'jquery-rails'
+    require 'yaml'
     require 'haml'
     require 'mongo'
     require 'mongo_mapper'

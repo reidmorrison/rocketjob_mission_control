@@ -456,3 +456,15 @@ table.dataTable thead > tr > th {
 .status {
   padding: 1em;
 }
+
+.btn-zombies {
+  position: relative !important;
+  
+  .badge-zombies {
+    position: absolute !important;
+    top: -6px !important;
+    padding: 3px 6px !important;
+    background-color: #c9302c !important;
+    border-color: #761c19 !important;
+  }
+}

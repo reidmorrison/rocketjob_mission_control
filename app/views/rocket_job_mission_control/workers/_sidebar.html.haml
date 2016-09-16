@@ -3,12 +3,12 @@
     = link_to(workers_path) do
       %i.fa.fa-list
       All
-  - RocketJob::Worker.aasm.states.map { |s| s.name.to_s }.each do |state|
+  - (RocketJob::Worker.aasm.states.map { |s| s.name.to_s } + ['zombie']).each do |state|
     %li{class: state}
       = link_to("#{state}_workers".to_sym) do
         %i.fa{class: state_icon(state)}
         = state.to_s.capitalize!
-        = "(#{worker_counts_by_state(state)})"
+        %span.badge.badge-zombies #{worker_counts_by_state(state)}
 / tiny only nav
 %ul#xs-menu.nav.visible-xs
   %li

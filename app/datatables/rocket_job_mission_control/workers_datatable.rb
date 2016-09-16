@@ -86,7 +86,7 @@ module RocketJobMissionControl
     end
 
     def paginate_records(records)
-      Kaminari.paginate_array(records.all).page(page).per(per_page)
+      Kaminari.paginate_array(records).page(page).per(per_page)
     end
 
     def name_with_icon(worker)

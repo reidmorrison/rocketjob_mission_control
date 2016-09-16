@@ -30,6 +30,7 @@ RocketJobMissionControl::Engine.routes.draw do
       get :running, to: 'workers/index_filters#running'
       get :paused, to: 'workers/index_filters#paused'
       get :stopping, to: 'workers/index_filters#stopping'
+      get :zombie, to: 'workers/index_filters#zombies'
     end
 
     member do

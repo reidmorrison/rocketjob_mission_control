@@ -13,7 +13,7 @@ module RocketJobMissionControl
       scheduled: 'fa-clock-o',
       starting:  'fa-cogs',
       stopping:  'fa-stop',
-      zombie:    'fa-hourglass-o'
+      zombie:    'fa-medkit'
     }
 
     def state_icon(state)

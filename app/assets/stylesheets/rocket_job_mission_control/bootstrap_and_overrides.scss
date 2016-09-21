@@ -487,3 +487,7 @@ $component-offset-horizontal: 180px;
 .alert-alert {
   @extend .alert-danger
 }
+
+body {
+  font-size: 14px;
+}

@@ -16,7 +16,7 @@ module RocketJobMissionControl
           busy << {worker_name: job.worker_name, klass: job.class.name, description: job.description, started_at: job.started_at, id: job.id}
         end
       end
-      @busy = sorted ? busy : busy.sort_by { |h| h[:worker_name] || ''}
+      @busy = sorted ? busy : busy.sort_by { |h| h[:started_at] || ''}
 
       respond_to do |format|
         format.html

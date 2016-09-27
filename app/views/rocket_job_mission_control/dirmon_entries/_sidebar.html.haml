@@ -12,7 +12,7 @@
       = link_to("#{state}_dirmon_entries".to_sym) do
         %i.fa{class: state_icon(state)}
         = state.to_s.capitalize!
-        = "(#{dirmon_counts_by_state(state)})"
+        %span.badge.pull-right #{dirmon_counts_by_state(state)}
 / tiny only nav
 %ul#xs-menu.nav.visible-xs
   %li

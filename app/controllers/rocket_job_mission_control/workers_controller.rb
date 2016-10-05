@@ -4,7 +4,7 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @workers = RocketJob::Worker.sort(:name)
+      @workers = RocketJob::Worker.all.sort(name: 1)
       respond_to do |format|
         format.html
         format.json { render(json: WorkersDatatable.new(view_context, @workers)) }

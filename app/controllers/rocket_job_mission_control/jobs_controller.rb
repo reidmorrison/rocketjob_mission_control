@@ -5,7 +5,7 @@ module RocketJobMissionControl
     rescue_from StandardError, with: :error_occurred
 
     def index
-      @jobs  = RocketJob::Job.sort(_id: :desc)
+      @jobs  = RocketJob::Job.all.sort(_id: -1)
       respond_to do |format|
         format.html
         format.json { render(json: JobsDatatable.new(view_context, @jobs)) }
@@ -93,14 +93,14 @@ module RocketJobMissionControl
     end
 
     def job_params
-      params.require(:job).permit(RocketJob::Job.rocket_job_properties)
+      params.require(:job).permit(RocketJob::Job.user_editable_fields)
     end
 
     def error_occurred(exception)
       if defined?(SemanticLogger::Logger) && logger.is_a?(SemanticLogger::Logger)
         logger.error 'Error loading a job', exception
       else
-        logger.error "Error loading a job. #{log.exception.class}: #{log.exception.message}\n#{(log.exception.backtrace || []).join("\n")}"
+        logger.error "Error loading a job. #{exception.class}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
       end
       flash[:danger] = 'Error loading jobs.'
       raise exception if Rails.env.development?

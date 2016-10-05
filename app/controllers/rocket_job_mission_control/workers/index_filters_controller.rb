@@ -1,11 +1,10 @@
 module RocketJobMissionControl
   module Workers
     class IndexFiltersController < RocketJobMissionControl::ApplicationController
-      before_filter :load_workers
       before_filter :show_sidebar
 
       def starting
-        @workers = @workers.where(state: :starting)
+        @workers = RocketJob::Worker.starting.sort(name: 1)
         respond_to do |format|
           format.html
           format.json { render(json: WorkersDatatable.new(view_context, @workers)) }
@@ -13,7 +12,7 @@ module RocketJobMissionControl
       end
 
       def running
-        @workers = @workers.where(state: :running)
+        @workers = RocketJob::Worker.running.sort(name: 1)
         respond_to do |format|
           format.html
           format.json { render(json: WorkersDatatable.new(view_context, @workers)) }
@@ -21,7 +20,7 @@ module RocketJobMissionControl
       end
 
       def paused
-        @workers = @workers.where(state: :paused)
+        @workers = RocketJob::Worker.paused.sort(name: 1)
         respond_to do |format|
           format.html
           format.json { render(json: WorkersDatatable.new(view_context, @workers)) }
@@ -29,7 +28,7 @@ module RocketJobMissionControl
       end
 
       def stopping
-        @workers = @workers.where(state: :stopping)
+        @workers = RocketJob::Worker.stopping.sort(name: 1)
         respond_to do |format|
           format.html
           format.json { render(json: WorkersDatatable.new(view_context, @workers)) }
@@ -37,10 +36,6 @@ module RocketJobMissionControl
       end
 
       private
-
-      def load_workers
-        @workers = RocketJob::Worker.sort(:name)
-      end
 
       def show_sidebar
         @workers_sidebar = true

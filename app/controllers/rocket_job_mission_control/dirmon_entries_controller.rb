@@ -6,7 +6,7 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @dirmons  = RocketJob::DirmonEntry.where()
+      @dirmons  = RocketJob::DirmonEntry.all
       respond_to do |format|
         format.html
         format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
@@ -106,7 +106,7 @@ module RocketJobMissionControl
     def parse_and_assign_properties
       properties = params[:rocket_job_dirmon_entry].fetch(:properties, {})
       properties.each_pair do |property, value|
-        if key = @dirmon_entry.job_class.keys[property]
+        if key = @dirmon_entry.job_class.fields[property]
           if key.type == Hash
             begin
               @dirmon_entry.properties[property] = JSON.parse(value)

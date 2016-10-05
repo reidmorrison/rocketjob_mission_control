@@ -39,7 +39,7 @@ module RocketJobMissionControl
       private
 
       def load_dirmon_entries
-        @dirmons = RocketJob::DirmonEntry.where()
+        @dirmons = RocketJob::DirmonEntry.all
       end
 
       def show_sidebar

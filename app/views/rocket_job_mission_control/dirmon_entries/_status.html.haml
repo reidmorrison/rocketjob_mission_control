@@ -10,11 +10,6 @@
 %div
   %label Archive Directory:
   = @dirmon_entry.archive_directory
--if @dirmon_entry.arguments.size > 0
-  .parameters
-    %label Arguments:
-    %pre
-      %code= pretty_print_array_or_hash(@dirmon_entry.arguments)
 - @dirmon_entry.properties.each_pair do |name, value|
   .parameters
     %label= "#{name.to_s.titleize}:"

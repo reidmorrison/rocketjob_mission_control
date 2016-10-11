@@ -28,7 +28,6 @@ module RocketJobMissionControl
     def create
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
 
-      parse_and_assign_arguments
       parse_and_assign_properties
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.save
@@ -51,7 +50,6 @@ module RocketJobMissionControl
 
     def update
       @dirmon_entry.attributes = dirmon_params
-      parse_and_assign_arguments
       parse_and_assign_properties
       if @dirmon_entry.errors.empty? && @dirmon_entry.save
         flash[:success] = t(:success, scope: [:dirmon_entry, :update])
@@ -92,15 +90,6 @@ module RocketJobMissionControl
 
     def show_sidebar
       @dirmon_sidebar = true
-    end
-
-    def parse_and_assign_arguments
-      arguments               = params[:rocket_job_dirmon_entry][:arguments] || []
-      @dirmon_entry.arguments = arguments.collect do |value|
-        cleansed = parse_array_element(value, :arguments, true)
-        @dirmon_entry.errors.add(:arguments, 'All arguments are mandatory') unless cleansed
-        cleansed
-      end
     end
 
     def parse_and_assign_properties

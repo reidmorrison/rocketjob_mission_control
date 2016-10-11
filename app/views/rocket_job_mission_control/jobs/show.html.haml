@@ -29,7 +29,7 @@
           - if valid_events.include?(:retry)
             = job_action_link('Retry', rocket_job_mission_control.retry_job_path(@job), :patch)
 
-          - if @job.respond_to?(:input) && @job.input.failed_count > 0
+          - if @job.respond_to?(:input) && @job.input.failed.count > 0
             = link_to('View Errors', job_failures_path(@job), class: 'btn btn-default')
         - unless @job.completed? || @job.aborted?
           .btn-group

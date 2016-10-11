@@ -1,11 +1,5 @@
 require_relative '../rails_helper'
 
-class OneParamJob < RocketJob::Job
-  def perform(id)
-    id
-  end
-end
-
 class NoParamsJob < RocketJob::Job
   def perform
     100_000
@@ -30,9 +24,8 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'OneParamJob',
+          job_class_name: 'NoParamsJob',
           pattern:        'the_path',
-          arguments:      ['42'],
           state:          starting_state,
         )
       end
@@ -62,9 +55,8 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'OneParamJob',
+          job_class_name: 'NoParamsJob',
           pattern:        'the_path',
-          arguments:      ['42'],
           state:          starting_state,
         )
       end
@@ -119,13 +111,13 @@ module RocketJobMissionControl
         end
 
         context 'with a valid job_class_name' do
-          let(:entry_params) { {rocket_job_dirmon_entry: {job_class_name: 'OneParamJob'}} }
+          let(:entry_params) { {rocket_job_dirmon_entry: {job_class_name: 'NoParamsJob'}} }
 
           it { expect(response.status).to eq(200) }
 
           it 'assigns the job class' do
             expect(assigns(:dirmon_entry)).to be_present
-            expect(assigns(:dirmon_entry).job_class).to eq(OneParamJob)
+            expect(assigns(:dirmon_entry).job_class).to eq(NoParamsJob)
           end
         end
 
@@ -147,9 +139,8 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'OneParamJob',
+          job_class_name: 'NoParamsJob',
           pattern:        'the_path',
-          arguments:      ['{"argument1":"value1", "argument2":"value2", "argument3":"value3"}']
         )
       end
 
@@ -161,8 +152,7 @@ module RocketJobMissionControl
         let(:dirmon_params) do
           {
             pattern:        'the_path2',
-            job_class_name: 'OneParamJob',
-            arguments:      ['42']
+            job_class_name: 'NoParamsJob',
           }
         end
 
@@ -195,24 +185,6 @@ module RocketJobMissionControl
           expect(assigns(:dirmon_entry)).to_not be_valid
         end
 
-        context 'with invalid arguments json' do
-          let(:dirmon_params) do
-            {
-              name:           'Test',
-              job_class_name: 'OneParamJob',
-              arguments:      [],
-            }
-          end
-
-          it 'renders the new template' do
-            expect(response.status).to eq(200)
-            expect(response).to render_template(:edit)
-          end
-
-          it 'has errors on arguments' do
-            expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
-          end
-        end
       end
     end
 
@@ -220,9 +192,7 @@ module RocketJobMissionControl
       context 'with valid parameters' do
 
         [
-          {job_class_name: 'OneParamJob', argument: ['42'], expected_value: [42]},
-          {job_class_name: 'OneParamJob', argument: ['{"argument1":"value1", "argument2":"value2", "argument3":"value3"}'], expected_value: [{"argument1" => "value1", "argument2" => "value2", "argument3" => "value3"}]},
-          {job_class_name: 'NoParamsJob', argument: [], expected_value: []}
+          {job_class_name: 'NoParamsJob', expected_value: []}
         ].each do |arguments|
           context "and arguments are '#{arguments}'" do
             let(:dirmon_params) do
@@ -230,8 +200,7 @@ module RocketJobMissionControl
                 name:           'Test',
                 pattern:        '/files/*',
                 job_class_name: arguments[:job_class_name],
-                arguments:      arguments[:argument],
-                properties:     {description: '', priority: 42},
+                properties:     {description: '', priority: 42}
               }
             end
 
@@ -268,10 +237,6 @@ module RocketJobMissionControl
                 expect(assigns(:dirmon_entry)[attribute]).to eq(dirmon_params[attribute])
               end
             end
-
-            it 'persists arguments correctly' do
-              expect(assigns(:dirmon_entry).arguments).to eq(arguments[:expected_value])
-            end
           end
         end
       end
@@ -280,8 +245,7 @@ module RocketJobMissionControl
         let(:dirmon_params) do
           {
             name:           'Test',
-            job_class_name: 'FakeAndBadJob',
-            arguments:      [[42].to_json],
+            job_class_name: 'FakeAndBadJob'
           }
         end
 
@@ -299,25 +263,6 @@ module RocketJobMissionControl
             expect(assigns(:dirmon_entry)).to_not be_valid
           end
         end
-
-        context 'with invalid arguments json' do
-          let(:dirmon_params) do
-            {
-              name:           'Test',
-              job_class_name: 'OneParamJob',
-              arguments:      ['{"bad" "json"}'],
-            }
-          end
-
-          it 'renders the new template' do
-            expect(response.status).to eq(200)
-            expect(response).to render_template(:new)
-          end
-
-          it 'has errors on arguments' do
-            expect(assigns(:dirmon_entry).errors[:arguments]).to be_present
-          end
-        end
       end
     end
 
@@ -326,8 +271,7 @@ module RocketJobMissionControl
         @entry = RocketJob::DirmonEntry.create(
           name:           'Test',
           pattern:        '/files/',
-          job_class_name: 'OneParamJob',
-          arguments:      [42]
+          job_class_name: 'NoParamsJob'
         )
         get :edit, id: @entry.id
       end
@@ -376,9 +320,8 @@ module RocketJobMissionControl
       let(:existing_dirmon) do
         RocketJob::DirmonEntry.create!(
           name:           'Test',
-          job_class_name: 'OneParamJob',
-          pattern:        'the_path',
-          arguments:      [42].to_json
+          job_class_name: 'NoParamsJob',
+          pattern:        'the_path'
         )
       end
 

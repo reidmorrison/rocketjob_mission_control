@@ -1,19 +1,8 @@
 - if @dirmon_entry.job_class
   .arguments
     .job_arguments.form-group
-      - count = @dirmon_entry.job_class.rocket_job_argument_count
-      - count.times do |counter|
-        - argument = @dirmon_entry.arguments[counter]
-        = f.label "Argument #{counter + 1}:"
-        = f.text_field :arguments,
-          value: argument.is_a?(Hash) || argument.is_a?(Array) ? argument.to_json : argument,
-          name: 'rocket_job_dirmon_entry[arguments][]',
-          rows: 10,
-          placeholder: '{"argument1":"value1", "argument2":"value2", "argument3":"value3"}',
-          class: 'form-control'
     = f.fields_for :properties do |properties|
       - @dirmon_entry.job_class.user_editable_fields.each do |property_name|
-        - next if property_name == :arguments
         - key = @dirmon_entry.job_class.fields[property_name.to_s]
         - next unless key && key.type
         - placeholder = key.default? ? key.default : nil
@@ -24,7 +13,7 @@
             = properties.number_field property_name, value: @dirmon_entry.properties[property_name], class: 'form-control', placeholder: placeholder
           - when 'Hash'
             - value = @dirmon_entry.properties[property_name]
-            = properties.text_field property_name, value: value ? value.to_json : '', class: 'form-control', placeholder: '{"argument1":"value1", "argument2":"value2", "argument3":"value3"}'
+            = properties.text_field property_name, value: value ? value.to_json : '', class: 'form-control', placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}'
           - when 'Array'
             - options = Array(@dirmon_entry.properties[property_name])
             = properties.select property_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true}

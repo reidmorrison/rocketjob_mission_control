@@ -86,7 +86,7 @@ module RocketJobMissionControl
       if events.include?(:retry)
         buttons += "#{ job_action_link('Retry', retry_job_path(job), :patch) }"
       end
-      if job.respond_to?(:input) && job.input.failed_count > 0
+      if job.respond_to?(:input) && job.input.failed.count > 0
         buttons += "#{ link_to('View Errors', job_failures_path(job), class: 'btn btn-default') }"
       end
       buttons += "</div>"
@@ -129,7 +129,7 @@ module RocketJobMissionControl
     end
 
     def paginate_records(records)
-      Kaminari.paginate_array(records.all).page(page).per(per_page)
+      Kaminari.paginate_array(records.to_a).page(page).per(per_page)
     end
   end
 end

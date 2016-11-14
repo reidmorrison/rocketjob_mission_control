@@ -5,7 +5,7 @@ module RocketJobMissionControl
     rescue_from StandardError, with: :error_occurred
 
     def index
-      @jobs  = RocketJob::Job.all.sort(_id: -1)
+      @jobs = RocketJob::Job.all.sort(id: -1)
       respond_to do |format|
         format.html
         format.json { render(json: JobsDatatable.new(view_context, @jobs)) }
@@ -28,13 +28,8 @@ module RocketJobMissionControl
     end
 
     def destroy
-      if @job.completed? || @job.aborted?
-        @job.destroy
-        redirect_to(jobs_path)
-      else
-        flash[:alert] = 'Cannot destroy a job unless it is completed or aborted'
-        redirect_to(job_path(@job))
-      end
+      @job.destroy
+      redirect_to(jobs_path)
     end
 
     def retry
@@ -79,9 +74,7 @@ module RocketJobMissionControl
     end
 
     def find_job_or_redirect
-      @job = RocketJob::Job.find(params[:id])
-
-      if @job.nil?
+      unless @job = RocketJob::Job.where(id: params[:id]).first
         flash[:alert] = t(:failure, scope: [:job, :find], id: params[:id])
 
         redirect_to(jobs_path)

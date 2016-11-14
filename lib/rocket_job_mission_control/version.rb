@@ -1,3 +1,3 @@
 module RocketJobMissionControl
-  VERSION = '3.0.0.alpha'
+  VERSION = '3.0.0.beta2'
 end

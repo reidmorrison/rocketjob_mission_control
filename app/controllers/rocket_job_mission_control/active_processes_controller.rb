@@ -1,21 +1,22 @@
 module RocketJobMissionControl
   class ActiveProcessesController < RocketJobMissionControl::ApplicationController
     # The list of workers actively processing jobs
-    # [Array[Array<worker_name [String], job [RocketJob::Job], slice_id [String]]]
+    # [Array[Array<server_name [String], job [RocketJob::Job], slice_id [String]]]
     def index
       busy = []
-      RocketJob::ActiveWorker.all.each do |worker_name, active_workers|
-        active_workers.each do |aw|
+
+      RocketJob::ActiveServer.all.each_pair do |server_name, active_servers|
+        active_servers.each do |as|
           busy << {
-            worker_name: worker_name,
-            klass:       aw.job.class.name,
-            description: aw.job.description,
-            started_at:  aw.started_at,
-            id:          aw.job.id
+            server_name: as.name,
+            klass:       as.job.class.name,
+            description: as.job.description,
+            started_at:  as.duration,
+            id:          as.job.id
           }
         end
       end
-      @busy = busy.sort_by { |h| h[:worker_name] || '' }
+      @busy = busy.sort_by { |h| h[:server_name] || '' }
 
       respond_to do |format|
         format.html

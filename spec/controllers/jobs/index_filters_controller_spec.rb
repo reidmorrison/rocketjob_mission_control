@@ -43,7 +43,7 @@ module RocketJobMissionControl
             end
 
             after do
-              RocketJob::Worker.delete_all
+              RocketJob::Server.delete_all
               RocketJob::Job.delete_all
             end
 

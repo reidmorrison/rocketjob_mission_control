@@ -1,11 +1,10 @@
 module RocketJobMissionControl
   module DirmonEntries
     class IndexFiltersController < RocketJobMissionControl::ApplicationController
-      before_filter :load_dirmon_entries
       before_filter :show_sidebar
 
       def pending
-        @dirmons = @dirmons.where(state: :pending)
+        @dirmons = RocketJob::DirmonEntry.pending
         respond_to do |format|
           format.html
           format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
@@ -13,7 +12,7 @@ module RocketJobMissionControl
       end
 
       def enabled
-        @dirmons = @dirmons.where(state: :enabled)
+        @dirmons = RocketJob::DirmonEntry.enabled
         respond_to do |format|
           format.html
           format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
@@ -21,7 +20,7 @@ module RocketJobMissionControl
       end
 
       def failed
-        @dirmons = @dirmons.where(state: :failed)
+        @dirmons = RocketJob::DirmonEntry.failed
         respond_to do |format|
           format.html
           format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
@@ -29,7 +28,7 @@ module RocketJobMissionControl
       end
 
       def disabled
-        @dirmons = @dirmons.where(state: :disabled)
+        @dirmons = RocketJob::DirmonEntry.disabled
         respond_to do |format|
           format.html
           format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
@@ -37,10 +36,6 @@ module RocketJobMissionControl
       end
 
       private
-
-      def load_dirmon_entries
-        @dirmons = RocketJob::DirmonEntry.all
-      end
 
       def show_sidebar
         @dirmon_sidebar = true

@@ -62,20 +62,8 @@ module RocketJobMissionControl
     def action_buttons(job)
       events = valid_events(job)
       buttons = "<div class='inline-job-actions'>"
-      unless job.completed? || job.aborted?
-        buttons += "#{ link_to( 'Edit', edit_job_path(job), class: 'btn btn-default', title: 'Edit job') }"
-      end
       if job.scheduled?
         buttons += "#{ job_action_link('Run', run_now_job_path(job), :patch) }"
-      end
-      if events.include?(:abort)
-        buttons += "#{ job_action_link('Abort', abort_job_path(job), :patch) }"
-      end
-      if job.completed? || job.aborted?
-        buttons += "#{ job_action_link('Destroy', job_path(job), :delete) }"
-      end
-      if events.include?(:fail)
-        buttons += "#{ job_action_link('Fail', fail_job_path(job), :patch) }"
       end
       if events.include?(:pause)
         buttons += "#{ job_action_link('Pause', pause_job_path(job), :patch) }"
@@ -89,11 +77,12 @@ module RocketJobMissionControl
       if job.respond_to?(:input) && job.input.failed.count > 0
         buttons += "#{ link_to('View Errors', job_failures_path(job), class: 'btn btn-default') }"
       end
+      buttons += "#{ job_action_link('Destroy', job_path(job), :delete) }"
       buttons += "</div>"
     end
 
     def valid_events(job)
-      job.aasm.events.collect{ |e| e.name }
+      job.aasm.events.collect(&:name)
     end
 
     def page

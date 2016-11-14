@@ -200,7 +200,7 @@ module RocketJobMissionControl
                 name:           'Test',
                 pattern:        '/files/*',
                 job_class_name: arguments[:job_class_name],
-                properties:     {description: '', priority: 42}
+                properties:     {description: '', priority: '42'}
               }
             end
 
@@ -337,7 +337,7 @@ module RocketJobMissionControl
         end
 
         it 'deletes the entry' do
-          expect(RocketJob::DirmonEntry.find(existing_dirmon.id)).to eq(nil)
+          expect(RocketJob::DirmonEntry.where(id: existing_dirmon.id).exists?).to eq(false)
         end
       end
     end
@@ -362,7 +362,7 @@ module RocketJobMissionControl
         let(:dirmons) { ['fake_dirmon1', 'fake_dirmon2'] }
 
         before do
-          allow(RocketJob::DirmonEntry).to receive(:where).and_return(dirmons)
+          allow(RocketJob::DirmonEntry).to receive(:all).and_return(dirmons)
           get :index
         end
 
@@ -371,7 +371,7 @@ module RocketJobMissionControl
         end
 
         it 'grabs all dirmons with empty where' do
-          expect(RocketJob::DirmonEntry).to have_received(:where)
+          expect(RocketJob::DirmonEntry).to have_received(:all)
         end
 
         it 'returns the entries' do

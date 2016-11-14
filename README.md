@@ -24,10 +24,10 @@ Job Management
 * Abort, or fail queued or running jobs
 * Destroy a completed or aborted job
 
-Worker Management
+Server Management
 
-* View running workers
-* Stop workers
+* View running servers
+* Stop servers
 
 Running Jobs
 

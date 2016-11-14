@@ -22,7 +22,7 @@ module RocketJobMissionControl
     def data
       processes.map do |h|
         {
-          '0' => worker_name_with_icon(h[:worker_name]),
+          '0' => server_name_with_icon(h[:server_name]),
           '1' => job_name_with_link(h[:klass], h[:id]),
           '2' => h(h[:description].try!(:truncate, 50)),
           '3' => h(duration(h[:started_at])),
@@ -57,10 +57,10 @@ module RocketJobMissionControl
       Kaminari.paginate_array(records).page(page).per(per_page)
     end
 
-    def worker_name_with_icon(worker_name)
+    def server_name_with_icon(server_name)
       <<-EOS
         <i class="fa #{state_icon(:running)}" style="font-size: 75%" title="running"></i>
-        #{worker_name}
+        #{server_name}
       EOS
     end
 

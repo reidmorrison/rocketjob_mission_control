@@ -1,63 +1,63 @@
 require 'rails_helper'
 
 module RocketJobMissionControl
-  RSpec.describe WorkersController do
+  RSpec.describe ServersController do
     routes { Engine.routes }
 
-    [:stop, :pause, :resume].each do |worker_action|
-      describe "PATCH ##{worker_action}" do
-        describe "with a valid worker id" do
-          let(:worker) { spy(id: 42, to_param: 42) }
+    [:stop, :pause, :resume].each do |server_action|
+      describe "PATCH ##{server_action}" do
+        describe "with a valid server id" do
+          let(:server) { spy(id: 42, to_param: 42) }
 
           before do
-            allow(RocketJob::Worker).to receive(:find).and_return(worker)
-            patch worker_action, id: worker.id
+            allow(RocketJob::Server).to receive(:find).and_return(server)
+            patch server_action, id: server.id
           end
 
-          it "redirects to workers" do
-            expect(response).to redirect_to(workers_path)
+          it "redirects to servers" do
+            expect(response).to redirect_to(servers_path)
           end
 
           it "displays a flash message" do
-            expect(flash[:notice]).to eq(I18n.t(:success, scope: [:worker, worker_action]))
+            expect(flash[:notice]).to eq(I18n.t(:success, scope: [:server, server_action]))
           end
 
-          it "#{worker_action} the worker" do
-            expect(worker).to have_received("#{worker_action}!".to_sym)
+          it "#{server_action} the server" do
+            expect(server).to have_received("#{server_action}!".to_sym)
           end
         end
 
-        describe "when the worker fails to #{worker_action}" do
+        describe "when the server fails to #{server_action}" do
           before do
-            worker = spy("#{worker_action}!".to_sym => false)
-            allow(RocketJob::Worker).to receive(:find).and_return(worker)
-            patch worker_action, id: worker.id
+            server = spy("#{server_action}!".to_sym => false)
+            allow(RocketJob::Server).to receive(:find).and_return(server)
+            patch server_action, id: server.id
           end
 
-          it "redirects to workers" do
-            expect(response).to redirect_to(workers_path)
+          it "redirects to servers" do
+            expect(response).to redirect_to(servers_path)
           end
 
           it "displays a flash message" do
-            expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:worker, worker_action]))
+            expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:server, server_action]))
           end
         end
       end
     end
 
     describe "PATCH #update_all" do
-      RocketJobMissionControl::WorkersController::VALID_STATES.each do |worker_action, action_message|
-        context "with '#{worker_action}' as the worker_action param" do
+      RocketJobMissionControl::ServersController::VALID_STATES.each do |server_action, action_message|
+        context "with '#{server_action}' as the server_action param" do
           before do
-            allow(RocketJob::Worker).to receive(worker_action.to_sym)
-            patch :update_all, worker_action: worker_action
+            allow(RocketJob::Server).to receive(server_action.to_sym)
+            patch :update_all, server_action: server_action
           end
 
-          it "redirects to workers" do
-            expect(response).to redirect_to(workers_path)
+          it "redirects to servers" do
+            expect(response).to redirect_to(servers_path)
           end
           it "displays a success message" do
-            state_message = I18n.t(:success, scope: [:worker, :update_all], worker_action: action_message)
+            state_message = I18n.t(:success, scope: [:server, :update_all], server_action: action_message)
             expect(flash[:notice]).to eq(state_message)
           end
           it "does not display an error message" do
@@ -66,58 +66,58 @@ module RocketJobMissionControl
         end
       end
 
-      context "with an invalid worker_action param" do
+      context "with an invalid server_action param" do
         before do
-          patch :update_all, worker_action: :bad_worker_action
+          patch :update_all, server_action: :bad_server_action
         end
 
-        it "redirects to workers" do
-          expect(response).to redirect_to(workers_path)
+        it "redirects to servers" do
+          expect(response).to redirect_to(servers_path)
         end
         it "does not display a success message" do
           expect(flash[:notice]).to be_nil
         end
         it "displays an error message" do
-          expect(flash[:alert]).to eq(I18n.t(:invalid, scope: [:worker, :update_all]))
+          expect(flash[:alert]).to eq(I18n.t(:invalid, scope: [:server, :update_all]))
         end
       end
     end
 
     describe "DELETE #destroy" do
-      describe "with a valid worker id" do
-        let(:worker) { spy(id: 42, to_param: 42) }
+      describe "with a valid server id" do
+        let(:server) { spy(id: 42, to_param: 42) }
 
         before do
-          allow(RocketJob::Worker).to receive(:find).and_return(worker)
-          delete :destroy, id: worker.id
+          allow(RocketJob::Server).to receive(:find).and_return(server)
+          delete :destroy, id: server.id
         end
 
-        it "redirects to workers" do
-          expect(response).to redirect_to(workers_path)
+        it "redirects to servers" do
+          expect(response).to redirect_to(servers_path)
         end
 
         it "displays a flash message" do
-          expect(flash[:notice]).to eq(I18n.t(:success, scope: [:worker, :destroy]))
+          expect(flash[:notice]).to eq(I18n.t(:success, scope: [:server, :destroy]))
         end
 
-        it "destroys the worker" do
-          expect(worker).to have_received(:destroy)
+        it "destroys the server" do
+          expect(server).to have_received(:destroy)
         end
       end
 
-      describe "when the worker fails to be destroyed" do
+      describe "when the server fails to be destroyed" do
         before do
-          worker = spy(destroy: false)
-          allow(RocketJob::Worker).to receive(:find).and_return(worker)
-          delete :destroy, id: worker.id
+          server = spy(destroy: false)
+          allow(RocketJob::Server).to receive(:find).and_return(server)
+          delete :destroy, id: server.id
         end
 
-        it "redirects to workers" do
-          expect(response).to redirect_to(workers_path)
+        it "redirects to servers" do
+          expect(response).to redirect_to(servers_path)
         end
 
         it "displays a flash message" do
-          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:worker, :destroy]))
+          expect(flash[:alert]).to eq(I18n.t(:failure, scope: [:server, :destroy]))
         end
       end
     end

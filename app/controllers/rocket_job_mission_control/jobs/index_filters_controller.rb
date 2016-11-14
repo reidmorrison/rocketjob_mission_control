@@ -4,7 +4,7 @@ module RocketJobMissionControl
       before_filter :show_sidebar
 
       def running
-        @jobs = RocketJob::Job.where(state: :running).sort(started_at: :desc)
+        @jobs = RocketJob::Job.running.sort(started_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: RunningJobsDatatable.new(view_context, @jobs)) }
@@ -12,7 +12,7 @@ module RocketJobMissionControl
       end
 
       def paused
-        @jobs = RocketJob::Job.where(state: :paused).sort(completed_at: :desc)
+        @jobs = RocketJob::Job.paused.sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
@@ -20,7 +20,7 @@ module RocketJobMissionControl
       end
 
       def completed
-        @jobs = RocketJob::Job.where(state: :completed).sort(completed_at: :desc)
+        @jobs = RocketJob::Job.completed.sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: CompletedJobsDatatable.new(view_context, @jobs)) }
@@ -28,7 +28,7 @@ module RocketJobMissionControl
       end
 
       def aborted
-        @jobs = RocketJob::Job.where(state: :aborted).sort(completed_at: :desc)
+        @jobs = RocketJob::Job.aborted.sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
@@ -36,7 +36,7 @@ module RocketJobMissionControl
       end
 
       def failed
-        @jobs = RocketJob::Job.where(state: :failed).sort(completed_at: :desc)
+        @jobs = RocketJob::Job.failed.sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }

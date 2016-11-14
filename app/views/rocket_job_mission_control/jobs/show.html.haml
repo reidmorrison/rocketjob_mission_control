@@ -4,9 +4,14 @@
       .lead= @job.class.name
 
       .job-state.inline-block
-        .left state
+        .left State
         .right{ class: @job.state.to_s }
           = @job.state
+      - if sub_state = @job['sub_state']
+        .job-state.inline-block
+          .left Batch
+          .right{ class: 'running' }
+            = sub_state
 
       .btn-toolbar.job-actions.pull-right
         .btn-group
@@ -14,8 +19,7 @@
           - if valid_events.include?(:abort)
             = job_action_link('Abort', rocket_job_mission_control.abort_job_path(@job), :patch)
 
-          - if @job.completed? || @job.aborted?
-            = job_action_link('Destroy', rocket_job_mission_control.job_path(@job), :delete)
+          = job_action_link('Destroy', rocket_job_mission_control.job_path(@job), :delete)
 
           - if valid_events.include?(:fail)
             = job_action_link('Fail', rocket_job_mission_control.fail_job_path(@job), :patch)

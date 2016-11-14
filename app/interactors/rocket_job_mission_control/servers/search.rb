@@ -1,5 +1,5 @@
 module RocketJobMissionControl
-  module Workers
+  module Servers
     class Search
       attr_reader :results, :search_term
 

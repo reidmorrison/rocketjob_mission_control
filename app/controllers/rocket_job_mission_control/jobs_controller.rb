@@ -51,7 +51,7 @@ module RocketJobMissionControl
     end
 
     def run_now
-      @job.update_attribute(:run_at, nil) if @job.scheduled?
+      @job.unset(:run_at) if @job.scheduled?
       redirect_to scheduled_jobs_path
     end
 
@@ -65,6 +65,10 @@ module RocketJobMissionControl
     end
 
     def edit
+    end
+
+    def exceptions
+      @exceptions = @job.input.group_exceptions
     end
 
     private

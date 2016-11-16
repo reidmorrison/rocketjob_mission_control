@@ -3,26 +3,21 @@ module RocketJobMissionControl
     class FailuresController < RocketJobMissionControl::ApplicationController
       def index
         job_failures = JobFailures.new(params[:job_id])
-        @job         = job_failures.job
-
-        if @job && @job.failed?
+        if @job = job_failures.job
           @slice_errors = job_failures.list
 
           if @slice_errors.present?
-            @error_type = params[:error_type] || @slice_errors.first['_id']['error_class']
+            @error_type = params[:error_type] || @slice_errors.first.class_name
 
             offset             = params.fetch(:offset, 0).to_i
-            selected_exception = job_failures.for_error(@error_type, offset)
-            current_failure    = selected_exception.first
+            count              = @slice_errors.find { |exception| exception.class_name == @error_type }.try!(:count) || 0
+            current_failure    = job_failures.for_error(@error_type, offset)
+            @failure_exception = current_failure.try!(:exception)
 
             @pagination = {
               offset: offset,
-              total:  (selected_exception.count - 1),
+              total:  (count - 1),
             }
-
-            if current_failure.present?
-              @failure_exception = current_failure['exception']
-            end
           else
             flash[:notice] = t(:no_errors, scope: [:job, :failures])
           end

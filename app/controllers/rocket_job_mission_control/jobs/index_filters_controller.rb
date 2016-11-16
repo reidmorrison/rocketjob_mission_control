@@ -3,8 +3,10 @@ module RocketJobMissionControl
     class IndexFiltersController < RocketJobMissionControl::ApplicationController
       before_filter :show_sidebar
 
+      REQUIRED_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state]
+
       def running
-        @jobs = RocketJob::Job.running.sort(started_at: :desc)
+        @jobs = RocketJob::Job.running.only(:record_count, :collect_output, :input_categories, :encrypt, :compress, :slice_size, :priority, REQUIRED_FIELDS).sort(started_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: RunningJobsDatatable.new(view_context, @jobs)) }
@@ -12,7 +14,7 @@ module RocketJobMissionControl
       end
 
       def paused
-        @jobs = RocketJob::Job.paused.sort(completed_at: :desc)
+        @jobs = RocketJob::Job.paused.only(REQUIRED_FIELDS).sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
@@ -20,7 +22,7 @@ module RocketJobMissionControl
       end
 
       def completed
-        @jobs = RocketJob::Job.completed.sort(completed_at: :desc)
+        @jobs = RocketJob::Job.completed.only(REQUIRED_FIELDS).sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: CompletedJobsDatatable.new(view_context, @jobs)) }
@@ -28,7 +30,7 @@ module RocketJobMissionControl
       end
 
       def aborted
-        @jobs = RocketJob::Job.aborted.sort(completed_at: :desc)
+        @jobs = RocketJob::Job.aborted.only(REQUIRED_FIELDS).sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
@@ -36,7 +38,7 @@ module RocketJobMissionControl
       end
 
       def failed
-        @jobs = RocketJob::Job.failed.sort(completed_at: :desc)
+        @jobs = RocketJob::Job.failed.only(REQUIRED_FIELDS).sort(completed_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @jobs)) }
@@ -44,7 +46,7 @@ module RocketJobMissionControl
       end
 
       def queued
-        @jobs = RocketJob::Job.queued_now.sort(created_at: :desc)
+        @jobs = RocketJob::Job.queued_now.only(:run_at, :priority, REQUIRED_FIELDS).sort(created_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: QueuedJobsDatatable.new(view_context, @jobs)) }
@@ -52,7 +54,7 @@ module RocketJobMissionControl
       end
 
       def scheduled
-        @jobs = RocketJob::Job.scheduled.sort(run_at: :asc)
+        @jobs = RocketJob::Job.scheduled.only(:run_at, :cron_schedule, REQUIRED_FIELDS).sort(run_at: :asc)
         respond_to do |format|
           format.html
           format.json { render(json: ScheduledJobsDatatable.new(view_context, @jobs)) }

@@ -8,25 +8,25 @@
       .clearfix
       .list
         - @slice_errors.each do |slice_error|
-          = link_to(job_failures_path(@job, error_type: slice_error['_id']['error_class']), class: "card callout") do
+          = link_to(job_failures_path(@job, error_type: slice_error.class_name), class: "card callout") do
             .inner
               .title
                 .lead
-                  = slice_error['_id']['error_class']
+                  = slice_error.class_name
 
               .description
-                = "Occurrences: #{slice_error['count'].to_i}"
+                = "Occurrences: #{slice_error.count}"
 
   - if @failure_exception
     .col-md-8
       .job-status
         .failures
-          .lead= @failure_exception['class_name']
-          .pagination-buttons.pull-right= render partial: 'pagination', locals: { error_type: @failure_exception['class_name'], pagination: @pagination }
+          .lead= @failure_exception.class_name
+          .pagination-buttons.pull-right= render partial: 'pagination', locals: { error_type: @failure_exception.class_name, pagination: @pagination }
 
         .clearfix
         .message
           %pre
-            %code= @failure_exception['message']
+            %code= @failure_exception.message
         .error
-          %pre.small= @failure_exception['backtrace'].join("\n")
+          %pre.small= @failure_exception.backtrace.join("\n")

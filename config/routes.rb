@@ -18,6 +18,7 @@ RocketJobMissionControl::Engine.routes.draw do
       patch :resume
       patch :retry
       patch :run_now
+      get   :exceptions
     end
     resources :failures, controller: 'jobs/failures', only: :index
   end

@@ -1,21 +1,21 @@
 module RocketJobMissionControl
   class JobsDatatable
     delegate :params, :link_to, :job_path, :job_icon, :edit_job_path,
-    :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
-    :resume_job_path, :retry_job_path, :job_failures_path, :job_action_link, to: :@view
+      :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
+      :resume_job_path, :retry_job_path, :job_failures_path, :job_action_link, :exceptions_job_path, to: :@view
     delegate :h, to: 'ERB::Util'
 
     def initialize(view, jobs)
-      @view = view
+      @view            = view
       @unfiltered_jobs = jobs
     end
 
     def as_json(options = {})
       {
-        :draw => params[:draw].to_i,
-        :recordsTotal =>  get_raw_records.count,
-        :recordsFiltered => filter_records(get_raw_records).count,
-        :data => data
+        draw:            params[:draw].to_i,
+        recordsTotal:    get_raw_records.count,
+        recordsFiltered: filter_records(get_raw_records).count,
+        data:            data
       }
     end
 
@@ -24,11 +24,11 @@ module RocketJobMissionControl
     def data
       jobs.map do |job|
         {
-          '0' => class_with_link(job),
-          '1' => h(job.description.try(:truncate, 50)),
-          '2' => h(job.created_at),
-          '3' => h(job.duration),
-          '4' => action_buttons(job),
+          '0'           => class_with_link(job),
+          '1'           => h(job.description.try(:truncate, 50)),
+          '2'           => h(job.created_at),
+          '3'           => h(job.duration),
+          '4'           => action_buttons(job),
           'DT_RowClass' => "card callout callout-#{job.state}"
         }
       end
@@ -60,7 +60,7 @@ module RocketJobMissionControl
     end
 
     def action_buttons(job)
-      events = valid_events(job)
+      events  = valid_events(job)
       buttons = "<div class='inline-job-actions'>"
       if job.scheduled?
         buttons += "#{ job_action_link('Run', run_now_job_path(job), :patch) }"
@@ -73,9 +73,6 @@ module RocketJobMissionControl
       end
       if events.include?(:retry)
         buttons += "#{ job_action_link('Retry', retry_job_path(job), :patch) }"
-      end
-      if job.respond_to?(:input) && job.input.failed.count > 0
-        buttons += "#{ link_to('View Errors', job_failures_path(job), class: 'btn btn-default') }"
       end
       buttons += "#{ job_action_link('Destroy', job_path(job), :delete) }"
       buttons += "</div>"
@@ -113,7 +110,7 @@ module RocketJobMissionControl
     def filter_records(records)
       return records unless (params[:search].present? && params[:search][:value].present?)
       conditions = params[:search][:value]
-      records = RocketJobMissionControl::Jobs::Search.new(conditions, records).execute if conditions
+      records    = RocketJobMissionControl::Jobs::Search.new(conditions, records).execute if conditions
       records
     end
 

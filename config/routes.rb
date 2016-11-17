@@ -23,7 +23,7 @@ RocketJobMissionControl::Engine.routes.draw do
     resources :failures, controller: 'jobs/failures', only: :index
   end
 
-  resources :active_processes, only: :index
+  resources :active_workers, only: :index
 
   resources :servers, only: [:index, :destroy] do
     collection do

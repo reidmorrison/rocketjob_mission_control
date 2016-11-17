@@ -2,14 +2,14 @@
   .list
     .row
       .col-sm-10
-        %h2 Active Servers
+        %h2 Active Workers
       .col-sm-2
         .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
           %i.fa.fa-refresh
-    %table.table.datatable.active-processes-datatable{ style: "width: 100%", data: { source: "#{active_processes_url(format: 'json')}", column_num: 4 } }
+    %table.table.datatable.active-workers-datatable{ style: "width: 100%", data: { source: "#{active_workers_url(format: 'json')}", column_num: 4 } }
       %thead
         %tr
-          %th Hostname : PID
+          %th Worker Name
           %th Class
           %th Description
           %th Started
@@ -18,7 +18,7 @@
 :javascript
   jQuery(function() {
     new RjmcDatatable(
-      $('.active-processes-datatable'),
+      $('.active-workers-datatable'),
       [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}],
       {ordering: false, searching: false});
   });

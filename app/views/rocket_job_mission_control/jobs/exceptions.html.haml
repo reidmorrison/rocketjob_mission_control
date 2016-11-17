@@ -15,15 +15,15 @@
           %th Exception Class
           %th Exception Messages
       %tbody
-        - first = true
+        - class_name = nil
         - @exceptions.each do |exception|
           - exception.messages.each do |message|
             %tr
               %th
-                = exception.count if first
+                = exception.count if exception.class_name != class_name
               %th
-                - if first
+                - if exception.class_name != class_name
                   = link_to(exception.class_name, job_failures_path(@job, error_type: exception.class_name), class: "card callout")
               %th
                 = message
-          - first = false
+          - class_name = exception.class_name

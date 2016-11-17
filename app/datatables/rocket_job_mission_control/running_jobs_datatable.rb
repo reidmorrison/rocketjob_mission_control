@@ -5,12 +5,12 @@ module RocketJobMissionControl
     def data
       jobs.map do |job|
         {
-          '0' => class_with_link(job),
-          '1' => h(job.description.try(:truncate, 50)),
-          '2' => progress(job),
-          '3' => h(job.priority),
-          '4' => h(started(job)),
-          '5' => action_buttons(job),
+          '0'           => class_with_link(job),
+          '1'           => h(job.description.try(:truncate, 50)),
+          '2'           => progress(job),
+          '3'           => h(job.priority),
+          '4'           => h(started(job)),
+          '5'           => action_buttons(job),
           'DT_RowClass' => "card callout callout-#{job.state}"
         }
       end
@@ -22,11 +22,22 @@ module RocketJobMissionControl
     end
 
     def progress(job)
-      <<-EOS
-        <div class='progress'>
-          <div class='progress-bar' style="width: #{job.percent_complete}%;", title="#{job.percent_complete}% complete."></div>
-        </div>
-      EOS
+      if (sub_state = job.attributes['sub_state']) && [:before, :after].include?(sub_state)
+        <<-EOS
+          <div class="job-status">
+            <div class="job-state">
+              <div class="left">Batch</div>
+              <div class="right running">#{sub_state}</div>
+            </div>
+          </div>
+        EOS
+      else
+        <<-EOS
+          <div class='progress'>
+            <div class='progress-bar' style="width: #{job.percent_complete}%;", title="#{job.percent_complete}% complete."></div>
+          </div>
+        EOS
+      end
     end
 
     def started(job)

@@ -6,7 +6,7 @@ module RocketJobMissionControl
       REQUIRED_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state]
 
       def running
-        @jobs = RocketJob::Job.running.only(:record_count, :collect_output, :input_categories, :encrypt, :compress, :slice_size, :priority, REQUIRED_FIELDS).sort(started_at: :desc)
+        @jobs = RocketJob::Job.running.only(:record_count, :collect_output, :input_categories, :encrypt, :compress, :slice_size, :priority, :sub_state, REQUIRED_FIELDS).sort(started_at: :desc)
         respond_to do |format|
           format.html
           format.json { render(json: RunningJobsDatatable.new(view_context, @jobs)) }

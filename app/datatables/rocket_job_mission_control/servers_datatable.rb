@@ -112,7 +112,12 @@ module RocketJobMissionControl
       actions = '<div class="actions">'
       if server.stopping?
         actions += "Server is stopping..."
-        actions += "#{ link_to "destroy", server_path(server), method: :delete, class: 'btn btn-danger', data: {confirm: "Destroy this server?"}  }"
+        confirmation = ''
+        unless server.zombie?
+          confirmation << "Warning!\n\nDestroying this server will hard kill its active workers/jobs.\nKilled jobs will be requeued for processing on another worker.\n\n"
+        end
+        confirmation << "Are you sure you want to destroy #{server.name} ?"
+        actions += "#{ link_to "destroy", server_path(server), method: :delete, class: 'btn btn-danger', data: {confirm: confirmation}  }"
       else
         if server.paused?
           actions += "#{ link_to "resume", resume_server_path(server), method: :patch, class: 'btn btn-default', data: {confirm: "Resume this server?"}  }"

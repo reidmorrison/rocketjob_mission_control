@@ -22,7 +22,7 @@ module RocketJobMissionControl
     def data
       active_workers.collect do |active_worker|
         {
-          '0'           => worker_name_with_icon(active_worker),
+          '0'           => worker_name_with_icon(active_worker, active_worker.job),
           '1'           => job_name_with_link(active_worker.job.class.name, active_worker.job.id),
           '2'           => h(active_worker.job.description.try!(:truncate, 50)),
           '3'           => h("#{active_worker.duration} ago"),
@@ -57,8 +57,8 @@ module RocketJobMissionControl
       Kaminari.paginate_array(records).page(page).per(per_page)
     end
 
-    def worker_name_with_icon(active_worker)
-      state = active_worker.zombie? ? :zombie : :running
+    def worker_name_with_icon(active_worker, job)
+      state = active_worker.zombie? ? :zombie : job.state
       <<-EOS
         <i class="fa #{state_icon(state)}" style="font-size: 75%" title="#{state}"></i>
         #{active_worker.name}

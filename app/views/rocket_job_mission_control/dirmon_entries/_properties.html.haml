@@ -17,7 +17,7 @@
           - when 'Array'
             - options = Array(@dirmon_entry.properties[property_name])
             = properties.select property_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true}
-          - when 'Boolean'
+          - when 'Mongoid::Boolean'
             - name = "#{property_name}_true".to_sym
             .radio-buttons
               = properties.label name, 'true'

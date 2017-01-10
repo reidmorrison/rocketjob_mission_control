@@ -21,8 +21,8 @@ module RocketJobMissionControl
         if search_columns.size == 1
           records = records.where(search_columns.first => regexp)
         else
-          cols    = search_columns.inject({}) { |cols, key| cols[key] = regexp; cols }
-          records = records.where('$or' => [cols])
+          cols    = search_columns.collect { |col| {col => regexp} }
+          records = records.where('$or' => cols)
         end
       end
 

@@ -4,10 +4,10 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @servers = RocketJob::Server.all.sort(name: 1)
+      @query = RocketJobMissionControl::Query.new(RocketJob::Server.all, name: :asc)
       respond_to do |format|
         format.html
-        format.json { render(json: ServersDatatable.new(view_context, @servers)) }
+        format.json { render(json: ServersDatatable.new(view_context, @query)) }
       end
     end
 

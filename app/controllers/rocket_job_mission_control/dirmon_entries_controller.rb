@@ -6,10 +6,10 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @dirmons  = RocketJob::DirmonEntry.all
+      @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.all, name: :asc)
       respond_to do |format|
         format.html
-        format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+        format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
       end
     end
 

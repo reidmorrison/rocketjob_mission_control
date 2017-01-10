@@ -4,34 +4,34 @@ module RocketJobMissionControl
       before_filter :show_sidebar
 
       def pending
-        @dirmons = RocketJob::DirmonEntry.pending
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.pending, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 
       def enabled
-        @dirmons = RocketJob::DirmonEntry.enabled
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.enabled, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 
       def failed
-        @dirmons = RocketJob::DirmonEntry.failed
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.failed, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 
       def disabled
-        @dirmons = RocketJob::DirmonEntry.disabled
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.disabled, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 

@@ -1,25 +1,18 @@
 module RocketJobMissionControl
-  class ActiveWorkersDatatable
-    delegate :params, :link_to, :job_path, :state_icon, to: :@view
-    delegate :h, to: 'ERB::Util'
+  class ActiveWorkersDatatable < AbstractDatatable
+    delegate :job_path, :state_icon, to: :@view
 
-    def initialize(view, active_workers)
-      @view                      = view
-      @unfiltered_active_workers = active_workers
-    end
-
-    def as_json(options = {})
-      {
-        draw:            params[:draw].to_i,
-        recordsTotal:    get_raw_records.count,
-        recordsFiltered: get_raw_records.count,
-        data:            data
-      }
+    def initialize(view, query)
+      super(view, query)
     end
 
     private
 
-    def data
+    def extract_query_params
+      @query.order_by = nil
+    end
+
+    def data(active_workers)
       active_workers.collect do |active_worker|
         {
           '0'           => worker_name_with_icon(active_worker, active_worker.job),
@@ -29,32 +22,6 @@ module RocketJobMissionControl
           'DT_RowClass' => 'card callout callout-running'
         }
       end
-    end
-
-    def get_raw_records
-      @unfiltered_active_workers
-    end
-
-    def active_workers
-      @active_workers ||= fetch_active_workers
-    end
-
-    def fetch_active_workers
-      records = get_raw_records
-      records = paginate_records(records) unless params[:length].present? && params[:length] == '-1'
-      records
-    end
-
-    def page
-      (params[:start].to_i / per_page) + 1
-    end
-
-    def per_page
-      params.fetch(:length, 10).to_i
-    end
-
-    def paginate_records(records)
-      Kaminari.paginate_array(records).page(page).per(per_page)
     end
 
     def worker_name_with_icon(active_worker, job)

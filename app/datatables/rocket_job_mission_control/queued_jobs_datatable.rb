@@ -2,7 +2,7 @@ module RocketJobMissionControl
   class QueuedJobsDatatable < JobsDatatable
     private
 
-    def data
+    def data(jobs)
       jobs.map do |job|
         {
           '0' => class_with_link(job),

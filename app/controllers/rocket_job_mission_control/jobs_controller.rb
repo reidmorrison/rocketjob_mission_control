@@ -5,10 +5,10 @@ module RocketJobMissionControl
     rescue_from StandardError, with: :error_occurred
 
     def index
-      @jobs = RocketJob::Job.all.sort(id: -1)
+      @query = RocketJobMissionControl::Query.new(RocketJob::Job.all, id: :desc)
       respond_to do |format|
         format.html
-        format.json { render(json: JobsDatatable.new(view_context, @jobs)) }
+        format.json { render(json: JobsDatatable.new(view_context, @query)) }
       end
     end
 

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 class AJob < RocketJob::Job
-  def perform(id)
-    id
+  def perform
+    23
   end
 end
 
@@ -39,7 +39,6 @@ module RocketJobMissionControl
               RocketJob::DirmonEntry.create!(
                 state:          state,
                 pattern:        '21',
-                arguments:      ['42'],
                 job_class_name: 'AJob'
               )
             }
@@ -48,7 +47,6 @@ module RocketJobMissionControl
               RocketJob::DirmonEntry.create!(
                 name:           'Test',
                 state:          not_state,
-                arguments:      ['42'],
                 pattern:        '21',
                 job_class_name: 'AJob'
               )

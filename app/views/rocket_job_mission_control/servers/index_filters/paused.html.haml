@@ -1,25 +1,25 @@
-#workers
-  .worker-list
+#servers
+  .server-list
     .list
       .row
         .col-md-6
           %h2 Paused Servers
         .col-md-6
           .col-sm-10
-            .worker-collection-actions
-              - if @workers.present?
+            .server-collection-actions
+              - if @servers.present?
                 %ol.pull-right
                   .btn-group
                     - [:stop_all, :resume_all, :destroy_zombies].each do |action|
                       = link_to("#{action.to_s.humanize.capitalize}",
-                        rocket_job_mission_control.update_all_workers_path(worker_action: action),
+                        rocket_job_mission_control.update_all_servers_path(server_action: action),
                         method: :patch,
-                        data: { confirm: t(:confirm, scope: [:worker, :update_all], action: action.to_s.singularize.humanize.downcase) },
+                        data: { confirm: t(:confirm, scope: [:server, :update_all], action: action.to_s.singularize.humanize.downcase) },
                         class: 'btn btn-default')
           .col-sm-2.pull-right
             .btn.btn-default.pull-right.dt-reload{ data: { behavior: 'reload' } }
               %i.fa.fa-refresh
-      %table.table.datatable.workers-datatable{ style: "width: 100%", data: { source: "#{paused_workers_url(format: 'json')}" } }
+      %table.table.datatable.servers-datatable{ style: "width: 100%", data: { source: "#{paused_servers_url(format: 'json')}" } }
         %thead
           %tr
             %th Hostname : PID
@@ -32,6 +32,6 @@
 :javascript
   jQuery(function() {
     new RjmcDatatable(
-      $('.workers-datatable'),
+      $('.servers-datatable'),
       [{data: '0'}, {data: '1', orderable: false}, {data: '2'}, {data: '3'}, {data: '4', orderable: false}]);
   });

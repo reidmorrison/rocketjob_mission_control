@@ -1,0 +1,9 @@
+- if server.stopping?
+  %p Server is stopping...
+  = link_to "destroy", rocket_job_mission_control.server_path(server), method: :delete, class: 'btn btn-danger'
+-else
+  = link_to "stop", rocket_job_mission_control.stop_server_path(server), method: :patch, class: 'btn btn-danger'
+  - if server.paused?
+    = link_to "resume", rocket_job_mission_control.resume_server_path(server), method: :patch, class: 'btn btn-default'
+  - else
+    = link_to "pause", rocket_job_mission_control.pause_server_path(server), method: :patch, class: 'btn btn-default'

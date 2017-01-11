@@ -18,7 +18,7 @@
         = f.number_field :priority, value: @job.priority, class: 'form-control'
       .col-md-4
         = f.label :log_level
-        = f.select :log_level, ['trace', 'debug', 'info', 'warn', 'error', 'fatal'], { include_blank: true }, { class: 'form-control' }
+        = f.select :log_level, SemanticLogger::LEVELS.collect(&:to_s), { include_blank: true }, { class: 'form-control' }
       - if @job.respond_to?(:max_active_workers)
         .col-md-4
           = f.label :max_active_workers

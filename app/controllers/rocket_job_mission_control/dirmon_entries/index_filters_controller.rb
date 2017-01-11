@@ -1,46 +1,41 @@
 module RocketJobMissionControl
   module DirmonEntries
     class IndexFiltersController < RocketJobMissionControl::ApplicationController
-      before_filter :load_dirmon_entries
       before_filter :show_sidebar
 
       def pending
-        @dirmons = @dirmons.where(state: :pending)
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.pending, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 
       def enabled
-        @dirmons = @dirmons.where(state: :enabled)
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.enabled, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 
       def failed
-        @dirmons = @dirmons.where(state: :failed)
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.failed, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 
       def disabled
-        @dirmons = @dirmons.where(state: :disabled)
+        @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.disabled, name: :asc)
         respond_to do |format|
           format.html
-          format.json { render(json: DirmonEntriesDatatable.new(view_context, @dirmons)) }
+          format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
         end
       end
 
       private
-
-      def load_dirmon_entries
-        @dirmons = RocketJob::DirmonEntry.where()
-      end
 
       def show_sidebar
         @dirmon_sidebar = true

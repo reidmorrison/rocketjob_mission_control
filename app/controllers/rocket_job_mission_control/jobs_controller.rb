@@ -5,10 +5,10 @@ module RocketJobMissionControl
     rescue_from StandardError, with: :error_occurred
 
     def index
-      @jobs  = RocketJob::Job.sort(_id: :desc)
+      @query = RocketJobMissionControl::Query.new(RocketJob::Job.all, id: :desc)
       respond_to do |format|
         format.html
-        format.json { render(json: JobsDatatable.new(view_context, @jobs)) }
+        format.json { render(json: JobsDatatable.new(view_context, @query)) }
       end
     end
 
@@ -28,13 +28,8 @@ module RocketJobMissionControl
     end
 
     def destroy
-      if @job.completed? || @job.aborted?
-        @job.destroy
-        redirect_to(jobs_path)
-      else
-        flash[:alert] = 'Cannot destroy a job unless it is completed or aborted'
-        redirect_to(job_path(@job))
-      end
+      @job.destroy
+      redirect_to(jobs_path)
     end
 
     def retry
@@ -56,7 +51,7 @@ module RocketJobMissionControl
     end
 
     def run_now
-      @job.update_attribute(:run_at, nil) if @job.scheduled?
+      @job.unset(:run_at) if @job.scheduled?
       redirect_to scheduled_jobs_path
     end
 
@@ -72,6 +67,10 @@ module RocketJobMissionControl
     def edit
     end
 
+    def exceptions
+      @exceptions = @job.input.group_exceptions
+    end
+
     private
 
     def show_sidebar
@@ -79,9 +78,7 @@ module RocketJobMissionControl
     end
 
     def find_job_or_redirect
-      @job = RocketJob::Job.find(params[:id])
-
-      if @job.nil?
+      unless @job = RocketJob::Job.where(id: params[:id]).first
         flash[:alert] = t(:failure, scope: [:job, :find], id: params[:id])
 
         redirect_to(jobs_path)
@@ -93,14 +90,14 @@ module RocketJobMissionControl
     end
 
     def job_params
-      params.require(:job).permit(RocketJob::Job.rocket_job_properties)
+      params.require(:job).permit(RocketJob::Job.user_editable_fields)
     end
 
     def error_occurred(exception)
       if defined?(SemanticLogger::Logger) && logger.is_a?(SemanticLogger::Logger)
         logger.error 'Error loading a job', exception
       else
-        logger.error "Error loading a job. #{log.exception.class}: #{log.exception.message}\n#{(log.exception.backtrace || []).join("\n")}"
+        logger.error "Error loading a job. #{exception.class}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
       end
       flash[:danger] = 'Error loading jobs.'
       raise exception if Rails.env.development?

@@ -1,31 +1,36 @@
 - status = job.status(Time.zone)
 .id
   %label ID:
-  = status.delete('id')
-.status-message
-  %label Description:
-  = status.delete('description')
-.status-message
-  %label Duration:
-  = status.delete('duration')
-.status-message
-  %label Record Count:
-  = status.delete('record_count')
+  = status.delete('_id')
+- if description = status.delete('description')
+  .status-message
+    %label Description:
+    = description
+- if duration = status.delete('duration')
+  .status-message
+    %label Duration:
+    = duration
+- if record_count = status.delete('record_count')
+  .status-message
+    %label Record Count:
+    = record_count
 .created_at
   %label Created At:
   = status.delete('created_at')
-.status-message
-  %label Started At:
-  = status.delete('started_at')
-.status-message
-  %label % Complete:
-  = status.delete('percent_complete')
+- if started_at = status.delete('started_at')
+  .status-message
+    %label Started At:
+    = started_at
+- if percent_complete = status.delete('percent_complete')
+  .status-message
+    %label % Complete:
+    = percent_complete
 
 - remaining = {}
 - status.each_pair do |key, value|
   - next if value.blank?
   .status-message
-  - if ['state', '_type'].include?(key)
+  - if ['state', '_type', 'sub_state'].include?(key)
   - elsif value.kind_of?(Hash) || value.kind_of?(Array)
     - remaining[key] = value
   - else

@@ -18,18 +18,19 @@ RocketJobMissionControl::Engine.routes.draw do
       patch :resume
       patch :retry
       patch :run_now
+      get   :exceptions
     end
     resources :failures, controller: 'jobs/failures', only: :index
   end
 
-  resources :active_processes, only: :index
+  resources :active_workers, only: :index
 
-  resources :workers, only: [:index, :destroy] do
+  resources :servers, only: [:index, :destroy] do
     collection do
-      get :starting, to: 'workers/index_filters#starting'
-      get :running, to: 'workers/index_filters#running'
-      get :paused, to: 'workers/index_filters#paused'
-      get :stopping, to: 'workers/index_filters#stopping'
+      get :starting, to: 'servers/index_filters#starting'
+      get :running, to: 'servers/index_filters#running'
+      get :paused, to: 'servers/index_filters#paused'
+      get :stopping, to: 'servers/index_filters#stopping'
     end
 
     member do

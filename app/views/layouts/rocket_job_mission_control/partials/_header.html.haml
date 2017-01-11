@@ -16,13 +16,13 @@
             %i.fa.fa-home
             Jobs
         %li
-          = link_to workers_path, class: active_page(workers_path) do
+          = link_to servers_path, class: active_page(servers_path) do
             %i.fa.fa-database
             Servers
         %li
-          = link_to active_processes_path, class: active_page(active_processes_path) do
+          = link_to active_workers_path, class: active_page(active_workers_path) do
             %i.fa.fa-circle-o-notch
-            Activity
+            Workers
         %li
           = link_to enabled_dirmon_entries_path, class: active_page(enabled_dirmon_entries_path) do
             %i.fa.fa-folder-o

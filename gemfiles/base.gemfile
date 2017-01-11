@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'bson_ext', platform: :ruby
+gem 'awesome_print'
 gem 'sqlite3', platform: :ruby
 
 platform :jruby do

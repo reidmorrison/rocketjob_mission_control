@@ -4,6 +4,3 @@ gemspec :path => '..'
 
 gem 'rspec-rails', '~> 3.5'
 gem 'rails', '~> 5.0'
-
-gem 'rails-controller-testing'
-gem 'activemodel-serializers-xml'

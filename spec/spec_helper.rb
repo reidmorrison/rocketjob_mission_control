@@ -1,3 +1,4 @@
+require 'rocketjob'
 # Given that it is always loaded, you are encouraged to keep this file as
 # light-weight as possible. Requiring heavyweight dependencies from this file
 # will add to the boot time of your test suite on EVERY test run, even for an
@@ -79,3 +80,5 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+RocketJob::Config.load!('test', 'spec/dummy/config/mongoid.yml', 'spec/dummy/config/symmetric-encryption.yml')

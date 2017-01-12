@@ -1,4 +1,4 @@
-APP_RAKEFILE = File.expand_path('../spec/dummy/Rakefile', __FILE__)
+APP_RAKEFILE = File.expand_path('../rjmc/Rakefile', __FILE__)
 load 'rails/tasks/engine.rake'
 
 require_relative 'lib/rocket_job_mission_control/version'

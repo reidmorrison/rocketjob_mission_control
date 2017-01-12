@@ -7,6 +7,7 @@ eval File.read(File.expand_path('../gemfiles/base.gemfile', __FILE__)), nil, 'ba
 # Rails 5
 gem 'rspec-rails', '~> 3.5'
 gem 'rails', '~> 5.0'
+gem 'rails-controller-testing'
 
 gem 'rails_semantic_logger'
 #gem 'rocketjob', path: '../rocketjob'

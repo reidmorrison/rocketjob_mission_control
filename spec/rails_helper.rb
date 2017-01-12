@@ -1,9 +1,10 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative 'spec_helper'
-require_relative 'dummy/config/environment'
+require_relative '../rjmc/config/environment'
 
 require 'rspec/rails'
+#require 'rails/test_unit/railtie'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

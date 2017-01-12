@@ -1,11 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'sprockets/railtie'
 
 Bundler.require(*Rails.groups)
-require "rocketjob_mission_control"
 
-module Dummy
+module Rjmc
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

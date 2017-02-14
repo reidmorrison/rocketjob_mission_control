@@ -1,0 +1,33 @@
+<ul class="nav hidden-xs" id="lg-menu">
+  <li>
+    <%= link_to(servers_path) do %>
+      <i class="fa fa-list"></i>All
+    <% end %>
+  </li>
+  <% states = RocketJob::Server.aasm.states.map { |s| s.name.to_s }
+     states << 'zombie'
+     states.each do |state| %>
+    <li class="#{state}">
+      <%= link_to("#{state}_servers".to_sym) do %>
+        <i class="fa <%= state_icon(state) %>"></i> <%= state.to_s.capitalize!%> (<%= server_counts_by_state(state)%>)
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<!-- tiny only nav -->
+
+<ul class="nav visible-xs" id="xs-menu">
+  <li>
+    <%= link_to(servers_path) do %>
+      <i class="fa fa-list"></i>
+    <% end %>
+  </li>
+  <% RocketJob::Server.aasm.states.map { |s| s.name.to_s }.each do |state| %>
+    <li class="#{state}">
+      <%= link_to("#{state}_servers".to_sym) do %>
+        <i class="fa <%= state_icon(state) %>"></i>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

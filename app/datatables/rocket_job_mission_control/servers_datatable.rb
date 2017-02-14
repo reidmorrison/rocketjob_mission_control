@@ -4,23 +4,21 @@ module RocketJobMissionControl
 
     def initialize(view, query)
       query.display_columns = %w[name heartbeat.workers started_at heartbeat.updated_at]
-      query.search_columns = [:name]
+      query.search_columns  = [:name]
       super(view, query)
     end
 
     private
 
-    def data(servers)
-      servers.collect do |server|
-        {
-          '0'           => name_with_icon(server),
-          '1'           => h(threads(server)),
-          '2'           => h(started_ago(server)),
-          '3'           => h(time_since_heartbeat(server)),
-          '4'           => action_links_html(server),
-          'DT_RowClass' => "card callout #{server_card_class(server)}"
-        }
-      end
+    def map(server)
+      {
+        '0'           => name_with_icon(server),
+        '1'           => h(threads(server)),
+        '2'           => h(started_ago(server)),
+        '3'           => h(time_since_heartbeat(server)),
+        '4'           => action_links_html(server),
+        'DT_RowClass' => "card callout #{server_card_class(server)}"
+      }
     end
 
     def name_with_icon(server)

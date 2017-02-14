@@ -1,0 +1,57 @@
+<div id='servers'>
+  <div class='server-list'>
+    <div class='list'>
+      <div class='row'>
+        <div class='col-md-6'>
+          <h2><%= @description %> Servers</h2>
+        </div>
+        <div class='col-md-6'>
+          <div class='col-sm-10'>
+            <div class='server-collection-actions'>
+              <% if @servers.present? %>
+                <ol>
+                  <div class='btn-group'>
+                    <% Array(@actions).each do |action| %>
+                      <%= link_to(
+                              "#{action.to_s.humanize.capitalize}",
+                              rocket_job_mission_control.update_all_servers_path(server_action: action),
+                              method: :patch,
+                              data:   {confirm: t(:confirm, scope: [:server, :update_all], action: action.to_s.singularize.humanize.downcase)},
+                              class:  'btn btn-default')
+                      %>
+                    <% end %>
+                  </div>
+                </ol>
+              <% end %>
+            </div>
+          </div>
+          <div class='col-sm-2 pull-right'>
+            <div class='btn btn-default pull-right dt-reload' data-behavior='reload'>
+              <i class='fa fa-refresh'></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class='table datatable servers-datatable' data-source='<%= @data_table_url %>' style='width: 100%'>
+        <thead>
+        <tr>
+          <th>Hostname : PID</th>
+          <th>Workers (Current/Max)</th>
+          <th>Started</th>
+          <th>Heartbeat</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  jQuery(function () {
+    new RjmcDatatable(
+      $('.servers-datatable'),
+      [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}, {data: '4', orderable: false}]);
+  });
+</script>

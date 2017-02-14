@@ -27,10 +27,11 @@ RocketJobMissionControl::Engine.routes.draw do
 
   resources :servers, only: [:index, :destroy] do
     collection do
-      get :starting, to: 'servers/index_filters#starting'
-      get :running, to: 'servers/index_filters#running'
-      get :paused, to: 'servers/index_filters#paused'
-      get :stopping, to: 'servers/index_filters#stopping'
+      get :starting, to: 'servers#starting'
+      get :running, to: 'servers#running'
+      get :paused, to: 'servers#paused'
+      get :stopping, to: 'servers#stopping'
+      get :zombie, to: 'servers#zombie'
     end
 
     member do

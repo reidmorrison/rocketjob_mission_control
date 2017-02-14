@@ -4,40 +4,69 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @query = RocketJobMissionControl::Query.new(RocketJob::Server.all, name: :asc)
-      respond_to do |format|
-        format.html
-        format.json { render(json: ServersDatatable.new(view_context, @query)) }
-      end
+      @servers        = RocketJob::Server.all
+      @description    = 'All'
+      @data_table_url = servers_url(format: 'json')
+      @actions        = [:pause_all, :resume_all, :stop_all, :destroy_zombies]
+      respond_with_query
     end
 
-    VALID_STATES = {
-      stop_all:        'stopped',
-      pause_all:       'paused',
-      resume_all:      'resumed',
-      destroy_zombies: 'destroyed if zombified',
-    }
+    def starting
+      @servers        = RocketJob::Server.starting
+      @description    = 'Starting'
+      @data_table_url = starting_servers_url(format: 'json')
+      @actions        = [:pause_all, :stop_all]
+      respond_with_query
+    end
+
+    def running
+      @servers        = RocketJob::Server.running
+      @description    = 'Running'
+      @data_table_url = running_servers_url(format: 'json')
+      @actions        = [:pause_all, :stop_all, :destroy_zombies]
+      respond_with_query
+    end
+
+    def paused
+      @servers        = RocketJob::Server.paused
+      @description    = 'Paused'
+      @data_table_url = paused_servers_url(format: 'json')
+      @actions        = [:resume_all, :destroy_zombies]
+      respond_with_query
+    end
+
+    def stopping
+      @servers        = RocketJob::Server.stopping
+      @description    = 'Stopping'
+      @data_table_url = stopping_servers_url(format: 'json')
+      @actions        = [:destroy_zombies]
+      respond_with_query
+    end
+
+    def zombie
+      @servers        = RocketJob::Server.zombies
+      @description    = 'Zombie'
+      @data_table_url = zombie_servers_url(format: 'json')
+      @actions        = [:destroy_zombies]
+      respond_with_query
+    end
+
+    VALID_ACTIONS = [:stop_all, :pause_all, :resume_all, :destroy_zombies]
 
     def update_all
       server_action = params[:server_action].to_sym
-      if VALID_STATES.keys.include?(server_action)
-        RocketJob::Server.send(server_action.to_sym)
-        flash[:notice] = t(:success, scope: [:server, :update_all], server_action: VALID_STATES[server_action])
-      else
-        flash[:alert] = t(:invalid, scope: [:server, :update_all])
+      if VALID_ACTIONS.include?(server_action)
+        RocketJob::Server.public_send(server_action.to_sym)
       end
 
+      # TODO: Refresh the same page it was on
       respond_to do |format|
         format.html { redirect_to servers_path }
       end
     end
 
     def stop
-      if @server.stop!
-        flash[:notice] = t(:success, scope: [:server, :stop])
-      else
-        flash[:alert] = t(:failure, scope: [:server, :stop])
-      end
+      @server.try!(:stop!)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -45,11 +74,7 @@ module RocketJobMissionControl
     end
 
     def destroy
-      if @server.nil? || @server.destroy
-        flash[:notice] = t(:success, scope: [:server, :destroy])
-      else
-        flash[:alert] = t(:failure, scope: [:server, :destroy])
-      end
+      @server.try!(:destroy)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -57,11 +82,7 @@ module RocketJobMissionControl
     end
 
     def pause
-      if @server.pause!
-        flash[:notice] = t(:success, scope: [:server, :pause])
-      else
-        flash[:alert] = t(:failure, scope: [:server, :pause])
-      end
+      @server.try!(:pause!)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -69,11 +90,7 @@ module RocketJobMissionControl
     end
 
     def resume
-      if @server.resume!
-        flash[:notice] = t(:success, scope: [:server, :resume])
-      else
-        flash[:alert] = t(:failure, scope: [:server, :resume])
-      end
+      @server.try!(:resume!)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -81,6 +98,19 @@ module RocketJobMissionControl
     end
 
     private
+
+    def respond_with_query
+      @query = RocketJobMissionControl::Query.new(@servers, name: :asc)
+      respond_to do |format|
+        format.html do
+          @server_counts = RocketJob::Server.counts_by_state
+          # TODO: Move into RocketJob
+          @server_counts[:zombie] = RocketJob::Server.zombies.count
+          render :index
+        end
+        format.json { render(json: ServersDatatable.new(view_context, @query)) }
+      end
+    end
 
     def find_server
       @server = RocketJob::Server.find(params[:id])

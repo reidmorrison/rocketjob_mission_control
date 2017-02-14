@@ -11,7 +11,7 @@ module RocketJobMissionControl
       def running
         @jobs                  = RocketJob::Job.running.only(RUNNING_FIELDS)
         @query                 = RocketJobMissionControl::Query.new(@jobs, started_at: :desc)
-        @query.display_columns = %w[_type description runs_in cron_schedule completed_at]
+        @query.display_columns = RunningJobsDatatable::DISPLAY_COLUMNS
 
         respond_to do |format|
           format.html
@@ -22,7 +22,7 @@ module RocketJobMissionControl
       def paused
         @jobs                  = RocketJob::Job.paused.only(COMMON_FIELDS)
         @query                 = RocketJobMissionControl::Query.new(@jobs, completed_at: :desc)
-        @query.display_columns = %w[_type description completed_at]
+        @query.display_columns = InterruptedJobsDatatable::DISPLAY_COLUMNS
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @query)) }
@@ -32,7 +32,7 @@ module RocketJobMissionControl
       def completed
         @jobs                  = RocketJob::Job.completed.only(COMMON_FIELDS)
         @query                 = RocketJobMissionControl::Query.new(@jobs, completed_at: :desc)
-        @query.display_columns = %w[_type description duration completed_at]
+        @query.display_columns = CompletedJobsDatatable::DISPLAY_COLUMNS
         respond_to do |format|
           format.html
           format.json { render(json: CompletedJobsDatatable.new(view_context, @query)) }
@@ -42,7 +42,7 @@ module RocketJobMissionControl
       def aborted
         @jobs                  = RocketJob::Job.aborted.only(COMMON_FIELDS)
         @query                 = RocketJobMissionControl::Query.new(@jobs, completed_at: :desc)
-        @query.display_columns = %w[_type description completed_at]
+        @query.display_columns = InterruptedJobsDatatable::DISPLAY_COLUMNS
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @query)) }
@@ -52,7 +52,7 @@ module RocketJobMissionControl
       def failed
         @jobs                  = RocketJob::Job.failed.only(COMMON_FIELDS)
         @query                 = RocketJobMissionControl::Query.new(@jobs, completed_at: :desc)
-        @query.display_columns = %w[_type description completed_at]
+        @query.display_columns = InterruptedJobsDatatable::DISPLAY_COLUMNS
         respond_to do |format|
           format.html
           format.json { render(json: InterruptedJobsDatatable.new(view_context, @query)) }
@@ -62,7 +62,7 @@ module RocketJobMissionControl
       def queued
         @jobs                  = RocketJob::Job.queued_now.only(QUEUED_FIELDS)
         @query                 = RocketJobMissionControl::Query.new(@jobs, completed_at: :desc)
-        @query.display_columns = %w[_type description priority queued_for]
+        @query.display_columns = QueuedJobsDatatable::DISPLAY_COLUMNS
         respond_to do |format|
           format.html
           format.json { render(json: QueuedJobsDatatable.new(view_context, @query)) }
@@ -72,7 +72,7 @@ module RocketJobMissionControl
       def scheduled
         @jobs                  = RocketJob::Job.scheduled.only(SCHEDULED_FIELDS)
         @query                 = RocketJobMissionControl::Query.new(@jobs, run_at: :asc)
-        @query.display_columns = %w[_type description runs_in cron_schedule]
+        @query.display_columns = ScheduledJobsDatatable::DISPLAY_COLUMNS
         respond_to do |format|
           format.html
           format.json { render(json: ScheduledJobsDatatable.new(view_context, @query)) }

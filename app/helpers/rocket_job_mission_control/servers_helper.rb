@@ -1,7 +1,7 @@
 module RocketJobMissionControl
   module ServersHelper
     def server_counts_by_state(state)
-      RocketJob::Server.counts_by_state.fetch(state.downcase.to_sym, 0)
+      @server_counts.fetch(state.downcase.to_sym, 0)
     end
 
     def server_icon(server)

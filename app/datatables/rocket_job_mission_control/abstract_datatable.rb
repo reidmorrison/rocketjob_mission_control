@@ -16,13 +16,13 @@ module RocketJobMissionControl
         draw:            params[:draw].to_i,
         recordsTotal:    query.unfiltered_count,
         recordsFiltered: query.count,
-        data:            data(query.query)
+        data:            query.query.collect{|record| map(record)}
       }
     end
 
     private
 
-    def data(records)
+    def map(record)
       raise NotImplementedError
     end
 
@@ -51,7 +51,7 @@ module RocketJobMissionControl
       ap order
       sort_by = {}
       order.each_pair do |key, value|
-        name          = query.display_columns[value[:column].to_i]
+        name = query.display_columns[value[:column].to_i]
         raise(ArgumentError, "Invalid column id: #{value[:column]}. Must fit #{query.display_columns.inspect}") unless name.present?
         sort_by[name] = value[:dir]
       end

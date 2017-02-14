@@ -12,16 +12,14 @@ module RocketJobMissionControl
       @query.order_by = nil
     end
 
-    def data(active_workers)
-      active_workers.collect do |active_worker|
-        {
-          '0'           => worker_name_with_icon(active_worker, active_worker.job),
-          '1'           => job_name_with_link(active_worker.job.class.name, active_worker.job.id),
-          '2'           => h(active_worker.job.description.try!(:truncate, 50)),
-          '3'           => h("#{active_worker.duration} ago"),
-          'DT_RowClass' => 'card callout callout-running'
-        }
-      end
+    def map(active_worker)
+      {
+        '0'           => worker_name_with_icon(active_worker, active_worker.job),
+        '1'           => job_name_with_link(active_worker.job.class.name, active_worker.job.id),
+        '2'           => h(active_worker.job.description.try!(:truncate, 50)),
+        '3'           => h("#{active_worker.duration} ago"),
+        'DT_RowClass' => 'card callout callout-running'
+      }
     end
 
     def worker_name_with_icon(active_worker, job)

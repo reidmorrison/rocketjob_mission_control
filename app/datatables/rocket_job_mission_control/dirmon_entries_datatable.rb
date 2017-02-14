@@ -3,22 +3,20 @@ module RocketJobMissionControl
     delegate :dirmon_entry_path, :state_icon, to: :@view
 
     def initialize(view, query)
-      query.display_columns   = %w[name _type pattern]
-      query.search_columns = [:job_class_name, :name, :pattern]
+      query.display_columns = %w[name _type pattern]
+      query.search_columns  = [:job_class_name, :name, :pattern]
       super(view, query)
     end
 
     private
 
-    def data(dirmons)
-      dirmons.map do |dirmon|
-        {
-          '0'           => name_with_link(dirmon),
-          '1'           => h(dirmon.job_class_name),
-          '2'           => h(dirmon.pattern.try(:truncate, 80)),
-          'DT_RowClass' => "card callout callout-#{dirmon.state}"
-        }
-      end
+    def map(dirmon)
+      {
+        '0'           => name_with_link(dirmon),
+        '1'           => h(dirmon.job_class_name),
+        '2'           => h(dirmon.pattern.try(:truncate, 80)),
+        'DT_RowClass' => "card callout callout-#{dirmon.state}"
+      }
     end
 
     def name_with_link(dirmon)

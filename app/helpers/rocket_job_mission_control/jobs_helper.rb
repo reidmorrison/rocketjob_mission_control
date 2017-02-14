@@ -12,7 +12,7 @@ module RocketJobMissionControl
 
     def job_counts_by_state(state)
       state = 'queued_now' if state == 'queued'
-      RocketJob::Job.counts_by_state.fetch(state.downcase.to_sym, 0)
+      (@count ||= RocketJob::Job.counts_by_state).fetch(state.downcase.to_sym, 0)
     end
 
     def job_action_link(action, path, http_method=:get)

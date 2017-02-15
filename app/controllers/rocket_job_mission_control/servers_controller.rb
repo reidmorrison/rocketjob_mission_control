@@ -6,37 +6,37 @@ module RocketJobMissionControl
     def index
       @data_table_url = servers_url(format: 'json')
       @actions        = [:pause_all, :resume_all, :stop_all, :destroy_zombies]
-      respond_with_query(RocketJob::Server.all, 'All')
+      render_datatable(RocketJob::Server.all, 'All')
     end
 
     def starting
       @data_table_url = starting_servers_url(format: 'json')
       @actions        = [:pause_all, :stop_all]
-      respond_with_query(RocketJob::Server.starting, 'Starting')
+      render_datatable(RocketJob::Server.starting, 'Starting')
     end
 
     def running
       @data_table_url = running_servers_url(format: 'json')
       @actions        = [:pause_all, :stop_all, :destroy_zombies]
-      respond_with_query(RocketJob::Server.running, 'Running')
+      render_datatable(RocketJob::Server.running, 'Running')
     end
 
     def paused
       @data_table_url = paused_servers_url(format: 'json')
       @actions        = [:resume_all, :destroy_zombies]
-      respond_with_query(RocketJob::Server.paused, 'Paused')
+      render_datatable(RocketJob::Server.paused, 'Paused')
     end
 
     def stopping
       @data_table_url = stopping_servers_url(format: 'json')
       @actions        = [:destroy_zombies]
-      respond_with_query(RocketJob::Server.stopping, 'Stopping')
+      render_datatable(RocketJob::Server.stopping, 'Stopping')
     end
 
     def zombie
       @data_table_url = zombie_servers_url(format: 'json')
       @actions        = [:destroy_zombies]
-      respond_with_query(RocketJob::Server.zombies, 'Zombie')
+      render_datatable(RocketJob::Server.zombies, 'Zombie')
     end
 
     VALID_ACTIONS = [:stop_all, :pause_all, :resume_all, :destroy_zombies]
@@ -87,20 +87,23 @@ module RocketJobMissionControl
 
     private
 
-    def respond_with_query(servers, description)
-      @description = description
-      @query       = RocketJobMissionControl::Query.new(servers, name: :asc)
-      @states      = RocketJob::Server.aasm.states.map { |s| s.name.to_s }
-      @states << 'zombie'
+    def render_datatable(servers, description)
 
       respond_to do |format|
         format.html do
+          @description = description
+          @states      = RocketJob::Server.aasm.states.map { |s| s.name.to_s }
+          @states << 'zombie'
+
           @server_counts          = RocketJob::Server.counts_by_state
           # TODO: Move into RocketJob
           @server_counts[:zombie] = RocketJob::Server.zombies.count
           render :index
         end
-        format.json { render(json: ServersDatatable.new(view_context, @query)) }
+        format.json do
+          query = RocketJobMissionControl::Query.new(servers, name: :asc)
+          render(json: ServersDatatable.new(view_context, query))
+        end
       end
     end
 

@@ -11,8 +11,7 @@ module RocketJobMissionControl
     end
 
     def job_counts_by_state(state)
-      state = 'queued_now' if state == 'queued'
-      (@count ||= RocketJob::Job.counts_by_state).fetch(state.downcase.to_sym, 0)
+      @job_counts.fetch(state.downcase.to_sym, 0)
     end
 
     def job_action_link(action, path, http_method=:get)
@@ -24,10 +23,6 @@ module RocketJobMissionControl
         class:  'btn btn-default',
         data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
       )
-    end
-
-    def job_states
-      @job_states ||= RocketJob::Job.aasm.states.map { |state| state.name.to_s }
     end
 
     def job_selected_class(job, selected_job)

@@ -4,51 +4,39 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      @servers        = RocketJob::Server.all
-      @description    = 'All'
       @data_table_url = servers_url(format: 'json')
       @actions        = [:pause_all, :resume_all, :stop_all, :destroy_zombies]
-      respond_with_query
+      respond_with_query(RocketJob::Server.all, 'All')
     end
 
     def starting
-      @servers        = RocketJob::Server.starting
-      @description    = 'Starting'
       @data_table_url = starting_servers_url(format: 'json')
       @actions        = [:pause_all, :stop_all]
-      respond_with_query
+      respond_with_query(RocketJob::Server.starting, 'Starting')
     end
 
     def running
-      @servers        = RocketJob::Server.running
-      @description    = 'Running'
       @data_table_url = running_servers_url(format: 'json')
       @actions        = [:pause_all, :stop_all, :destroy_zombies]
-      respond_with_query
+      respond_with_query(RocketJob::Server.running, 'Running')
     end
 
     def paused
-      @servers        = RocketJob::Server.paused
-      @description    = 'Paused'
       @data_table_url = paused_servers_url(format: 'json')
       @actions        = [:resume_all, :destroy_zombies]
-      respond_with_query
+      respond_with_query(RocketJob::Server.paused, 'Paused')
     end
 
     def stopping
-      @servers        = RocketJob::Server.stopping
-      @description    = 'Stopping'
       @data_table_url = stopping_servers_url(format: 'json')
       @actions        = [:destroy_zombies]
-      respond_with_query
+      respond_with_query(RocketJob::Server.stopping, 'Stopping')
     end
 
     def zombie
-      @servers        = RocketJob::Server.zombies
-      @description    = 'Zombie'
       @data_table_url = zombie_servers_url(format: 'json')
       @actions        = [:destroy_zombies]
-      respond_with_query
+      respond_with_query(RocketJob::Server.zombies, 'Zombie')
     end
 
     VALID_ACTIONS = [:stop_all, :pause_all, :resume_all, :destroy_zombies]
@@ -99,11 +87,15 @@ module RocketJobMissionControl
 
     private
 
-    def respond_with_query
-      @query = RocketJobMissionControl::Query.new(@servers, name: :asc)
+    def respond_with_query(servers, description)
+      @description = description
+      @query       = RocketJobMissionControl::Query.new(servers, name: :asc)
+      @states      = RocketJob::Server.aasm.states.map { |s| s.name.to_s }
+      @states << 'zombie'
+
       respond_to do |format|
         format.html do
-          @server_counts = RocketJob::Server.counts_by_state
+          @server_counts          = RocketJob::Server.counts_by_state
           # TODO: Move into RocketJob
           @server_counts[:zombie] = RocketJob::Server.zombies.count
           render :index

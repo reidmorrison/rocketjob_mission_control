@@ -158,9 +158,6 @@ module RocketJobMissionControl
           @description         = description
           @columns             = columns
           @table_layout        = build_table_layout(columns)
-          @job_states          = RocketJob::Job.aasm.states.map { |state| state.name.to_s }
-          @job_counts          = RocketJob::Job.counts_by_state
-          @job_counts[:queued] = @job_counts[:queued_now]
           render :index
         end
         format.json do

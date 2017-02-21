@@ -10,7 +10,20 @@ module RocketJobMissionControl
       state_icon(state)
     end
 
+    def job_states
+      @job_states ||= RocketJob::Job.aasm.states.map { |state| state.name.to_s }
+    end
+
+    def job_states_with_scheduled
+      @job_states_with_scheduled ||= ['scheduled'] + job_states
+    end
+
     def job_counts_by_state(state)
+      @job_counts ||= begin
+        counts          = RocketJob::Job.counts_by_state
+        counts[:queued] = counts[:queued_now]
+        counts
+      end
       @job_counts.fetch(state.downcase.to_sym, 0)
     end
 
@@ -19,7 +32,7 @@ module RocketJobMissionControl
         action,
         path,
         method: http_method,
-        title: "#{action} job",
+        title:  "#{action} job",
         class:  'btn btn-default',
         data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
       )

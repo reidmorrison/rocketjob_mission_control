@@ -1,0 +1,17 @@
+<div><label>Name:</label><%= @dirmon_entry.name %></div>
+<div><label>Pattern:</label><%= @dirmon_entry.pattern %></div>
+<div><label>Job Class Name:</label><%= @dirmon_entry.job_class_name %></div>
+<div><label>Archive Directory:</label><%= @dirmon_entry.archive_directory %></div>
+
+</br>
+<% @dirmon_entry.properties.each_pair do |name, value| %>
+  <div class="parameters">
+    <label><%= name.to_s.titleize %>:</label>
+    <% if value.is_a?(Array) || value.is_a?(Hash) %>
+      <pre><code><%= pretty_print_array_or_hash(value) %></code></pre>
+    <% else %>
+      <%= value %>
+    <% end %>
+  </div>
+<% end %>
+<div class="id"><label>ID:</label><%= @dirmon_entry.id %></div>

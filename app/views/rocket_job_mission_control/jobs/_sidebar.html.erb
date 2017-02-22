@@ -5,7 +5,7 @@
     <% end %>
   </li>
   <% job_states_with_scheduled.each do |state| %>
-    <li class="#{state}">
+    <li class="<%= state %>">
       <%= link_to("#{state}_jobs".to_sym) do %>
         <i class="fa <%= state_icon(state) %>"></i> <%= state.capitalize %> (<%= job_counts_by_state(state) %>)
       <% end %>
@@ -22,7 +22,7 @@
     <% end %>
   </li>
   <% job_states_with_scheduled.each do |state| %>
-    <li class="#{state}">
+    <li class="<%= state %>">
       <%= link_to("#{state}_jobs".to_sym) do %>
         <i class="fa <%= state_icon(state) %>"></i>
       <% end %>

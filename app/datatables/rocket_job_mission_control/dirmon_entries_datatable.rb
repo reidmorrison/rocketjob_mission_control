@@ -2,12 +2,6 @@ module RocketJobMissionControl
   class DirmonEntriesDatatable < AbstractDatatable
     delegate :dirmon_entry_path, :state_icon, to: :@view
 
-    def initialize(view, query)
-      query.display_columns = %w[name _type pattern]
-      query.search_columns  = [:job_class_name, :name, :pattern]
-      super(view, query)
-    end
-
     private
 
     def map(dirmon)

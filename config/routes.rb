@@ -46,10 +46,10 @@ RocketJobMissionControl::Engine.routes.draw do
 
   resources :dirmon_entries do
     collection do
-      get :pending,  to: 'dirmon_entries/index_filters#pending'
-      get :enabled,  to: 'dirmon_entries/index_filters#enabled'
-      get :failed,   to: 'dirmon_entries/index_filters#failed'
-      get :disabled, to: 'dirmon_entries/index_filters#disabled'
+      get :pending,  to: 'dirmon_entries#pending'
+      get :enabled,  to: 'dirmon_entries#enabled'
+      get :failed,   to: 'dirmon_entries#failed'
+      get :disabled, to: 'dirmon_entries#disabled'
     end
 
     member do

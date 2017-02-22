@@ -1,15 +1,37 @@
 require 'csv'
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
-    before_filter :find_entry_or_redirect, except: [:index, :new, :create]
+    before_filter :find_entry_or_redirect, except: [:index, :disabled, :enabled, :failed, :pending, :new, :create]
     before_filter :show_sidebar
 
     def index
-      @query = RocketJobMissionControl::Query.new(RocketJob::DirmonEntry.all, name: :asc)
-      respond_to do |format|
-        format.html
-        format.json { render(json: DirmonEntriesDatatable.new(view_context, @query)) }
-      end
+      entries         = RocketJob::DirmonEntry.all
+      @data_table_url = dirmon_entries_url(format: 'json')
+      render_datatable(entries, 'All')
+    end
+
+    def disabled
+      entries         = RocketJob::DirmonEntry.disabled
+      @data_table_url = disabled_dirmon_entries_url(format: 'json')
+      render_datatable(entries, 'Disabled')
+    end
+
+    def enabled
+      entries         = RocketJob::DirmonEntry.enabled
+      @data_table_url = enabled_dirmon_entries_url(format: 'json')
+      render_datatable(entries, 'Enabled')
+    end
+
+    def failed
+      entries         = RocketJob::DirmonEntry.failed
+      @data_table_url = failed_dirmon_entries_url(format: 'json')
+      render_datatable(entries, 'Failed')
+    end
+
+    def pending
+      entries         = RocketJob::DirmonEntry.pending
+      @data_table_url = pending_dirmon_entries_url(format: 'json')
+      render_datatable(entries, 'Pending')
     end
 
     def show
@@ -102,6 +124,21 @@ module RocketJobMissionControl
       params
         .fetch(:rocket_job_dirmon_entry, {})
         .permit(:name, :archive_directory, :pattern, :job_class_name)
+    end
+
+    def render_datatable(entries, description)
+      respond_to do |format|
+        format.html do
+          @description = description
+          render :index
+        end
+        format.json do
+          query                 = RocketJobMissionControl::Query.new(entries, name: :asc)
+          query.search_columns  = [:job_class_name, :name, :pattern]
+          query.display_columns = %w[name _type pattern]
+          render(json: DirmonEntriesDatatable.new(view_context, query))
+        end
+      end
     end
   end
 end

@@ -1,0 +1,38 @@
+<ul class="nav hidden-xs" id="lg-menu">
+  <li>
+    <%= link_to(new_dirmon_entry_path) do %>
+      <i class="fa fa-plus"></i>Create
+    <% end %>
+    <%= link_to(dirmon_entries_path) do %>
+      <i class="fa fa-list"></i>All
+    <% end %>
+  </li>
+  <% RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state| %>
+    <li class="<%= state %>">
+      <%= link_to("#{state}_dirmon_entries".to_sym) do %>
+        <i class="fa <%= state_icon(state) %>"></i> <%= state.capitalize %> (<%= dirmon_counts_by_state(state) %>)
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<!-- tiny only nav -->
+
+<ul class="nav visible-xs" id="xs-menu">
+  <li>
+    <%= link_to(new_dirmon_entry_path) do %>
+      <i class="fa fa-plus"></i>
+    <% end %>
+    <%= link_to(dirmon_entries_path) do %>
+      <i class="fa fa-list"></i>
+    <% end %>
+  </li>
+  <% RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state| %>
+    <li class="<%= state %>">
+      <%= link_to("#{state}_dirmon_entries".to_sym) do %>
+        <i class="fa <%= state_icon(state) %>"></i>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+

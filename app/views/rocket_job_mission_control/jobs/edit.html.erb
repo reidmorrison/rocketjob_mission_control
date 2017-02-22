@@ -15,7 +15,7 @@
         <div class="form-group">
           <% @job.class.user_editable_fields.each do |property_name| %>
             <%= f.label property_name.to_s %>
-            <%= editable_field_html(@job.class, property_name, @job.send(property_name), f).html_safe %>
+            <%= editable_field_html(@job.class, property_name, @job.send(property_name), f) %>
           <% end %>
         </div>
       </div>

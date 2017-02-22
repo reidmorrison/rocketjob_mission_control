@@ -61,8 +61,8 @@ module RocketJobMissionControl
     end
 
     def update
-      JobSanitizer.new(params).sanitize
-      if @job.update_attributes(job_params)
+      permitted_params = JobSanitizer.sanitize(params[:job], @job.class, @job)
+      if @job.errors.empty? && @job.valid? && @job.update_attributes(permitted_params)
         redirect_to job_path(@job)
       else
         render :edit
@@ -133,12 +133,8 @@ module RocketJobMissionControl
       end
     end
 
-    def jobs_params
-      params.fetch(:states, [])
-    end
-
     def job_params
-      params.require(:job).permit(RocketJob::Job.user_editable_fields)
+      params.require(:job).permit(@job.class.user_editable_fields)
     end
 
     def error_occurred(exception)

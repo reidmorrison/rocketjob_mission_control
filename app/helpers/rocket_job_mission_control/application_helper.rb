@@ -53,44 +53,44 @@ module RocketJobMissionControl
     end
 
     # Returns the editable field as html for use in editing dynamic fileds from a Job class.
-    def editable_field_html(klass, property_name, value, f)
-      field = klass.fields[property_name.to_s]
+    def editable_field_html(klass, field_name, value, f)
+      field = klass.fields[field_name.to_s]
       return unless field && field.type
       placeholder = field.default_val
 
       case field.type.name
       when 'Symbol', 'String', 'Integer'
-        options = extract_inclusion_values(klass, property_name)
-        str     = "[#{field.type.name}]\n"
+        options = extract_inclusion_values(klass, field_name)
+        str     = "[#{field.type.name}]\n".html_safe
         if options
-          str + f.select(property_name, options, {include_blank: options.include?(nil)}, {class: 'form-control'})
+          str + f.select(field_name, options, {include_blank: options.include?(nil)}, {class: 'form-control'})
         else
           if field.type.name == 'Integer'
-            str + f.number_field(property_name, value: value, class: 'form-control', placeholder: placeholder)
+            str + f.number_field(field_name, value: value, class: 'form-control', placeholder: placeholder)
           else
-            str + f.text_field(property_name, value: value, class: 'form-control', placeholder: placeholder)
+            str + f.text_field(field_name, value: value, class: 'form-control', placeholder: placeholder)
           end
         end
       when 'Hash'
-        "[JSON Hash]\n" +
-          f.text_field(property_name, value: value ? value.to_json : '', class: 'form-control', placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
+        "[JSON Hash]\n".html_safe +
+          f.text_field(field_name, value: value ? value.to_json : '', class: 'form-control', placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
       when 'Array'
         options = Array(value)
-        "[Array]\n" +
-          f.select(property_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true})
+        "[Array]\n".html_safe +
+          f.select(field_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true})
       when 'Mongoid::Boolean'
-        name = "#{property_name}_true".to_sym
-        str  = '<div class="radio-buttons">'
+        name = "#{field_name}_true".to_sym
+        str  = '<div class="radio-buttons">'.html_safe
         str << f.label(name, 'true')
-        str << f.radio_button(property_name, 'true', checked: value == 'true')
+        str << f.radio_button(field_name, 'true', checked: value == 'true')
         str << f.label(name, 'false')
-        str << f.radio_button(property_name, 'false', checked: value == 'false')
+        str << f.radio_button(field_name, 'false', checked: value == 'false')
         str << f.label(name, 'none')
-        str << f.radio_button(property_name, '', checked: value.blank?)
-        str << '</div>'
+        str << f.radio_button(field_name, '', checked: value.blank?)
+        str << '</div>'.html_safe
       else
-        "[#{field.type.name}]" +
-          f.text_field(property_name, value: value, class: 'form-control', placeholder: placeholder)
+        "[#{field.type.name}]".html_safe +
+          f.text_field(field_name, value: value, class: 'form-control', placeholder: placeholder)
       end
     end
 

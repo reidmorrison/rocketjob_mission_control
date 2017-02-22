@@ -2,7 +2,6 @@ require 'csv'
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     before_filter :find_entry_or_redirect, except: [:index, :new, :create]
-    before_filter :clean_values, only: [:create, :update]
     before_filter :show_sidebar
 
     def index
@@ -27,11 +26,11 @@ module RocketJobMissionControl
 
     def create
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
-
-      parse_and_assign_properties
+      if properties = params[:rocket_job_dirmon_entry][:properties]
+        @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
+      end
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.save
-        flash[:success] = t(:success, scope: [:dirmon_entry, :create])
         redirect_to(dirmon_entry_path(@dirmon_entry))
       else
         render :new
@@ -40,8 +39,6 @@ module RocketJobMissionControl
 
     def destroy
       @dirmon_entry.destroy
-      flash[:success] = t(:success, scope: [:dirmon_entry, :destroy])
-
       redirect_to(dirmon_entries_path)
     end
 
@@ -49,10 +46,11 @@ module RocketJobMissionControl
     end
 
     def update
-      @dirmon_entry.attributes = dirmon_params
-      parse_and_assign_properties
-      if @dirmon_entry.errors.empty? && @dirmon_entry.save
-        flash[:success] = t(:success, scope: [:dirmon_entry, :update])
+      if properties = params[:rocket_job_dirmon_entry][:properties]
+        @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
+      end
+
+      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.save
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         render :edit
@@ -62,7 +60,6 @@ module RocketJobMissionControl
     def enable
       if @dirmon_entry.may_enable?
         @dirmon_entry.enable!
-        flash[:success] = t(:success, scope: [:dirmon_entry, :enable])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :enable])
@@ -73,7 +70,6 @@ module RocketJobMissionControl
     def disable
       if @dirmon_entry.may_disable?
         @dirmon_entry.disable!
-        flash[:success] = t(:success, scope: [:dirmon_entry, :disable])
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :disable])
@@ -92,47 +88,6 @@ module RocketJobMissionControl
       @dirmon_sidebar = true
     end
 
-    def parse_and_assign_properties
-      properties = params[:rocket_job_dirmon_entry].fetch(:properties, {})
-      properties.each_pair do |property, value|
-        if key = @dirmon_entry.job_class.fields[property]
-          if key.type == Hash
-            begin
-              @dirmon_entry.properties[property] = JSON.parse(value)
-            rescue JSON::ParserError => e
-              @dirmon_entry.errors.add(:properties, e.message)
-            end
-          else
-            @dirmon_entry.properties[property] = value
-          end
-        end
-      end
-    end
-
-    # Returns [Array<String>] an array from the supplied string
-    # String can also be in JSON format
-    def parse_array_element(value, attribute, could_be_singleton = false)
-      return if value.blank?
-      begin
-        JSON.parse(value)
-      rescue JSON::ParserError => e
-        begin
-          values = CSV.parse(value).first.collect { |col| JSON.parse("[#{col.to_s.strip}]").first }
-          could_be_singleton && (values.size == 1) ? values.first : values
-        rescue Exception => exc
-          @dirmon_entry.errors.add(attribute, e.message)
-          @dirmon_entry.errors.add(attribute, exc.message)
-          value
-        end
-      end
-    end
-
-    def clean_values
-      params[:rocket_job_dirmon_entry].fetch(:properties, {}).each_pair do |param, value|
-        params[:rocket_job_dirmon_entry][:properties].delete(param) if value.blank?
-      end
-    end
-
     def find_entry_or_redirect
       @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
 
@@ -141,10 +96,6 @@ module RocketJobMissionControl
 
         redirect_to(dirmon_entries_path)
       end
-    end
-
-    def dirmons_params
-      params.fetch(:states, [])
     end
 
     def dirmon_params

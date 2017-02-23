@@ -2,10 +2,6 @@ module RocketJobMissionControl
   class ActiveWorkersDatatable < AbstractDatatable
     delegate :job_path, :state_icon, to: :@view
 
-    def initialize(view, query)
-      super(view, query)
-    end
-
     private
 
     def extract_query_params

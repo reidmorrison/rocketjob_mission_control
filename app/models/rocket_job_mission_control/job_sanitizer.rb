@@ -2,6 +2,20 @@ module RocketJobMissionControl
   module JobSanitizer
 
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
+    # Parameters
+    #   properties [Hash]
+    #     Parameters to extract the values from.
+    #
+    #   job_class [RocketJob::Job]
+    #     Job class from which the user editable fields and types will be retrieved.
+    #
+    #   target [ActiveModel::Base]
+    #     Model to set the errors on.
+    #
+    #   nil_blank [Boolean]
+    #     true: Nil out blank fields.
+    #     false: Do not return blank fields.
+    #     Default: true
     def self.sanitize(properties, job_class, target, nil_blank = true)
       permissible_params = {}
       job_class.user_editable_fields.each do |field_name|

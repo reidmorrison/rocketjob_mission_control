@@ -1,15 +1,35 @@
 module RocketJobMissionControl
   class Query
-    attr_reader :scope, :default_order
-    attr_accessor :search_term, :order_by, :search_term, :start, :page_size,
+    attr_reader :scope
+    attr_accessor :search_term, :order_by, :start, :page_size,
       :search_columns, :display_columns
 
-    def initialize(scope, default_order = {})
+    def initialize(scope, order_by = nil)
       @scope           = scope
-      @order_by        = @default_order = default_order
+      @order_by        = order_by
       @search_columns  = []
       @display_columns = []
     end
+
+    # Returns the filtered query expression with the sort applied
+    def query
+      # Sort must be applied last
+      order_by ? unsorted_query.sort(order_by) : unsorted_query
+    end
+
+    # Count after applying search_term.
+    # Pagination settings do not affect this count.
+    def count
+      unsorted_query.count
+    end
+
+    # Count before applying search term
+    # Pagination settings do not affect this count.
+    def unfiltered_count
+      scope.count
+    end
+
+    private
 
     # Returns the filtered query expression
     def unsorted_query
@@ -31,20 +51,6 @@ module RocketJobMissionControl
         records = records.skip(start).limit(page_size)
       end
       records
-    end
-
-    # Returns the filtered query expression with the sort applied
-    def query
-      # Sort must be applied last
-      order_by ? unsorted_query.sort(order_by) : unsorted_query
-    end
-
-    def count
-      unsorted_query.count
-    end
-
-    def unfiltered_count
-      scope.count
     end
 
   end

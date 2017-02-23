@@ -1,18 +1,20 @@
-<div class="flash text-center">
-  <% flash.each do |key, msg| %>
-    <div class="alert alert-alert alert-dismissable" role="alert">
-      <button class="close" data-dismiss="alert">
-        <span>&times;</span>
-      </button>
-      <% if msg.kind_of? Array %>
-        <ul class="list-unstyled margin-bottom-0">
-          <% msg.each do |m| %>
-            <li><%= m.html_safe %></li>
-          <% end %>
-        </ul>
-      <% else %>
-        <%= msg.html_safe %>
-      <% end %>
-    </div>
-  <% end %>
-</div>
+<% if flash.present? %>
+  <div class="flash text-center">
+    <% flash.each do |key, msg| %>
+      <div class="alert alert-alert alert-dismissable" role="alert">
+        <button class="close" data-dismiss="alert">
+          <span>&times;</span>
+        </button>
+        <% if msg.kind_of? Array %>
+          <ul class="list-unstyled margin-bottom-0">
+            <% msg.each do |m| %>
+              <li><%= m.html_safe %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= msg.html_safe %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

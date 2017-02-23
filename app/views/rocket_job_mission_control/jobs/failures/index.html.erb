@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="job-list">
+      <div class="list-top">
+        <ol class="breadcrumb">
+          <li><%= link_to(@job.class.name, job_path(@job)) %></li>
+          <li class="active">Failures</li>
+        </ol>
+      </div>
+      <div class="clearfix"></div>
+      <div class="list">
+        <% @slice_errors.each do |slice_error| %>
+          <%= link_to(job_failures_path(@job, error_type: slice_error.class_name), class: "card callout") do %>
+            <div class="inner">
+              <div class="title">
+                <div class="lead"><%= slice_error.class_name %></div>
+              </div>
+              <div class="description">Occurrences: <%= slice_error.count %></div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <% if @failure_exception %>
+    <div class="col-md-8">
+      <div class="job-status">
+        <div class="failures">
+          <div class="lead"><%= @failure_exception.class_name %></div>
+          <div class="pagination-buttons pull-right">
+            <%= render partial: 'pagination', locals: {error_type: @failure_exception.class_name, pagination: @pagination} %>
+          </div>
+          <div class="clearfix"></div>
+          <div class="message">
+            <pre><code><%= @failure_exception.message %></code></pre>
+          </div>
+          <div class="error">
+            <pre class="small"><%= @failure_exception.backtrace.join("\n") %></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

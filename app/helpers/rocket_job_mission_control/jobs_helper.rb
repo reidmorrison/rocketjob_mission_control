@@ -21,7 +21,7 @@ module RocketJobMissionControl
     def job_counts_by_state(state)
       @job_counts ||= begin
         counts          = RocketJob::Job.counts_by_state
-        counts[:queued] = counts[:queued_now]
+        counts[:queued] = counts[:queued_now] || 0
         counts
       end
       @job_counts.fetch(state.downcase.to_sym, 0)

@@ -1,5 +1,7 @@
 module RocketJobMissionControl
   class ApplicationController < ActionController::Base
+    protect_from_forgery with: :exception
+
     around_action :with_time_zone
 
     private

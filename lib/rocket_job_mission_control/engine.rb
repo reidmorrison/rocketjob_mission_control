@@ -7,7 +7,6 @@ module RocketJobMissionControl
     require 'bootstrap-sass'
     require 'coffee-rails'
     require 'sass-rails'
-    require 'haml'
     require 'jquery-datatables-rails'
     begin
       require 'rocketjob_pro'

@@ -3,5 +3,4 @@ eval File.read(File.expand_path('../base.gemfile', __FILE__)), nil, 'base.gemfil
 gemspec :path => '..'
 
 gem 'rails', '~> 4.2.0'
-gem 'rspec-rails'
 

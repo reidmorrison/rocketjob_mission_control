@@ -7,20 +7,24 @@ gemfile:
 
 rvm:
   - 2.1.10
-  - 2.2.5
-  - 2.3.1
-  - jruby-9.1.6.0
-
-# Patch for RSpec to work with multiple Gemfiles
-before_script:
-  - rm Gemfile
+  - 2.2.6
+  - 2.3.3
+#  - 2.4.1
+  - jruby-9.1.7.0
 
 matrix:
   exclude:
     - rvm: 2.1.10
       gemfile: gemfiles/rails5_0.gemfile
-    - rvm: jruby-9.1.6.0
+    - rvm: jruby-9.1.7.0
       gemfile: gemfiles/rails5_0.gemfile
+#    - rvm: 2.4.1
+#      gemfile: gemfiles/rails4_1.gemfile
+#    - rvm: 2.4.1
+#      gemfile: gemfiles/rails4_2.gemfile
+
+notifications:
+  email: false
 
 bundler_args: --without development
 

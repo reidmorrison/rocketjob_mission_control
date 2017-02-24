@@ -26,16 +26,16 @@ module RocketJobMissionControl
           case field.type.name
           when 'Hash'
             begin
-              permissible_params[field_name] = JSON.parse(value)
+              value = value.blank? ? nil : JSON.parse(value)
             rescue JSON::ParserError => e
               target.errors.add(:properties, e.message)
             end
+          end
+
+          if value.blank?
+            permissible_params[field_name] = nil if nil_blank
           else
-            if value.blank?
-              permissible_params[field_name] = nil if nil_blank
-            else
-              permissible_params[field_name] = value
-            end
+            permissible_params[field_name] = value
           end
 
         end

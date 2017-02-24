@@ -5,7 +5,6 @@ module RocketJobMissionControl
     require 'rocketjob'
     require 'jquery-rails'
     require 'bootstrap-sass'
-    require 'coffee-rails'
     require 'sass-rails'
     require 'jquery-datatables-rails'
     begin

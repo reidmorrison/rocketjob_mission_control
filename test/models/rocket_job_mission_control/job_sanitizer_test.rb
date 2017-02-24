@@ -1,21 +1,9 @@
 require_relative '../../test_helper'
 
 class JobSanitizerTest < Minitest::Test
-
-  class SimpleJob < RocketJob::Job
-    field :hash, type: Hash, user_editable: true
-    field :string, type: String, user_editable: true
-    field :integer, type: Integer, user_editable: true
-    field :symbol, type: Symbol, user_editable: true
-    field :secure, type: String
-
-    def perform
-    end
-  end
-
   describe RocketJobMissionControl::JobSanitizer do
     before do
-      @job = SimpleJob.new
+      @job = AllTypesJob.new
       assert_equal 0, @job.errors.count
     end
 
@@ -23,7 +11,7 @@ class JobSanitizerTest < Minitest::Test
     end
 
     describe '.sanitize' do
-      it 'passes permissable fields' do
+      it 'passes permissible fields' do
         properties = {
           string:  'hello',
           integer: '12',
@@ -54,13 +42,14 @@ class JobSanitizerTest < Minitest::Test
           string:  '',
           integer: '',
           symbol:  '',
+          hash:    '',
           secure:  'Not permissible',
           log_level: ''
         }
         cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, true)
-        assert_equal 0, @job.errors.count
-        assert_equal 4, cleansed.count
-        assert_equal({log_level: nil, integer: nil, string: nil, symbol: nil}, cleansed)
+        assert_equal 0, @job.errors.count, @job.errors
+        assert_equal 5, cleansed.count
+        assert_equal({log_level: nil, hash: nil, integer: nil, string: nil, symbol: nil}, cleansed)
       end
 
       it 'parses JSON' do
@@ -86,8 +75,7 @@ class JobSanitizerTest < Minitest::Test
         assert first = @job.errors.first
         assert_equal first.first, :properties
         assert first.second.include?('unexpected token'), first
-        assert_equal 1, cleansed.count
-        assert_equal({string: 'hello'}, cleansed)
+        assert_equal({hash: "{ bad json }", string: 'hello'}, cleansed)
       end
     end
 

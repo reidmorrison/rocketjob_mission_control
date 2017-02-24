@@ -1,4 +1,3 @@
-require 'csv'
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     before_filter :find_entry_or_redirect, except: [:index, :disabled, :enabled, :failed, :pending, :new, :create]

@@ -94,8 +94,8 @@ module RocketJobMissionControl
         end
 
         it 'assigns a new entry' do
-          # expect(assigns(:dirmon_entry)).to be_present
-          # expect(assigns(:dirmon_entry)).to_not be_persisted
+          assert assigns(:dirmon_entry).present?
+          refute assigns(:dirmon_entry).persisted?
         end
 
         describe 'with form params' do
@@ -106,8 +106,7 @@ module RocketJobMissionControl
           end
 
           it 'assigns the params to new entry' do
-            # expect(assigns(:dirmon_entry)).to be_present
-            # expect(assigns(:dirmon_entry).name).to eq('new entry')
+            assert_equal 'new entry', assigns(:dirmon_entry).name
           end
 
           describe 'with a valid job_class_name' do
@@ -118,8 +117,7 @@ module RocketJobMissionControl
             end
 
             it 'assigns the job class' do
-              # expect(assigns(:dirmon_entry)).to be_present
-              # expect(assigns(:dirmon_entry).job_class).to eq(NoParamsJob)
+              assert_equal 'NoParamsJob', assigns(:dirmon_entry).job_class_name
             end
           end
 
@@ -131,8 +129,7 @@ module RocketJobMissionControl
             end
 
             it 'adds an error' do
-              # expect(assigns(:dirmon_entry)).to be_present
-              # expect(assigns(:dirmon_entry).errors[:job_class_name]).to be_present
+              assert assigns(:dirmon_entry).errors[:job_class_name].present?
             end
           end
         end
@@ -150,7 +147,7 @@ module RocketJobMissionControl
           end
 
           it 'updates the entry' do
-            #follow_redirect
+            #follow_redirect!
             #assert_equal 'the_path2', existing_dirmon_entry.reload.pattern
           end
         end
@@ -198,10 +195,6 @@ module RocketJobMissionControl
             assert_redirected_to dirmon_entry_path(assigns(:dirmon_entry))
           end
 
-          it 'does not load all entries' do
-            #expect(dirmon_list).to_not have_received(:sort)
-          end
-
           it 'does not save blank properties' do
             assert_nil assigns(:dirmon_entry).properties[:description]
           end
@@ -232,11 +225,11 @@ module RocketJobMissionControl
           describe 'on model attributes' do
             it 'renders the new template' do
               assert_response :success
-              #expect(response).to render_template(:new)
+              assert_template :new
             end
 
             it 'has errors on the entry' do
-              #expect(assigns(:dirmon_entry)).to_not be_valid
+              refute assigns(:dirmon_entry).valid?
             end
           end
         end
@@ -252,8 +245,7 @@ module RocketJobMissionControl
         end
 
         it 'assigns the entry' do
-          # expect(assigns(:dirmon_entry)).to be_present
-          # expect(assigns(:dirmon_entry)).to eq(@entry)
+          assert_equal existing_dirmon_entry, assigns(:dirmon_entry)
         end
       end
 

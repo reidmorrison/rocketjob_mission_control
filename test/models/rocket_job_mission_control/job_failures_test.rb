@@ -2,12 +2,14 @@ require_relative '../../test_helper'
 
 class JobFailuresTest < Minitest::Test
 
-  class BatchJob < RocketJob::Job
-    include RocketJob::Plugins::Batch
-    self.slice_size = 1
+  if defined?(RocketJobPro)
+    class BatchJob < RocketJob::Job
+      include RocketJob::Plugins::Batch
+      self.slice_size = 1
 
-    def perform(record)
-      raise "Failure: #{rocket_job_record_number}"
+      def perform(record)
+        raise "Failure: #{rocket_job_record_number}"
+      end
     end
   end
 
@@ -46,6 +48,7 @@ class JobFailuresTest < Minitest::Test
         def list
           @slice_errors ||= job.input.group_exceptions
         end
+
         assert list = @job_failures.list
         assert_equal 1, list.count
         assert first = list.first

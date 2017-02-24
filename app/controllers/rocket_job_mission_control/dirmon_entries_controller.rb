@@ -111,7 +111,7 @@ module RocketJobMissionControl
     end
 
     def find_entry_or_redirect
-      @dirmon_entry = RocketJob::DirmonEntry.find(params[:id])
+      @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
 
       if @dirmon_entry.nil?
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :find], id: params[:id])

@@ -15,10 +15,11 @@
 //= require dataTables/jquery.dataTables
 //= require dataTables/extras/dataTables.responsive
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+//
+// Selectize is used by Array builder in application_helper#editable_field_html
 //= require microplugin
 //= require sifter
 //= require selectize
-//= require jquery.bootstrap-touchspin
-//= require bootstrap-sprockets
-//= require prism
+// End selectize dependencies
+//
 //= require_tree .

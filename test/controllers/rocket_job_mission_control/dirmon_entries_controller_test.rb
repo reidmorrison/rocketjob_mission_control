@@ -20,6 +20,19 @@ module RocketJobMissionControl
         )
       end
 
+      dirmon_entry_states = RocketJob::DirmonEntry.aasm.states.collect(&:name)
+
+      let :one_dirmon_entry_for_every_state do
+        dirmon_entry_states.collect do |state|
+          RocketJob::DirmonEntry.create!(
+            name:           'Test',
+            job_class_name: job_class_name,
+            pattern:        'the_path',
+            state:          state
+          )
+        end
+      end
+
       describe 'PATCH #enable' do
         describe 'when transition is allowed' do
           before do
@@ -293,76 +306,102 @@ module RocketJobMissionControl
         end
       end
 
-      describe 'GET #index' do
-        describe 'html' do
-          describe 'with no entries' do
-            before do
-              get :index
+      ([:index] + dirmon_entry_states).each do |state|
+        describe "GET ##{state}" do
+          describe 'html' do
+            describe "with #{state} entries" do
+              before do
+                get state
+              end
+
+              it 'succeeds' do
+                assert_response :success
+              end
+
+              it 'renders template' do
+                assert_template :index
+              end
             end
 
-            it 'succeeds' do
-              assert_response :success
-            end
-          end
+            describe "with #{state} entries" do
+              before do
+                one_dirmon_entry_for_every_state
+                get state
+              end
 
-          describe 'with entries' do
-            before do
-              existing_dirmon_entry
-              get :index
-            end
+              it 'succeeds' do
+                assert_response :success
+              end
 
-            it 'succeeds' do
-              assert_response :success
-            end
-          end
-        end
-
-        describe 'json' do
-          describe 'with no entries' do
-            before do
-              get :index, format: :json
-            end
-
-            it 'succeeds' do
-              assert_response :success
-              json     = JSON.parse(response.body)
-              expected = {
-                "data"            => [],
-                "draw"            => 0,
-                "recordsFiltered" => 0,
-                "recordsTotal"    => 0
-              }
-              assert_equal expected, json
+              it 'renders template' do
+                assert_template :index
+              end
             end
           end
 
-          describe 'with entries' do
-            before do
-              existing_dirmon_entry
-              get :index, format: :json
+          describe 'json' do
+            describe "with #{state} entries" do
+              before do
+                get state, format: :json
+              end
+
+              it 'succeeds' do
+                assert_response :success
+                json     = JSON.parse(response.body)
+                expected = {
+                  "data"            => [],
+                  "draw"            => 0,
+                  "recordsFiltered" => 0,
+                  "recordsTotal"    => 0
+                }
+                assert_equal expected, json
+              end
             end
 
-            it 'succeeds' do
-              assert_response :success
-              json     = JSON.parse(response.body)
-              expected = {
-                "data"            => [
-                  {
-                    "0"           => "        <a href=\"/dirmon_entries/#{existing_dirmon_entry.id}\">\n          <i class=\"fa fa-inbox pending\" style=\"font-size: 75%\" title=\"pending\"></i>\n          Test\n        </a>\n",
-                    "1"           => "RocketJob::Jobs::SimpleJob",
-                    "2"           => "the_path",
-                    "DT_RowClass" => "card callout callout-pending"
+            describe "with #{state} entries" do
+              before do
+                one_dirmon_entry_for_every_state
+                get state, format: :json
+              end
+
+              it 'succeeds' do
+                assert_response :success
+                json          = JSON.parse(response.body)
+                expected_data = {
+                  pending:  {
+                    "0" => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.pending.first.id}\">\n          <i class=\"fa fa-inbox pending\" style=\"font-size: 75%\" title=\"pending\"></i>\n          Test\n        </a>\n",
+                    "1" => "RocketJob::Jobs::SimpleJob", "2" => "the_path", "DT_RowClass" => "card callout callout-pending"
+                  },
+                  enabled:  {
+                    "0" => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.enabled.first.id}\">\n          <i class=\"fa fa-check enabled\" style=\"font-size: 75%\" title=\"enabled\"></i>\n          Test\n        </a>\n",
+                    "1" => "RocketJob::Jobs::SimpleJob", "2" => "the_path", "DT_RowClass" => "card callout callout-enabled"
+                  },
+                  failed:   {
+                    "0" => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.failed.first.id}\">\n          <i class=\"fa fa-exclamation-triangle failed\" style=\"font-size: 75%\" title=\"failed\"></i>\n          Test\n        </a>\n",
+                    "1" => "RocketJob::Jobs::SimpleJob", "2" => "the_path", "DT_RowClass" => "card callout callout-failed"
+                  },
+                  disabled: {
+                    "0" => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.disabled.first.id}\">\n          <i class=\"fa fa-stop disabled\" style=\"font-size: 75%\" title=\"disabled\"></i>\n          Test\n        </a>\n",
+                    "1" => "RocketJob::Jobs::SimpleJob", "2" => "the_path", "DT_RowClass" => "card callout callout-disabled"
                   }
-                ],
-                "draw"            => 0,
-                "recordsFiltered" => 1,
-                "recordsTotal"    => 1
-              }
-              assert_equal expected, json
+                }
+
+                if state == :index
+                  assert_equal 0, json['draw']
+                  assert_equal 4, json['recordsTotal']
+                  assert_equal 4, json['recordsFiltered']
+                  assert_equal [expected_data[:pending], expected_data[:enabled], expected_data[:failed], expected_data[:disabled]], json['data']
+                else
+                  assert_equal 0, json['draw']
+                  assert_equal 1, json['recordsTotal']
+                  assert_equal 1, json['recordsFiltered']
+                  assert_equal [expected_data[state]], json['data']
+                end
+              end
             end
           end
-        end
 
+        end
       end
     end
   end

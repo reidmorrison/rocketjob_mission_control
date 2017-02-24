@@ -8,7 +8,7 @@ gem 'rails', '~> 4.1'
 # gem 'rails-controller-testing'
 
 gem 'rails_semantic_logger'
-#gem 'rocketjob', path: '../rocketjob'
-#gem 'rocketjob_pro', path: '../rocketjob_pro'
+gem 'rocketjob', path: '../rocketjob'
+gem 'rocketjob_pro', path: '../rocketjob_pro'
 
 gemspec

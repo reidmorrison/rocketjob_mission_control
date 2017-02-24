@@ -28,7 +28,4 @@ Rjmc::Application.configure do
   config.active_support.deprecation                 = :stderr
 
   config.active_support.test_order                  = :random
-
-  config.rails_semantic_logger.quiet_assets         = true
-  config.rails_semantic_logger.ap_options           = {multiline: false}
 end

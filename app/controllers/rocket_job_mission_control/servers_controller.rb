@@ -1,6 +1,6 @@
 module RocketJobMissionControl
   class ServersController < RocketJobMissionControl::ApplicationController
-    before_filter :find_server, only: [:stop, :pause, :resume, :destroy]
+    before_filter :find_server_or_redirect, only: [:stop, :pause, :resume, :destroy]
     before_filter :show_sidebar
 
     def index
@@ -45,6 +45,8 @@ module RocketJobMissionControl
       server_action = params[:server_action].to_sym
       if VALID_ACTIONS.include?(server_action)
         RocketJob::Server.public_send(server_action.to_sym)
+      else
+        flash[:alert] = t(:invalid, scope: [:server, :update_all])
       end
 
       # TODO: Refresh the same page it was on
@@ -54,7 +56,11 @@ module RocketJobMissionControl
     end
 
     def stop
-      @server.try!(:stop!)
+      if @server.may_stop?
+        @server.stop!
+      else
+        flash[:alert] = t(:failure, scope: [:server, :stop])
+      end
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -62,7 +68,8 @@ module RocketJobMissionControl
     end
 
     def destroy
-      @server.try!(:destroy)
+      @server.destroy
+      flash[:notice] = t(:success, scope: [:server, :destroy])
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -70,7 +77,11 @@ module RocketJobMissionControl
     end
 
     def pause
-      @server.try!(:pause!)
+      if @server.may_pause?
+        @server.pause!
+      else
+        flash[:alert] = t(:failure, scope: [:server, :pause])
+      end
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -78,7 +89,11 @@ module RocketJobMissionControl
     end
 
     def resume
-      @server.try!(:resume!)
+      if @server.may_resume?
+        @server.resume!
+      else
+        flash[:alert] = t(:failure, scope: [:server, :resume])
+      end
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -88,7 +103,6 @@ module RocketJobMissionControl
     private
 
     def render_datatable(servers, description)
-
       respond_to do |format|
         format.html do
           @description = description
@@ -107,8 +121,12 @@ module RocketJobMissionControl
       end
     end
 
-    def find_server
-      @server = RocketJob::Server.find(params[:id])
+    def find_server_or_redirect
+      unless @server = RocketJob::Server.where(id: params[:id]).first
+        flash[:alert] = t(:failure, scope: [:server, :find], id: params[:id])
+
+        redirect_to(servers_path)
+      end
     end
 
     def show_sidebar

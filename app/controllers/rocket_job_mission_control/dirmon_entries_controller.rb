@@ -4,33 +4,28 @@ module RocketJobMissionControl
     before_filter :show_sidebar
 
     def index
-      entries         = RocketJob::DirmonEntry.all
       @data_table_url = dirmon_entries_url(format: 'json')
-      render_datatable(entries, 'All')
+      render_datatable(RocketJob::DirmonEntry.all, 'All')
     end
 
     def disabled
-      entries         = RocketJob::DirmonEntry.disabled
       @data_table_url = disabled_dirmon_entries_url(format: 'json')
-      render_datatable(entries, 'Disabled')
+      render_datatable(RocketJob::DirmonEntry.disabled, 'Disabled')
     end
 
     def enabled
-      entries         = RocketJob::DirmonEntry.enabled
       @data_table_url = enabled_dirmon_entries_url(format: 'json')
-      render_datatable(entries, 'Enabled')
+      render_datatable(RocketJob::DirmonEntry.enabled, 'Enabled')
     end
 
     def failed
-      entries         = RocketJob::DirmonEntry.failed
       @data_table_url = failed_dirmon_entries_url(format: 'json')
-      render_datatable(entries, 'Failed')
+      render_datatable(RocketJob::DirmonEntry.failed, 'Failed')
     end
 
     def pending
-      entries         = RocketJob::DirmonEntry.pending
       @data_table_url = pending_dirmon_entries_url(format: 'json')
-      render_datatable(entries, 'Pending')
+      render_datatable(RocketJob::DirmonEntry.pending, 'Pending')
     end
 
     def show
@@ -110,9 +105,7 @@ module RocketJobMissionControl
     end
 
     def find_entry_or_redirect
-      @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
-
-      if @dirmon_entry.nil?
+      unless @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
         flash[:alert] = t(:failure, scope: [:dirmon_entry, :find], id: params[:id])
 
         redirect_to(dirmon_entries_path)

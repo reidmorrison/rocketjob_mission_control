@@ -38,7 +38,7 @@
             <%= f.fields_for :properties do |properties| %>
               <% @dirmon_entry.job_class.user_editable_fields.each do |property_name| %>
                 <%= properties.label property_name.to_s %>
-                <%= editable_field_html(@dirmon_entry.job_class, property_name, @dirmon_entry.properties[property_name], properties) %>
+                <%= editable_field_html(@dirmon_entry.job_class, property_name, @dirmon_entry.properties[property_name], properties, true) %>
               <% end %>
             <% end %>
           </div>

@@ -77,6 +77,15 @@ class JobSanitizerTest < Minitest::Test
         assert first.second.include?('unexpected token'), first
         assert_equal({hash: "{ bad json }", string: 'hello'}, cleansed)
       end
+
+      it 'Keeps empty JSON Hash' do
+        properties = {
+          hash:    '{ }'
+        }
+        cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+        assert_equal 0, @job.errors.count
+        assert_equal({hash: {}}, cleansed)
+      end
     end
 
   end

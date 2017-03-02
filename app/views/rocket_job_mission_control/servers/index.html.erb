@@ -8,21 +8,19 @@
         <div class='col-md-6'>
           <div class='col-sm-10'>
             <div class='server-collection-actions'>
-              <% if @servers.present? %>
-                <ol>
-                  <div class='btn-group'>
-                    <% Array(@actions).each do |action| %>
-                      <%= link_to(
-                              "#{action.to_s.humanize.capitalize}",
-                              rocket_job_mission_control.update_all_servers_path(server_action: action),
-                              method: :patch,
-                              data:   {confirm: t(:confirm, scope: [:server, :update_all], action: action.to_s.singularize.humanize.downcase)},
-                              class:  'btn btn-default')
-                      %>
-                    <% end %>
-                  </div>
-                </ol>
-              <% end %>
+              <ol>
+                <div class='btn-group'>
+                  <% Array(@actions).each do |action| %>
+                    <%= link_to(
+                            "#{action.to_s.humanize.capitalize}",
+                            rocket_job_mission_control.update_all_servers_path(server_action: action),
+                            method: :patch,
+                            data:   {confirm: t(:confirm, scope: [:server, :update_all], action: action.to_s.singularize.humanize.downcase)},
+                            class:  'btn btn-default')
+                    %>
+                  <% end %>
+                </div>
+              </ol>
             </div>
           </div>
           <div class='col-sm-2 pull-right'>

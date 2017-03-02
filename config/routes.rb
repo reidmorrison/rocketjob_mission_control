@@ -58,5 +58,7 @@ RocketJobMissionControl::Engine.routes.draw do
     end
   end
 
+  get 'rocket_job_mission_control/test' => 'test#index' if Rails.env.test?
+
   root to: "jobs#running"
 end

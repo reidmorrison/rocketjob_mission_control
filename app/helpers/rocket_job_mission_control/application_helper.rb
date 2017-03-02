@@ -52,18 +52,20 @@ module RocketJobMissionControl
       values
     end
 
-    # Returns the editable field as html for use in editing dynamic fileds from a Job class.
-    def editable_field_html(klass, field_name, value, f)
+    # Returns the editable field as html for use in editing dynamic fields from a Job class.
+    def editable_field_html(klass, field_name, value, f, include_nil_selectors = false)
       field = klass.fields[field_name.to_s]
       return unless field && field.type
+
       placeholder = field.default_val
+      placeholder = nil if placeholder.is_a?(Proc)
 
       case field.type.name
       when 'Symbol', 'String', 'Integer'
         options = extract_inclusion_values(klass, field_name)
         str     = "[#{field.type.name}]\n".html_safe
         if options
-          str + f.select(field_name, options, {include_blank: options.include?(nil)}, {class: 'form-control'})
+          str + f.select(field_name, options, {include_blank: options.include?(nil) || include_nil_selectors, selected: value}, {class: 'form-control'})
         else
           if field.type.name == 'Integer'
             str + f.number_field(field_name, value: value, class: 'form-control', placeholder: placeholder)

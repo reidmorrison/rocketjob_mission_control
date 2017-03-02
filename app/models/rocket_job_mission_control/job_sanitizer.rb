@@ -32,7 +32,7 @@ module RocketJobMissionControl
             end
           end
 
-          if value.blank?
+          if value.blank? && !value.is_a?(Hash)
             permissible_params[field_name] = nil if nil_blank
           else
             permissible_params[field_name] = value

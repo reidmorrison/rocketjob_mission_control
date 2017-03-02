@@ -1,0 +1,26 @@
+<%
+  previous_offset = [0, pagination[:offset].pred].max
+  next_offset     = [pagination[:total], pagination[:offset].next].min
+%>
+<ul class="pagination">
+  <li>
+    <%= link_to(exception_job_path(error_type: error_type, offset: 0), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], 0)}", title: 'First') do %>
+      <i class="fa fa-angle-double-left"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to(exception_job_path(error_type: error_type, offset: previous_offset), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], 0)}", title: 'Previous') do %>
+      <i class="fa fa-angle-left"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to(exception_job_path(error_type: error_type, offset: next_offset), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], pagination[:total])}", title: 'Next') do %>
+      <i class="fa fa-angle-right"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to(exception_job_path(error_type: error_type, offset: pagination[:total]), class: "btn btn-default #{page_nav_disabled_class(pagination[:offset], pagination[:total])}", title: 'Last') do %>
+      <i class="fa fa-angle-double-right"></i>
+    <% end %>
+  </li>
+</ul>

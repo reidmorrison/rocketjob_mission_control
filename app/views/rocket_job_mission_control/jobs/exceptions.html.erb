@@ -21,21 +21,18 @@
       </tr>
       </thead>
       <tbody>
-      <%
-        class_name = nil
-        @exceptions.each do |exception|
-          exception.messages.each do |message| %>
-          <tr>
-            <th><%= exception.count if exception.class_name != class_name %></th>
-            <th>
-              <% if exception.class_name != class_name %>
-                <%= link_to(exception.class_name, job_failures_path(@job, error_type: exception.class_name), class: "card callout") %>
-              <% end %>
-            </th>
-            <th><%= message %></th>
-          </tr>
-        <% end %>
-        <% class_name = exception.class_name %>
+      <% @exceptions.each do |exception| %>
+        <tr>
+          <th><%= exception.count %></th>
+          <th>
+            <%= link_to(exception.class_name, exception_job_path(@job, error_type: exception.class_name), class: "card callout") %>
+          </th>
+          <th>
+            <% exception.messages.each do |message| %>
+              <div><%= message %></div>
+            <% end %>
+          </th>
+        </tr>
       <% end %>
       </tbody>
     </table>

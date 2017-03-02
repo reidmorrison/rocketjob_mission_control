@@ -71,7 +71,6 @@ module RocketJobMissionControl
 
     def abort
       @job.abort!
-
       redirect_to(job_path(@job))
     end
 
@@ -82,25 +81,22 @@ module RocketJobMissionControl
 
     def retry
       @job.retry!
-
       redirect_to(job_path(@job))
     end
 
     def pause
       @job.pause!
-
       redirect_to(job_path(@job))
     end
 
     def resume
       @job.resume!
-
       redirect_to(job_path(@job))
     end
 
     def run_now
       @job.unset(:run_at) if @job.scheduled?
-      redirect_to scheduled_jobs_path
+      redirect_to(job_path(@job))
     end
 
     def fail
@@ -117,6 +113,31 @@ module RocketJobMissionControl
 
     def exceptions
       @exceptions = @job.input.group_exceptions
+    end
+
+    def exception
+      error_type = params[:error_type]
+      offset     = params.fetch(:offset, 0).to_i
+
+      unless error_type.present?
+        flash[:notice] = t(:no_errors, scope: [:job, :failures])
+        redirect_to(job_path(@job))
+      end
+
+      scope = @job.input.failed.where('exception.class_name' => error_type)
+      count = scope.count
+      unless count > 0
+        flash[:notice] = t(:no_errors, scope: [:job, :failures])
+        redirect_to(job_path(@job))
+      end
+
+      current_failure    = scope.order(_id: 1).limit(1).skip(offset).first
+      @failure_exception = current_failure.try!(:exception)
+
+      @pagination = {
+        offset: offset,
+        total:  (count - 1),
+      }
     end
 
     private
@@ -144,16 +165,16 @@ module RocketJobMissionControl
         logger.error "Error loading a job. #{exception.class}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
       end
       flash[:danger] = 'Error loading jobs.'
-      raise exception if Rails.env.development?
+      raise exception if Rails.env.development? || Rails.env.test?
       redirect_to :back
     end
 
     def render_datatable(jobs, description, columns, sort_order)
       respond_to do |format|
         format.html do
-          @description         = description
-          @columns             = columns
-          @table_layout        = build_table_layout(columns)
+          @description  = description
+          @columns      = columns
+          @table_layout = build_table_layout(columns)
           render :index
         end
         format.json do

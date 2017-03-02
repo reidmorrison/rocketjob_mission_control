@@ -2,7 +2,7 @@ module RocketJobMissionControl
   class JobsDatatable < AbstractDatatable
     delegate :job_path, :job_icon, :edit_job_path,
       :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
-      :resume_job_path, :retry_job_path, :job_failures_path, :job_action_link, :exceptions_job_path, to: :@view
+      :resume_job_path, :retry_job_path, :exception_job_path, :job_action_link, :exceptions_job_path, to: :@view
 
     COMMON_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state].freeze
 
@@ -114,15 +114,15 @@ module RocketJobMissionControl
     end
 
     def started(job)
-      "#{RocketJob.seconds_as_duration(Time.now - job.started_at)} ago" if job.started_at
+      "#{RocketJob.seconds_as_duration(Time.now - (job.started_at || Time.now))} ago" if job.started_at
     end
 
     def completed_ago(job)
-      "#{RocketJob.seconds_as_duration(Time.now - job.completed_at)} ago"
+      "#{RocketJob.seconds_as_duration(Time.now - (job.completed_at || Time.now))} ago"
     end
 
     def time_till_run(job)
-      h(RocketJob.seconds_as_duration(job.run_at - Time.now))
+      h(RocketJob.seconds_as_duration((job.run_at || Time.now) - Time.now))
     end
 
     def cron_schedule(job)

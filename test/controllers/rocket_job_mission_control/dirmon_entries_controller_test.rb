@@ -1,4 +1,5 @@
 require_relative '../../test_helper'
+require_relative '../../compare_hashes'
 
 module RocketJobMissionControl
   class DirmonEntriesControllerTest < ActionController::TestCase

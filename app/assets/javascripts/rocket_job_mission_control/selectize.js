@@ -1,6 +1,8 @@
-$(document).on('ready', () =>
-  $('select.selectize').selectize({
-    create:       true,
+'use strict';
+
+$(document).on('ready', function () {
+  return $('select.selectize').selectize({
+    create: true,
     hideSelected: true
-  })
-);
+  });
+});

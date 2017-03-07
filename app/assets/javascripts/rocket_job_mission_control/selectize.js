@@ -2,7 +2,7 @@
 
 $(document).on('ready', function () {
   return $('select.selectize').selectize({
-    create: true,
+    create:       true,
     hideSelected: true
   });
 });

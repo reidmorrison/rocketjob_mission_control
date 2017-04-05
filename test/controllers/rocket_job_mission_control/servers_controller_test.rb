@@ -31,7 +31,9 @@ module RocketJobMissionControl
           describe 'with a valid server id' do
             before do
               server.pause! if server_action == :resume
-              patch server_action, id: server.id
+              params = {id: server.id}
+              params = {params: params} if Rails.version.to_i >= 5
+              patch server_action, params
             end
 
             it 'redirects to servers' do
@@ -48,7 +50,9 @@ module RocketJobMissionControl
             before do
               server.pause! if server_action == :pause
               server.stop! if server_action == :stop
-              patch server_action, id: server.id
+              params = {id: server.id}
+              params = {params: params} if Rails.version.to_i >= 5
+              patch server_action, params
             end
 
             it 'redirects to servers' do
@@ -66,7 +70,9 @@ module RocketJobMissionControl
         RocketJobMissionControl::ServersController::VALID_ACTIONS.each do |server_action, action_message|
           describe "with '#{server_action}' as the server_action param" do
             before do
-              patch :update_all, server_action: server_action
+              params = {server_action: server_action}
+              params = {params: params} if Rails.version.to_i >= 5
+              patch :update_all, params
             end
 
             it 'redirects to servers' do
@@ -81,7 +87,9 @@ module RocketJobMissionControl
 
         describe 'with an invalid server_action param' do
           before do
-            patch :update_all, server_action: :bad_server_action
+            params = {server_action: :bad_server_action}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :update_all, params
           end
 
           it 'redirects to servers' do
@@ -101,7 +109,9 @@ module RocketJobMissionControl
       describe 'DELETE #destroy' do
         describe 'with a valid server id' do
           before do
-            delete :destroy, id: server.id
+            params = {id: server.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            delete :destroy, params
           end
 
           it 'redirects to servers' do
@@ -119,7 +129,9 @@ module RocketJobMissionControl
 
         describe 'when the server is not found' do
           before do
-            delete :destroy, id: 999999
+            params = {id: 999999}
+            params = {params: params} if Rails.version.to_i >= 5
+            delete :destroy, params
           end
 
           it 'redirects to servers' do
@@ -192,7 +204,7 @@ module RocketJobMissionControl
 
               it 'succeeds' do
                 assert_response :success
-                json = JSON.parse(response.body)
+                json          = JSON.parse(response.body)
                 expected_data = {
                   starting: {
                     "0"           => /#{RocketJob::Server.starting.first.name}/,

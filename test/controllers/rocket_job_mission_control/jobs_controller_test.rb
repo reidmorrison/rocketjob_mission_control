@@ -44,7 +44,9 @@ module RocketJobMissionControl
         describe "PATCH ##{state}" do
           describe 'with an invalid job id' do
             before do
-              patch state, id: 42, job: {id: 42, priority: 12}
+              params = {id: 42, job: {id: 42, priority: 12}}
+              params = {params: params} if Rails.version.to_i >= 5
+              patch state, params
             end
 
             it 'redirects' do
@@ -66,7 +68,9 @@ module RocketJobMissionControl
               when :retry
                 job.fail!
               end
-              patch state, id: job.id, job: {id: job.id, priority: job.priority}
+              params = {id: job.id, job: {id: job.id, priority: job.priority}}
+              params = {params: params} if Rails.version.to_i >= 5
+              patch state, params
             end
 
             it 'redirects to the job' do
@@ -84,7 +88,9 @@ module RocketJobMissionControl
         let(:scheduled_job) { RocketJob::Jobs::SimpleJob.create!(run_at: 2.days.from_now) }
 
         before do
-          patch :run_now, id: scheduled_job.id
+          params = {id: scheduled_job.id}
+          params = {params: params} if Rails.version.to_i >= 5
+          patch :run_now, params
         end
 
         it 'redirects to the job path' do
@@ -100,7 +106,9 @@ module RocketJobMissionControl
       describe "PATCH #update" do
         describe 'with an invalid job id' do
           before do
-            patch :update, id: 42, job: {id: 42, priority: 12}
+            params = {id: 42, job: {id: 42, priority: 12}}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :update, params
           end
 
           it 'redirects' do
@@ -114,7 +122,9 @@ module RocketJobMissionControl
 
         describe "with a valid job id" do
           before do
-            patch :update, id: job.id, job: {id: job.id, priority: 12, blah: 23, description: '', log_level: '', state: 'failed'}
+            params = {id: job.id, job: {id: job.id, priority: 12, blah: 23, description: '', log_level: '', state: 'failed'}}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :update, params
           end
 
           it 'redirects to the job' do
@@ -137,7 +147,9 @@ module RocketJobMissionControl
       describe 'GET #show' do
         describe 'with an invalid job id' do
           before do
-            get :show, id: 42
+            params = {id: 42}
+            params = {params: params} if Rails.version.to_i >= 5
+            get :show, params
           end
 
           it 'redirects' do
@@ -151,7 +163,9 @@ module RocketJobMissionControl
 
         describe "with a valid job id" do
           before do
-            get :show, id: job.id
+            params = {id: job.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            get :show, params
           end
 
           it 'succeeds' do
@@ -167,7 +181,9 @@ module RocketJobMissionControl
       describe 'GET #exception' do
         describe 'with an invalid job id' do
           before do
-            get :exception, id: 42
+            params = {id: 42}
+            params = {params: params} if Rails.version.to_i >= 5
+            get :exception, params
           end
 
           it 'redirects' do
@@ -181,13 +197,14 @@ module RocketJobMissionControl
 
         describe 'with a valid job id' do
           before do
-            skip 'Only tested with Rocket Job Pro' unless defined?(RocketJob::Plugins::Batch)
-            get :exception, id: failed_job.id, error_type: 'Blah'
+            skip('Only tested with Rocket Job Pro') unless defined?(RocketJob::Plugins::Batch)
           end
 
           describe 'without an exception' do
             before do
-              get :exception, id: failed_job.id, error_type: 'Blah'
+              params = {id: failed_job.id, error_type: 'Blah'}
+              params = {params: params} if Rails.version.to_i >= 5
+              get :exception, params
             end
 
             it 'redirects to job path' do
@@ -201,7 +218,9 @@ module RocketJobMissionControl
 
           describe 'with exception' do
             before do
-              get :exception, id: failed_job.id, error_type: 'ArgumentError'
+              params = {id: failed_job.id, error_type: 'ArgumentError'}
+              params = {params: params} if Rails.version.to_i >= 5
+              get :exception, params
             end
 
             it 'succeeds' do

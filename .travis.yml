@@ -11,6 +11,9 @@ rvm:
   - 2.4.1
   - jruby-9.1.8.0
 
+env:
+  - JAVA_OPTS="-Xms512m -Xmx2048m -Xss2048k -XX:G1HeapRegionSize=4m -XX:+UseG1GC -XX:+UseCodeCacheFlushing -Dfile.encoding=UTF-8 -Djruby.compile.invokedynamic=false -Djruby.global.require.lock=true -Djruby.thread.pool.enabled=true"
+
 matrix:
   exclude:
     - rvm: 2.1.10

@@ -16,7 +16,7 @@ module RocketJobMissionControl
         draw:            params[:draw].to_i,
         recordsTotal:    query.unfiltered_count,
         recordsFiltered: query.count,
-        data:            query.query.collect{|record| map(record)}
+        data:            query.query.collect { |record| map(record) }
       }
     end
 

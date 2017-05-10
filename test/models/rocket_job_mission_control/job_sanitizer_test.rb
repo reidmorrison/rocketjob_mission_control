@@ -21,15 +21,15 @@ class JobSanitizerTest < Minitest::Test
         cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 0, @job.errors.count
         assert_equal 3, cleansed.count
-        assert_equal({:string=>"hello", :integer=>"12", :symbol=>"name"}, cleansed)
+        assert_equal({:string => "hello", :integer => "12", :symbol => "name"}, cleansed)
       end
 
       it 'strips blank values' do
         properties = {
-          string:  '',
-          integer: '',
-          symbol:  '',
-          secure:  'Not permissible',
+          string:    '',
+          integer:   '',
+          symbol:    '',
+          secure:    'Not permissible',
           log_level: ''
         }
         cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
@@ -39,11 +39,11 @@ class JobSanitizerTest < Minitest::Test
 
       it 'nils blank values' do
         properties = {
-          string:  '',
-          integer: '',
-          symbol:  '',
-          hash:    '',
-          secure:  'Not permissible',
+          string:    '',
+          integer:   '',
+          symbol:    '',
+          hash:      '',
+          secure:    'Not permissible',
           log_level: ''
         }
         cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, true)
@@ -54,9 +54,9 @@ class JobSanitizerTest < Minitest::Test
 
       it 'parses JSON' do
         properties = {
-          string:  '',
-          secure:  'Not permissible',
-          hash:    '{"state":"FL"}'
+          string: '',
+          secure: 'Not permissible',
+          hash:   '{"state":"FL"}'
         }
         cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 0, @job.errors.count
@@ -66,9 +66,9 @@ class JobSanitizerTest < Minitest::Test
 
       it 'sets the error for invalid JSON' do
         properties = {
-          string:  'hello',
-          secure:  'Not permissible',
-          hash:    '{ bad json }'
+          string: 'hello',
+          secure: 'Not permissible',
+          hash:   '{ bad json }'
         }
         cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 1, @job.errors.count
@@ -80,7 +80,7 @@ class JobSanitizerTest < Minitest::Test
 
       it 'Keeps empty JSON Hash' do
         properties = {
-          hash:    '{ }'
+          hash: '{ }'
         }
         cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 0, @job.errors.count

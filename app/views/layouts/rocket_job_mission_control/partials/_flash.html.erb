@@ -12,7 +12,7 @@
             <% end %>
           </ul>
         <% else %>
-          <%= msg.html_safe %>
+          <%= msg.to_s.html_safe %>
         <% end %>
       </div>
     <% end %>

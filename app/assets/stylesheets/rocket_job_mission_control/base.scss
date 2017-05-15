@@ -257,9 +257,13 @@ table.dataTable thead > tr > th {
       left: 50%;
       margin-left: -96px !important;
       display: block;
+
       img {
         display: inline;
         height: 40px;
+        position: relative;
+        bottom: 3px;
+        left: 8px;
       }
   }
 
@@ -267,10 +271,10 @@ table.dataTable thead > tr > th {
   .last { right: 15px; }
 
   a.navbar-brand.brand {
-    font-size: 36px;
+    font-size: 23px;
     color: white;
     font-weight: bold;
-    margin-top: -10px;
+    top: -5px;
 
     span {
       display: inline-block;

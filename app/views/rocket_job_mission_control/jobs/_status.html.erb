@@ -23,7 +23,7 @@
 <%
   remaining = {}
   status.each_pair do |key, value|
-    next if value.blank? || ['state', '_type', 'sub_state'].include?(key)
+    next if ((value != false) && value.blank?) || ['state', '_type', 'sub_state'].include?(key)
     if value.kind_of?(Hash) || value.kind_of?(Array)
       remaining[key] = value
       next

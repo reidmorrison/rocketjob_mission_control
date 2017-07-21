@@ -4,7 +4,7 @@ module RocketJobMissionControl
              :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
              :resume_job_path, :retry_job_path, :exception_job_path, :job_action_link, :exceptions_job_path, to: :@view
 
-    COMMON_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state].freeze
+    COMMON_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state, :worker_name].freeze
 
     ABORTED_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type', width: '30%'},
@@ -49,6 +49,7 @@ module RocketJobMissionControl
       {display: 'Class', value: :class_with_link, field: '_type'},
       {display: 'Description', value: :description, field: 'description'},
       {display: 'Progress', value: :progress, field: 'percent_complete', orderable: false},
+      {display: 'Workers', value: :worker_count, field: 'worker_count', orderable: false},
       {display: 'Priority', value: :priority, field: 'priority'},
       {display: 'Started', value: :started, field: 'started_at'},
       {display: 'Actions', value: :action_buttons, orderable: false}
@@ -111,6 +112,10 @@ module RocketJobMissionControl
 
     def priority(job)
       h(job.priority)
+    end
+
+    def worker_count(job)
+      h(job.worker_count)
     end
 
     def started(job)

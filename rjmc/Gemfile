@@ -7,5 +7,6 @@ gem 'rails_semantic_logger', '>= 4.0.0'
 
 gem 'rocketjob_mission_control', path: '../'
 
-# Comment out the line below if not running RocketJob Pro
-gem 'rocketjob_pro', path: '../../rocketjob_pro'
+# For local testing
+#gem 'rocketjob', path: '../../rocketjob'
+#gem 'rocketjob_pro', path: '../../rocketjob_pro'

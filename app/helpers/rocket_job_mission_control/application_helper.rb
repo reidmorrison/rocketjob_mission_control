@@ -10,6 +10,7 @@ module RocketJobMissionControl
       pending:   'fa-inbox',
       queued:    'fa-inbox',
       running:   'fa-play',
+      sleeping:  'fa-hourglass-o',
       scheduled: 'fa-clock-o',
       starting:  'fa-cogs',
       stopping:  'fa-stop',

@@ -4,7 +4,7 @@
       <div class="lead"><%= @job.class.name %></div>
       <div class="job-state inline-block">
         <div class="left">State</div>
-        <div class="<%= @job.state %> right"><%= @job.state %></div>
+        <div class="<%= job_state(@job) %> right"><%= job_state(@job) %></div>
       </div>
 
       <% if sub_state = @job['sub_state'] %>

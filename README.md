@@ -64,6 +64,10 @@ Add the following route to `config/routes.rb`:
 mount RocketJobMissionControl::Engine => 'rocketjob'
 ```
 
+## Development and Testing
+
+* [Development and Testing](TESTING.md) documentation.
+
 ## Versioning
 
 This project uses [Semantic Versioning](http://semver.org/).

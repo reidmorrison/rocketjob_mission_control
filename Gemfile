@@ -13,5 +13,5 @@ gem 'appraisal'
 gem 'rails_semantic_logger'
 
 gem 'rails', '~> 4.0'
-gem 'rocketjob', path: '../rocketjob'
-gem 'rocketjob_pro', path: '../rocketjob_pro'
+# gem 'rocketjob', path: '../rocketjob'
+# gem 'rocketjob_pro', path: '../rocketjob_pro'

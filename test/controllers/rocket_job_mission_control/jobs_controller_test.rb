@@ -26,23 +26,26 @@ module RocketJobMissionControl
       end
 
       let :failed_job do
-        job = KaboomBatchJob.new(slice_size: 1)
-        job.upload do |stream|
-          stream << 'first record'
-          stream << 'second record'
-          stream << 'third record'
-        end
-        job.save!
-
-        # Run all 3 slices now to get exceptions for each.
-        3.times do
-          begin
-            job.perform_now
-          rescue ArgumentError, RuntimeError
+        if defined?(RocketJobPro)
+          job = KaboomBatchJob.new(slice_size: 1)
+          job.upload do |stream|
+            stream << 'first record'
+            stream << 'second record'
+            stream << 'third record'
           end
-        end
+          job.save!
 
-        job
+          # Run all 3 slices now to get exceptions for each.
+          3.times do
+            begin
+              job.perform_now
+            rescue ArgumentError, RuntimeError
+            end
+          end
+          job
+        else
+          RocketJob::Job::SimpleJob.new.fail!('Oh no', 'bad_worker')
+        end
       end
 
       job_states = RocketJob::Job.aasm.states.collect(&:name)

@@ -37,7 +37,7 @@ Run bundler to install the gems:
     bundle
     
 If you have Rocket Job and/or Rocket Job Pro checked out locally, you can point to those installations
-instead of the current gems by edition Gemfile and uncommenting the following 2 lines as applicable:
+instead of the current gems by editing Gemfile and uncommenting the following 2 lines as applicable:
 
 ~~~ruby
 # For testing with local copies of the gems:
@@ -49,7 +49,7 @@ Optionally pre-load the database with jobs in the various states to assist with 
 
     bin/rake db:seed
     
-Run the above db:seed operation several times to create more test data.
+Run the above db:seed operation several times to create additional test data.
 
 Start a Rails server:
 

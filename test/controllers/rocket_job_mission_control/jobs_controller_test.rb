@@ -49,7 +49,7 @@ module RocketJobMissionControl
 
       let :one_job_for_every_state do
         job_states.collect do |state|
-          RocketJob::Jobs::SimpleJob.create!(state: state)
+          RocketJob::Jobs::SimpleJob.create!(state: state, worker_name: 'worker')
         end
       end
 

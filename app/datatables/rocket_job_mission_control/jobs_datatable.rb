@@ -1,28 +1,19 @@
 module RocketJobMissionControl
   class JobsDatatable < AbstractDatatable
-    delegate :job_path, :job_icon, :edit_job_path,
-      :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
-      :resume_job_path, :retry_job_path, :exception_job_path, :job_action_link, :exceptions_job_path, to: :@view
+    delegate :job_path, :job_icon, :edit_job_path, :state_icon, :job_state,
+             :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
+             :resume_job_path, :retry_job_path, :exception_job_path, :job_action_link, :exceptions_job_path, to: :@view
 
-    COMMON_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state].freeze
+    COMMON_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state, :worker_name].freeze
 
-    ABORTED_COLUMNS             = [
+    ABORTED_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type', width: '30%'},
       {display: 'Description', value: :description, field: 'description', width: '30%'},
       {display: 'Aborted', value: :completed_ago, field: 'completed_at'},
       {display: 'Actions', value: :action_buttons, orderable: false}
     ]
 
-    ALL_COLUMNS                 = [
-      {display: 'Class', value: :class_with_link, field: '_type'},
-      {display: 'Description', value: :description, field: 'description'},
-      {display: 'Created', value: :created_at, field: 'created_at'},
-      {display: 'Duration', value: :duration, field: 'duration', orderable: false},
-      {display: 'Actions', value: :action_buttons, orderable: false}
-    ]
-    ALL_FIELDS                  = COMMON_FIELDS + [:run_at].freeze
-
-    COMPLETED_COLUMNS           = [
+    COMPLETED_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type', width: '30%'},
       {display: 'Description', value: :description, field: 'description', width: '30%'},
       {display: 'Duration', value: :duration, field: 'duration', orderable: false},
@@ -36,33 +27,43 @@ module RocketJobMissionControl
     PAUSED_COLUMNS              = ABORTED_COLUMNS.deep_dup
     PAUSED_COLUMNS[2][:display] = 'Paused'
 
-    QUEUED_COLUMNS              = [
+    QUEUED_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type'},
       {display: 'Description', value: :description, field: 'description'},
       {display: 'Priority', value: :priority, field: 'priority'},
       {display: 'Queued For', value: :duration, field: 'duration', orderable: false},
       {display: 'Actions', value: :action_buttons, orderable: false}
     ]
-    QUEUED_FIELDS               = COMMON_FIELDS + [:run_at, :priority].freeze
+    QUEUED_FIELDS  = (COMMON_FIELDS + [:run_at, :priority]).freeze
 
-    RUNNING_COLUMNS             = [
+    RUNNING_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type'},
       {display: 'Description', value: :description, field: 'description'},
       {display: 'Progress', value: :progress, field: 'percent_complete', orderable: false},
+      {display: 'Workers', value: :worker_count, field: 'worker_count', orderable: false},
       {display: 'Priority', value: :priority, field: 'priority'},
       {display: 'Started', value: :started, field: 'started_at'},
       {display: 'Actions', value: :action_buttons, orderable: false}
     ]
-    RUNNING_FIELDS              = COMMON_FIELDS + [:record_count, :collect_output, :input_categories, :output_categories, :encrypt, :compress, :slice_size, :priority, :sub_state, :percent_complete].freeze
+    RUNNING_FIELDS  = (COMMON_FIELDS + [:record_count, :collect_output, :input_categories, :output_categories, :encrypt, :compress, :slice_size, :priority, :sub_state, :percent_complete]).freeze
 
-    SCHEDULED_COLUMNS           = [
+    SCHEDULED_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type'},
       {display: 'Description', value: :description, field: 'description'},
       {display: 'Runs in', value: :time_till_run, field: 'run_at'},
       {display: 'Cron Schedule', value: :cron_schedule, field: 'cron_schedule'},
       {display: 'Actions', value: :action_buttons, orderable: false}
     ]
-    SCHEDULED_FIELDS            = COMMON_FIELDS + [:run_at, :cron_schedule].freeze
+    SCHEDULED_FIELDS  = (COMMON_FIELDS + [:run_at, :cron_schedule]).freeze
+
+    ALL_COLUMNS = [
+      {display: 'Class', value: :class_with_link, field: '_type'},
+      {display: 'Description', value: :description, field: 'description'},
+      {display: 'Created', value: :created_at, field: 'created_at'},
+      {display: 'Duration', value: :duration, field: 'duration', orderable: false},
+      {display: 'Actions', value: :action_buttons, orderable: false}
+    ]
+    ALL_FIELDS  = (QUEUED_FIELDS + RUNNING_FIELDS + SCHEDULED_FIELDS).uniq.freeze
 
     def initialize(view, query, columns)
       @columns = columns
@@ -78,12 +79,12 @@ module RocketJobMissionControl
     # Map the values for each column
     def map(job)
       index = 0
-      h = {}
+      h     = {}
       @columns.each do |column|
         h[index.to_s] = send(column[:value], job)
-        index += 1
+        index         += 1
       end
-      h['DT_RowClass'] = "card callout callout-#{job.state}"
+      h['DT_RowClass'] = "card callout callout-#{job_state(job)}"
       h
     end
 
@@ -91,7 +92,7 @@ module RocketJobMissionControl
     def class_with_link(job)
       <<-EOS
         <a class='job-link' href="#{job_path(job.id)}">
-          <i class="fa #{job_icon(job)}" style="font-size: 75%" title="#{job.state}"></i>
+          <i class="fa #{job_icon(job)}" style="font-size: 75%" title="#{job_state(job)}"></i>
           #{job.class.name}
         </a>
       EOS
@@ -111,6 +112,10 @@ module RocketJobMissionControl
 
     def priority(job)
       h(job.priority)
+    end
+
+    def worker_count(job)
+      h(job.worker_count)
     end
 
     def started(job)

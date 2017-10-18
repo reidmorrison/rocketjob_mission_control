@@ -1,59 +1,10 @@
+<div class="row">
   <div class="col-md-12 job-status">
-    <div class="btn-toolbar job-actions pull-right">
-      <% if @job.respond_to?(:input) && @job.input.failed.count > 0 %>
-        <div class="btn-group">
-          <%= link_to('Show Exceptions', exceptions_job_path(@job), class: 'btn btn-default') %>
-        </div>
-      <% end %>
-
-      <% if @job.scheduled? %>
-        <div class="btn-group">
-          <%= job_action_link('Run', rocket_job_mission_control.run_now_job_path(@job), :patch) %>
-        </div>
-      <% end %>
-
-      <div class="btn-group">
-        <% valid_events = @job.aasm.events.collect { |e| e.name } %>
-        <% if valid_events.include?(:pause) %>
-          <%= job_action_link('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
-        <% end %>
-
-        <% if valid_events.include?(:resume) %>
-          <%= job_action_link('Resume', rocket_job_mission_control.resume_job_path(@job), :patch) %>
-        <% end %>
-
-        <% if valid_events.include?(:retry) %>
-          <%= job_action_link('Retry', rocket_job_mission_control.retry_job_path(@job), :patch) %>
-        <% end %>
-      </div>
-
-      <div class="btn-group">
-        <% if valid_events.include?(:fail) %>
-          <%= job_action_link('Fail', rocket_job_mission_control.fail_job_path(@job), :patch) %>
-        <% end %>
-
-        <% if valid_events.include?(:abort) %>
-          <%= job_action_link('Abort', rocket_job_mission_control.abort_job_path(@job), :patch) %>
-        <% end %>
-
-        <%= job_action_link('Destroy', rocket_job_mission_control.job_path(@job), :delete) %>
-      </div>
-
-      <% unless @job.completed? || @job.aborted? %>
-        <div class="btn-group">
-          <%= link_to "Edit", edit_job_path(@job), class: "btn btn-default" %>
-        </div>
-      <% end %>
-    </div>
-
-    <div class="clearfix"></div>
-
     <div id="job">
       <div class="lead"><%= @job.class.name %></div>
-
       <div class="job-state inline-block">
         <div class="left">State</div>
-        <div class="<%= @job.state %> right"><%= @job.state %></div>
+        <div class="<%= job_state(@job) %> right"><%= job_state(@job) %></div>
       </div>
 
       <% if sub_state = @job['sub_state'] %>
@@ -63,7 +14,58 @@
         </div>
       <% end %>
 
-      <%= render partial: 'status', locals: {job: @job} %>
+      <div class="btn-toolbar job-actions pull-right">
+        <% if @job.respond_to?(:input) && @job.input.failed.count > 0 %>
+          <div class="btn-group">
+            <%= link_to('Show Exceptions', exceptions_job_path(@job), class: 'btn btn-default') %>
+          </div>
+        <% end %>
+
+        <% if @job.scheduled? %>
+          <div class="btn-group">
+            <%= job_action_link('Run', rocket_job_mission_control.run_now_job_path(@job), :patch) %>
+          </div>
+        <% end %>
+
+        <div class="btn-group">
+          <% valid_events = @job.aasm.events.collect { |e| e.name } %>
+          <% if valid_events.include?(:pause) %>
+            <%= job_action_link('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
+          <% end %>
+
+          <% if valid_events.include?(:resume) %>
+            <%= job_action_link('Resume', rocket_job_mission_control.resume_job_path(@job), :patch) %>
+          <% end %>
+
+          <% if valid_events.include?(:retry) %>
+            <%= job_action_link('Retry', rocket_job_mission_control.retry_job_path(@job), :patch) %>
+          <% end %>
+        </div>
+
+        <div class="btn-group">
+          <% if valid_events.include?(:fail) %>
+            <%= job_action_link('Fail', rocket_job_mission_control.fail_job_path(@job), :patch) %>
+          <% end %>
+
+          <% if valid_events.include?(:abort) %>
+            <%= job_action_link('Abort', rocket_job_mission_control.abort_job_path(@job), :patch) %>
+          <% end %>
+
+          <%= job_action_link('Destroy', rocket_job_mission_control.job_path(@job), :delete) %>
+        </div>
+
+        <% unless @job.completed? || @job.aborted? %>
+          <div class="btn-group">
+            <%= link_to "Edit", edit_job_path(@job), class: "btn btn-default" %>
+          </div>
+        <% end %>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= render partial: 'status', locals: {job: @job} %>
   </div>
 </div>

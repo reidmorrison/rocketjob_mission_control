@@ -4,15 +4,27 @@
   border-left-width: 0.5em;
 }
 .callout-queued {
-  border-left-color: darkgrey;
+  border-left-color: #A29F00;
   a {
-    color: darkgrey;
+    color: #A29F00;
   }
 }
 .callout-running {
   border-left-color: #337ab7;
   a {
     color: #337ab7;
+  }
+}
+.callout-sleeping {
+  border-left-color: darkcyan;
+  a {
+    color: darkcyan;
+  }
+}
+.callout-scheduled {
+  border-left-color: #92001B;
+  a {
+    color: #92001B;
   }
 }
 .callout-completed {

@@ -8,3 +8,4 @@ rjmc/.sass-cache
 tags
 *.DS_Store
 Gemfile.lock
+/gemfiles/*.lock

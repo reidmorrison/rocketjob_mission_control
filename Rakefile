@@ -1,3 +1,7 @@
+# Setup bundler to avoid having to run bundle exec all the time.
+require 'rubygems'
+require 'bundler/setup'
+
 APP_RAKEFILE = File.expand_path('../rjmc/Rakefile', __FILE__)
 load 'rails/tasks/engine.rake'
 
@@ -21,4 +25,10 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
-task default: :test
+# By default run tests against all appraisals
+if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
+  require 'appraisal'
+  task default: 'app:appraisal'
+else
+  task default: :test
+end

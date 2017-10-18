@@ -1,7 +1,12 @@
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
-    before_filter :find_entry_or_redirect, except: [:index, :disabled, :enabled, :failed, :pending, :new, :create]
-    before_filter :show_sidebar
+    if Rails.version.to_i < 5
+      before_filter :find_entry_or_redirect, except: [:index, :disabled, :enabled, :failed, :pending, :new, :create]
+      before_filter :show_sidebar
+    else
+      before_action :find_entry_or_redirect, except: [:index, :disabled, :enabled, :failed, :pending, :new, :create]
+      before_action :show_sidebar
+    end
 
     def index
       @data_table_url = dirmon_entries_url(format: 'json')
@@ -65,8 +70,7 @@ module RocketJobMissionControl
       if properties = params[:rocket_job_dirmon_entry][:properties]
         @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
       end
-
-      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.save
+      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update_attributes(dirmon_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         render :edit

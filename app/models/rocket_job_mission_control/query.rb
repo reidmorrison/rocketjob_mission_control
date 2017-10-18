@@ -2,7 +2,7 @@ module RocketJobMissionControl
   class Query
     attr_reader :scope
     attr_accessor :search_term, :order_by, :start, :page_size,
-      :search_columns, :display_columns
+                  :search_columns, :display_columns
 
     def initialize(scope, order_by = nil)
       @scope           = scope

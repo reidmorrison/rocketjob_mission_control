@@ -2,7 +2,15 @@ source 'https://rubygems.org'
 
 gem 'awesome_print'
 gem 'puma'
-gem 'rails', '~> 5.0'
-gem 'rails_semantic_logger', '>= 4.0.0.rc1'
+gem 'rails', '~> 4.0'
+gem 'rails_semantic_logger', '>= 4.0.0'
 
 gem 'rocketjob_mission_control', path: '../'
+
+# For testing with local copies of the gems:
+#gem 'rocketjob', path: '../../rocketjob'
+#gem 'rocketjob_pro', path: '../../rocketjob_pro'
+
+# For high availability
+gem 'mongo', git: 'https://github.com/mongodb/mongo-ruby-driver.git'
+gem 'mongo_ha', git: 'https://github.com/reidmorrison/mongo_ha.git'

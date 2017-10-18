@@ -1,13 +1,18 @@
 module RocketJobMissionControl
   module JobsHelper
     def job_icon(job)
-      state =
-        if job.scheduled?
-          :scheduled
-        else
-          job.state
-        end
+      state = job_state(job)
       state_icon(state)
+    end
+
+    def job_state(job)
+      if job.scheduled?
+        :scheduled
+      elsif job.sleeping?
+        :sleeping
+      else
+        job.state
+      end
     end
 
     def job_states

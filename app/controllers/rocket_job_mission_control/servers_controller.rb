@@ -1,7 +1,12 @@
 module RocketJobMissionControl
   class ServersController < RocketJobMissionControl::ApplicationController
-    before_filter :find_server_or_redirect, only: [:stop, :pause, :resume, :destroy]
-    before_filter :show_sidebar
+    if Rails.version.to_i < 5
+      before_filter :find_server_or_redirect, only: [:stop, :pause, :resume, :destroy]
+      before_filter :show_sidebar
+    else
+      before_action :find_server_or_redirect, only: [:stop, :pause, :resume, :destroy]
+      before_action :show_sidebar
+    end
 
     def index
       @data_table_url = servers_url(format: 'json')

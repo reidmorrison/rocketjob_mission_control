@@ -1,14 +1,17 @@
-eval File.read(File.expand_path('../gemfiles/base.gemfile', __FILE__)), nil, 'base.gemfile'
-
-# Rails 4
-gem 'rails', '~> 4.1'
-
-# Rails 5
-# gem 'rails', '~> 5.0'
-# gem 'rails-controller-testing'
-
-gem 'rails_semantic_logger'
-gem 'rocketjob', path: '../rocketjob'
-gem 'rocketjob_pro', path: '../rocketjob_pro'
+source 'https://rubygems.org'
 
 gemspec
+
+gem 'rake'
+gem 'minitest'
+gem 'minitest-stub_any_instance'
+gem 'awesome_print'
+gem 'minitest-rails'
+gem 'minitest-reporters'
+gem 'rubyzip', platform: :ruby
+gem 'appraisal'
+gem 'rails_semantic_logger'
+
+gem 'rails', '~> 4.0'
+# gem 'rocketjob', path: '../rocketjob'
+# gem 'rocketjob_pro', path: '../rocketjob_pro'

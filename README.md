@@ -1,7 +1,7 @@
-# rocketjob mission control
-[![Gem Version](https://badge.fury.io/rb/rocketjob_mission_control.svg)](http://badge.fury.io/rb/rocketjob_mission_control) [![Build Status](https://secure.travis-ci.org/rocketjob/rocketjob_mission_control.png?branch=master)](http://travis-ci.org/rocketjob/rocketjob_mission_control) ![](http://ruby-gem-downloads-badge.herokuapp.com/rocketjob_mission_control)
+# Rocket Job Mission Control
+[![Gem Version](https://badge.fury.io/rb/rocketjob_mission_control.svg)](http://badge.fury.io/rb/rocketjob_mission_control) [![Build Status](https://secure.travis-ci.org/rocketjob/rocketjob_mission_control.png?branch=master)](http://travis-ci.org/rocketjob/rocketjob_mission_control)
 
-Web based management interface for [rocketjob][0].
+Web based management interface for [Rocket Job][0].
 
 ![Screen shot](http://rocketjob.io/images/rjmc_running.png)
 
@@ -10,24 +10,24 @@ Web based management interface for [rocketjob][0].
 Production Ready
 
 Already in use in production processing large files with millions
-of records, as well as large jobs to walk though large databases.
+of records, as well as large jobs to walk through large databases.
 
 ## Features
 
 Job Management
 
-* View all queued, running, failed, and running jobs
-* View all completed jobs where `destroy_on_complete == false`
-* Pause any running jobs
-* Resume paused jobs
-* Retry failed jobs
-* Abort, or fail queued or running jobs
-* Destroy a completed or aborted job
+* View all queued, running, failed, and running jobs.
+* View all completed jobs where `destroy_on_complete` is `false`.
+* Pause any running jobs.
+* Resume paused jobs.
+* Retry failed jobs.
+* Abort, or fail queued or running jobs.
+* Destroy a completed or aborted job.
 
 Server Management
 
-* View running servers
-* Stop servers
+* View running servers.
+* Stop servers.
 
 Running Jobs
 
@@ -35,35 +35,38 @@ Running Jobs
 
 Directory Monitor Management
 
-* Create, update, enable, disable directory monitoring entries
+* Create, update, enable, disable directory monitoring entries.
 
 ## Documentation
 
 * [Guide](http://rocketjob.io/mission_control)
 
-## Rails 4 Installation
+## Rails Installation
 
 This gem is a Rails Engine and can be installed directly into existing Rails 4
-applications.
+or 5 applications.
 
-Add the dependency to your Gemfile
+Add to Gemfile:
 
 ```ruby
 gem 'rocketjob_mission_control'
 ```
 
-Install it...
+Install:
 
 ```ruby
 bundle
 ```
 
-Add the following route to your application for accessing the interface,
-and retrying failed jobs.
+Add the following route to `config/routes.rb`:
 
 ```ruby
 mount RocketJobMissionControl::Engine => 'rocketjob'
 ```
+
+## Development and Testing
+
+* [Development and Testing](TESTING.md) documentation.
 
 ## Versioning
 
@@ -74,9 +77,6 @@ This project uses [Semantic Versioning](http://semver.org/).
 * [Michael Cloutier][1]
 * [Chris Lamb][2]
 * [Jonathan Whittington][4]
-
-## Contributors
-
 * [Reid Morrison][3] :: @reidmorrison
 
 [0]: http://rocketjob.io

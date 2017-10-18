@@ -1,7 +1,12 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
-    before_filter :find_job_or_redirect, except: [:index, :aborted, :completed, :failed, :paused, :queued, :running, :scheduled]
-    before_filter :show_sidebar
+    if Rails.version.to_i < 5
+      before_filter :find_job_or_redirect, except: [:index, :aborted, :completed, :failed, :paused, :queued, :running, :scheduled]
+      before_filter :show_sidebar
+    else
+      before_action :find_job_or_redirect, except: [:index, :aborted, :completed, :failed, :paused, :queued, :running, :scheduled]
+      before_action :show_sidebar
+    end
     rescue_from StandardError, with: :error_occurred
 
     def index

@@ -150,8 +150,10 @@ table.dataTable thead > tr > th {
       border-bottom-right-radius: 3px;
     }
 
-    .queued, .pending { background-color: darkgrey; }
+    .queued, .pending, { background-color: #A29F00; }
+    .scheduled { background-color: #92001B; }
     .running { background-color: #337ab7; }
+    .sleeping { background-color: darkcyan; }
     .completed, .enabled { background-color: green; }
     .paused, .disabled { background-color: orange; }
     .failed { background-color: red; }
@@ -257,9 +259,13 @@ table.dataTable thead > tr > th {
       left: 50%;
       margin-left: -96px !important;
       display: block;
+
       img {
         display: inline;
         height: 40px;
+        position: relative;
+        bottom: 3px;
+        left: 8px;
       }
   }
 
@@ -267,10 +273,10 @@ table.dataTable thead > tr > th {
   .last { right: 15px; }
 
   a.navbar-brand.brand {
-    font-size: 36px;
+    font-size: 23px;
     color: white;
     font-weight: bold;
-    margin-top: -10px;
+    top: -5px;
 
     span {
       display: inline-block;
@@ -316,8 +322,10 @@ table.dataTable thead > tr > th {
         display: inline-block;
         vertical-align: middle;
 
-        i.queued { color: darkgrey; }
+        i.queued { color: #A29F00; }
+        i.scheduled { color: #92001B; }
         i.running { color: #337ab7; }
+        i.sleeping { color: darkcyan; }
         i.completed { color: green; }
         i.paused { color: orange; }
         i.failed { color: red; }

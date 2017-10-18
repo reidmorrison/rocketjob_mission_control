@@ -10,6 +10,7 @@ module RocketJobMissionControl
       pending:   'fa-inbox',
       queued:    'fa-inbox',
       running:   'fa-play',
+      sleeping:  'fa-hourglass-o',
       scheduled: 'fa-clock-o',
       starting:  'fa-cogs',
       stopping:  'fa-stop',
@@ -54,6 +55,8 @@ module RocketJobMissionControl
 
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
     def editable_field_html(klass, field_name, value, f, include_nil_selectors = false)
+      # When editing a job the values are of the correct type.
+      # When editing a dirmon entry values are strings.
       field = klass.fields[field_name.to_s]
       return unless field && field.type
 
@@ -82,13 +85,18 @@ module RocketJobMissionControl
           f.select(field_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true})
       when 'Mongoid::Boolean'
         name = "#{field_name}_true".to_sym
+        value = value.to_s
         str  = '<div class="radio-buttons">'.html_safe
-        str << f.label(name, 'true')
         str << f.radio_button(field_name, 'true', checked: value == 'true')
-        str << f.label(name, 'false')
-        str << f.radio_button(field_name, 'false', checked: value == 'false')
-        str << f.label(name, 'none')
-        str << f.radio_button(field_name, '', checked: value.blank?)
+        str << ' '.html_safe + f.label(name, 'true')
+        str << ' '.html_safe + f.radio_button(field_name, 'false', checked: value == 'false')
+        str << ' '.html_safe + f.label(name, 'false')
+        # Allow this field to be unset (nil).
+        if include_nil_selectors
+          str << ' '.html_safe + f.radio_button(field_name, '', checked: value == '')
+          str << ' '.html_safe + f.label(name, 'nil')
+        end
+
         str << '</div>'.html_safe
       else
         "[#{field.type.name}]".html_safe +

@@ -37,7 +37,9 @@ module RocketJobMissionControl
       describe 'PATCH #enable' do
         describe 'when transition is allowed' do
           before do
-            patch :enable, id: existing_dirmon_entry.id
+            params = {id: existing_dirmon_entry.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :enable, params
           end
 
           it do
@@ -52,7 +54,9 @@ module RocketJobMissionControl
         describe 'when transition is not allowed' do
           before do
             existing_dirmon_entry.enable!
-            patch :enable, id: existing_dirmon_entry.id
+            params = {id: existing_dirmon_entry.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :enable, params
           end
 
           it 'succeeds' do
@@ -69,7 +73,9 @@ module RocketJobMissionControl
         describe 'when transition is allowed' do
           before do
             existing_dirmon_entry.enable!
-            patch :disable, id: existing_dirmon_entry.id
+            params = {id: existing_dirmon_entry.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :disable, params
           end
 
           it do
@@ -83,7 +89,9 @@ module RocketJobMissionControl
 
         describe 'when transition is not allowed' do
           before do
-            patch :disable, id: existing_dirmon_entry.id
+            params = {id: existing_dirmon_entry.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :disable, params
           end
 
           it 'succeeds' do
@@ -100,7 +108,9 @@ module RocketJobMissionControl
         let(:entry_params) { {} }
 
         before do
-          get :new, entry_params
+          params = entry_params
+          params = {params: entry_params} if Rails.version.to_i >= 5
+          get :new, params
         end
 
         it 'succeeds' do
@@ -153,7 +163,9 @@ module RocketJobMissionControl
       describe 'PATCH #update' do
         describe 'with valid parameters' do
           before do
-            patch :update, id: existing_dirmon_entry.id, rocket_job_dirmon_entry: {pattern: 'the_path2', job_class_name: job_class_name}
+            params = {id: existing_dirmon_entry.id, rocket_job_dirmon_entry: {pattern: 'the_path2', job_class_name: job_class_name}}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :update, params
           end
 
           it 'redirects to the updated entry' do
@@ -161,23 +173,23 @@ module RocketJobMissionControl
           end
 
           it 'updates the entry' do
-            #follow_redirect!
-            #assert_equal 'the_path2', existing_dirmon_entry.reload.pattern
+            assert_equal 'the_path2', existing_dirmon_entry.reload.pattern
           end
         end
 
         describe 'with invalid parameters' do
           before do
-            patch :update, id: existing_dirmon_entry.id, rocket_job_dirmon_entry: {job_class_name: 'FakeAndBadJob'}
+            params = {id: existing_dirmon_entry.id, rocket_job_dirmon_entry: {job_class_name: 'FakeAndBadJob'}}
+            params = {params: params} if Rails.version.to_i >= 5
+            patch :update, params
           end
 
           it 'renders the edit template' do
-            assert_redirected_to dirmon_entry_path(existing_dirmon_entry)
+            assert_response :success
           end
 
           it 'alerts the user' do
-            #follow_redirect!
-            #assert_select 'div.message', "job_class_name: #{I18n.t(:failure, scope: [:dirmon_entry, :disable])}"
+            assert_select 'div.message', "job_class_name: [\"job_class_name must be defined and must be derived from RocketJob::Job\"]"
           end
         end
       end
@@ -194,7 +206,9 @@ module RocketJobMissionControl
           end
 
           before do
-            post :create, rocket_job_dirmon_entry: dirmon_params
+            params = {rocket_job_dirmon_entry: dirmon_params}
+            params = {params: params} if Rails.version.to_i >= 5
+            post :create, params
           end
 
           it 'creates the entry' do
@@ -233,7 +247,9 @@ module RocketJobMissionControl
           end
 
           before do
-            post :create, rocket_job_dirmon_entry: dirmon_params
+            params = {rocket_job_dirmon_entry: dirmon_params}
+            params = {params: params} if Rails.version.to_i >= 5
+            post :create, params
           end
 
           describe 'on model attributes' do
@@ -251,7 +267,9 @@ module RocketJobMissionControl
 
       describe 'GET #edit' do
         before do
-          get :edit, id: existing_dirmon_entry.id
+          params = {id: existing_dirmon_entry.id}
+          params = {params: params} if Rails.version.to_i >= 5
+          get :edit, params
         end
 
         it 'succeeds' do
@@ -266,7 +284,9 @@ module RocketJobMissionControl
       describe 'GET #show' do
         describe 'with an invalid id' do
           before do
-            get :show, id: 42
+            params = {id: 42}
+            params = {params: params} if Rails.version.to_i >= 5
+            get :show, params
           end
 
           it 'redirects' do
@@ -280,7 +300,9 @@ module RocketJobMissionControl
 
         describe 'with a valid id' do
           before do
-            get :show, id: existing_dirmon_entry.id
+            params = {id: existing_dirmon_entry.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            get :show, params
           end
 
           it 'succeeds' do
@@ -295,7 +317,11 @@ module RocketJobMissionControl
 
       describe 'DELETE #destroy' do
         describe 'with a valid id' do
-          before { delete :destroy, id: existing_dirmon_entry.id }
+          before do
+            params = {id: existing_dirmon_entry.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            delete :destroy, params
+          end
 
           it 'redirects to index' do
             assert_redirected_to dirmon_entries_path

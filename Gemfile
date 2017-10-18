@@ -11,6 +11,7 @@ gem 'minitest-rails'
 gem 'minitest-reporters'
 gem 'rubyzip', platform: :ruby
 gem 'appraisal'
-# gem 'rails_semantic_logger'
+gem 'rails_semantic_logger'
+
 # gem 'rocketjob', path: '../rocketjob'
 # gem 'rocketjob_pro', path: '../rocketjob_pro'

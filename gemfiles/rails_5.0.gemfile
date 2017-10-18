@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'rails', '~> 5.0'
 gem 'rake'
 gem 'minitest'
 gem 'minitest-stub_any_instance'
@@ -11,7 +12,6 @@ gem 'minitest-reporters'
 gem 'rubyzip', platform: :ruby
 gem 'appraisal'
 gem 'rails_semantic_logger'
-gem 'rails', '~> 5'
 gem 'rails-controller-testing'
 
 gemspec path: '../'

@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'awesome_print'
-gem 'puma'
-gem 'rails', '~> 4.0'
+gem 'rails', '~> 4'
 gem 'rails_semantic_logger', '>= 4.0.0'
+gem 'puma'
+gem 'awesome_print'
 
 gem 'rocketjob_mission_control', path: '../'
 

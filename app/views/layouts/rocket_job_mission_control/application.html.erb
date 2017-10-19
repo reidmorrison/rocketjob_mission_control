@@ -1,43 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title><%= title %></title>
+  <head>
+    <title><%= title %></title>
 
-  <link href="/assets/favicon.png" rel="icon" type="image/png">
-  <link href="/assets/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
+    <link href='/assets/favicon.png' rel='icon' type='image/png'>
+    <link href='/assets/rocket-icon-512x512.png' rel='apple-touch-icon-precomposed'>
 
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta content="text/javascript" http-equiv="Content-Script-Type">
-  <meta content="IE=edge" http-equiv="X-UA-Compatible">
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <%= yield :meta %>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <meta content='text/javascript' http-equiv='Content-Script-Type'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'>
 
-  <%= stylesheet_link_tag "rocket_job_mission_control/application", :media => "all" %>
-  <%= javascript_include_tag "rocket_job_mission_control/application" %>
+    <%= yield :meta %>
 
-  <%= csrf_meta_tag %>
+    <%= stylesheet_link_tag 'rocket_job_mission_control/application', media: 'all' %>
+    <%= javascript_include_tag 'rocket_job_mission_control/application' %>
 
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-</head>
+    <%= csrf_meta_tag %>
+  </head>
 
-<body class="rocket_job">
-<div id="wrapper">
-  <div class="container-fluid">
-    <div class="row row-offcanvas row-offcanvas-left">
-      <%= render partial: 'layouts/rocket_job_mission_control/partials/sidebar' %>
+  <body class='rocket_job'>
+    <div id='wrapper'>
+      <div class='container-fluid'>
+        <div class='row row-offcanvas row-offcanvas-left'>
+          <%= render partial: 'layouts/rocket_job_mission_control/partials/sidebar' %>
 
-      <div class="col-sm-10 col-xs-11 white-background" id="main">
-        <%= render partial: 'layouts/rocket_job_mission_control/partials/header' %>
+          <div class='col-sm-10 col-xs-11 white-background' id='main'>
+            <%= render partial: 'layouts/rocket_job_mission_control/partials/header' %>
 
-        <div id="content">
-          <%= render partial: 'layouts/rocket_job_mission_control/partials/flash' %>
+            <div id='content'>
+              <%= render partial: 'layouts/rocket_job_mission_control/partials/flash' %>
 
-          <%= yield %>
+              <%= yield %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-</body>
+  </body>
 </html>

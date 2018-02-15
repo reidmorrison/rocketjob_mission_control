@@ -43,12 +43,14 @@ module RocketJobMissionControl
     # Returns nil when there are no inclusion values for this attribute.
     def extract_inclusion_values(klass, attribute)
       values = nil
+
       klass.validators_on(attribute).each do |validator|
         case validator
         when ActiveModel::Validations::InclusionValidator
           values = validator.options[:in]
         end
       end
+
       values
     end
 
@@ -95,6 +97,5 @@ module RocketJobMissionControl
           f.text_field(field_name, value: value, class: 'form-control', placeholder: placeholder)
       end
     end
-
   end
 end

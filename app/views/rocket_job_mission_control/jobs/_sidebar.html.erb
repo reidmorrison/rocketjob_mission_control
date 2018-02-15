@@ -1,9 +1,10 @@
-<ul class="nav hidden-xs" id="lg-menu">
-  <li class="active">
+<ul class='nav hidden-xs' id='lg-menu'>
+  <li class='active'>
     <%= link_to(jobs_path) do %>
-      <i class="fa fa-list"></i>All
+      <i class='fa fa-list'></i>All
     <% end %>
   </li>
+
   <% job_states_with_scheduled.each do |state| %>
     <li class="<%= state %>">
       <%= link_to("#{state}_jobs".to_sym) do %>
@@ -15,12 +16,13 @@
 
 <!-- tiny only nav -->
 
-<ul class="nav visible-xs" id="xs-menu">
+<ul class='nav visible-xs' id='xs-menu'>
   <li>
     <%= link_to(jobs_path) do %>
-      <i class="fa fa-list"></i>
+      <i class='fa fa-list'></i>
     <% end %>
   </li>
+
   <% job_states_with_scheduled.each do |state| %>
     <li class="<%= state %>">
       <%= link_to("#{state}_jobs".to_sym) do %>
@@ -29,4 +31,3 @@
     </li>
   <% end %>
 </ul>
-

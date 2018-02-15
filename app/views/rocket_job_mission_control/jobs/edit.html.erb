@@ -1,18 +1,22 @@
-<div class="container-fluid">
-  <div class="lead">Edit <%= @job._type %></div>
+<div class='container-fluid'>
+  <div class='lead'>Edit <%= @job._type %></div>
+
   <% if @job.errors.present? %>
-    <div class="alert alert-alert">
+    <div class='alert alert-alert'>
       Failed to save the changes!
+
       <% @job.errors.messages.each_pair do |field, message| %>
-        <div class="message"><%= field.to_s.humanize %> is not valid: <%= message.join(', ') %></div>
+        <div class='message'><%= field.to_s.humanize %> is not valid: <%= message.join(', ') %></div>
       <% end %>
     </div>
   <% end %>
+
   <%= form_for(@job, as: :job, url: job_path(@job)) do |f| %>
-    <div class="row">
-      <div class="arguments">
-        <div class="job_arguments form-group"></div>
-        <div class="form-group">
+    <div class='row'>
+      <div class='arguments'>
+        <div class='job_arguments form-group'></div>
+
+        <div class='form-group'>
           <% @job.class.user_editable_fields.each do |property_name| %>
             <%= f.label property_name.to_s %>
             <%= editable_field_html(@job.class, property_name, @job.send(property_name), f) %>
@@ -20,9 +24,10 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="buttons">
+
+    <div class='row'>
+      <div class='col-md-12'>
+        <div class='buttons'>
           <%= f.submit 'Save', class: 'btn btn-primary' %>
           <%= link_to 'Cancel', :back, class: 'btn btn-default' %>
         </div>

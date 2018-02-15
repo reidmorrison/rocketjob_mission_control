@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rails', '>= 4.0'
+gem 'rails', '~> 4.0'
 gem 'rake'
 gem 'minitest'
 gem 'minitest-stub_any_instance'

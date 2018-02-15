@@ -92,7 +92,7 @@ module RocketJobMissionControl
     def class_with_link(job)
       <<-EOS
         <a class='job-link' href="#{job_path(job.id)}">
-          <i class="fa #{job_icon(job)}" style="font-size: 75%" title="#{job_state(job)}"></i>
+          <i class="#{job_icon(job)}" style="font-size: 75%" title="#{job_state(job)}"></i>
           #{job.class.name}
         </a>
       EOS

@@ -34,7 +34,7 @@
   <% RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state| %>
     <li class="<%= state %>">
       <%= link_to("#{state}_dirmon_entries".to_sym) do %>
-        <i class="fas <%= state_icon(state) %>"></i>
+        <i class="<%= state_icon(state) %>"></i>
       <% end %>
     </li>
   <% end %>

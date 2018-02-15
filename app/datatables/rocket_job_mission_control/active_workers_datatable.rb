@@ -21,7 +21,7 @@ module RocketJobMissionControl
     def worker_name_with_icon(active_worker, job)
       state = active_worker.zombie? ? :zombie : job.state
       <<-EOS
-        <i class="fa #{state_icon(state)}" style="font-size: 75%" title="#{state}"></i>
+        <i class="#{state_icon(state)}" style="font-size: 75%" title="#{state}"></i>
         #{active_worker.name}
       EOS
     end

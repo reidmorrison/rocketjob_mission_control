@@ -16,7 +16,7 @@ module RocketJobMissionControl
     def name_with_link(dirmon)
       <<-EOS
         <a href="#{dirmon_entry_path(dirmon.id)}">
-          <i class="fa #{state_icon(dirmon.state)}" style="font-size: 75%" title="#{dirmon.state}"></i>
+          <i class="#{state_icon(dirmon.state)}" style="font-size: 75%" title="#{dirmon.state}"></i>
           #{dirmon.name}
         </a>
       EOS

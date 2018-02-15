@@ -39,7 +39,7 @@ module RocketJobMissionControl
 
         it 'handles scheduled special case' do
           job.run_at = 1.day.from_now
-          assert_equal 'fa-clock-o scheduled', job_icon(job)
+          assert_equal 'fa-clock scheduled', job_icon(job)
         end
       end
 

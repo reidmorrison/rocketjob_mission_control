@@ -9,3 +9,4 @@ tags
 *.DS_Store
 Gemfile.lock
 /gemfiles/*.lock
+.tool-versions

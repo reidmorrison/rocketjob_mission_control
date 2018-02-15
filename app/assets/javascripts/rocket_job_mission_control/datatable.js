@@ -36,7 +36,7 @@ var RjmcDatatable = function () {
     this.columns    = columns;
     this.ordering   = opts.ordering != null ? opts.ordering : true;
     this.searching  = opts.searching != null ? opts.searching : true;
-    this.pageLength = opts.pageLength != null ? opts.pageLength : 100;
+    this.pageLength = opts.pageLength != null ? opts.pageLength : 10;
     this.order      = opts.order != null ? opts.order : [];
     this.reload     = $("[data-behavior='reload']");
     this.initializeTable();

@@ -1,10 +1,10 @@
 <div class="row">
-  <div class="col-md-14 col-md-offset-1 job-status">
+  <div class="col-md-12 job-status">
     <div id="job">
       <div class="lead"><%= @job.class.name %></div>
       <div class="job-state inline-block">
         <div class="left">State</div>
-        <div class="<%= @job.state %> right"><%= @job.state %></div>
+        <div class="<%= job_state(@job) %> right"><%= job_state(@job) %></div>
       </div>
 
       <% if sub_state = @job['sub_state'] %>
@@ -60,9 +60,12 @@
           </div>
         <% end %>
       </div>
-      <div class="col-md-12">
-        <%= render partial: 'status', locals: {job: @job} %>
-      </div>
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= render partial: 'status', locals: {job: @job} %>
   </div>
 </div>

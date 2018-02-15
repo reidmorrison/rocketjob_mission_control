@@ -1,5 +1,5 @@
 class AllTypesJob < RocketJob::Job
-  field :hash, type: Hash, user_editable: true
+  field :hash_field, type: Hash, user_editable: true
   field :array, type: Array, user_editable: true
   field :string, type: String, user_editable: true
   field :integer, type: Integer, user_editable: true

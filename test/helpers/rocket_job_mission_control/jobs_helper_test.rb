@@ -16,7 +16,13 @@ module RocketJobMissionControl
 
         it 'shows running' do
           job.start
+          job.worker_name = 'test_worker'
           assert_equal 'fa-play running', job_icon(job)
+        end
+
+        it 'shows sleeping' do
+          job.start
+          assert_equal 'fa-hourglass-o sleeping', job_icon(job)
         end
 
         it 'shows failed' do

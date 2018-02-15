@@ -3,6 +3,15 @@ require_relative '../../compare_hashes'
 
 module RocketJobMissionControl
   class JobsControllerTest < ActionController::TestCase
+
+    class PausableJob < RocketJob::Job
+      self.pausable = true
+
+      def perform
+        21
+      end
+    end
+
     describe JobsController do
       before do
         RocketJob::Job.delete_all
@@ -12,31 +21,38 @@ module RocketJobMissionControl
         RocketJob::Jobs::SimpleJob.create!
       end
 
+      let :pausable_job do
+        PausableJob.create!
+      end
+
       let :failed_job do
-        job = KaboomBatchJob.new(slice_size: 1)
-        job.upload do |stream|
-          stream << 'first record'
-          stream << 'second record'
-          stream << 'third record'
-        end
-        job.save!
-
-        # Run all 3 slices now to get exceptions for each.
-        3.times do
-          begin
-            job.perform_now
-          rescue ArgumentError, RuntimeError
+        if defined?(RocketJobPro)
+          job = KaboomBatchJob.new(slice_size: 1)
+          job.upload do |stream|
+            stream << 'first record'
+            stream << 'second record'
+            stream << 'third record'
           end
-        end
+          job.save!
 
-        job
+          # Run all 3 slices now to get exceptions for each.
+          3.times do
+            begin
+              job.perform_now
+            rescue ArgumentError, RuntimeError
+            end
+          end
+          job
+        else
+          RocketJob::Job::SimpleJob.new.fail!('Oh no', 'bad_worker')
+        end
       end
 
       job_states = RocketJob::Job.aasm.states.collect(&:name)
 
       let :one_job_for_every_state do
         job_states.collect do |state|
-          RocketJob::Jobs::SimpleJob.create!(state: state)
+          RocketJob::Jobs::SimpleJob.create!(state: state, worker_name: 'worker')
         end
       end
 
@@ -62,23 +78,23 @@ module RocketJobMissionControl
             before do
               case state
               when :pause, :fail, :abort
-                job.start!
+                pausable_job.start!
               when :resume
-                job.pause!
+                pausable_job.pause!
               when :retry
-                job.fail!
+                pausable_job.fail!
               end
-              params = {id: job.id, job: {id: job.id, priority: job.priority}}
+              params = {id: pausable_job.id, job: {id: pausable_job.id, priority: pausable_job.priority}}
               params = {params: params} if Rails.version.to_i >= 5
               patch state, params
             end
 
             it 'redirects to the job' do
-              assert_redirected_to job_path(job.id)
+              assert_redirected_to job_path(pausable_job.id)
             end
 
             it 'transitions the job' do
-              refute_equal state, job.state
+              refute_equal state, pausable_job.state
             end
           end
         end

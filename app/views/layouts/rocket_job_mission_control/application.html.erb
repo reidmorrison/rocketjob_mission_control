@@ -3,31 +3,32 @@
   <head>
     <title><%= title %></title>
 
-    <link href="/assets/favicon.png" rel="icon" type="image/png">
-    <link href="/assets/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
+    <link href='/assets/favicon.png' rel="icon" type='image/png'>
+    <link href='/assets/apple-touch-icon.png' rel='apple-touch-icon-precomposed'>
 
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <meta content="text/javascript" http-equiv="Content-Script-Type">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <meta content='text/javascript' http-equiv='Content-Script-Type'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'>
+
     <%= yield :meta %>
 
-    <%= stylesheet_link_tag "rocket_job_mission_control/application", media: "all" %>
-    <%= javascript_include_tag "rocket_job_mission_control/application" %>
+    <%= stylesheet_link_tag 'rocket_job_mission_control/application', media: 'all' %>
+    <%= javascript_include_tag 'rocket_job_mission_control/application' %>
 
     <%= csrf_meta_tag %>
   </head>
 
-  <body class="rocket_job">
-    <div id="wrapper">
-      <div class="container-fluid">
-        <div class="row row-offcanvas row-offcanvas-left">
+  <body class='rocket_job'>
+    <div id='wrapper'>
+      <div class='container-fluid'>
+        <div class='row row-offcanvas row-offcanvas-left'>
           <%= render partial: 'layouts/rocket_job_mission_control/partials/sidebar' %>
 
-          <div class="col-sm-10 col-xs-11 white-background" id="main">
+          <div class='col-sm-10 col-xs-11 white-background' id='main'>
             <%= render partial: 'layouts/rocket_job_mission_control/partials/header' %>
 
-            <div id="content">
+            <div id='content'>
               <%= render partial: 'layouts/rocket_job_mission_control/partials/flash' %>
 
               <%= yield %>

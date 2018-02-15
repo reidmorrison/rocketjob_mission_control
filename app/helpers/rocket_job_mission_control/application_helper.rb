@@ -70,7 +70,7 @@ module RocketJobMissionControl
         options = extract_inclusion_values(klass, field_name)
         str     = "[#{field.type.name}]\n".html_safe
         if options
-          str + f.select(field_name, options, {include_blank: options.include?(nil) || include_nil_selectors, selected: value}, {class: 'form-control'})
+          str + f.select(field_name, options, { include_blank: options.include?(nil) || include_nil_selectors, selected: value }, { class: 'selectize form-control' })
         else
           if field.type.name == 'Integer'
             str + f.number_field(field_name, value: value, class: 'form-control', placeholder: placeholder)
@@ -84,7 +84,7 @@ module RocketJobMissionControl
       when 'Array'
         options = Array(value)
         "[Array]\n".html_safe +
-          f.select(field_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true})
+          f.select(field_name, options_for_select(options, options), { include_hidden: false }, { class: 'selectize form-control', multiple: true })
       when 'Mongoid::Boolean'
         name = "#{field_name}_true".to_sym
         value = value.to_s

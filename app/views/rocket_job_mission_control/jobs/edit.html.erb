@@ -13,14 +13,16 @@
 
   <%= form_for(@job, as: :job, url: job_path(@job)) do |f| %>
     <div class='row'>
-      <div class='arguments'>
-        <div class='job_arguments form-group'></div>
+      <div class='col-md-12'>
+        <div class='arguments'>
+          <div class='job_arguments form-group'></div>
 
-        <div class='form-group'>
-          <% @job.class.user_editable_fields.each do |property_name| %>
-            <%= f.label property_name.to_s %>
-            <%= editable_field_html(@job.class, property_name, @job.send(property_name), f) %>
-          <% end %>
+          <div class='form-group'>
+            <% @job.class.user_editable_fields.each do |property_name| %>
+              <%= f.label property_name.to_s %>
+              <%= editable_field_html(@job.class, property_name, @job.send(property_name), f) %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

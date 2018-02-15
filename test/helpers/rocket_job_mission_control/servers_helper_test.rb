@@ -2,9 +2,9 @@ require_relative '../../test_helper'
 
 module RocketJobMissionControl
   ServersHelper.include(RocketJobMissionControl::ApplicationHelper)
+
   class ServersHelperTest < ActionView::TestCase
     describe ServersHelper do
-
       describe '#server_card_class' do
         describe 'when the server is running' do
           let(:server) do
@@ -57,7 +57,6 @@ module RocketJobMissionControl
             assert_equal 'fa-hourglass-o zombie', server_icon(server)
           end
         end
-
       end
     end
   end

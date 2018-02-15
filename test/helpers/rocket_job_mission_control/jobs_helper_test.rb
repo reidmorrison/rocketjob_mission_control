@@ -2,8 +2,8 @@ require_relative '../../test_helper'
 
 module RocketJobMissionControl
   JobsHelper.include(RocketJobMissionControl::ApplicationHelper)
-  class JobsHelperTest < ActionView::TestCase
 
+  class JobsHelperTest < ActionView::TestCase
     describe JobsHelper do
       describe '#jobs_icon' do
         let :job do
@@ -22,7 +22,7 @@ module RocketJobMissionControl
 
         it 'shows sleeping' do
           job.start
-          assert_equal 'fa-hourglass-o sleeping', job_icon(job)
+          assert_equal 'fa-hourglass sleeping', job_icon(job)
         end
 
         it 'shows failed' do

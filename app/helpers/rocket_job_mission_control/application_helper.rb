@@ -1,20 +1,20 @@
 module RocketJobMissionControl
   module ApplicationHelper
     STATE_ICON_MAP = {
-      aborted:   'fa-stop',
-      completed: 'fa-check',
-      disabled:  'fa-stop',
-      enabled:   'fa-check',
-      failed:    'fa-exclamation-triangle',
-      paused:    'fa-pause',
-      pending:   'fa-inbox',
-      queued:    'fa-inbox',
-      running:   'fa-play',
-      sleeping:  'fa-hourglass-o',
-      scheduled: 'fa-clock-o',
-      starting:  'fa-cogs',
-      stopping:  'fa-stop',
-      zombie:    'fa-hourglass-o'
+      aborted:   'fas fa-stop',
+      completed: 'fas fa-check',
+      disabled:  'fas fa-stop',
+      enabled:   'fas fa-check',
+      failed:    'fas fa-exclamation-triangle',
+      paused:    'fas fa-pause',
+      pending:   'fas fa-inbox',
+      queued:    'fas fa-inbox',
+      running:   'fas fa-play',
+      sleeping:  'fas fa-hourglass',
+      scheduled: 'fas fa-clock',
+      starting:  'fas fa-cogs',
+      stopping:  'fas fa-stop',
+      zombie:    'fas fa-hourglass'
     }
 
     def state_icon(state)

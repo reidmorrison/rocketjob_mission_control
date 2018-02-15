@@ -1,14 +1,14 @@
-<ul class="nav hidden-xs" id="lg-menu">
+<ul class='nav hidden-xs' id='lg-menu'>
   <li>
     <%= link_to(servers_path) do %>
-      <i class="fa fa-list"></i>All
+      <i class='fas fa-list'></i>All
     <% end %>
   </li>
 
   <% @states.each do |state| %>
     <li class="#{state}">
       <%= link_to("#{state}_servers".to_sym) do %>
-        <i class="fa <%= state_icon(state) %>"></i> <%= state.capitalize%> (<%= server_counts_by_state(state)%>)
+        <i class="fas <%= state_icon(state) %>"></i> <%= state.capitalize%> (<%= server_counts_by_state(state)%>)
       <% end %>
     </li>
   <% end %>
@@ -16,17 +16,17 @@
 
 <!-- tiny only nav -->
 
-<ul class="nav visible-xs" id="xs-menu">
+<ul class='nav visible-xs' id='xs-menu'>
   <li>
     <%= link_to(servers_path) do %>
-      <i class="fa fa-list"></i>
+      <i class='fa fa-list'></i>
     <% end %>
   </li>
 
   <% @states.each do |state| %>
     <li class="#{state}">
       <%= link_to("#{state}_servers".to_sym) do %>
-        <i class="fa <%= state_icon(state) %>"></i>
+        <i class="fas <%= state_icon(state) %>"></i>
       <% end %>
     </li>
   <% end %>

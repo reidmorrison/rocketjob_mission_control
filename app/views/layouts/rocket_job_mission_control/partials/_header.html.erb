@@ -18,31 +18,31 @@
       <ul class='nav navbar-nav'>
         <li>
           <%= link_to running_jobs_path, class: active_page(running_jobs_path) do %>
-            <i class='fa fa-home'></i> Jobs
+            <i class='fas fa-home'></i> Jobs
           <% end %>
         </li>
 
         <li>
           <%= link_to servers_path, class: active_page(servers_path) do %>
-            <i class='fa fa-database'></i> Servers
+            <i class='fas fa-database'></i> Servers
           <% end %>
         </li>
 
         <li>
           <%= link_to active_workers_path, class: active_page(active_workers_path) do %>
-            <i class='fa fa-circle-o-notch'></i> Workers
+            <i class='fas fa-circle-notch'></i> Workers
           <% end %>
         </li>
 
         <li>
           <%= link_to enabled_dirmon_entries_path, class: active_page(enabled_dirmon_entries_path) do %>
-            <i class='fa fa-folder-o'></i> Directory Monitoring
+            <i class='fas fa-folder'></i> Directory Monitoring
           <% end %>
         </li>
       </ul>
 
       <ul class='nav navbar-nav navbar-right'>
-        <li><a href='/'>Home</a></li>
+        <li><a href='/'><i class='fas fa-home'></i> Home</a></li>
       </ul>
     </div>
   </div>

@@ -1,20 +1,20 @@
 module RocketJobMissionControl
   module ApplicationHelper
     STATE_ICON_MAP = {
-      aborted:   'fa-stop',
-      completed: 'fa-check',
-      disabled:  'fa-stop',
-      enabled:   'fa-check',
-      failed:    'fa-exclamation-triangle',
-      paused:    'fa-pause',
-      pending:   'fa-inbox',
-      queued:    'fa-inbox',
-      running:   'fa-play',
-      sleeping:  'fa-hourglass-o',
-      scheduled: 'fa-clock-o',
-      starting:  'fa-cogs',
-      stopping:  'fa-stop',
-      zombie:    'fa-hourglass-o'
+      aborted:   'fas fa-stop',
+      completed: 'fas fa-check',
+      disabled:  'fas fa-stop',
+      enabled:   'fas fa-check',
+      failed:    'fas fa-exclamation-triangle',
+      paused:    'fas fa-pause',
+      pending:   'fas fa-inbox',
+      queued:    'fas fa-inbox',
+      running:   'fas fa-play',
+      sleeping:  'fas fa-hourglass',
+      scheduled: 'fas fa-clock',
+      starting:  'fas fa-cogs',
+      stopping:  'fas fa-stop',
+      zombie:    'fas fa-hourglass'
     }
 
     def state_icon(state)
@@ -44,12 +44,14 @@ module RocketJobMissionControl
     # Returns nil when there are no inclusion values for this attribute.
     def extract_inclusion_values(klass, attribute)
       values = nil
+
       klass.validators_on(attribute).each do |validator|
         case validator
         when ActiveModel::Validations::InclusionValidator
           values = validator.options[:in]
         end
       end
+
       values
     end
 
@@ -68,7 +70,7 @@ module RocketJobMissionControl
         options = extract_inclusion_values(klass, field_name)
         str     = "[#{field.type.name}]\n".html_safe
         if options
-          str + f.select(field_name, options, {include_blank: options.include?(nil) || include_nil_selectors, selected: value}, {class: 'form-control'})
+          str + f.select(field_name, options, { include_blank: options.include?(nil) || include_nil_selectors, selected: value }, { class: 'selectize form-control' })
         else
           if field.type.name == 'Integer'
             str + f.number_field(field_name, value: value, class: 'form-control', placeholder: placeholder)
@@ -82,7 +84,7 @@ module RocketJobMissionControl
       when 'Array'
         options = Array(value)
         "[Array]\n".html_safe +
-          f.select(field_name, options_for_select(options, options), {include_hidden: false}, {class: 'selectize', multiple: true})
+          f.select(field_name, options_for_select(options, options), { include_hidden: false }, { class: 'selectize form-control', multiple: true })
       when 'Mongoid::Boolean'
         name = "#{field_name}_true".to_sym
         value = value.to_s
@@ -103,6 +105,5 @@ module RocketJobMissionControl
           f.text_field(field_name, value: value, class: 'form-control', placeholder: placeholder)
       end
     end
-
   end
 end

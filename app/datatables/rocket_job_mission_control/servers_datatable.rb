@@ -23,7 +23,7 @@ module RocketJobMissionControl
 
     def name_with_icon(server)
       <<-EOS
-        <i class="fa #{server_icon(server)}" style="font-size: 75%" title="#{server.state}"></i>
+        <i class="#{server_icon(server)}" style="font-size: 75%" title="#{server.state}"></i>
         #{server.name}
       EOS
     end

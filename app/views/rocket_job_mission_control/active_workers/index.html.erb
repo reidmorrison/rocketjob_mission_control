@@ -1,21 +1,25 @@
-<div class="job-list">
-  <div class="list">
-    <div class="row">
-      <div class="col-sm-10">
+<div class='job-list'>
+  <div class='list'>
+    <div class='row'>
+      <div class='col-sm-10'>
         <h2>Active Workers</h2>
+
         <% if @server_name %>
           <h4><%= " For Server: #{@server_name}" %></h4>
         <% end %>
+
         <% if @job %>
           <h4> For Job: <%= link_to(@job.class.name, job_path(@job)) %> ID:<%= link_to(@job.id, job_path(@job)) %></h4>
         <% end %>
       </div>
-      <div class="col-sm-2">
-        <div class="btn btn-default pull-right dt-reload" data-behavior="reload">
-          <i class="fa fa-refresh"></i>
+
+      <div class='col-sm-2'>
+        <div class='btn btn-default pull-right dt-reload' data-behavior='reload'>
+          <i class='fas fa-sync'></i>
         </div>
       </div>
     </div>
+
     <table class='table datatable active-workers-datatable' data-source='<%= active_workers_url(format: 'json') %>' style='width: 100%'>
       <thead>
         <tr>
@@ -25,6 +29,7 @@
           <th>Started</th>
         </tr>
       </thead>
+
       <tbody></tbody>
     </table>
   </div>
@@ -35,6 +40,6 @@
     new RjmcDatatable(
       $('.active-workers-datatable'),
       [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}],
-      {ordering: false, searching: false});
+      { ordering: false, searching: false });
   });
 </script>

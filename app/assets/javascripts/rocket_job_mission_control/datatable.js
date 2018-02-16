@@ -69,6 +69,7 @@ var RjmcDatatable = function () {
     value: function reloadTable() {
       var icon = this.reload.find('i');
       icon.addClass('fa-spin');
+
       return this.data.ajax.reload(function () {
         return icon.removeClass('fa-spin');
       });

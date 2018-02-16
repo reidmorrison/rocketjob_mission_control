@@ -1,59 +1,69 @@
 <% action ||= :create %>
+
 <% if @dirmon_entry.errors.present? %>
-  <div class="alert alert-alert">Invalid Dirmon entry!</div>
+  <div class='alert alert-alert'>Invalid Dirmon entry!</div>
   <% @dirmon_entry.errors.messages.each_pair do |field, message| %>
-    <div class="message"><%= field %>: <%= message %></div>
+    <div class='message'><%= field %>: <%= message %></div>
   <% end %>
 <% end %>
+
 <%= form_for @dirmon_entry, url: {action: action} do |f| %>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="name form-group">
+  <div class='row'>
+    <div class='col-md-6'>
+      <div class='name form-group'>
         <%= f.label :name %>
         <%= f.text_field :name, class: 'form-control' %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="job form-group">
+
+    <div class='col-md-6'>
+      <div class='job form-group'>
         <%= f.label :job_class_name %>
         <%= f.text_field :job_class_name, class: 'form-control', disabled: action != :create %>
       </div>
     </div>
   </div>
-  <div class="path form-group">
+
+  <div class='path form-group'>
     <%= f.label :pattern %>
     <%= f.text_field :pattern, class: 'form-control' %>
   </div>
-  <div class="path form-group">
+
+  <div class='path form-group'>
     <%= f.label :archive_directory %>
     <%= f.text_field :archive_directory, class: 'form-control' %>
   </div>
-  <div class="row">
-    <div class="col-md-12">
+
+  <div class='row'>
+    <div class='col-md-12'>
       <% if @dirmon_entry.job_class %>
-        <div class="lead">Job Properties</div>
-        <div class="arguments">
-          <div class="job_arguments form-group"></div>
-          <div class="form-group">
-            <%= f.fields_for :properties do |properties| %>
-              <% @dirmon_entry.job_class.user_editable_fields.each do |property_name| %>
+        <div class='lead'>Job Properties</div>
+
+        <div class='arguments'>
+          <div class='job_arguments form-group'></div>
+
+          <%= f.fields_for :properties do |properties| %>
+            <% @dirmon_entry.job_class.user_editable_fields.each do |property_name| %>
+              <div class='form-group'>
                 <%= properties.label property_name.to_s %>
                 <%= editable_field_html(@dirmon_entry.job_class, property_name, @dirmon_entry.properties[property_name], properties, true) %>
-              <% end %>
+              </div>
             <% end %>
-          </div>
+          <% end %>
         </div>
       <% end %>
-      <div class="buttons pull-right">
+
+      <div class='buttons pull-right'>
         <%= f.submit action, class: 'btn btn-primary' %>
         <%= link_to 'cancel', :back, class: 'btn btn-default' %>
       </div>
+
       <% if action == :create %>
         <%= button_tag 'properties',
             type:  'button',
             class: 'btn btn-default',
             id:    'properties',
-            data:  {url: rocket_job_mission_control.new_dirmon_entry_path} %>
+            data:  { url: rocket_job_mission_control.new_dirmon_entry_path } %>
       <% end %>
     </div>
   </div>

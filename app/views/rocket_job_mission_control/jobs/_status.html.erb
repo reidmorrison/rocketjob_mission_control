@@ -1,23 +1,31 @@
 <% status = job.status(Time.zone) %>
-<div class="id"><label>ID:</label> <%= status.delete('_id') %></div>
+
+<div class='id'>
+  <label>ID:</label> <%= status.delete('_id') %>
+</div>
 
 <% if description = status.delete('description') %>
-  <div class="status-message"><label>Description:</label> <%= description %></div>
-<% end %>
-<% if duration = status.delete('duration') %>
-  <div class="status-message"><label>Duration:</label> <%= duration %></div>
-<% end %>
-<% if record_count = status.delete('record_count') %>
-  <div class="status-message"><label>Record Count:</label> <%= record_count %></div>
+  <div class='status-message'><label>Description:</label> <%= description %></div>
 <% end %>
 
-<div class="created_at"><label>Created At:</label> <%= status.delete('created_at') %></div>
+<% if duration = status.delete('duration') %>
+  <div class='status-message'><label>Duration:</label> <%= duration %></div>
+<% end %>
+
+<% if record_count = status.delete('record_count') %>
+  <div class='status-message'><label>Record Count:</label> <%= record_count %></div>
+<% end %>
+
+<div class='created_at'>
+  <label>Created At:</label> <%= status.delete('created_at') %>
+</div>
 
 <% if started_at = status.delete('started_at') %>
-  <div class="status-message"><label>Started At:</label> <%= started_at %></div>
+  <div class='status-message'><label>Started At:</label> <%= started_at %></div>
 <% end %>
+
 <% if percent_complete = status.delete('percent_complete') %>
-  <div class="status-message"><label>% Complete:</label> <%= percent_complete %></div>
+  <div class='status-message'><label>% Complete:</label> <%= percent_complete %></div>
 <% end %>
 
 <%
@@ -29,13 +37,13 @@
       next
     end
 %>
-  <div class="status-message"><label><%= key.to_s.titleize %>:</label> <%= value %></div>
+  <div class='status-message'><label><%= key.to_s.titleize %>:</label> <%= value %></div>
 <% end %>
 
-<div class="clearfix"></div>
+<div class='clearfix'></div>
 
 <% remaining.each_pair do |key, value| %>
-  <div class="status-message">
+  <div class='status-message'>
     <label><%= key.to_s.titleize %>:</label>
     <pre><code><%= pretty_print_array_or_hash(value) %></code></pre>
   </div>

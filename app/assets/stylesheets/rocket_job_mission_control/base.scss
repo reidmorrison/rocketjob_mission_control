@@ -1,4 +1,5 @@
-html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row-offcanvas-left {
+html, body, #wrapper, #wrapper > .container-fluid, #main,
+.row.row-offcanvas.row-offcanvas-left {
   height: 100%
 }
 
@@ -6,9 +7,7 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   background-image: linear-gradient(90deg, #000000, #99120f);
 }
 
-#wrapper {
-  background-color: #f7f7f7;
-}
+#wrapper { background-color: #f7f7f7; }
 
 .footer {
   position: relative;
@@ -18,50 +17,43 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
 }
 
 /* Datatables */
+table.datatable { border-collapse: collapse; }
 
-table.datatable {
-  border-collapse: collapse;
-}
+.dataTables_wrapper { margin-top: 2em; }
 
-.dataTables_wrapper {
-  margin-top: 2em;
-}
+.dt-reload { margin: 1em 0; }
 
-.dt-reload {
-  margin: 1em 0;
-}
-
-table.dataTable thead .sorting:after {
-    content: "\f0c9";
-}
-
-table.dataTable thead .sorting_asc:after {
-    content: "\f160";
-}
-
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after,
 table.dataTable thead .sorting_desc:after {
-    content: "\f161";
-}
-
-table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
   position: absolute;
   top: 8px;
   left: 8px;
   display: block;
-  // display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
+  font-family: "Font Awesome 5 Free";
   font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+table.dataTable thead .sorting:after {
+  content: "\f0c9";
+}
+
+table.dataTable thead .sorting_asc:after {
+  content: "\f160";
+}
+
+table.dataTable thead .sorting_desc:after {
+  content: "\f161";
+}
+
 table.dataTable thead > tr > th {
-    padding-left: 30px;
+  padding-left: 30px;
 }
 
 .datatable .card td {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 .inline-job-actions > a {
@@ -77,16 +69,11 @@ table.dataTable thead > tr > th {
   min-height: 768px;
 }
 
-
 /* Job Edit Page */
 
 .edit_job {
-  textarea.description-block {
-    height: 166px;
-  }
-  .buttons {
-    margin-top: 1em;
-  }
+  textarea.description-block { height: 166px; }
+  .buttons { margin-top: 1em; }
 }
 
 .job-status {
@@ -186,13 +173,9 @@ table.dataTable thead > tr > th {
   padding: 20px;
 }
 
-#main {
-  padding-left: 0;
-}
+#main { padding-left: 0; }
 
-.white-background{
-  background-color: #fff;
-}
+.white-background{ background-color: #fff; }
 
 /* Sidebar */
 
@@ -204,14 +187,13 @@ table.dataTable thead > tr > th {
 
 #sidebar, #sidebar a {
   color: #555;
-  // text-shadow: 0 0 2px #000;
   background-color: transparent;
   padding-left: 5px;
 }
 
 #sidebar .nav li > a:hover {
-    color: #000;
-    background-color: #dddddd;
+  color: #000;
+  background-color: #dddddd;
 }
 
 @media screen and (max-width: 768px) {
@@ -222,9 +204,7 @@ table.dataTable thead > tr > th {
     transition: all 0.25s ease-out;
   }
 
-  .row-offcanvas-left.active {
-    left: 33%;
-  }
+  .row-offcanvas-left.active { left: 33%; }
 
   .row-offcanvas-left.active .sidebar-offcanvas {
     left: -33%;
@@ -234,9 +214,7 @@ table.dataTable thead > tr > th {
     margin-left: 5px;
   }
 
-  #sidebar, #sidebar a, #sidebar-footer a {
-    padding-left:6px;
-  }
+  #sidebar, #sidebar a, #sidebar-footer a { padding-left:6px; }
 }
 
 /* Header Styles */
@@ -250,9 +228,7 @@ table.dataTable thead > tr > th {
   right: 0;
   left: 0;
 
-  .navbar {
-    position: relative;
-  }
+  .navbar { position: relative; }
 
   .brand {
       position: absolute;
@@ -370,11 +346,9 @@ table.dataTable thead > tr > th {
     border-top: 1px solid blue;
     background-color: lightcyan;
   }
-
 }
 
 // Grid View
-
 .grid {
   padding: 1em;
   font-size: .85em;
@@ -443,9 +417,7 @@ table.dataTable thead > tr > th {
     border-radius: 0;
   }
 
-  .input-group-btn-vertical > .btn:first-child {
-    border-right: 0;
-  }
+  .input-group-btn-vertical > .btn:first-child { border-right: 0; }
 
   .input-group-btn-vertical > .btn:last-child {
     margin-top: -2px;
@@ -461,6 +433,4 @@ table.dataTable thead > tr > th {
 
 .code-block { margin-top: 25px; }
 
-.status {
-  padding: 1em;
-}
+.status { padding: 1em; }

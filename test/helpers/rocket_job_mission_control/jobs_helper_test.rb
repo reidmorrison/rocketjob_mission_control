@@ -2,8 +2,8 @@ require_relative '../../test_helper'
 
 module RocketJobMissionControl
   JobsHelper.include(RocketJobMissionControl::ApplicationHelper)
-  class JobsHelperTest < ActionView::TestCase
 
+  class JobsHelperTest < ActionView::TestCase
     describe JobsHelper do
       describe '#jobs_icon' do
         let :job do
@@ -11,35 +11,35 @@ module RocketJobMissionControl
         end
 
         it 'shows queued' do
-          assert_equal 'fa-inbox queued', job_icon(job)
+          assert_equal 'fas fa-inbox queued', job_icon(job)
         end
 
         it 'shows running' do
           job.start
           job.worker_name = 'test_worker'
-          assert_equal 'fa-play running', job_icon(job)
+          assert_equal 'fas fa-play running', job_icon(job)
         end
 
         it 'shows sleeping' do
           job.start
-          assert_equal 'fa-hourglass-o sleeping', job_icon(job)
+          assert_equal 'fas fa-hourglass sleeping', job_icon(job)
         end
 
         it 'shows failed' do
           job.start
           job.fail
-          assert_equal 'fa-exclamation-triangle failed', job_icon(job)
+          assert_equal 'fas fa-exclamation-triangle failed', job_icon(job)
         end
 
         it 'shows aborted' do
           job.start
           job.abort
-          assert_equal 'fa-stop aborted', job_icon(job)
+          assert_equal 'fas fa-stop aborted', job_icon(job)
         end
 
         it 'handles scheduled special case' do
           job.run_at = 1.day.from_now
-          assert_equal 'fa-clock-o scheduled', job_icon(job)
+          assert_equal 'fas fa-clock scheduled', job_icon(job)
         end
       end
 

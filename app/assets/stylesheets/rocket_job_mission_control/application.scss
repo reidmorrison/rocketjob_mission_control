@@ -10,14 +10,14 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require selectize
- *= require selectize.default
  *= require dataTables/extras/dataTables.responsive
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
- *= require font-awesome
  *= require_self
  *= require_tree .
  */
 
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
+@import 'fontawesome-all.min';
+@import 'selectize';
+@import 'selectize.bootstrap3';

@@ -1,32 +1,33 @@
-<div class="col-md-12 job-status">
-  <div id="job">
-    <div class="lead"><%= @dirmon_entry.job_class_name %></div>
+<div class='col-md-12 job-status'>
+  <div id='job'>
+    <div class='lead'><%= @dirmon_entry.job_class_name %></div>
 
-    <div class="job-state inline-block">
-      <div class="left">status</div>
+    <div class='job-state inline-block'>
+      <div class='left'>status</div>
       <div class="<%= @dirmon_entry.state %> right"><%= @dirmon_entry.state %></div>
     </div>
 
-    <div class="btn-toolbar job-actions pull-right">
-      <div class="btn-group">
+    <div class='btn-toolbar job-actions pull-right'>
+      <div class='btn-group'>
         <% if @dirmon_entry.disabled? || @dirmon_entry.pending? %>
-          <%= link_to "Enable", enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default" %>
+          <%= link_to 'Enable', enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default' %>
         <% end %>
 
         <% if @dirmon_entry.enabled? %>
-          <%= link_to "Disable", disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: "btn btn-default", :data => {:confirm => 'Are you sure?'} %>
+          <%= link_to 'Disable', disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default', data: { confirm: 'Are you sure?' } %>
         <% end %>
       </div>
 
-      <div class="btn-group">
-        <%= link_to "Destroy", dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', :data => {:confirm => 'Are you sure?'} %>
+      <div class='btn-group'>
+        <%= link_to 'Destroy', dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', data: { confirm: 'Are you sure?' } %>
       </div>
 
-      <div class="btn-group">
-        <%= link_to "Edit", edit_dirmon_entry_path(@dirmon_entry), class: "btn btn-default" %>
+      <div class='btn-group'>
+        <%= link_to 'Edit', edit_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>
       </div>
     </div>
-    <div class="clearfix"></div>
+
+    <div class='clearfix'></div>
 
     <%= render partial: 'status', locals: {dirmon_entry: @job} %>
   </div>

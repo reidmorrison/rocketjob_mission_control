@@ -3,9 +3,13 @@
   <head>
     <title><%= title %></title>
 
-    <link href='/assets/favicon.png' rel="icon" type='image/png'>
-    <link href='/assets/apple-touch-icon.png' rel='apple-touch-icon-precomposed'>
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= image_path('rocket_job_mission_control/favicon-16x16.png') %>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= image_path('rocket_job_mission_control/favicon-32x32.png') %>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= image_path('rocket_job_mission_control/apple-touch-icon.png') %>">
+    <link rel="mask-icon" href="<%= image_path('rocket_job_mission_control/safari-pinned-tab.svg') %>" color="#5bbad5">
 
+    <meta content="#da532c" name="msapplication-TileColor">
+    <meta content="#ffffff" name="theme-color">
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
     <meta content='text/javascript' http-equiv='Content-Script-Type'>
     <meta content='IE=edge' http-equiv='X-UA-Compatible'>

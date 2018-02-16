@@ -68,9 +68,10 @@ var RjmcDatatable = function () {
     key:   'reloadTable',
     value: function reloadTable() {
       var icon = this.reload.find('i');
-      icon.addClass('fas fa-spin');
+      icon.addClass('fa-spin');
+
       return this.data.ajax.reload(function () {
-        return icon.removeClass('fas fa-spin');
+        return icon.removeClass('fa-spin');
       });
     }
   }]);

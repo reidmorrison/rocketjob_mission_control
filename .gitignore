@@ -3,6 +3,8 @@
 pkg/
 rjmc/tmp/
 rjmc/.sass-cache
+rjmc4/tmp/
+rjmc4/.sass-cache
 *.gem
 /.idea
 tags
@@ -10,3 +12,4 @@ tags
 Gemfile.lock
 /gemfiles/*.lock
 .tool-versions
+.generators

@@ -2,7 +2,9 @@
 require 'rubygems'
 require 'bundler/setup'
 
-APP_RAKEFILE = File.expand_path('../rjmc/Rakefile', __FILE__)
+require 'rails/version'
+rakefile     = Rails.version.to_f >= 5.2 ? '../rjmc/Rakefile' : '../rjmc4/Rakefile'
+APP_RAKEFILE = File.expand_path(rakefile, __FILE__)
 load 'rails/tasks/engine.rake'
 
 require 'rake/testtask'

@@ -188,7 +188,11 @@ module RocketJobMissionControl
           end
 
           it 'alerts the user' do
-            assert_select 'div.message', "job_class_name: [\"job_class_name must be defined and must be derived from RocketJob::Job\"]"
+            if RocketJob::VERSION.to_f >= 3.5
+              assert_select 'div.message', "job_class_name: [\"Job FakeAndBadJob must be defined and inherit from RocketJob::Job\"]"
+            else
+              assert_select 'div.message', "job_class_name: [\"job_class_name must be defined and must be derived from RocketJob::Job\"]"
+            end
           end
         end
       end

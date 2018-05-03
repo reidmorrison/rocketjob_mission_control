@@ -13,3 +13,4 @@ Gemfile.lock
 /gemfiles/*.lock
 .tool-versions
 .generators
+.rakeTasks

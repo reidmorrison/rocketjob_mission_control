@@ -8,27 +8,36 @@ module RocketJobMissionControl
       before_action :show_sidebar
     end
 
+    rescue_from AccessGranted::AccessDenied do |exception|
+      redirect_to :back, alert: 'Access not authorized.'
+    end
+
     def index
+      authorize! :read, RocketJob::DirmonEntry
       @data_table_url = dirmon_entries_url(format: 'json')
       render_datatable(RocketJob::DirmonEntry.all, 'All')
     end
 
     def disabled
+      authorize! :read, RocketJob::DirmonEntry
       @data_table_url = disabled_dirmon_entries_url(format: 'json')
       render_datatable(RocketJob::DirmonEntry.disabled, 'Disabled')
     end
 
     def enabled
+      authorize! :read, RocketJob::DirmonEntry
       @data_table_url = enabled_dirmon_entries_url(format: 'json')
       render_datatable(RocketJob::DirmonEntry.enabled, 'Enabled')
     end
 
     def failed
+      authorize! :read, RocketJob::DirmonEntry
       @data_table_url = failed_dirmon_entries_url(format: 'json')
       render_datatable(RocketJob::DirmonEntry.failed, 'Failed')
     end
 
     def pending
+      authorize! :read, RocketJob::DirmonEntry
       @data_table_url = pending_dirmon_entries_url(format: 'json')
       render_datatable(RocketJob::DirmonEntry.pending, 'Pending')
     end
@@ -46,6 +55,7 @@ module RocketJobMissionControl
     end
 
     def create
+      authorize! :create, RocketJob::DirmonEntry
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
       if properties = params[:rocket_job_dirmon_entry][:properties]
         @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
@@ -59,6 +69,7 @@ module RocketJobMissionControl
     end
 
     def destroy
+      authorize! :destroy, RocketJob::DirmonEntry
       @dirmon_entry.destroy
       redirect_to(dirmon_entries_path)
     end
@@ -67,6 +78,7 @@ module RocketJobMissionControl
     end
 
     def update
+      authorize! :update, RocketJob::DirmonEntry
       if properties = params[:rocket_job_dirmon_entry][:properties]
         @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
       end
@@ -78,6 +90,7 @@ module RocketJobMissionControl
     end
 
     def enable
+      authorize! :enable, RocketJob::DirmonEntry
       if @dirmon_entry.may_enable?
         @dirmon_entry.enable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
@@ -88,6 +101,7 @@ module RocketJobMissionControl
     end
 
     def disable
+      authorize! :disable, RocketJob::DirmonEntry
       if @dirmon_entry.may_disable?
         @dirmon_entry.disable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))

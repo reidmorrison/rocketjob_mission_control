@@ -6,10 +6,23 @@ module RocketJobMissionControl
 
     private
 
-    def with_time_zone
+    def with_time_zone(&block)
       if time_zone = session['time_zone'] || 'UTC'
-        Time.use_zone(time_zone) { yield }
+        Time.use_zone(time_zone, &block)
       end
     end
+
+    def current_policy
+      @current_policy ||= begin
+        args =
+          if Config.authorization_callback
+            instance_exec(&Config.authorization_callback)
+          else
+            {roles: %i[admin]}
+          end
+        AccessPolicy.new(Authorization.new(args))
+      end
+    end
+
   end
 end

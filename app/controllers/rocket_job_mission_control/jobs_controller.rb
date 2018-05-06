@@ -10,6 +10,7 @@ module RocketJobMissionControl
     rescue_from StandardError, with: :error_occurred
 
     def index
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.all.only(JobsDatatable::ALL_FIELDS)
       @data_table_url = jobs_url(format: 'json')
 
@@ -17,6 +18,7 @@ module RocketJobMissionControl
     end
 
     def running
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.running.only(JobsDatatable::RUNNING_FIELDS)
       @data_table_url = running_jobs_url(format: 'json')
 
@@ -24,6 +26,7 @@ module RocketJobMissionControl
     end
 
     def paused
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.paused.only(JobsDatatable::COMMON_FIELDS)
       @data_table_url = paused_jobs_url(format: 'json')
 
@@ -31,6 +34,7 @@ module RocketJobMissionControl
     end
 
     def completed
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.completed.only(JobsDatatable::COMMON_FIELDS)
       @data_table_url = completed_jobs_url(format: 'json')
 
@@ -38,6 +42,7 @@ module RocketJobMissionControl
     end
 
     def aborted
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.aborted.only(JobsDatatable::COMMON_FIELDS)
       @data_table_url = aborted_jobs_url(format: 'json')
 
@@ -45,6 +50,7 @@ module RocketJobMissionControl
     end
 
     def failed
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.failed.only(JobsDatatable::COMMON_FIELDS)
       @data_table_url = failed_jobs_url(format: 'json')
 
@@ -52,6 +58,7 @@ module RocketJobMissionControl
     end
 
     def queued
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.queued_now.only(JobsDatatable::QUEUED_FIELDS)
       @data_table_url = queued_jobs_url(format: 'json')
 
@@ -59,6 +66,7 @@ module RocketJobMissionControl
     end
 
     def scheduled
+      authorize! :read, RocketJob::Job
       jobs            = RocketJob::Job.scheduled.only(JobsDatatable::SCHEDULED_FIELDS)
       @data_table_url = scheduled_jobs_url(format: 'json')
 
@@ -66,6 +74,7 @@ module RocketJobMissionControl
     end
 
     def update
+      authorize! :update, @job
       permitted_params = JobSanitizer.sanitize(params[:job], @job.class, @job)
       if @job.errors.empty? && @job.valid? && @job.update_attributes(permitted_params)
         redirect_to job_path(@job)
@@ -75,52 +84,63 @@ module RocketJobMissionControl
     end
 
     def abort
+      authorize! :abort, @job
       @job.abort!
       redirect_to(job_path(@job))
     end
 
     def destroy
+      authorize! :destroy, @job
       @job.destroy
       redirect_to(jobs_path)
     end
 
     def retry
+      authorize! :retry, @job
       @job.retry!
       redirect_to(job_path(@job))
     end
 
     def pause
+      authorize! :pause, @job
       @job.pause!
       redirect_to(job_path(@job))
     end
 
     def resume
+      authorize! :resume, @job
       @job.resume!
       redirect_to(job_path(@job))
     end
 
     def run_now
+      authorize! :run_now, @job
       @job.unset(:run_at) if @job.scheduled?
       redirect_to(job_path(@job))
     end
 
     def fail
+      authorize! :fail, @job
       @job.fail!
 
       redirect_to(job_path(@job))
     end
 
     def show
+      authorize! :read, @job
     end
 
     def edit
+      authorize! :edit, @job
     end
 
     def exceptions
+      authorize! :read, @job
       @exceptions = @job.input.group_exceptions
     end
 
     def exception
+      authorize! :read, @job
       error_type = params[:error_type]
       offset     = params.fetch(:offset, 0).to_i
 
@@ -164,13 +184,20 @@ module RocketJobMissionControl
     end
 
     def error_occurred(exception)
+
       if defined?(SemanticLogger::Logger) && logger.is_a?(SemanticLogger::Logger)
         logger.error 'Error loading a job', exception
       else
         logger.error "Error loading a job. #{exception.class}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
       end
-      flash[:danger] = 'Error loading jobs.'
-      raise exception if Rails.env.development? || Rails.env.test?
+
+      flash[:danger] = if exception.is_a?(AccessGranted::AccessDenied)
+                         'Access not authorized.'
+                       else
+                         'Error loading jobs.'
+                       end
+
+      # raise exception if Rails.env.development? || Rails.env.test?
       redirect_to :back
     end
 

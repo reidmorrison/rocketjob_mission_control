@@ -17,7 +17,11 @@ module RocketJobMissionControl
     end
 
     def running
-      jobs            = RocketJob::Job.running.only(JobsDatatable::RUNNING_FIELDS)
+      # Prevent throttled jobs from displaying.
+      jobs            = RocketJob::Job.
+        running.
+        where(:started_at.lte => (Time.now - 0.1)).
+        only(JobsDatatable::RUNNING_FIELDS)
       @data_table_url = running_jobs_url(format: 'json')
 
       render_datatable(jobs, 'Running', JobsDatatable::RUNNING_COLUMNS, started_at: :desc)

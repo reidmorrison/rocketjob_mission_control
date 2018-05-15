@@ -31,7 +31,7 @@
         <div class='btn-group'>
           <% valid_events = @job.aasm.events.collect { |e| e.name } %>
 
-          <% if valid_events.include?(:pause) && view.can?(:pause, @job)%>
+          <% if valid_events.include?(:pause) && can?(:pause, @job)%>
             <%= job_action_link('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
           <% end %>
 

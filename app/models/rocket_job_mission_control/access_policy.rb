@@ -5,8 +5,14 @@ module RocketJobMissionControl
     def configure
       # Destroy Jobs, Dirmon Entries
       role :admin, {admin: true} do
-        can %i[create destroy fail], RocketJob::Job
+        can %i[create destroy], RocketJob::Job
         can :destroy, RocketJob::DirmonEntry
+      end
+
+      # View the contents of jobs and edit the data within them.
+      # Including encrypted records.
+      role :editor, {editor: true} do
+        can %i[read_records update_records], RocketJob::Job
       end
 
       # Stop, Pause, Resume, Destroy (force stop) Rocket Job Servers
@@ -16,12 +22,12 @@ module RocketJobMissionControl
 
       # Pause, Resume, Retry, Abort, Edit Jobs
       role :manager, {manager: true} do
-        can %i[edit pause resume retry abort fail update run_now], RocketJob::Job
+        can %i[edit pause resume retry abort fail update], RocketJob::Job
       end
 
       # Create, Destroy, Enable, Disable, Edit Dirmon Entries
       role :dirmon, {dirmon: true} do
-        can %i[create enable disable update destroy], RocketJob::DirmonEntry
+        can %i[create enable disable update], RocketJob::DirmonEntry
       end
 
       # A User can only edit their own jobs
@@ -29,12 +35,6 @@ module RocketJobMissionControl
         can %i[edit pause resume retry abort update], RocketJob::Job do |job, auth|
           job.respond_to?(:login) && (job.login == auth.login)
         end
-      end
-
-      # View the contents of jobs and edit the data within them.
-      # Including encrypted records.
-      role :editor, {editor: true} do
-        can %i[read_records update_records], RocketJob::Job
       end
 
       # Read only access

@@ -194,7 +194,7 @@ module RocketJobMissionControl
                          'Error loading jobs.'
                        end
 
-      # raise exception if Rails.env.development? || Rails.env.test?
+       raise exception if Rails.env.development? || Rails.env.test?
       redirect_to :back
     end
 

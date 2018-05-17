@@ -22,7 +22,7 @@ module RocketJobMissionControl
 
       # Pause, Resume, Retry, Abort, Edit Jobs
       role :manager, {manager: true} do
-        can %i[edit pause resume retry abort fail update], RocketJob::Job
+        can %i[edit pause resume retry abort fail update run_now], RocketJob::Job
       end
 
       # Create, Destroy, Enable, Disable, Edit Dirmon Entries

@@ -8,6 +8,11 @@ module RocketJobMissionControl
       before_action :show_sidebar
     end
 
+    rescue_from AccessGranted::AccessDenied do |exception|
+      raise exception if Rails.env.development? || Rails.env.test?
+      redirect_to :back, alert: 'Access not authorized.'
+    end
+
     def index
       authorize! :read, RocketJob::Server
       @data_table_url = servers_url(format: 'json')
@@ -53,7 +58,7 @@ module RocketJobMissionControl
     VALID_ACTIONS = [:stop_all, :pause_all, :resume_all, :destroy_zombies]
 
     def update_all
-      authorize! :destroy, RocketJob::Server              #TODO: it is Friday
+      authorize! :destroy, RocketJob::Server
       server_action = params[:server_action].to_sym
       if VALID_ACTIONS.include?(server_action)
         RocketJob::Server.public_send(server_action.to_sym)

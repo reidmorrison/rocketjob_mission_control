@@ -6,6 +6,7 @@ module RocketJobMissionControl
     describe ServersController do
 
       before do
+        set_role(:admin)
         RocketJob::Job.delete_all
         RocketJob::Server.delete_all
       end
@@ -258,6 +259,62 @@ module RocketJobMissionControl
         end
       end
 
+      describe 'role base authentication control' do
+        %i[index starting running paused stopping zombie].each do |method|
+          it "#{method} has read access as default" do
+            get method, format: :json
+            assert_response :success
+          end
+        end
+
+        %i[stop pause resume destroy].each do |method|
+          describe "#{method}" do
+            before do
+              server.pause! if method == :resume
+              @params = {id: server.id}
+              @params = {params: @params} if Rails.version.to_i >= 5
+            end
+
+            %i[admin editor operator].each do |role|
+              it "redirects with #{method} method and role #{role}" do
+                set_role(role)
+                patch method, @params
+                assert_response(:redirect)
+              end
+            end
+
+            %i[manager dirmon user].each do |role|
+              it "raises authentication error for #{role}" do
+                set_role(role)
+                assert_raises AccessGranted::AccessDenied do
+                  patch method, @params
+                end
+              end
+            end
+          end
+        end
+
+        RocketJobMissionControl::ServersController::VALID_ACTIONS.each do |server_action|
+          describe "with '#{server_action}' as the server_action param" do
+            %i[admin editor operator].each do |role|
+              it 'redirects to servers' do
+                set_role(role)
+                params = {server_action: server_action}
+                params = {params: params} if Rails.version.to_i >= 5
+                patch :update_all, params
+
+                assert_response(:redirect)
+              end
+            end
+          end
+        end
+      end
+    end
+
+    def set_role(r)
+      Config.authorization_callback = -> do
+        {roles: [r]}
+      end
     end
   end
 end

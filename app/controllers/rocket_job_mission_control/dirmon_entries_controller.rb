@@ -9,6 +9,7 @@ module RocketJobMissionControl
     end
 
     rescue_from AccessGranted::AccessDenied do |exception|
+      raise exception if Rails.env.development? || Rails.env.test?
       redirect_to :back, alert: 'Access not authorized.'
     end
 

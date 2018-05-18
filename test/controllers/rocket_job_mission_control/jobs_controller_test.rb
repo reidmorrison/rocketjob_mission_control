@@ -402,7 +402,7 @@ module RocketJobMissionControl
         end
 
         %i[update abort retry pause resume run_now fail].each do |method|
-          describe "udpate" do
+          describe "#{method}" do
             before do
               case method
                 when :pause, :fail, :abort

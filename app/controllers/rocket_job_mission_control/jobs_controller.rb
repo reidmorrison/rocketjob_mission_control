@@ -2,13 +2,14 @@ module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
     if Rails.version.to_i < 5
       before_filter :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_filter :authorize, only: %i[index running paused completed aborted failed queued scheduled]
+      before_filter :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
       before_filter :show_sidebar
     else
       before_action :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_action :authorize, only: %i[index running paused completed aborted failed queued scheduled]
+      before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
       before_action :show_sidebar
     end
+
     rescue_from StandardError, with: :error_occurred
 
     def index
@@ -161,7 +162,7 @@ module RocketJobMissionControl
 
     private
 
-    def authorize
+    def authorize_read
       authorize! :read, RocketJob::Job
     end
 

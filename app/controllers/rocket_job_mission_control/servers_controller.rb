@@ -1,10 +1,12 @@
 module RocketJobMissionControl
   class ServersController < RocketJobMissionControl::ApplicationController
     if Rails.version.to_i < 5
-      before_filter :find_server_or_redirect, only: [:stop, :pause, :resume, :destroy]
+      before_filter :find_server_or_redirect, only: %i[stop pause resume destroy]
+      before_filter :authorize_read, only: %i[index starting running paused stopping zombie]
       before_filter :show_sidebar
     else
-      before_action :find_server_or_redirect, only: [:stop, :pause, :resume, :destroy]
+      before_action :find_server_or_redirect, only: %i[stop pause resume destroy]
+      before_action :authorize_read, only: %i[index starting running paused stopping zombie]
       before_action :show_sidebar
     end
 
@@ -14,42 +16,36 @@ module RocketJobMissionControl
     end
 
     def index
-      authorize! :read, RocketJob::Server
       @data_table_url = servers_url(format: 'json')
       @actions        = [:pause_all, :resume_all, :stop_all, :destroy_zombies]
       render_datatable(RocketJob::Server.all, 'All')
     end
 
     def starting
-      authorize! :read, RocketJob::Server
       @data_table_url = starting_servers_url(format: 'json')
       @actions        = [:pause_all, :stop_all]
       render_datatable(RocketJob::Server.starting, 'Starting')
     end
 
     def running
-      authorize! :read, RocketJob::Server
       @data_table_url = running_servers_url(format: 'json')
       @actions        = [:pause_all, :stop_all, :destroy_zombies]
       render_datatable(RocketJob::Server.running, 'Running')
     end
 
     def paused
-      authorize! :read, RocketJob::Server
       @data_table_url = paused_servers_url(format: 'json')
       @actions        = [:resume_all, :destroy_zombies]
       render_datatable(RocketJob::Server.paused, 'Paused')
     end
 
     def stopping
-      authorize! :read, RocketJob::Server
       @data_table_url = stopping_servers_url(format: 'json')
       @actions        = [:destroy_zombies]
       render_datatable(RocketJob::Server.stopping, 'Stopping')
     end
 
     def zombie
-      authorize! :read, RocketJob::Server
       @data_table_url = zombie_servers_url(format: 'json')
       @actions        = [:destroy_zombies]
       render_datatable(RocketJob::Server.zombies, 'Zombie')
@@ -122,6 +118,10 @@ module RocketJobMissionControl
     end
 
     private
+
+    def authorize_read
+      authorize! :read, RocketJob::Server
+    end
 
     def render_datatable(servers, description)
       respond_to do |format|

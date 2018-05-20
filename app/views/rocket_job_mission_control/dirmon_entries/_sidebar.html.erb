@@ -1,7 +1,10 @@
 <ul class='nav hidden-xs' id='lg-menu'>
   <li>
-    <%= link_to(new_dirmon_entry_path) do %>
-      <i class='fas fa-plus'></i> Create
+
+    <% if can?(:destroy, RocketJob::Server) %>
+      <%= link_to(new_dirmon_entry_path) do %>
+        <i class='fas fa-plus'></i> Create
+      <% end %>
     <% end %>
 
     <%= link_to(dirmon_entries_path) do %>

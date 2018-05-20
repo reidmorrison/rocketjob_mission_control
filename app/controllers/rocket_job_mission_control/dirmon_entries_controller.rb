@@ -73,6 +73,7 @@ module RocketJobMissionControl
     end
 
     def edit
+      authorize! :edit, @dirmon_entry
     end
 
     def update

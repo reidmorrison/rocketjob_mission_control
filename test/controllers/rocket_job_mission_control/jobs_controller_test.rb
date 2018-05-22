@@ -316,6 +316,7 @@ module RocketJobMissionControl
 
             describe "with #{state} server" do
               before do
+                set_role(:admin)
                 one_job_for_every_state
                 get state, format: :json
               end
@@ -381,7 +382,7 @@ module RocketJobMissionControl
                   compare_array_of_hashes expected_data.values, json['data']
                 else
                   assert_equal 0, json['draw']
-                  # assert_equal 1, json['recordsTotal']
+                  assert_equal 1, json['recordsTotal']
                   assert_equal 1, json['recordsFiltered']
                   # Columns change by state
                   #compare_hash expected_data[state], json['data'].first

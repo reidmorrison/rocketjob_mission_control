@@ -437,6 +437,7 @@ module RocketJobMissionControl
           end
         end
       end
+
       describe 'role base authentication control' do
         let(:dirmon_params) do
           {

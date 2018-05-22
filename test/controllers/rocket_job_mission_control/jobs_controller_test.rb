@@ -394,6 +394,7 @@ module RocketJobMissionControl
 
         end
       end
+
       describe 'role base authentication control' do
         %i[index aborted completed failed paused queued running scheduled].each do |method|
           it "#{method} has read access as default" do

@@ -1,12 +1,15 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
     if Rails.version.to_i < 5
-      before_filter :find_job_or_redirect, except: [:index, :aborted, :completed, :failed, :paused, :queued, :running, :scheduled]
+      before_filter :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
+      before_filter :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
       before_filter :show_sidebar
     else
-      before_action :find_job_or_redirect, except: [:index, :aborted, :completed, :failed, :paused, :queued, :running, :scheduled]
+      before_action :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
+      before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
       before_action :show_sidebar
     end
+
     rescue_from StandardError, with: :error_occurred
 
     def index
@@ -70,6 +73,7 @@ module RocketJobMissionControl
     end
 
     def update
+      authorize! :update, @job
       permitted_params = JobSanitizer.sanitize(params[:job], @job.class, @job)
       if @job.errors.empty? && @job.valid? && @job.update_attributes(permitted_params)
         redirect_to job_path(@job)
@@ -79,64 +83,75 @@ module RocketJobMissionControl
     end
 
     def abort
+      authorize! :abort, @job
       @job.abort!
       redirect_to(job_path(@job))
     end
 
     def destroy
+      authorize! :destroy, @job
       @job.destroy
       redirect_to(jobs_path)
     end
 
     def retry
+      authorize! :retry, @job
       @job.retry!
       redirect_to(job_path(@job))
     end
 
     def pause
+      authorize! :pause, @job
       @job.pause!
       redirect_to(job_path(@job))
     end
 
     def resume
+      authorize! :resume, @job
       @job.resume!
       redirect_to(job_path(@job))
     end
 
     def run_now
+      authorize! :run_now, @job
       @job.unset(:run_at) if @job.scheduled?
       redirect_to(job_path(@job))
     end
 
     def fail
+      authorize! :fail, @job
       @job.fail!
 
       redirect_to(job_path(@job))
     end
 
     def show
+      authorize! :read, @job
     end
 
     def edit
+      authorize! :edit, @job
     end
 
     def exceptions
+      authorize! :read, @job
       @exceptions = @job.input.group_exceptions
     end
 
     def exception
+      authorize! :read, @job
       error_type = params[:error_type]
       offset     = params.fetch(:offset, 0).to_i
 
       unless error_type.present?
-        flash[:notice] = t(:no_errors, scope: [:job, :failures])
+        flash[:notice] = t(:no_errors, scope: %i[job failures])
         redirect_to(job_path(@job))
       end
 
       scope = @job.input.failed.where('exception.class_name' => error_type)
       count = scope.count
       unless count > 0
-        flash[:notice] = t(:no_errors, scope: [:job, :failures])
+        flash[:notice] = t(:no_errors, scope: %i[job failures])
         redirect_to(job_path(@job))
       end
 
@@ -145,11 +160,15 @@ module RocketJobMissionControl
 
       @pagination = {
         offset: offset,
-        total:  (count - 1),
+        total:  (count - 1)
       }
     end
 
     private
+
+    def authorize_read
+      authorize! :read, RocketJob::Job
+    end
 
     def show_sidebar
       @jobs_sidebar = true
@@ -157,7 +176,7 @@ module RocketJobMissionControl
 
     def find_job_or_redirect
       unless @job = RocketJob::Job.where(id: params[:id]).first
-        flash[:alert] = t(:failure, scope: [:job, :find], id: params[:id])
+        flash[:alert] = t(:failure, scope: %i[job find], id: params[:id])
 
         redirect_to(jobs_path)
       end
@@ -173,8 +192,14 @@ module RocketJobMissionControl
       else
         logger.error "Error loading a job. #{exception.class}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
       end
-      flash[:danger] = 'Error loading jobs.'
-      raise exception if Rails.env.development? || Rails.env.test?
+
+      flash[:danger] = if exception.is_a?(AccessGranted::AccessDenied)
+                         'Access not authorized.'
+                       else
+                         'Error loading jobs.'
+                       end
+
+       raise exception if Rails.env.development? || Rails.env.test?
       redirect_to :back
     end
 
@@ -188,7 +213,7 @@ module RocketJobMissionControl
         end
         format.json do
           query                 = RocketJobMissionControl::Query.new(jobs, sort_order)
-          query.search_columns  = [:_type, :description]
+          query.search_columns  = %i[_type description]
           query.display_columns = columns.collect { |c| c[:field] }.compact
           render(json: JobsDatatable.new(view_context, query, columns))
         end
@@ -198,13 +223,12 @@ module RocketJobMissionControl
     def build_table_layout(columns)
       index = 0
       columns.collect do |column|
-        h             = {data: index.to_s}
-        h[:width]     = column[:width] if column.has_key?(:width)
-        h[:orderable] = column[:orderable] if column.has_key?(:orderable)
-        index         += 1
+        h             = { data: index.to_s }
+        h[:width]     = column[:width] if column.key?(:width)
+        h[:orderable] = column[:orderable] if column.key?(:orderable)
+        index += 1
         h
       end
     end
-
   end
 end

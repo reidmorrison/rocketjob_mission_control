@@ -9,21 +9,27 @@
 
     <div class='btn-toolbar job-actions pull-right'>
       <div class='btn-group'>
-        <% if @dirmon_entry.disabled? || @dirmon_entry.pending? %>
+        <% if @dirmon_entry.disabled? || @dirmon_entry.pending? && can?(:enable, @dirmon_entry) %>
           <%= link_to 'Enable', enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default' %>
         <% end %>
 
-        <% if @dirmon_entry.enabled? %>
+        <% if @dirmon_entry.enabled? && can?(:disable, @dirmon_entry)%>
           <%= link_to 'Disable', disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default', data: { confirm: 'Are you sure?' } %>
         <% end %>
       </div>
 
-      <div class='btn-group'>
-        <%= link_to 'Destroy', dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', data: { confirm: 'Are you sure?' } %>
-      </div>
 
       <div class='btn-group'>
+        <% if can?(:destroy, @dirmon_entry)%>
+        <%= link_to 'Destroy', dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', data: { confirm: 'Are you sure?' } %>
+        <% end %>
+      </div>
+
+
+      <div class='btn-group'>
+        <% if can?(:edit, @dirmon_entry)%>
         <%= link_to 'Edit', edit_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>
+        <% end %>
       </div>
     </div>
 

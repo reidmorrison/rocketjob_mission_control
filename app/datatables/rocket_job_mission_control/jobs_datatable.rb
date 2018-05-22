@@ -156,19 +156,21 @@ module RocketJobMissionControl
     def action_buttons(job)
       events  = valid_events(job)
       buttons = "<div class='inline-job-actions'>"
-      if job.scheduled?
+      if job.scheduled? && view.can?(:run_now, job)
         buttons += "#{ job_action_link('Run', run_now_job_path(job), :patch) }"
       end
-      if events.include?(:pause)
+      if events.include?(:pause) && view.can?(:pause, job)
         buttons += "#{ job_action_link('Pause', pause_job_path(job), :patch) }"
       end
-      if events.include?(:resume)
+      if events.include?(:resume) && view.can?(:resume, job)
         buttons += "#{ job_action_link('Resume', resume_job_path(job), :patch) }"
       end
-      if events.include?(:retry)
+      if events.include?(:retry) && view.can?(:retry, job)
         buttons += "#{ job_action_link('Retry', retry_job_path(job), :patch) }"
       end
-      buttons += "#{ job_action_link('Destroy', job_path(job), :delete) }"
+      if view.can?(:destroy, job)
+        buttons += "#{ job_action_link('Destroy', job_path(job), :delete) }"
+      end
       buttons += "</div>"
     end
 

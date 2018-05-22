@@ -5,6 +5,7 @@ module RocketJobMissionControl
   class DirmonEntriesControllerTest < ActionController::TestCase
     describe DirmonEntriesController do
       before do
+        set_role(:admin)
         RocketJob::DirmonEntry.delete_all
       end
 
@@ -439,6 +440,78 @@ module RocketJobMissionControl
             end
           end
         end
+      end
+
+      describe 'role base authentication control' do
+        let(:dirmon_params) do
+          {
+            name:           'Test',
+            pattern:        '/files/*',
+            job_class_name: job_class_name,
+            properties:     {description: '', priority: '42'}
+          }
+        end
+
+        %i[index disabled enabled failed pending].each do |method|
+          it "#{method} has read only default access" do
+            get method, format: :json
+            assert_response :success
+          end
+        end
+
+        # PATCH
+        %i[enable disable update].each do |method|
+          describe method.to_s do
+            %i[admin editor operator manager dirmon].each do |role|
+              it "allows role #{role} to access #{method}" do
+                set_role(role)
+                params = {id: existing_dirmon_entry.id}
+                params = {params: params} if Rails.version.to_i >= 5
+                patch :enable, params
+
+                assert_response(:redirect)
+              end
+            end
+          end
+        end
+
+        # POST
+        %i[admin editor operator manager dirmon].each do |role|
+          it 'creates dirmon entry' do
+            set_role(role)
+            params = {rocket_job_dirmon_entry: dirmon_params}
+            params = {params: params} if Rails.version.to_i >= 5
+            post :create, params
+
+            assert_response(:redirect)
+          end
+        end
+
+        it 'deletes dirmon entry' do
+          set_role(:admin)
+          params = {id: existing_dirmon_entry.id}
+          params = {params: params} if Rails.version.to_i >= 5
+          delete :destroy, params
+
+          assert_response(:redirect)
+        end
+
+        %i[editor operator manager dirmon].each do |role|
+          it "raises authentication error for #{role}" do
+            set_role(role)
+            assert_raises AccessGranted::AccessDenied do
+              params = {id: existing_dirmon_entry.id}
+              params = {params: params} if Rails.version.to_i >= 5
+              delete :destroy, params
+            end
+          end
+        end
+      end
+    end
+
+    def set_role(r)
+      Config.authorization_callback = -> do
+        {roles: [r]}
       end
     end
   end

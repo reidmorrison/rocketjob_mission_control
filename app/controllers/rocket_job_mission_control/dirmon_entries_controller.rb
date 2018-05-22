@@ -1,11 +1,18 @@
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
     if Rails.version.to_i < 5
-      before_filter :find_entry_or_redirect, except: [:index, :disabled, :enabled, :failed, :pending, :new, :create]
+      before_filter :find_entry_or_redirect, except: %i[index disabled enabled failed pending new create]
+      before_filter :authorize_read, only: %i[index disabled enabled failed pending]
       before_filter :show_sidebar
     else
-      before_action :find_entry_or_redirect, except: [:index, :disabled, :enabled, :failed, :pending, :new, :create]
+      before_action :find_entry_or_redirect, except: %i[index disabled enabled failed pending new create]
+      before_action :authorize_read, only: %i[index disabled enabled failed pending]
       before_action :show_sidebar
+    end
+
+    rescue_from AccessGranted::AccessDenied do |exception|
+      raise exception if Rails.env.development? || Rails.env.test?
+      redirect_to :back, alert: 'Access not authorized.'
     end
 
     def index
@@ -46,6 +53,7 @@ module RocketJobMissionControl
     end
 
     def create
+      authorize! :create, RocketJob::DirmonEntry
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
       if properties = params[:rocket_job_dirmon_entry][:properties]
         @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
@@ -59,14 +67,17 @@ module RocketJobMissionControl
     end
 
     def destroy
+      authorize! :destroy, @dirmon_entry
       @dirmon_entry.destroy
       redirect_to(dirmon_entries_path)
     end
 
     def edit
+      authorize! :edit, @dirmon_entry
     end
 
     def update
+      authorize! :update, @dirmon_entry
       if properties = params[:rocket_job_dirmon_entry][:properties]
         @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
       end
@@ -78,6 +89,7 @@ module RocketJobMissionControl
     end
 
     def enable
+      authorize! :enable, @dirmon_entry
       if @dirmon_entry.may_enable?
         @dirmon_entry.enable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
@@ -88,6 +100,7 @@ module RocketJobMissionControl
     end
 
     def disable
+      authorize! :disable, @dirmon_entry
       if @dirmon_entry.may_disable?
         @dirmon_entry.disable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
@@ -103,6 +116,10 @@ module RocketJobMissionControl
     end
 
     private
+
+    def authorize_read
+      authorize! :read, RocketJob::DirmonEntry
+    end
 
     def show_sidebar
       @dirmon_sidebar = true

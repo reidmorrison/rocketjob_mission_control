@@ -31,34 +31,38 @@
         <div class='btn-group'>
           <% valid_events = @job.aasm.events.collect { |e| e.name } %>
 
-          <% if valid_events.include?(:pause) %>
+          <% if valid_events.include?(:pause) && can?(:pause, @job)%>
             <%= job_action_link('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
           <% end %>
 
-          <% if valid_events.include?(:resume) %>
+          <% if valid_events.include?(:resume) && can?(:resume, @job)%>
             <%= job_action_link('Resume', rocket_job_mission_control.resume_job_path(@job), :patch) %>
           <% end %>
 
-          <% if valid_events.include?(:retry) %>
+          <% if valid_events.include?(:retry) && can?(:retry, @job)%>
             <%= job_action_link('Retry', rocket_job_mission_control.retry_job_path(@job), :patch) %>
           <% end %>
         </div>
 
         <div class='btn-group'>
-          <% if valid_events.include?(:fail) %>
+          <% if valid_events.include?(:fail) && can?(:fail, @job)%>
             <%= job_action_link('Fail', rocket_job_mission_control.fail_job_path(@job), :patch) %>
           <% end %>
 
-          <% if valid_events.include?(:abort) %>
+          <% if valid_events.include?(:abort) && can?(:abort, @job) %>
             <%= job_action_link('Abort', rocket_job_mission_control.abort_job_path(@job), :patch) %>
           <% end %>
 
+          <% if can?(:destroy, @job)%>
           <%= job_action_link('Destroy', rocket_job_mission_control.job_path(@job), :delete) %>
+          <% end %>
         </div>
 
         <% unless @job.completed? || @job.aborted? %>
           <div class='btn-group'>
+            <% if can?(:edit, @job)%>
             <%= link_to 'Edit', edit_job_path(@job), class: 'btn btn-default' %>
+            <% end %>
           </div>
         <% end %>
       </div>

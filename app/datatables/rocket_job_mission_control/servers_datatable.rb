@@ -42,7 +42,21 @@ module RocketJobMissionControl
 
     def action_links_html(server)
       actions = '<div class="actions">'
-      if server.stopping?
+      events  = valid_events(server)
+
+      if events.include?(:resume) && view.can?(:resume, server)
+        actions += "#{ link_to "resume", resume_server_path(server), method: :patch, class: 'btn btn-default', data: {confirm: "Resume this server?"}  }"
+      end
+
+      if events.include?(:pause) && view.can?(:pause, server)
+        actions += "#{ link_to "pause", pause_server_path(server), method: :patch, class: 'btn btn-default', data: {confirm: "Pause this server?"} }"
+      end
+
+      if events.include?(:stop) && view.can?(:stop, server)
+        actions += "#{ link_to "stop", stop_server_path(server), method: :patch, class: 'btn btn-danger', data: {confirm: "Stop this server?"} }"
+      end
+
+      if server.stopping? && view.can?(:destroy, server)
         actions      += "Server is stopping..."
         confirmation = ''
         unless server.zombie?
@@ -50,15 +64,13 @@ module RocketJobMissionControl
         end
         confirmation << "Are you sure you want to destroy #{server.name} ?"
         actions += "#{ link_to "destroy", server_path(server), method: :delete, class: 'btn btn-danger', data: {confirm: confirmation}  }"
-      else
-        if server.paused?
-          actions += "#{ link_to "resume", resume_server_path(server), method: :patch, class: 'btn btn-default', data: {confirm: "Resume this server?"}  }"
-        else
-          actions += "#{ link_to "pause", pause_server_path(server), method: :patch, class: 'btn btn-default', data: {confirm: "Pause this server?"} }"
-        end
-        actions += "#{ link_to "stop", stop_server_path(server), method: :patch, class: 'btn btn-danger', data: {confirm: "Stop this server?"} }"
       end
+
       actions += '</div>'
+    end
+
+    def valid_events(server)
+      server.aasm.events.collect(&:name)
     end
 
   end

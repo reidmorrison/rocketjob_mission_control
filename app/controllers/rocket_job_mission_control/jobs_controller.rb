@@ -27,7 +27,7 @@ module RocketJobMissionControl
         only(JobsDatatable::RUNNING_FIELDS)
       @data_table_url = running_jobs_url(format: 'json')
 
-      render_datatable(jobs, 'Running', JobsDatatable::RUNNING_COLUMNS, started_at: :desc)
+      render_datatable(jobs, 'Running', JobsDatatable::RUNNING_COLUMNS, priority: :asc, created_at: :asc)
     end
 
     def paused
@@ -62,7 +62,7 @@ module RocketJobMissionControl
       jobs            = RocketJob::Job.queued_now.only(JobsDatatable::QUEUED_FIELDS)
       @data_table_url = queued_jobs_url(format: 'json')
 
-      render_datatable(jobs, 'Queued', JobsDatatable::QUEUED_COLUMNS, completed_at: :desc)
+      render_datatable(jobs, 'Queued', JobsDatatable::QUEUED_COLUMNS, priority: :asc, created_at: :asc)
     end
 
     def scheduled

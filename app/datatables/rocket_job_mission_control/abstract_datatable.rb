@@ -48,7 +48,6 @@ module RocketJobMissionControl
     def extract_sort(order)
       return nil unless order.present?
 
-      ap order
       sort_by = {}
       order.each_pair do |key, value|
         name = query.display_columns[value[:column].to_i]

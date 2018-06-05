@@ -1,5 +1,9 @@
 ## Installation
 
+Install required gems
+
+    bundle install
+    
 Install all needed gems to run the tests:
 
     appraisal install
@@ -11,7 +15,7 @@ The Gemfiles in the `gemfiles` folder are also re-generated.
 
 For all supported Rails/ActiveRecord versions:
 
-    rake
+    bundle exec rake
 
 Or for specific rails version:
 
@@ -79,3 +83,4 @@ For testing purposes the following Jobs are supplied with the rjmc dummy Rails a
 * KaboomBatchJob
     * For testing against RocketJob Pro.
     * Creates test data with intentional errors and exceptions.
+    

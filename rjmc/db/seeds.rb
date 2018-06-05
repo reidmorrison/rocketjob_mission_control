@@ -19,6 +19,13 @@ RocketJob::Jobs::SimpleJob.new.fail!('Oh no', 'TestWorker')
 # Aborted Jobs
 RocketJob::Jobs::SimpleJob.new.abort!
 
+# Few Running Jobs with varying priority
+
+RocketJob::Jobs::SimpleJob.new(priority: 50).start!
+RocketJob::Jobs::SimpleJob.new(priority: 60).start!
+RocketJob::Jobs::SimpleJob.new(priority: 10).start!
+RocketJob::Jobs::SimpleJob.new(priority: 90).start!
+
 # Rocket Job Pro Jobs
 if defined?(RocketJobPro)
 

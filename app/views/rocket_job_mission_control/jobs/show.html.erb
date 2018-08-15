@@ -22,7 +22,7 @@
           </div>
         <% end %>
 
-        <% if @job.scheduled? %>
+        <% if @job.scheduled? && can?(:run_now, @job)%>
           <div class='btn-group'>
             <%= job_action_link('Run', rocket_job_mission_control.run_now_job_path(@job), :patch) %>
           </div>

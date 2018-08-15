@@ -4,7 +4,7 @@ module RocketJobMissionControl
              :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
              :resume_job_path, :retry_job_path, :exception_job_path, :job_action_link, :exceptions_job_path, to: :@view
 
-    COMMON_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state, :worker_name].freeze
+    COMMON_FIELDS = [:id, :_type, :description, :completed_at, :created_at, :started_at, :state, :worker_name, :login].freeze
 
     ABORTED_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type', width: '30%'},

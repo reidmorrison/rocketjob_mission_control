@@ -48,7 +48,7 @@ module RocketJobMissionControl
         actions += "#{ link_to "resume", resume_server_path(server), method: :patch, class: 'btn btn-default', data: {confirm: "Resume this server?"}  }"
       end
 
-      if events.include?(:pause) && view.can?(:pause, server)
+      if events.include?(:pause) && && job.pauseable? && view.can?(:pause, server)
         actions += "#{ link_to "pause", pause_server_path(server), method: :patch, class: 'btn btn-default', data: {confirm: "Pause this server?"} }"
       end
 

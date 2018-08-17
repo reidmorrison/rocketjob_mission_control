@@ -159,7 +159,7 @@ module RocketJobMissionControl
       if job.scheduled? && view.can?(:run_now, job)
         buttons += "#{ job_action_link('Run', run_now_job_path(job), :patch) }"
       end
-      if events.include?(:pause) && view.can?(:pause, job)
+      if events.include?(:pause) && && job.pauseable? && view.can?(:pause, job)
         buttons += "#{ job_action_link('Pause', pause_job_path(job), :patch) }"
       end
       if events.include?(:resume) && view.can?(:resume, job)

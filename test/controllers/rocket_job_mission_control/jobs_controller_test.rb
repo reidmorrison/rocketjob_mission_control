@@ -27,26 +27,22 @@ module RocketJobMissionControl
       end
 
       let :failed_job do
-        if defined?(RocketJobPro)
-          job = KaboomBatchJob.new(slice_size: 1)
-          job.upload do |stream|
-            stream << 'first record'
-            stream << 'second record'
-            stream << 'third record'
-          end
-          job.save!
-
-          # Run all 3 slices now to get exceptions for each.
-          3.times do
-            begin
-              job.perform_now
-            rescue ArgumentError, RuntimeError
-            end
-          end
-          job
-        else
-          RocketJob::Job::SimpleJob.new.fail!('Oh no', 'bad_worker')
+        job = KaboomBatchJob.new(slice_size: 1)
+        job.upload do |stream|
+          stream << 'first record'
+          stream << 'second record'
+          stream << 'third record'
         end
+        job.save!
+
+        # Run all 3 slices now to get exceptions for each.
+        3.times do
+          begin
+            job.perform_now
+          rescue ArgumentError, RuntimeError
+          end
+        end
+        job
       end
 
       job_states = RocketJob::Job.aasm.states.collect(&:name)
@@ -213,10 +209,6 @@ module RocketJobMissionControl
         end
 
         describe 'with a valid job id' do
-          before do
-            skip('Only tested with Rocket Job Pro') unless defined?(RocketJob::Plugins::Batch)
-          end
-
           describe 'without an exception' do
             before do
               params = {id: failed_job.id, error_type: 'Blah'}
@@ -407,12 +399,12 @@ module RocketJobMissionControl
           describe "#{method}" do
             before do
               case method
-                when :pause, :fail, :abort
-                  pausable_job.start!
-                when :resume
-                  pausable_job.pause!
-                when :retry, :exception
-                  pausable_job.fail!
+              when :pause, :fail, :abort
+                pausable_job.start!
+              when :resume
+                pausable_job.pause!
+              when :retry, :exception
+                pausable_job.fail!
               end
 
               @params = {id: pausable_job.id, job: {id: pausable_job.id, priority: pausable_job.priority}}

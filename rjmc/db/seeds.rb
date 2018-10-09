@@ -26,35 +26,30 @@ RocketJob::Jobs::SimpleJob.new(priority: 60).start!
 RocketJob::Jobs::SimpleJob.new(priority: 10).start!
 RocketJob::Jobs::SimpleJob.new(priority: 90).start!
 
-# Rocket Job Pro Jobs
-if defined?(RocketJobPro)
-
-  # KaboomBatchJob with exceptions.
-  count = 100
-  job   = KaboomBatchJob.new(slice_size: 1)
-  job.upload do |stream|
-    count.times { |i| stream << "Slice number #{i}" }
-  end
-  # Manually run job to get some failures without needing workers.
-  while job.input.queued.count > 0
-    begin
-      job.perform_now
-    rescue
-      # perform_now re-raises exceptions.
-    end
-  end
-  job.save!
-
-  # Running Jobs
-  job = CSVJob.new(slice_size: 1)
-  job.upload do |stream|
-    # Write header row.
-    stream << "name,age,state"
-
-    # Write 10 lines.
-    10.times { |i| stream << "jack,#{i+20},FL" }
-  end
-  job.perform_now
-  job.save!
-
+# KaboomBatchJob with exceptions.
+count = 100
+job   = KaboomBatchJob.new(slice_size: 1)
+job.upload do |stream|
+  count.times { |i| stream << "Slice number #{i}" }
 end
+# Manually run job to get some failures without needing workers.
+while job.input.queued.count > 0
+  begin
+    job.perform_now
+  rescue
+    # perform_now re-raises exceptions.
+  end
+end
+job.save!
+
+# Running Jobs
+job = CSVJob.new(slice_size: 1)
+job.upload do |stream|
+  # Write header row.
+  stream << "name,age,state"
+
+  # Write 10 lines.
+  10.times { |i| stream << "jack,#{i + 20},FL" }
+end
+job.perform_now
+job.save!

@@ -15,7 +15,7 @@ module RocketJobMissionControl
     require 'jquery-datatables-rails'
     require 'access-granted'
     begin
-      require 'rocketjob_pro'
+      require 'rocketjob_enterprise'
     rescue LoadError
     end
 

@@ -16,8 +16,8 @@
 # end
 # job.save!
 class CSVJob < RocketJob::Job
-  include RocketJob::Plugins::Batch
-  include RocketJob::Plugins::Batch::Tabular::Input
+  include RocketJob::Batch
+  include RocketJob::Batch::Tabular::Input
 
   self.destroy_on_complete = false
 

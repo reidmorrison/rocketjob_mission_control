@@ -20,6 +20,9 @@ end
 
 # Rails 4.2
 # gem 'minitest-rails'
+#
+gem 'iostreams', git: 'https://github.com/rocketjob/iostreams.git'
+gem 'rocketjob', git: 'https://github.com/rocketjob/rocketjob.git', branch:'feature/batch'
 
 group :development do
   gem 'rubocop'

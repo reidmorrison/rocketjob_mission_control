@@ -7,7 +7,7 @@
 # end
 # job.save!
 class KaboomBatchJob < RocketJob::Job
-  include RocketJob::Plugins::Batch
+  include RocketJob::Batch
 
   self.destroy_on_complete = false
 

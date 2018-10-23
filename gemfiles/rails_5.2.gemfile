@@ -9,6 +9,8 @@ gem "awesome_print"
 gem "rubyzip", platform: :ruby
 gem "appraisal"
 gem "mongo_ha", "~> 2.5.1"
+gem "iostreams", git: "https://github.com/rocketjob/iostreams.git"
+gem "rocketjob", git: "https://github.com/rocketjob/rocketjob.git", branch: "feature/batch"
 gem "rails-controller-testing"
 gem "minispec-rails"
 

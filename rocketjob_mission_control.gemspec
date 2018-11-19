@@ -16,10 +16,10 @@ Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*']
 
   s.add_dependency 'rails', '>= 4.0'
-  s.add_dependency 'rocketjob', '>= 4.0.0.alpha'
+  s.add_dependency 'rocketjob', '~> 4.0.0'
   s.add_dependency 'jquery-rails'
-  s.add_dependency 'jquery-datatables-rails', '~> 3.3.0'
+  s.add_dependency 'jquery-datatables-rails', '~> 3.3'
   s.add_dependency 'bootstrap-sass', '>= 3.2.0.1'
   s.add_dependency 'sass-rails', '>= 3.2'
-  s.add_dependency 'access-granted', '~> 1.1.0'
+  s.add_dependency 'access-granted', '~> 1.1'
 end

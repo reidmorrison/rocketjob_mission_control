@@ -1,5 +1,8 @@
 <% status = job.status(Time.zone) %>
 
+<!--rather have the api not return this hash key anymore -->
+<% status.delete('exception') %>
+
 <div class='id'>
   <label>ID:</label> <%= status.delete('_id') %>
 </div>
@@ -41,6 +44,12 @@
 <% end %>
 
 <div class='clearfix'></div>
+
+<div class='status-message'>
+  <label><%= 'Exceptions' %>:</label>
+  <%= render partial: 'exceptions', locals: {job: @job} %>
+</div>
+
 
 <% remaining.each_pair do |key, value| %>
   <div class='status-message'>

@@ -133,9 +133,27 @@ module RocketJobMissionControl
       authorize! :edit, @job
     end
 
-    def exceptions
-      authorize! :read, @job
-      @exceptions = @job.input.group_exceptions
+    def view_input
+      error_type = params[:error_type]
+      offset     = params.fetch(:offset, 0).to_i
+
+      scope = @job.input.failed.where('exception.class_name' => error_type)
+      count = scope.count
+
+      current_failure = scope.order(_id: 1).limit(1).skip(offset).first
+
+      @lines = current_failure.records
+
+      @failure_exception = scope.first.try!(:exception)
+
+      @edit_input_pagination = {
+        offset: offset,
+        total:  (count - 1)
+      }
+    end
+
+    def edit_input
+
     end
 
     def exception
@@ -199,7 +217,7 @@ module RocketJobMissionControl
                          'Error loading jobs.'
                        end
 
-       raise exception if Rails.env.development? || Rails.env.test?
+      raise exception if Rails.env.development? || Rails.env.test?
       redirect_to :back
     end
 
@@ -223,10 +241,10 @@ module RocketJobMissionControl
     def build_table_layout(columns)
       index = 0
       columns.collect do |column|
-        h             = { data: index.to_s }
+        h             = {data: index.to_s}
         h[:width]     = column[:width] if column.key?(:width)
         h[:orderable] = column[:orderable] if column.key?(:orderable)
-        index += 1
+        index         += 1
         h
       end
     end

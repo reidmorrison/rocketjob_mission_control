@@ -19,8 +19,10 @@ RocketJobMissionControl::Engine.routes.draw do
       patch :resume
       patch :retry
       patch :run_now
+      patch :edit_input
       get   :exceptions
       get   :exception
+      get   :view_input
     end
   end
 

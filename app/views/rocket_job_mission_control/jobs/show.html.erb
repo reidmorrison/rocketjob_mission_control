@@ -16,11 +16,6 @@
       <% end %>
 
       <div class='btn-toolbar job-actions pull-right'>
-        <% if @job.respond_to?(:input) && @job.input.failed.count > 0 %>
-          <div class='btn-group'>
-            <%= link_to('Show Exceptions', exceptions_job_path(@job), class: 'btn btn-default') %>
-          </div>
-        <% end %>
 
         <% if @job.scheduled? && can?(:run_now, @job)%>
           <div class='btn-group'>

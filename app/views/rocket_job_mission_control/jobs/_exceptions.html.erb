@@ -20,8 +20,9 @@
       </th>
 
       <th>
-        <div><%= link_to '<button type="button">View Input</button>'.html_safe, view_input_job_path(@job, error_type: exception.class_name) %></div>
-        <div><%= link_to '<button type="button">Edit Input</button>'.html_safe, edit_input_job_path(@job, error_type: exception.class_name) %></div>
+        <div>
+          <%= link_to 'Edit Input', edit_input_job_path(@job, error_type: exception.class_name), class: 'btn btn-primary' %>
+        </div>
       </th>
 
     </tr>

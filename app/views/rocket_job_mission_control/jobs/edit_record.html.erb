@@ -1,33 +1,25 @@
-<div class='edit_input'>
-  <div class='col-md-9'>
-    <div class='job-status'>
-      <div class='failures'>
+<div class='col-md-9'>
+  <% valid_events = @job.aasm.events.collect { |e| e.name } %>
 
-        <% valid_events = @job.aasm.events.collect { |e| e.name } %>
+  <br>
+  <br>
+  <%= form_for(:job, url: update_input_job_path(@job, offset: @offset, error_type: @failure_exception.class_name)) do |f| %>
+    <% @lines.each_with_index do |line, index| %>
+      <% if @line_index == index %>
+        <%= f.text_area :records, :value => line, class: 'input_slices', id: index, multiple: true %>
+      <% else %>
+        <%= f.hidden_field :records, :value => line, class: 'input_slices', id: index, multiple: true %>
+      <% end %>
+    <% end %>
 
-        <%= form_for(:job, url: update_input_job_path(@job, offset: @offset, error_type: @failure_exception.class_name)) do |f| %>
-
-          <% @lines.each_with_index do |line, index| %>
-            <div class='user_login'>
-              <% if @line_index == index %>
-                <%= f.text_area :records, :value => line, class: 'input_slices', id: index, multiple: true %>
-              <% else %>
-                <%= f.hidden_field :records, :value => line, class: 'input_slices', id: index, multiple: true %>
-                </div>
-              <% end %>
-          <% end %>
-
-          <div id='submit'>
-            <%= f.submit 'Save', class: 'btn btn-primary' %>
-            <% if valid_events.include?(:retry) && can?(:retry, @job) %>
-              <%= link_to 'Retry', rocket_job_mission_control.retry_job_path(@job), class: 'btn btn-warning', method: :patch %>
-            <% end %>
-            <%= link_to 'Cancel', :back, class: 'btn btn-default' %>
-          </div>
-          </div>
-        <% end %>
-
-        </div>
+    <div id='submit'>
+      <%= f.submit 'Save', class: 'btn btn-primary' %>
+      <% if valid_events.include?(:retry) && can?(:retry, @job) %>
+        <%= link_to 'Retry', rocket_job_mission_control.retry_job_path(@job), class: 'btn btn-warning', method: :patch %>
+      <% end %>
+      <%= link_to 'Back', edit_input_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
+  <% end %>
   </div>
 </div>
+
 

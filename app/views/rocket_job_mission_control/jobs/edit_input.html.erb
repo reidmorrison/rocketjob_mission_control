@@ -9,31 +9,25 @@
         </div>
 
         <div class='clearfix'></div>
-        <% valid_events = @job.aasm.events.collect { |e| e.name } %>
 
         <div class='message'>
           <pre><code><%= @failure_exception.message %></code></pre>
         </div>
 
-        <%= form_for(:job, url: update_input_job_path(@job, offset: @offset, error_type: @failure_exception.class_name)) do |f| %>
+      </div>
+    </div>
 
-          <% @lines.each do |line| %>
-            <div class='input_slices'>
-              <%= f.text_area :records, :multiple => true, :value => line, class: 'input_slices' %>
-            </div>
-          <% end %>
-
-          <div class='buttons'>
-            <%= f.submit 'Save', class: 'btn btn-primary' %>
-            <% if valid_events.include?(:retry) && can?(:retry, @job) %>
-              <%= link_to "Retry", rocket_job_mission_control.retry_job_path(@job), class: 'btn btn-warning', method: :patch %>
-            <% end %>
-            <%= link_to 'Cancel', :back, class: 'btn btn-default' %>
-          </div>
-          </div>
-        <% end %>
-
-
-        </div>
+    <% @lines.each_with_index do |line, index| %>
+      <div class='message' tabindex="<%= index + 1 %>" id="<%= index + 1 %>">
+        <pre><span>Line: <%= index + 1 %></span><br><br><code><%= line %></code><br><br><div class='edit_button'><%= link_to "Edit", edit_record_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: index), class: 'btn btn-primary' %></div>
+        </pre>
+      </div>
+    <% end %>
   </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        document.getElementById(<%= @edit_input_pagination[:record_number] %>).focus();
+    });
+</script>

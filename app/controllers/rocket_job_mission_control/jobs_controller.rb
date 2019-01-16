@@ -133,32 +133,55 @@ module RocketJobMissionControl
       authorize! :edit, @job
     end
 
-    def edit_input
+    def edit_record
       error_type = params[:error_type]
       @offset    = params.fetch(:offset, 0).to_i
+      @line_index = params[:line_index].to_i
 
       scope           = @job.input.failed.where('exception.class_name' => error_type)
       count           = scope.count
       current_failure = scope.order(_id: 1).limit(1).skip(@offset).first
 
-      @lines                 = current_failure.records
-      @failure_exception     = scope.first.try!(:exception)
+      @lines             = current_failure.records
+      @failure_exception = current_failure.try!(:exception)
+
       @edit_input_pagination = {
+        record_number: current_failure['exception']['record_number'] - 1,
         offset: @offset,
-        total:  (count - 1)
+        total: (count - 1)
+      }
+    end
+
+    def edit_input
+      error_type = params[:error_type]
+      @offset    = params.fetch(:offset, 0).to_i
+      scope           = @job.input.failed.where('exception.class_name' => error_type)
+      count           = scope.count
+      current_failure = scope.order(_id: 1).limit(1).skip(@offset).first
+
+      @lines             = current_failure.records
+      @failure_exception = current_failure.try!(:exception)
+
+      @edit_input_pagination = {
+        record_number: current_failure['exception']['record_number'],
+        offset: @offset,
+        total: (count - 1)
       }
     end
 
     def update_input
       error_type      = params[:error_type]
       offset          = params[:offset]
-      updated_records = params["job"]["records"]
+      updated_records = params['job']['records']
 
       slice         = @job.input.failed.skip(offset).first
-      slice.records = updated_records
+
+      # removes line
+      slice.records = updated_records.reject(&:empty?)
 
       if slice.save!
         redirect_to edit_input_job_path(@job, error_type: error_type)
+        flash[:success] = 'sliced updated'
       else
         raise 'oooooppppsssss'
       end

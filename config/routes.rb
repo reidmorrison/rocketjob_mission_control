@@ -24,6 +24,7 @@ RocketJobMissionControl::Engine.routes.draw do
       get :exception
       get :view_input
       get :edit_input
+      get :edit_record
     end
   end
 

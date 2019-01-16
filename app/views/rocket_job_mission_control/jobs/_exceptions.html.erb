@@ -21,7 +21,7 @@
 
       <th>
         <div>
-          <%= link_to 'Edit Input', edit_input_job_path(@job, error_type: exception.class_name), class: 'btn btn-primary' %>
+          <%= link_to 'Edit Input', edit_input_job_path(@job, error_type: exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"] ), class: 'btn btn-primary' %>
         </div>
       </th>
 

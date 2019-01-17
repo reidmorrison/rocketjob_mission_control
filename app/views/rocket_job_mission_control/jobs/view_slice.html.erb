@@ -5,7 +5,7 @@
         <div class='lead'><%= link_to(@job.class, job_path(@job)) %>: <%= @failure_exception.class_name %></div>
 
         <div class='pagination-buttons pull-right'>
-          <%= render partial: 'edit_input_pagination', locals: {error_type: @failure_exception.class_name, pagination: @edit_input_pagination} %>
+          <%= render partial: 'view_slice_pagination', locals: {error_type: @failure_exception.class_name, pagination: @view_slice_pagination} %>
         </div>
 
         <div class='clearfix'></div>
@@ -28,6 +28,6 @@
 
 <script>
     $(document).ready(function () {
-        document.getElementById(<%= @edit_input_pagination[:record_number] %>).focus();
+        document.getElementById(<%= @view_slice_pagination[:record_number] %>).focus();
     });
 </script>

@@ -19,7 +19,7 @@
 
     <% @lines.each_with_index do |line, index| %>
       <div class='message' tabindex="<%= index + 1 %>" id="<%= index + 1 %>">
-        <pre><span>Line: <%= index + 1 %></span><br><br><code><%= line %></code><br><br><div class='edit_button'><%= link_to "Edit", edit_record_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: index), class: 'btn btn-primary' %></div>
+        <pre><span>Line: <%= index + 1 %></span><br><br><code><%= line %></code><br><br><% if can?(:edit_slice, @job)%><div class='edit_button'><%= link_to "Edit", edit_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: index), class: 'btn btn-primary' %></div><% end %>
         </pre>
       </div>
     <% end %>

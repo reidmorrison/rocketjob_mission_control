@@ -2,11 +2,11 @@ module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
     if Rails.version.to_i < 5
       before_filter :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_filter :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
+      before_filter :authorize_read, only: %i[index running paused completed aborted failed queued scheduled view_slice]
       before_filter :show_sidebar
     else
       before_action :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
+      before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled view_slice]
       before_action :show_sidebar
     end
 
@@ -133,7 +133,7 @@ module RocketJobMissionControl
       authorize! :edit, @job
     end
 
-    def edit_input
+    def view_slice
       error_type      = params[:error_type]
       @offset         = params.fetch(:offset, 0).to_i
       scope           = @job.input.failed.where('exception.class_name' => error_type)
@@ -150,7 +150,8 @@ module RocketJobMissionControl
       }
     end
 
-    def edit_record
+    def edit_slice
+      authorize! :edit_slice, @job
       error_type  = params[:error_type]
       @offset     = params.fetch(:offset, 0).to_i
       @line_index = params[:line_index].to_i
@@ -169,7 +170,8 @@ module RocketJobMissionControl
       }
     end
 
-    def update_input
+    def update_slice
+      authorize! :update_slice, @job
       error_type      = params[:error_type]
       offset          = params[:offset]
       updated_records = params['job']['records']
@@ -180,10 +182,10 @@ module RocketJobMissionControl
       slice.records = updated_records.reject(&:empty?)
 
       if slice.save!
-        redirect_to edit_record_job_path(@job, error_type: error_type)
+        redirect_to edit_slice_job_path(@job, error_type: error_type)
         flash[:success] = 'sliced updated'
       else
-        flash[:danger] = 'Error loading jobs.'
+        flash[:danger] = 'Error updating slice.'
       end
     end
 

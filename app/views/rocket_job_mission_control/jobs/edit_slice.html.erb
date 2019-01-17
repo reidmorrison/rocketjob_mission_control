@@ -1,9 +1,8 @@
 <div class='col-md-9'>
   <% valid_events = @job.aasm.events.collect { |e| e.name } %>
-
   <br>
   <br>
-  <%= form_for(:job, url: update_input_job_path(@job, offset: @offset, error_type: @failure_exception.class_name)) do |f| %>
+  <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name)) do |f| %>
     <% @lines.each_with_index do |line, index| %>
       <% if @line_index == index %>
         <%= f.text_area :records, :value => line, class: 'input_slices', id: index, multiple: true %>
@@ -17,7 +16,7 @@
       <% if valid_events.include?(:retry) && can?(:retry, @job) %>
         <%= link_to 'Retry', rocket_job_mission_control.retry_job_path(@job), class: 'btn btn-warning', method: :patch %>
       <% end %>
-      <%= link_to 'Back', edit_input_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
+      <%= link_to 'Back', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
   <% end %>
   </div>
 </div>

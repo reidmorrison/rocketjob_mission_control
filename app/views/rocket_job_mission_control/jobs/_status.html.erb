@@ -45,11 +45,11 @@
 
 <div class='clearfix'></div>
 
-<% unless job.exception.nil? %>
-<div class='status-message'>
-  <label><%= 'Exceptions' %>:</label>
-  <%= render partial: 'exceptions', locals: {job: @job} %>
-</div>
+<% if job.exception.present? && job.respond_to?('input') %>
+  <div class='status-message'>
+    <label><%= 'Exceptions' %>:</label>
+    <%= render partial: 'exceptions', locals: {job: @job} %>
+  </div>
 <% end %>
 
 <% remaining.each_pair do |key, value| %>

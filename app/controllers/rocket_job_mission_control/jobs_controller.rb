@@ -182,7 +182,7 @@ module RocketJobMissionControl
       slice.records = updated_records.reject(&:empty?)
 
       if slice.save!
-        redirect_to edit_slice_job_path(@job, error_type: error_type)
+        redirect_to view_slice_job_path(@job, error_type: error_type)
         flash[:success] = 'sliced updated'
       else
         flash[:danger] = 'Error updating slice.'

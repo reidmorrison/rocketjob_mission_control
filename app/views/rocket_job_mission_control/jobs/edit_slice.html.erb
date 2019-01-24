@@ -13,10 +13,7 @@
 
     <div id='submit'>
       <%= f.submit 'Save', class: 'btn btn-primary' %>
-      <% if valid_events.include?(:retry) && can?(:retry, @job) %>
-        <%= link_to 'Retry', rocket_job_mission_control.retry_job_path(@job), class: 'btn btn-warning', method: :patch %>
-      <% end %>
-      <%= link_to 'Back', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
+      <%= link_to 'cancel', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
   <% end %>
   </div>
 </div>

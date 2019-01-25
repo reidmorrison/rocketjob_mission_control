@@ -134,54 +134,56 @@ module RocketJobMissionControl
     end
 
     def view_slice
-      error_type      = params[:error_type]
+      # Params from RocketJob. Exceptions are grouped by class_name.
+      # Scope: [[slice1], [slice2], [slice(n)]
+      error_type = params[:error_type]
+      scope      = @job.input.failed.where('exception.class_name' => error_type)
+
+      # Used by pagination to display the correct slice
+      # Offset refers to the slice number from the array "scope".
       @offset         = params.fetch(:offset, 0).to_i
-      scope           = @job.input.failed.where('exception.class_name' => error_type)
-      count           = scope.count
       current_failure = scope.order(_id: 1).limit(1).skip(@offset).first
 
-      @lines             = current_failure.records
-      @failure_exception = current_failure.try!(:exception)
-
+      # Instance variables to share with the view and pagination.
+      @lines                 = current_failure.records
+      @failure_exception     = current_failure.try!(:exception)
       @view_slice_pagination = {
         record_number: current_failure['exception']['record_number'],
         offset:        @offset,
-        total:         (count - 1)
+        total:         (scope.count - 1)
       }
     end
 
     def edit_slice
+      # We need all the instance varaibles from the view_slice (above) to able to
+      # Build the form as an array but only display the bad line
       authorize! :edit_slice, @job
-      error_type  = params[:error_type]
-      @offset     = params.fetch(:offset, 0).to_i
-      @line_index = params[:line_index].to_i
-
-      scope           = @job.input.failed.where('exception.class_name' => error_type)
-      count           = scope.count
-      current_failure = scope.order(_id: 1).limit(1).skip(@offset).first
-
+      error_type         = params[:error_type]
+      @line_index        = params[:line_index].to_i
+      @offset            = params.fetch(:offset, 0).to_i
+      scope              = @job.input.failed.where('exception.class_name' => error_type)
+      current_failure    = scope.order(_id: 1).limit(1).skip(@offset).first
       @lines             = current_failure.records
       @failure_exception = current_failure.try!(:exception)
-
-      @view_slice_pagination = {
-        record_number: current_failure['exception']['record_number'] - 1,
-        offset:        @offset,
-        total:         (count - 1)
-      }
     end
 
     def update_slice
       authorize! :update_slice, @job
+
+      # Params from the edit_slice form
       error_type      = params[:error_type]
       offset          = params[:offset]
       updated_records = params['job']['records']
 
-      slice = @job.input.failed.skip(offset).first
+      # Finds specific slice [Array]
+      slice         = @job.input.failed.skip(offset).first
+
+      # Assings modified slice (from the form) back to slice
       slice.records = updated_records
 
       if slice.save!
-        redirect_to view_slice_job_path(@job, error_type: error_type)
         flash[:success] = 'slice updated'
+        redirect_to view_slice_job_path(@job, error_type: error_type)
       else
         flash[:danger] = 'Error updating slice.'
       end
@@ -189,14 +191,21 @@ module RocketJobMissionControl
 
     def delete_line
       authorize! :edit_slice, @job
+
+      # Params from the edit_slice form
       error_type = params[:error_type]
       offset     = params.fetch(:offset, 0).to_i
       line_index = params[:line_index].to_i
 
-      scope         = @job.input.failed.where('exception.class_name' => error_type)
-      slice         = scope.order(_id: 1).limit(1).skip(offset).first
+      # Finds specific slice [Array]
+      scope = @job.input.failed.where('exception.class_name' => error_type)
+      slice = scope.order(_id: 1).limit(1).skip(offset).first
+
+      # Finds and deletes line
       value = slice.to_a[line_index]
       slice.to_a.delete(value)
+
+      # Assings full array back to slice
       slice.records = slice.to_a
 
       if slice.save!

@@ -2,11 +2,11 @@ module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
     if Rails.version.to_i < 5
       before_filter :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_filter :authorize_read, only: %i[index running paused completed aborted failed queued scheduled view_slice]
+      before_filter :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
       before_filter :show_sidebar
     else
       before_action :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled view_slice]
+      before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
       before_action :show_sidebar
     end
 
@@ -136,6 +136,7 @@ module RocketJobMissionControl
     def view_slice
       # Params from RocketJob. Exceptions are grouped by class_name.
       # Scope: [[slice1], [slice2], [slice(n)]
+      authorize! :view_slice, @job
       error_type = params[:error_type]
       scope      = @job.input.failed.where('exception.class_name' => error_type)
 

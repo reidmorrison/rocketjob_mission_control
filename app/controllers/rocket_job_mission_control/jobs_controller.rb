@@ -182,7 +182,7 @@ module RocketJobMissionControl
       # Assings modified slice (from the form) back to slice
       slice.records = updated_records
 
-      if slice.save!
+      if slice.save
         flash[:success] = 'slice updated'
         redirect_to view_slice_job_path(@job, error_type: error_type)
       else
@@ -209,7 +209,7 @@ module RocketJobMissionControl
       # Assings full array back to slice
       slice.records = slice.to_a
 
-      if slice.save!
+      if slice.save
         redirect_to view_slice_job_path(@job, error_type: error_type)
         flash[:success] = 'line removed'
       else

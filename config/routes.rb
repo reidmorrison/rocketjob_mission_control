@@ -19,7 +19,8 @@ RocketJobMissionControl::Engine.routes.draw do
       patch :resume
       patch :retry
       patch :run_now
-      post :update_slice
+      patch :delete_line
+      patch :update_slice
       get :exceptions
       get :exception
       get :view_slice

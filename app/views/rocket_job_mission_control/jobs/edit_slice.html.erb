@@ -1,21 +1,24 @@
-<div class='col-md-9'>
-  <% valid_events = @job.aasm.events.collect { |e| e.name } %>
-  <br>
-  <br>
-  <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name)) do |f| %>
-    <% @lines.each_with_index do |line, index| %>
-      <% if @line_index == index %>
-        <%= f.text_area :records, :value => line, class: 'input_slices', id: index, multiple: true %>
-      <% else %>
-        <%= f.hidden_field :records, :value => line, class: 'input_slices', id: index, multiple: true %>
+<div class='edit_input'>
+  <div class='col-md-10'>
+    <% valid_events = @job.aasm.events.collect { |e| e.name } %>
+    <br>
+    <br>
+    <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name), method: :patch) do |f| %>
+      <% @lines.each_with_index do |line, index| %>
+        <% if @line_index == index %>
+          <%= f.text_area :records, :value => line, class: 'input_slices', id: index, multiple: true %>
+        <% else %>
+          <%= f.hidden_field :records, :value => line, class: 'input_slices', id: index, multiple: true %>
+        <% end %>
       <% end %>
+
+      <div id='submit'>
+        <%= f.submit 'Save', class: 'btn btn-primary' %>
+        <%= link_to 'Delete', delete_line_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: @line_index), :data => {:confirm => 'Are you sure?'}, method: :patch, class: 'btn btn-danger' %>
+        <%= link_to 'Cancel', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
     <% end %>
 
-    <div id='submit'>
-      <%= f.submit 'Save', class: 'btn btn-primary' %>
-      <%= link_to 'cancel', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
-  <% end %>
+    </div>
   </div>
 </div>
-
 

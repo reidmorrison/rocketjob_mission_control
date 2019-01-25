@@ -177,15 +177,33 @@ module RocketJobMissionControl
       updated_records = params['job']['records']
 
       slice = @job.input.failed.skip(offset).first
-
-      # removes line
-      slice.records = updated_records.reject(&:empty?)
+      slice.records = updated_records
 
       if slice.save!
         redirect_to view_slice_job_path(@job, error_type: error_type)
         flash[:success] = 'slice updated'
       else
         flash[:danger] = 'Error updating slice.'
+      end
+    end
+
+    def delete_line
+      authorize! :edit_slice, @job
+      error_type = params[:error_type]
+      offset     = params.fetch(:offset, 0).to_i
+      line_index = params[:line_index].to_i
+
+      scope         = @job.input.failed.where('exception.class_name' => error_type)
+      slice         = scope.order(_id: 1).limit(1).skip(offset).first
+      value = slice.to_a[line_index]
+      slice.to_a.delete(value)
+      slice.records = slice.to_a
+
+      if slice.save!
+        redirect_to view_slice_job_path(@job, error_type: error_type)
+        flash[:success] = 'line removed'
+      else
+        flash[:danger] = 'Error removing line.'
       end
     end
 

@@ -43,6 +43,17 @@ module RocketJobMissionControl
       )
     end
 
+    def job_action_links_for_show(action, path, http_method=:get)
+      link_to(
+        action,
+        path,
+        method: http_method,
+        title:  "#{action} job",
+        class:  'btn btn-primary',
+        data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
+      )
+    end
+
     def job_selected_class(job, selected_job)
       if selected_job.present? && job.id == selected_job.id
         'selected'

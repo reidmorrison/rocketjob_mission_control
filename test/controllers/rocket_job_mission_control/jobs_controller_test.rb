@@ -450,14 +450,13 @@ module RocketJobMissionControl
         end
 
         it 'redirects' do
-          assert_redirected_to edit_slice_job_path(failed_job.id)
+          assert_redirected_to view_slice_job_path(failed_job, error_type: "CSV::MalformedCSVError")
         end
 
         it 'adds a flash success message' do
-          assert_equal 'sliced updated', flash[:success]
+          assert_equal 'slice updated', flash[:success]
         end
       end
-
     end
 
     def set_role(r)

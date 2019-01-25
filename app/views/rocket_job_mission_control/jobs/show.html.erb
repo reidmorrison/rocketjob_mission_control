@@ -17,49 +17,47 @@
 
       <div class='btn-toolbar job-actions pull-right'>
 
-        <% if @job.scheduled? && can?(:run_now, @job)%>
+        <% if @job.scheduled? && can?(:run_now, @job) %>
           <div class='btn-group'>
-            <%= job_action_link('Run', rocket_job_mission_control.run_now_job_path(@job), :patch) %>
+            <%= job_action_links_for_show('Run', rocket_job_mission_control.run_now_job_path(@job), :patch) %>
           </div>
         <% end %>
 
-        <div class='btn-group'>
+        <div class='left-margin'>
           <% valid_events = @job.aasm.events.collect { |e| e.name } %>
 
-          <% if valid_events.include?(:pause) && @job.pausable? && can?(:pause, @job)%>
-            <%= job_action_link('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
+          <% if valid_events.include?(:pause) && @job.pausable? && can?(:pause, @job) %>
+            <%= job_action_links_for_show('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
           <% end %>
 
-          <% if valid_events.include?(:resume) && can?(:resume, @job)%>
-            <%= job_action_link('Resume', rocket_job_mission_control.resume_job_path(@job), :patch) %>
+          <% if valid_events.include?(:resume) && can?(:resume, @job) %>
+            <%= job_action_links_for_show('Resume', rocket_job_mission_control.resume_job_path(@job), :patch) %>
           <% end %>
 
-          <% if valid_events.include?(:retry) && can?(:retry, @job)%>
-            <%= job_action_link('Retry', rocket_job_mission_control.retry_job_path(@job), :patch) %>
+          <% if valid_events.include?(:retry) && can?(:retry, @job) %>
+            <%= job_action_links_for_show('Retry', rocket_job_mission_control.retry_job_path(@job), :patch) %>
           <% end %>
-        </div>
 
-        <div class='btn-group'>
-          <% if valid_events.include?(:fail) && can?(:fail, @job)%>
-            <%= job_action_link('Fail', rocket_job_mission_control.fail_job_path(@job), :patch) %>
+          <% if valid_events.include?(:fail) && can?(:fail, @job) %>
+            <%= job_action_links_for_show('Fail', rocket_job_mission_control.fail_job_path(@job), :patch) %>
           <% end %>
 
           <% if valid_events.include?(:abort) && can?(:abort, @job) %>
-            <%= job_action_link('Abort', rocket_job_mission_control.abort_job_path(@job), :patch) %>
+            <%= job_action_links_for_show('Abort', rocket_job_mission_control.abort_job_path(@job), :patch) %>
           <% end %>
 
-          <% if can?(:destroy, @job)%>
-          <%= job_action_link('Destroy', rocket_job_mission_control.job_path(@job), :delete) %>
+          <% if can?(:destroy, @job) %>
+            <%= job_action_links_for_show('Destroy', rocket_job_mission_control.job_path(@job), :delete) %>
+          <% end %>
+
+          <% unless @job.completed? || @job.aborted? %>
+            <div class='btn-group'>
+              <% if can?(:edit, @job) %>
+                <%= link_to 'Edit', edit_job_path(@job), class: 'btn btn-primary' %>
+              <% end %>
+            </div>
           <% end %>
         </div>
-
-        <% unless @job.completed? || @job.aborted? %>
-          <div class='btn-group'>
-            <% if can?(:edit, @job)%>
-            <%= link_to 'Edit', edit_job_path(@job), class: 'btn btn-default' %>
-            <% end %>
-          </div>
-        <% end %>
       </div>
     </div>
   </div>
@@ -67,6 +65,6 @@
 
 <div class='row'>
   <div class='col-md-12'>
-    <%= render partial: 'status', locals: { job: @job } %>
+    <%= render partial: 'status', locals: {job: @job} %>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <% if flash.present? %>
   <div class='flash text-center'>
     <% flash.each do |key, msg| %>
-      <div class='alert alert-alert alert-dismissable' role='alert'>
+      <div class='alert alert-<%=key%> alert-dismissable' role='alert'>
         <button class='close' data-dismiss='alert'>
           <span>&times;</span>
         </button>

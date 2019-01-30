@@ -50,3 +50,23 @@
     border-radius: 0;
   }
 }
+
+.input_slices {
+  font-size: 14px;
+  line-height: 2.0;
+  resize: none;
+  width: 100%;
+  height: 20em;
+  padding-top:5px;
+  padding-bottom:5px;
+  margin-bottom: 4px;
+}
+
+.edit_button{
+  float: right;
+  margin-left: 3px;
+}
+
+.edit_input{
+  margin-left: 80px;
+}

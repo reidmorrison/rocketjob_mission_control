@@ -133,9 +133,90 @@ module RocketJobMissionControl
       authorize! :edit, @job
     end
 
-    def exceptions
-      authorize! :read, @job
-      @exceptions = @job.input.group_exceptions
+    def view_slice
+      # Params from RocketJob. Exceptions are grouped by class_name.
+      # Scope: [[slice1], [slice2], [slice(n)]
+      authorize! :view_slice, @job
+      error_type = params[:error_type]
+      scope      = @job.input.failed.where('exception.class_name' => error_type)
+
+      # Used by pagination to display the correct slice
+      # Offset refers to the slice number from the array "scope".
+      @offset         = params.fetch(:offset, 0).to_i
+      current_failure = scope.order(_id: 1).limit(1).skip(@offset).first
+
+      # Instance variables to share with the view and pagination.
+      @lines                 = current_failure.records
+      @failure_exception     = current_failure.try!(:exception)
+      @view_slice_pagination = {
+        record_number: current_failure['exception']['record_number'],
+        offset:        @offset,
+        total:         (scope.count - 1)
+      }
+    end
+
+    def edit_slice
+      # We need all the instance varaibles from the view_slice (above) to able to
+      # Build the form as an array but only display the bad line
+      authorize! :edit_slice, @job
+      error_type         = params[:error_type]
+      @line_index        = params[:line_index].to_i
+      @offset            = params.fetch(:offset, 0).to_i
+      scope              = @job.input.failed.where('exception.class_name' => error_type)
+      current_failure    = scope.order(_id: 1).limit(1).skip(@offset).first
+      @lines             = current_failure.records
+      @failure_exception = current_failure.try!(:exception)
+    end
+
+    def update_slice
+      authorize! :update_slice, @job
+
+      # Params from the edit_slice form
+      error_type      = params[:error_type]
+      offset          = params[:offset]
+      updated_records = params['job']['records']
+
+      # Finds specific slice [Array]
+      slice         = @job.input.failed.skip(offset).first
+
+      # Assings modified slice (from the form) back to slice
+      slice.records = updated_records
+
+      if slice.save
+        logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
+        flash[:success] = 'slice updated'
+        redirect_to view_slice_job_path(@job, error_type: error_type)
+      else
+        flash[:danger] = 'Error updating slice.'
+      end
+    end
+
+    def delete_line
+      authorize! :edit_slice, @job
+
+      # Params from the edit_slice form
+      error_type = params[:error_type]
+      offset     = params.fetch(:offset, 0).to_i
+      line_index = params[:line_index].to_i
+
+      # Finds specific slice [Array]
+      scope = @job.input.failed.where('exception.class_name' => error_type)
+      slice = scope.order(_id: 1).limit(1).skip(offset).first
+
+      # Finds and deletes line
+      value = slice.to_a[line_index]
+      slice.to_a.delete(value)
+
+      # Assings full array back to slice
+      slice.records = slice.to_a
+
+      if slice.save
+        logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
+        redirect_to view_slice_job_path(@job, error_type: error_type)
+        flash[:success] = 'line removed'
+      else
+        flash[:danger] = 'Error removing line.'
+      end
     end
 
     def exception
@@ -199,7 +280,7 @@ module RocketJobMissionControl
                          'Error loading jobs.'
                        end
 
-       raise exception if Rails.env.development? || Rails.env.test?
+      raise exception if Rails.env.development? || Rails.env.test?
       redirect_to :back
     end
 
@@ -223,10 +304,10 @@ module RocketJobMissionControl
     def build_table_layout(columns)
       index = 0
       columns.collect do |column|
-        h             = { data: index.to_s }
+        h             = {data: index.to_s}
         h[:width]     = column[:width] if column.key?(:width)
         h[:orderable] = column[:orderable] if column.key?(:orderable)
-        index += 1
+        index         += 1
         h
       end
     end

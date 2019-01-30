@@ -12,7 +12,7 @@ module RocketJobMissionControl
       # View the contents of jobs and edit the data within them.
       # Including encrypted records.
       role :editor, {editor: true} do
-        can %i[read_records update_records], RocketJob::Job
+        can %i[view_slice edit_slice update_slice], RocketJob::Job
       end
 
       # Stop, Pause, Resume, Destroy (force stop) Rocket Job Servers

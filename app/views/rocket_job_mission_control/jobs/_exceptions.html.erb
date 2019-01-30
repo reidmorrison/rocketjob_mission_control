@@ -1,0 +1,35 @@
+<table class='table datatable jobs-datatable' data-source='<%= jobs_url(format: 'json') %>' style='width: 100%'>
+  <thead>
+  <tr>
+    <th>Count</th>
+    <th>Exception Class</th>
+    <th>Exception Messages</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @job.input.group_exceptions.each do |exception| %>
+    <tr>
+      <th><%= exception.count %></th>
+      <th><%= link_to(exception.class_name, exception_job_path(@job, error_type: exception.class_name), class: "card callout") %></th>
+
+      <th>
+        <% exception.messages.each do |message| %>
+          <div><%= message %></div>
+        <% end %>
+      </th>
+
+      <% if can?(:view_slice, @job) %>
+      <th>
+        <div>
+          <%= link_to 'View Slice', view_slice_job_path(@job, error_type: exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"] ), class: 'btn btn-primary' %>
+        </div>
+      </th>
+      <% end %>
+
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+

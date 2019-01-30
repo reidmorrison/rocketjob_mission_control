@@ -42,6 +42,14 @@
 
 <div class='clearfix'></div>
 
+<% if job.respond_to?('input') && job.input.failed.count.positive? %>
+  <% status.delete('exception') %>
+  <div class='status-message'>
+    <label><%= 'Exceptions' %>:</label>
+    <%= render partial: 'exceptions', locals: {job: @job} %>
+  </div>
+<% end %>
+
 <% remaining.each_pair do |key, value| %>
   <div class='status-message'>
     <label><%= key.to_s.titleize %>:</label>

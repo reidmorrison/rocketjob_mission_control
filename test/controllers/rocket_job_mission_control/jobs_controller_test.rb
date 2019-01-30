@@ -430,6 +430,33 @@ module RocketJobMissionControl
           end
         end
       end
+
+      [:view_slice, :edit_slice].each do |method|
+        describe "with a failed slice" do
+          it "access ##{method}" do
+            params = {:error_type => "ArgumentError", "record_number" => "9", "id" => failed_job.id}
+            params = {params: params} if Rails.version.to_i >= 5
+            get method, params
+            assert_response :success
+          end
+        end
+      end
+
+      describe "#update slice" do
+        before do
+          params = { "job" => { "records" => [ "1", "2", "3"] }, "error_type" => "CSV::MalformedCSVError", "offset" => "1", "id" => failed_job.id.to_s }
+          params = {params: params} if Rails.version.to_i >= 5
+          post :update_slice, params
+        end
+
+        it 'redirects' do
+          assert_redirected_to view_slice_job_path(failed_job, error_type: "CSV::MalformedCSVError")
+        end
+
+        it 'adds a flash success message' do
+          assert_equal 'slice updated', flash[:success]
+        end
+      end
     end
 
     def set_role(r)

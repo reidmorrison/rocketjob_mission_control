@@ -1,8 +1,5 @@
 <% status = job.status(Time.zone) %>
 
-<!--rather have the api not return this hash key anymore -->
-<% status.delete('exception') %>
-
 <div class='id'>
   <label>ID:</label> <%= status.delete('_id') %>
 </div>
@@ -45,7 +42,8 @@
 
 <div class='clearfix'></div>
 
-<% if job.exception.present? && job.respond_to?('input') %>
+<% if job.respond_to?('input') && job.input.failed.count.positive? %>
+  <% status.delete('exception') %>
   <div class='status-message'>
     <label><%= 'Exceptions' %>:</label>
     <%= render partial: 'exceptions', locals: {job: @job} %>

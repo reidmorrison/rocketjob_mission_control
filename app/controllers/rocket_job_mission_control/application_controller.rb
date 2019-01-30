@@ -14,13 +14,20 @@ module RocketJobMissionControl
 
     def current_policy
       @current_policy ||= begin
-        args =
+        @args =
           if Config.authorization_callback
             instance_exec(&Config.authorization_callback)
           else
             {roles: %i[admin]}
           end
-        AccessPolicy.new(Authorization.new(args))
+        AccessPolicy.new(Authorization.new(@args))
+      end
+    end
+
+    def login
+      @login ||= begin
+        args = instance_exec(&Config.authorization_callback)
+        args[:login]
       end
     end
 

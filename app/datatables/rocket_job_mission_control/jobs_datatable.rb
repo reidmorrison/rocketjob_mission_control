@@ -30,15 +30,17 @@ module RocketJobMissionControl
     QUEUED_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type'},
       {display: 'Description', value: :description, field: 'description'},
+      {display: 'Record Count', value: :record_count, field: 'record_count'},
       {display: 'Priority', value: :priority, field: 'priority'},
       {display: 'Queued For', value: :duration, field: 'duration', orderable: false},
       {display: 'Actions', value: :action_buttons, orderable: false}
     ]
-    QUEUED_FIELDS  = (COMMON_FIELDS + [:run_at, :priority]).freeze
+    QUEUED_FIELDS  = (COMMON_FIELDS + [:record_count, :run_at, :priority]).freeze
 
     RUNNING_COLUMNS = [
       {display: 'Class', value: :class_with_link, field: '_type'},
       {display: 'Description', value: :description, field: 'description'},
+      {display: 'Record Count', value: :record_count, field: 'record_count'},
       {display: 'Progress', value: :progress, field: 'percent_complete', orderable: false},
       {display: 'Workers', value: :worker_count, field: 'worker_count', orderable: false},
       {display: 'Priority', value: :priority, field: 'priority'},
@@ -116,6 +118,10 @@ module RocketJobMissionControl
 
     def worker_count(job)
       h(job.worker_count)
+    end
+
+    def record_count(job)
+      job.attributes.key?('record_count') ? h(job.record_count) : 0
     end
 
     def started(job)

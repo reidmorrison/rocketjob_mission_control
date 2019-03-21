@@ -3,6 +3,7 @@ require_relative '../../test_helper'
 class QueryTest < Minitest::Test
 
   class NoopJob < RocketJob::Job
+    field :record_count, type: Integer, default: 0
     def perform(record)
       # noop
     end
@@ -10,7 +11,7 @@ class QueryTest < Minitest::Test
 
   describe RocketJobMissionControl::Query do
     before do
-      @jobs = (1..10).collect { |i| NoopJob.create(description: "Job #{i}") }
+      @jobs = (1..10).collect { |i| NoopJob.create(description: "Job #{i}", record_count: i) }
     end
 
     after do
@@ -98,6 +99,27 @@ class QueryTest < Minitest::Test
         assert_equal 3, count
       end
 
+      it 'sorts ascending by record_count' do
+        count    = 0
+        previous = nil
+        RocketJobMissionControl::Query.new(NoopJob.all, record_count: 1).query.each do |job|
+          assert(previous < job.record_count, "Wrong sort order. #{previous} < #{job.record_count}") if previous
+          previous = job.record_count
+          count   += 1
+        end
+        assert_equal @jobs.count, count
+      end
+
+      it 'sorts descending by record_count' do
+        count    = 0
+        previous = nil
+        RocketJobMissionControl::Query.new(NoopJob.all, record_count: -1).query.each do |job|
+          assert(previous > job.record_count, "Wrong sort order. #{previous} > #{job.record_count}") if previous
+          previous = job.record_count
+          count   += 1
+        end
+        assert_equal @jobs.count, count
+      end
     end
 
     describe '#count' do

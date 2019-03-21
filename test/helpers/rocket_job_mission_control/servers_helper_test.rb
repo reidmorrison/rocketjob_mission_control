@@ -23,6 +23,7 @@ module RocketJobMissionControl
           let(:server) do
             server = RocketJob::Server.new
             server.started
+            server.build_heartbeat(updated_at: 1.hour.ago, workers: 0)
             server
           end
 
@@ -50,6 +51,7 @@ module RocketJobMissionControl
           let(:server) do
             server = RocketJob::Server.new
             server.started
+            server.build_heartbeat(updated_at: 1.hour.ago, workers: 0)
             server
           end
 

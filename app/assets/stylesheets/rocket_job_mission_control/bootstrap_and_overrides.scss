@@ -473,8 +473,7 @@ $hr-border:                                 $gray-lighter;
 
 $component-offset-horizontal: 180px;
 
-@import "bootstrap-sprockets";
-@import "bootstrap";
+@import "bootstrap.min";
 
 .alert {
   margin-bottom: 0px;

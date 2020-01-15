@@ -11,7 +11,7 @@
             <div class='server-collection-actions'>
               <ol>
                 <div class='btn-group'>
-                  <% if can?(:create, RocketJob::DirmonEntry) %>
+                  <% if can?(:update_all, RocketJob::Server) %>
                     <% Array(@actions).each do |action| %>
                       <%= link_to(
                               "#{action.to_s.humanize.capitalize}",

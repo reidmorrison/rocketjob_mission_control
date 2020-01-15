@@ -17,25 +17,25 @@ module RocketJobMissionControl
 
     def index
       @data_table_url = servers_url(format: 'json')
-      @actions        = [:pause_all, :resume_all, :stop_all, :destroy_zombies]
+      @actions        = [:pause, :resume, :stop, :kill, :destroy_zombies]
       render_datatable(RocketJob::Server.all, 'All')
     end
 
     def starting
       @data_table_url = starting_servers_url(format: 'json')
-      @actions        = [:pause_all, :stop_all]
+      @actions        = [:pause, :stop, :kill]
       render_datatable(RocketJob::Server.starting, 'Starting')
     end
 
     def running
       @data_table_url = running_servers_url(format: 'json')
-      @actions        = [:pause_all, :stop_all, :destroy_zombies]
+      @actions        = [:pause, :stop, :kill, :destroy_zombies]
       render_datatable(RocketJob::Server.running, 'Running')
     end
 
     def paused
       @data_table_url = paused_servers_url(format: 'json')
-      @actions        = [:resume_all, :destroy_zombies]
+      @actions        = [:resume, :destroy_zombies]
       render_datatable(RocketJob::Server.paused, 'Paused')
     end
 
@@ -51,13 +51,15 @@ module RocketJobMissionControl
       render_datatable(RocketJob::Server.zombies, 'Zombie')
     end
 
-    VALID_ACTIONS = [:stop_all, :pause_all, :resume_all, :destroy_zombies]
+    VALID_ACTIONS = [:stop, :kill, :pause, :resume, :thread_dump]
 
     def update_all
-      authorize! :destroy, RocketJob::Server
+      authorize! :update_all, RocketJob::Server
       server_action = params[:server_action].to_sym
-      if VALID_ACTIONS.include?(server_action)
-        RocketJob::Server.public_send(server_action.to_sym)
+      if server_action == :destroy_zombies
+        RocketJob::Server.destroy_zombies
+      elsif VALID_ACTIONS.include?(server_action)
+        RocketJob::Subscribers::Server.publish(server_action)
       else
         flash[:alert] = t(:invalid, scope: [:server, :update_all])
       end

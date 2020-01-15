@@ -17,7 +17,7 @@ module RocketJobMissionControl
 
       # Stop, Pause, Resume, Destroy (force stop) Rocket Job Servers
       role :operator, {operator: true} do
-        can %i[stop pause resume destroy update_all], RocketJob::Server
+        can %i[stop kill pause resume destroy update_all], RocketJob::Server
       end
 
       # Pause, Resume, Retry, Abort, Edit Jobs

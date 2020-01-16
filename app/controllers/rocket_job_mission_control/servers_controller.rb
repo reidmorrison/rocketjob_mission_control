@@ -54,12 +54,14 @@ module RocketJobMissionControl
     VALID_ACTIONS = [:stop, :kill, :pause, :resume, :thread_dump]
 
     def update_all
-      authorize! :update_all, RocketJob::Server
       server_action = params[:server_action].to_sym
+      authorize! server_action, RocketJob::Server
+
       if server_action == :destroy_zombies
         RocketJob::Server.destroy_zombies
       elsif VALID_ACTIONS.include?(server_action)
         RocketJob::Subscribers::Server.publish(server_action)
+        flash[:notice] = t(:success, scope: [:server, :update_all], action: server_action.to_s)
       else
         flash[:alert] = t(:invalid, scope: [:server, :update_all])
       end
@@ -72,11 +74,8 @@ module RocketJobMissionControl
 
     def stop
       authorize! :stop, @server
-      if @server.may_stop?
-        @server.stop!
-      else
-        flash[:alert] = t(:failure, scope: [:server, :stop])
-      end
+      RocketJob::Subscribers::Server.publish(:stop, server_id: @server.id)
+      flash[:notice] = t(:success, scope: [:server, :update_one], action: 'stop', name: @server.name )
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -95,11 +94,8 @@ module RocketJobMissionControl
 
     def pause
       authorize! :pause, @server
-      if @server.may_pause?
-        @server.pause!
-      else
-        flash[:alert] = t(:failure, scope: [:server, :pause])
-      end
+      RocketJob::Subscribers::Server.publish(:pause, server_id: @server.id)
+      flash[:notice] = t(:success, scope: [:server, :update_one], action: 'pause', name: @server.name )
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -108,11 +104,8 @@ module RocketJobMissionControl
 
     def resume
       authorize! :resume, @server
-      if @server.may_resume?
-        @server.resume!
-      else
-        flash[:alert] = t(:failure, scope: [:server, :resume])
-      end
+      RocketJob::Subscribers::Server.publish(:resume, server_id: @server.id)
+      flash[:notice] = t(:success, scope: [:server, :update_one], action: 'resume', name: @server.name )
 
       respond_to do |format|
         format.html { redirect_to servers_path }

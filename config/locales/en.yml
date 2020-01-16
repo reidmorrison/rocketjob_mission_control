@@ -50,7 +50,10 @@ en:
       failure: "Error attempting to resume server."
     update_all:
       invalid: "Action not allowed."
+      success: "Submitted %{action} request to all active Rocket Job servers."
       confirm: "Are you sure you want to %{action} ALL Rocket Job servers?"
+    update_one:
+      success: "Submitted %{action} request to Rocket Job server: %{name}."
   job:
     find:
       failure: "Could not find job with id: %{id}!"

@@ -11,8 +11,8 @@
             <div class='server-collection-actions'>
               <ol>
                 <div class='btn-group'>
-                  <% if can?(:update_all, RocketJob::Server) %>
-                    <% Array(@actions).each do |action| %>
+                  <% Array(@actions).each do |action| %>
+                    <% if can?(action, RocketJob::Server) %>
                       <%= link_to(
                               "#{action.to_s.humanize.capitalize}",
                               rocket_job_mission_control.update_all_servers_path(server_action: action),

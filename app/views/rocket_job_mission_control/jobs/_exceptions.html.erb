@@ -22,7 +22,7 @@
       <% if can?(:view_slice, @job) %>
       <th>
         <div>
-          <%= link_to 'View Slice', view_slice_job_path(@job, error_type: exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"] ), class: 'btn btn-primary' %>
+          <%= link_to 'View Slice', view_slice_job_path(@job, error_type: exception.class_name, record_number: @job.input.failed.first.processing_record_number), class: 'btn btn-primary' %>
         </div>
       </th>
       <% end %>

@@ -15,7 +15,7 @@
       <div id='submit'>
         <%= f.submit 'Save', class: 'btn btn-primary' %>
         <%= link_to 'Delete', delete_line_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: @line_index), :data => {:confirm => 'Are you sure?'}, method: :patch, class: 'btn btn-danger' %>
-        <%= link_to 'Cancel', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first["exception"]["record_number"]), class: 'btn btn-default' %>
+        <%= link_to 'Cancel', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first.processing_record_number), class: 'btn btn-default' %>
     <% end %>
 
     </div>

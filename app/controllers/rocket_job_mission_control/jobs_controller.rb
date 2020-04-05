@@ -149,7 +149,7 @@ module RocketJobMissionControl
       @lines                 = current_failure.records
       @failure_exception     = current_failure.try!(:exception)
       @view_slice_pagination = {
-        record_number: current_failure['exception']['record_number'],
+        record_number: current_failure.processing_record_number,
         offset:        @offset,
         total:         (scope.count - 1)
       }

@@ -47,4 +47,3 @@ module RocketJobMissionControl
     end
   end
 end
-

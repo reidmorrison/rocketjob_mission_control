@@ -14,4 +14,3 @@ def compare_hash(expected_hash, actual_hash)
     end
   end
 end
-

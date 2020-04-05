@@ -14,62 +14,62 @@ module RocketJobMissionControl
 
     def index
       jobs            = RocketJob::Job.all.only(JobsDatatable::ALL_FIELDS)
-      @data_table_url = jobs_url(format: 'json')
+      @data_table_url = jobs_url(format: "json")
 
-      render_datatable(jobs, 'All', JobsDatatable::ALL_COLUMNS, id: :desc)
+      render_datatable(jobs, "All", JobsDatatable::ALL_COLUMNS, id: :desc)
     end
 
     def running
       # Prevent throttled jobs from displaying.
       jobs            = RocketJob::Job.
-        running.
-        where(:started_at.lte => (Time.now - 0.1)).
-        only(JobsDatatable::RUNNING_FIELDS)
-      @data_table_url = running_jobs_url(format: 'json')
+                        running.
+                        where(:started_at.lte => (Time.now - 0.1)).
+                        only(JobsDatatable::RUNNING_FIELDS)
+      @data_table_url = running_jobs_url(format: "json")
 
-      render_datatable(jobs, 'Running', JobsDatatable::RUNNING_COLUMNS, priority: :asc, created_at: :asc)
+      render_datatable(jobs, "Running", JobsDatatable::RUNNING_COLUMNS, priority: :asc, created_at: :asc)
     end
 
     def paused
       jobs            = RocketJob::Job.paused.only(JobsDatatable::COMMON_FIELDS)
-      @data_table_url = paused_jobs_url(format: 'json')
+      @data_table_url = paused_jobs_url(format: "json")
 
-      render_datatable(jobs, 'Paused', JobsDatatable::PAUSED_COLUMNS, completed_at: :desc)
+      render_datatable(jobs, "Paused", JobsDatatable::PAUSED_COLUMNS, completed_at: :desc)
     end
 
     def completed
       jobs            = RocketJob::Job.completed.only(JobsDatatable::COMMON_FIELDS)
-      @data_table_url = completed_jobs_url(format: 'json')
+      @data_table_url = completed_jobs_url(format: "json")
 
-      render_datatable(jobs, 'Completed', JobsDatatable::COMPLETED_COLUMNS, completed_at: :desc)
+      render_datatable(jobs, "Completed", JobsDatatable::COMPLETED_COLUMNS, completed_at: :desc)
     end
 
     def aborted
       jobs            = RocketJob::Job.aborted.only(JobsDatatable::COMMON_FIELDS)
-      @data_table_url = aborted_jobs_url(format: 'json')
+      @data_table_url = aborted_jobs_url(format: "json")
 
-      render_datatable(jobs, 'Aborted', JobsDatatable::ABORTED_COLUMNS, completed_at: :desc)
+      render_datatable(jobs, "Aborted", JobsDatatable::ABORTED_COLUMNS, completed_at: :desc)
     end
 
     def failed
       jobs            = RocketJob::Job.failed.only(JobsDatatable::COMMON_FIELDS)
-      @data_table_url = failed_jobs_url(format: 'json')
+      @data_table_url = failed_jobs_url(format: "json")
 
-      render_datatable(jobs, 'Failed', JobsDatatable::FAILED_COLUMNS, completed_at: :desc)
+      render_datatable(jobs, "Failed", JobsDatatable::FAILED_COLUMNS, completed_at: :desc)
     end
 
     def queued
       jobs            = RocketJob::Job.queued_now.only(JobsDatatable::QUEUED_FIELDS)
-      @data_table_url = queued_jobs_url(format: 'json')
+      @data_table_url = queued_jobs_url(format: "json")
 
-      render_datatable(jobs, 'Queued', JobsDatatable::QUEUED_COLUMNS, priority: :asc, created_at: :asc)
+      render_datatable(jobs, "Queued", JobsDatatable::QUEUED_COLUMNS, priority: :asc, created_at: :asc)
     end
 
     def scheduled
       jobs            = RocketJob::Job.scheduled.only(JobsDatatable::SCHEDULED_FIELDS)
-      @data_table_url = scheduled_jobs_url(format: 'json')
+      @data_table_url = scheduled_jobs_url(format: "json")
 
-      render_datatable(jobs, 'Scheduled', JobsDatatable::SCHEDULED_COLUMNS, run_at: :asc)
+      render_datatable(jobs, "Scheduled", JobsDatatable::SCHEDULED_COLUMNS, run_at: :asc)
     end
 
     def update
@@ -138,7 +138,7 @@ module RocketJobMissionControl
       # Scope: [[slice1], [slice2], [slice(n)]
       authorize! :view_slice, @job
       error_type = params[:error_type]
-      scope      = @job.input.failed.where('exception.class_name' => error_type)
+      scope      = @job.input.failed.where("exception.class_name" => error_type)
 
       # Used by pagination to display the correct slice
       # Offset refers to the slice number from the array "scope".
@@ -162,7 +162,7 @@ module RocketJobMissionControl
       error_type         = params[:error_type]
       @line_index        = params[:line_index].to_i
       @offset            = params.fetch(:offset, 0).to_i
-      scope              = @job.input.failed.where('exception.class_name' => error_type)
+      scope              = @job.input.failed.where("exception.class_name" => error_type)
       current_failure    = scope.order(_id: 1).limit(1).skip(@offset).first
       @lines             = current_failure.records
       @failure_exception = current_failure.try!(:exception)
@@ -174,20 +174,20 @@ module RocketJobMissionControl
       # Params from the edit_slice form
       error_type      = params[:error_type]
       offset          = params[:offset]
-      updated_records = params['job']['records']
+      updated_records = params["job"]["records"]
 
       # Finds specific slice [Array]
-      slice         = @job.input.failed.skip(offset).first
+      slice = @job.input.failed.skip(offset).first
 
       # Assings modified slice (from the form) back to slice
       slice.records = updated_records
 
       if slice.save
         logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
-        flash[:success] = 'slice updated'
+        flash[:success] = "slice updated"
         redirect_to view_slice_job_path(@job, error_type: error_type)
       else
-        flash[:danger] = 'Error updating slice.'
+        flash[:danger] = "Error updating slice."
       end
     end
 
@@ -200,7 +200,7 @@ module RocketJobMissionControl
       line_index = params[:line_index].to_i
 
       # Finds specific slice [Array]
-      scope = @job.input.failed.where('exception.class_name' => error_type)
+      scope = @job.input.failed.where("exception.class_name" => error_type)
       slice = scope.order(_id: 1).limit(1).skip(offset).first
 
       # Finds and deletes line
@@ -213,9 +213,9 @@ module RocketJobMissionControl
       if slice.save
         logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
         redirect_to view_slice_job_path(@job, error_type: error_type)
-        flash[:success] = 'line removed'
+        flash[:success] = "line removed"
       else
-        flash[:danger] = 'Error removing line.'
+        flash[:danger] = "Error removing line."
       end
     end
 
@@ -229,9 +229,9 @@ module RocketJobMissionControl
         redirect_to(job_path(@job))
       end
 
-      scope = @job.input.failed.where('exception.class_name' => error_type)
+      scope = @job.input.failed.where("exception.class_name" => error_type)
       count = scope.count
-      unless count > 0
+      unless count.positive?
         flash[:notice] = t(:no_errors, scope: %i[job failures])
         redirect_to(job_path(@job))
       end
@@ -269,18 +269,19 @@ module RocketJobMissionControl
 
     def error_occurred(exception)
       if defined?(SemanticLogger::Logger) && logger.is_a?(SemanticLogger::Logger)
-        logger.error 'Error loading a job', exception
+        logger.error "Error loading a job", exception
       else
         logger.error "Error loading a job. #{exception.class}: #{exception.message}\n#{(exception.backtrace || []).join("\n")}"
       end
 
       flash[:danger] = if exception.is_a?(AccessGranted::AccessDenied)
-                         'Access not authorized.'
+                         "Access not authorized."
                        else
-                         'Error loading jobs.'
+                         "Error loading jobs."
                        end
 
       raise exception if Rails.env.development? || Rails.env.test?
+
       redirect_to :back
     end
 
@@ -307,7 +308,7 @@ module RocketJobMissionControl
         h             = {data: index.to_s}
         h[:width]     = column[:width] if column.key?(:width)
         h[:orderable] = column[:orderable] if column.key?(:orderable)
-        index         += 1
+        index += 1
         h
       end
     end

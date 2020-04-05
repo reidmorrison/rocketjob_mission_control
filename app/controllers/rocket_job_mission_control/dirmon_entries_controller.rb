@@ -12,32 +12,33 @@ module RocketJobMissionControl
 
     rescue_from AccessGranted::AccessDenied do |exception|
       raise exception if Rails.env.development? || Rails.env.test?
-      redirect_to :back, alert: 'Access not authorized.'
+
+      redirect_to :back, alert: "Access not authorized."
     end
 
     def index
-      @data_table_url = dirmon_entries_url(format: 'json')
-      render_datatable(RocketJob::DirmonEntry.all, 'All')
+      @data_table_url = dirmon_entries_url(format: "json")
+      render_datatable(RocketJob::DirmonEntry.all, "All")
     end
 
     def disabled
-      @data_table_url = disabled_dirmon_entries_url(format: 'json')
-      render_datatable(RocketJob::DirmonEntry.disabled, 'Disabled')
+      @data_table_url = disabled_dirmon_entries_url(format: "json")
+      render_datatable(RocketJob::DirmonEntry.disabled, "Disabled")
     end
 
     def enabled
-      @data_table_url = enabled_dirmon_entries_url(format: 'json')
-      render_datatable(RocketJob::DirmonEntry.enabled, 'Enabled')
+      @data_table_url = enabled_dirmon_entries_url(format: "json")
+      render_datatable(RocketJob::DirmonEntry.enabled, "Enabled")
     end
 
     def failed
-      @data_table_url = failed_dirmon_entries_url(format: 'json')
-      render_datatable(RocketJob::DirmonEntry.failed, 'Failed')
+      @data_table_url = failed_dirmon_entries_url(format: "json")
+      render_datatable(RocketJob::DirmonEntry.failed, "Failed")
     end
 
     def pending
-      @data_table_url = pending_dirmon_entries_url(format: 'json')
-      render_datatable(RocketJob::DirmonEntry.pending, 'Pending')
+      @data_table_url = pending_dirmon_entries_url(format: "json")
+      render_datatable(RocketJob::DirmonEntry.pending, "Pending")
     end
 
     def show
@@ -48,7 +49,7 @@ module RocketJobMissionControl
       @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
 
       if dirmon_params[:job_class_name] && !@dirmon_entry.job_class
-        @dirmon_entry.errors.add(:job_class_name, 'Invalid Job Class')
+        @dirmon_entry.errors.add(:job_class_name, "Invalid Job Class")
       end
     end
 
@@ -94,7 +95,7 @@ module RocketJobMissionControl
         @dirmon_entry.enable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert] = t(:failure, scope: [:dirmon_entry, :enable])
+        flash[:alert] = t(:failure, scope: %i[dirmon_entry enable])
         render(:show)
       end
     end
@@ -105,7 +106,7 @@ module RocketJobMissionControl
         @dirmon_entry.disable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert] = t(:failure, scope: [:dirmon_entry, :disable])
+        flash[:alert] = t(:failure, scope: %i[dirmon_entry disable])
         render(:show)
       end
     end
@@ -127,16 +128,16 @@ module RocketJobMissionControl
 
     def find_entry_or_redirect
       unless @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
-        flash[:alert] = t(:failure, scope: [:dirmon_entry, :find], id: params[:id])
+        flash[:alert] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
 
         redirect_to(dirmon_entries_path)
       end
     end
 
     def dirmon_params
-      params
-        .fetch(:rocket_job_dirmon_entry, {})
-        .permit(:name, :archive_directory, :pattern, :job_class_name)
+      params.
+        fetch(:rocket_job_dirmon_entry, {}).
+        permit(:name, :archive_directory, :pattern, :job_class_name)
     end
 
     def render_datatable(entries, description)
@@ -147,7 +148,7 @@ module RocketJobMissionControl
         end
         format.json do
           query                 = RocketJobMissionControl::Query.new(entries, name: :asc)
-          query.search_columns  = [:job_class_name, :name, :pattern]
+          query.search_columns  = %i[job_class_name name pattern]
           query.display_columns = %w[name _type pattern]
           render(json: DirmonEntriesDatatable.new(view_context, query))
         end

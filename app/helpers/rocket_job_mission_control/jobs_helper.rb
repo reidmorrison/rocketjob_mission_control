@@ -20,7 +20,7 @@ module RocketJobMissionControl
     end
 
     def job_states_with_scheduled
-      @job_states_with_scheduled ||= ['scheduled'] + job_states
+      @job_states_with_scheduled ||= ["scheduled"] + job_states
     end
 
     def job_counts_by_state(state)
@@ -32,35 +32,34 @@ module RocketJobMissionControl
       @job_counts.fetch(state.downcase.to_sym, 0)
     end
 
-    def job_action_link(action, path, http_method=:get)
+    def job_action_link(action, path, http_method = :get)
       link_to(
         action,
         path,
         method: http_method,
         title:  "#{action} job",
-        class:  'btn btn-default',
-        data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
+        class:  "btn btn-default",
+        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
       )
     end
 
-    def job_action_links_for_show(action, path, http_method=:get)
+    def job_action_links_for_show(action, path, http_method = :get)
       link_to(
         action,
         path,
         method: http_method,
         title:  "#{action} job",
-        class:  'btn btn-primary',
-        data:   {confirm: t(:confirm, scope: [:job, :action], action: action)}
+        class:  "btn btn-primary",
+        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
       )
     end
 
     def job_selected_class(job, selected_job)
       if selected_job.present? && job.id == selected_job.id
-        'selected'
+        "selected"
       else
-        ''
+        ""
       end
     end
-
   end
 end

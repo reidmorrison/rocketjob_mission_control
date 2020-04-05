@@ -1,7 +1,7 @@
 module RocketJobMissionControl
   class AbstractDatatable
     delegate :params, :link_to, :render, to: :@view
-    delegate :h, to: 'ERB::Util'
+    delegate :h, to: "ERB::Util"
 
     attr_accessor :view, :query
 
@@ -11,7 +11,7 @@ module RocketJobMissionControl
       extract_query_params
     end
 
-    def as_json(options = {})
+    def as_json(_options = {})
       {
         draw:            params[:draw].to_i,
         recordsTotal:    query.unfiltered_count,
@@ -39,7 +39,7 @@ module RocketJobMissionControl
       end
 
       # Pagination
-      unless params[:length].present? && params[:length] == '-1'
+      unless params[:length].present? && params[:length] == "-1"
         query.start     = params[:start].to_i
         query.page_size = params.fetch(:length, 10).to_i
       end
@@ -49,13 +49,15 @@ module RocketJobMissionControl
       return nil unless order.present?
 
       sort_by = {}
-      order.each_pair do |key, value|
+      order.each_pair do |_key, value|
         name = query.display_columns[value[:column].to_i]
-        raise(ArgumentError, "Invalid column id: #{value[:column]}. Must fit #{query.display_columns.inspect}") unless name.present?
+        unless name.present?
+          raise(ArgumentError, "Invalid column id: #{value[:column]}. Must fit #{query.display_columns.inspect}")
+        end
+
         sort_by[name] = value[:dir]
       end
       sort_by
     end
-
   end
 end

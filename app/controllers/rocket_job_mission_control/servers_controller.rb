@@ -12,46 +12,47 @@ module RocketJobMissionControl
 
     rescue_from AccessGranted::AccessDenied do |exception|
       raise exception if Rails.env.development? || Rails.env.test?
-      redirect_to :back, alert: 'Access not authorized.'
+
+      redirect_to :back, alert: "Access not authorized."
     end
 
     def index
-      @data_table_url = servers_url(format: 'json')
-      @actions        = [:pause, :resume, :stop, :kill, :destroy_zombies]
-      render_datatable(RocketJob::Server.all, 'All')
+      @data_table_url = servers_url(format: "json")
+      @actions        = %i[pause resume stop kill destroy_zombies]
+      render_datatable(RocketJob::Server.all, "All")
     end
 
     def starting
-      @data_table_url = starting_servers_url(format: 'json')
-      @actions        = [:pause, :stop, :kill]
-      render_datatable(RocketJob::Server.starting, 'Starting')
+      @data_table_url = starting_servers_url(format: "json")
+      @actions        = %i[pause stop kill]
+      render_datatable(RocketJob::Server.starting, "Starting")
     end
 
     def running
-      @data_table_url = running_servers_url(format: 'json')
-      @actions        = [:pause, :stop, :kill, :destroy_zombies]
-      render_datatable(RocketJob::Server.running, 'Running')
+      @data_table_url = running_servers_url(format: "json")
+      @actions        = %i[pause stop kill destroy_zombies]
+      render_datatable(RocketJob::Server.running, "Running")
     end
 
     def paused
-      @data_table_url = paused_servers_url(format: 'json')
-      @actions        = [:resume, :destroy_zombies]
-      render_datatable(RocketJob::Server.paused, 'Paused')
+      @data_table_url = paused_servers_url(format: "json")
+      @actions        = %i[resume destroy_zombies]
+      render_datatable(RocketJob::Server.paused, "Paused")
     end
 
     def stopping
-      @data_table_url = stopping_servers_url(format: 'json')
+      @data_table_url = stopping_servers_url(format: "json")
       @actions        = [:destroy_zombies]
-      render_datatable(RocketJob::Server.stopping, 'Stopping')
+      render_datatable(RocketJob::Server.stopping, "Stopping")
     end
 
     def zombie
-      @data_table_url = zombie_servers_url(format: 'json')
+      @data_table_url = zombie_servers_url(format: "json")
       @actions        = [:destroy_zombies]
-      render_datatable(RocketJob::Server.zombies, 'Zombie')
+      render_datatable(RocketJob::Server.zombies, "Zombie")
     end
 
-    VALID_ACTIONS = [:stop, :kill, :pause, :resume, :thread_dump]
+    VALID_ACTIONS = %i[stop kill pause resume thread_dump].freeze
 
     def update_all
       server_action = params[:server_action].to_sym
@@ -61,9 +62,9 @@ module RocketJobMissionControl
         RocketJob::Server.destroy_zombies
       elsif VALID_ACTIONS.include?(server_action)
         RocketJob::Subscribers::Server.publish(server_action)
-        flash[:notice] = t(:success, scope: [:server, :update_all], action: server_action.to_s)
+        flash[:notice] = t(:success, scope: %i[server update_all], action: server_action.to_s)
       else
-        flash[:alert] = t(:invalid, scope: [:server, :update_all])
+        flash[:alert] = t(:invalid, scope: %i[server update_all])
       end
 
       # TODO: Refresh the same page it was on
@@ -75,7 +76,7 @@ module RocketJobMissionControl
     def stop
       authorize! :stop, @server
       RocketJob::Subscribers::Server.publish(:stop, server_id: @server.id)
-      flash[:notice] = t(:success, scope: [:server, :update_one], action: 'stop', name: @server.name )
+      flash[:notice] = t(:success, scope: %i[server update_one], action: "stop", name: @server.name)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -85,7 +86,7 @@ module RocketJobMissionControl
     def destroy
       authorize! :destroy, @server
       @server.destroy
-      flash[:notice] = t(:success, scope: [:server, :destroy])
+      flash[:notice] = t(:success, scope: %i[server destroy])
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -95,7 +96,7 @@ module RocketJobMissionControl
     def pause
       authorize! :pause, @server
       RocketJob::Subscribers::Server.publish(:pause, server_id: @server.id)
-      flash[:notice] = t(:success, scope: [:server, :update_one], action: 'pause', name: @server.name )
+      flash[:notice] = t(:success, scope: %i[server update_one], action: "pause", name: @server.name)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -105,7 +106,7 @@ module RocketJobMissionControl
     def resume
       authorize! :resume, @server
       RocketJob::Subscribers::Server.publish(:resume, server_id: @server.id)
-      flash[:notice] = t(:success, scope: [:server, :update_one], action: 'resume', name: @server.name )
+      flash[:notice] = t(:success, scope: %i[server update_one], action: "resume", name: @server.name)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -123,7 +124,7 @@ module RocketJobMissionControl
         format.html do
           @description = description
           @states      = RocketJob::Server.aasm.states.map { |s| s.name.to_s }
-          @states << 'zombie'
+          @states << "zombie"
 
           @server_counts          = RocketJob::Server.counts_by_state
           # TODO: Move into RocketJob
@@ -139,7 +140,7 @@ module RocketJobMissionControl
 
     def find_server_or_redirect
       unless @server = RocketJob::Server.where(id: params[:id]).first
-        flash[:alert] = t(:failure, scope: [:server, :find], id: params[:id])
+        flash[:alert] = t(:failure, scope: %i[server find], id: params[:id])
 
         redirect_to(servers_path)
       end

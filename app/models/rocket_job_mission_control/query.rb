@@ -42,16 +42,13 @@ module RocketJobMissionControl
           records = records.where(search_columns.first => regexp)
         else
           cols    = search_columns.collect { |col| {col => regexp} }
-          records = records.where('$or' => cols)
+          records = records.where("$or" => cols)
         end
       end
 
       # Pagination
-      if start && page_size
-        records = records.skip(start).limit(page_size)
-      end
+      records = records.skip(start).limit(page_size) if start && page_size
       records
     end
-
   end
 end

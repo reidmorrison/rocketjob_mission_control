@@ -7,7 +7,7 @@ module RocketJobMissionControl
     private
 
     def with_time_zone(&block)
-      if time_zone = session['time_zone'] || 'UTC'
+      if time_zone = session["time_zone"] || "UTC"
         Time.use_zone(time_zone, &block)
       end
     end
@@ -30,6 +30,5 @@ module RocketJobMissionControl
         args[:login]
       end
     end
-
   end
 end

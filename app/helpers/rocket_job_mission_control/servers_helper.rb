@@ -7,7 +7,7 @@ module RocketJobMissionControl
     def server_icon(server)
       state =
         if server.zombie?
-          'zombie'
+          "zombie"
         else
           server.state
         end
@@ -16,14 +16,14 @@ module RocketJobMissionControl
 
     def server_card_class(server)
       if server.zombie?
-        'callout-zombie'
+        "callout-zombie"
       else
         map = {
-          running:  'callout-success',
-          paused:   'callout-warning',
-          stopping: 'callout-alert',
+          running:  "callout-success",
+          paused:   "callout-warning",
+          stopping: "callout-alert"
         }
-        map[server.state] || 'callout-info'
+        map[server.state] || "callout-info"
       end
     end
   end

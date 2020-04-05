@@ -8,13 +8,13 @@ RocketJob::Jobs::SimpleJob.create!(run_at: 1.year.from_now)
 
 # Queued Jobs
 RocketJob::Jobs::SimpleJob.create!
-AllTypesJob.create!(string: 'Hello World')
+AllTypesJob.create!(string: "Hello World")
 
 # Paused Jobs
 RocketJob::Jobs::SimpleJob.new.pause!
 
 # Failed Jobs
-RocketJob::Jobs::SimpleJob.new.fail!('Oh no', 'TestWorker')
+RocketJob::Jobs::SimpleJob.new.fail!("Oh no", "TestWorker")
 
 # Aborted Jobs
 RocketJob::Jobs::SimpleJob.new.abort!
@@ -33,10 +33,10 @@ job.upload do |stream|
   count.times { |i| stream << "Slice number #{i}" }
 end
 # Manually run job to get some failures without needing workers.
-while job.input.queued.count > 0
+while job.input.queued.count.positive?
   begin
     job.perform_now
-  rescue
+  rescue StandardError
     # perform_now re-raises exceptions.
   end
 end

@@ -1,12 +1,12 @@
-require_relative '../../test_helper'
+require_relative "../../test_helper"
 
 module RocketJobMissionControl
   ServersHelper.include(RocketJobMissionControl::ApplicationHelper)
 
   class ServersHelperTest < ActionView::TestCase
     describe ServersHelper do
-      describe '#server_card_class' do
-        describe 'when the server is running' do
+      describe "#server_card_class" do
+        describe "when the server is running" do
           let(:server) do
             server = RocketJob::Server.new
             server.started
@@ -14,12 +14,12 @@ module RocketJobMissionControl
             server
           end
 
-          it 'returns the correct class' do
-            assert_equal 'callout-success', server_card_class(server)
+          it "returns the correct class" do
+            assert_equal "callout-success", server_card_class(server)
           end
         end
 
-        describe 'when the server is a zombie' do
+        describe "when the server is a zombie" do
           let(:server) do
             server = RocketJob::Server.new
             server.started
@@ -27,14 +27,14 @@ module RocketJobMissionControl
             server
           end
 
-          it 'returns the correct class' do
-            assert_equal 'callout-zombie', server_card_class(server)
+          it "returns the correct class" do
+            assert_equal "callout-zombie", server_card_class(server)
           end
         end
       end
 
-      describe '#server_icon' do
-        describe 'when the server is running' do
+      describe "#server_icon" do
+        describe "when the server is running" do
           let(:server) do
             server = RocketJob::Server.new
             server.started
@@ -42,12 +42,12 @@ module RocketJobMissionControl
             server
           end
 
-          it 'returns the correct class' do
-            assert_equal 'fas fa-play running', server_icon(server)
+          it "returns the correct class" do
+            assert_equal "fas fa-play running", server_icon(server)
           end
         end
 
-        describe 'when the server is a zombie' do
+        describe "when the server is a zombie" do
           let(:server) do
             server = RocketJob::Server.new
             server.started
@@ -55,8 +55,8 @@ module RocketJobMissionControl
             server
           end
 
-          it 'returns the correct class' do
-            assert_equal 'fas fa-hourglass zombie', server_icon(server)
+          it "returns the correct class" do
+            assert_equal "fas fa-hourglass zombie", server_icon(server)
           end
         end
       end

@@ -32,36 +32,20 @@ module RocketJobMissionControl
           describe 'with a valid server id' do
             before do
               server.pause! if server_action == :resume
-              params = {id: server.id}
-              params = {params: params} if Rails.version.to_i >= 5
-              patch server_action, params
             end
 
             it 'redirects to servers' do
+              patch server_action, params: {id: server.id}
               assert_redirected_to servers_path
             end
 
             it "#{server_action} the server" do
-              results = {stop: :stopping?, pause: :paused?, resume: :running?}
-              assert server.reload.send(results[server_action])
-            end
-          end
-
-          describe "when the server fails to #{server_action}" do
-            before do
-              server.pause! if server_action == :pause
-              server.stop! if server_action == :stop
-              params = {id: server.id}
-              params = {params: params} if Rails.version.to_i >= 5
-              patch server_action, params
-            end
-
-            it 'redirects to servers' do
-              assert_redirected_to servers_path
-            end
-
-            it 'displays a flash message' do
-              assert_equal I18n.t(:failure, scope: [:server, server_action]), flash[:alert]
+              action = server_id = nil
+              RocketJob::Subscribers::Server.stub(:publish, ->(_action, args) { action, server_id = _action, args[:server_id] }) do
+                patch server_action, params: {id: server.id}
+              end
+              assert_equal server_action, action
+              assert_equal server.id, server_id
             end
           end
         end
@@ -71,9 +55,7 @@ module RocketJobMissionControl
         RocketJobMissionControl::ServersController::VALID_ACTIONS.each do |server_action, action_message|
           describe "with '#{server_action}' as the server_action param" do
             before do
-              params = {server_action: server_action}
-              params = {params: params} if Rails.version.to_i >= 5
-              patch :update_all, params
+              patch :update_all, params: {server_action: server_action}
             end
 
             it 'redirects to servers' do
@@ -87,22 +69,10 @@ module RocketJobMissionControl
         end
 
         describe 'with an invalid server_action param' do
-          before do
-            params = {server_action: :bad_server_action}
-            params = {params: params} if Rails.version.to_i >= 5
-            patch :update_all, params
-          end
-
-          it 'redirects to servers' do
-            assert_redirected_to servers_path
-          end
-
-          it "does not display a success message" do
-            assert_nil flash[:notice]
-          end
-
-          it 'displays an error message' do
-            assert_equal I18n.t(:invalid, scope: [:server, :update_all]), flash[:alert]
+          it 'gets access denied' do
+            assert_raises(AccessGranted::AccessDenied) do
+              patch :update_all, params: {server_action: :bad_server_action}
+            end
           end
         end
       end
@@ -110,9 +80,7 @@ module RocketJobMissionControl
       describe 'DELETE #destroy' do
         describe 'with a valid server id' do
           before do
-            params = {id: server.id}
-            params = {params: params} if Rails.version.to_i >= 5
-            delete :destroy, params
+            delete :destroy, params: {id: server.id}
           end
 
           it 'redirects to servers' do
@@ -130,9 +98,7 @@ module RocketJobMissionControl
 
         describe 'when the server is not found' do
           before do
-            params = {id: 999999}
-            params = {params: params} if Rails.version.to_i >= 5
-            delete :destroy, params
+            delete :destroy, params: {id: 999999}
           end
 
           it 'redirects to servers' do
@@ -271,14 +237,12 @@ module RocketJobMissionControl
           describe "#{method}" do
             before do
               server.pause! if method == :resume
-              @params = {id: server.id}
-              @params = {params: @params} if Rails.version.to_i >= 5
             end
 
             %i[admin editor operator].each do |role|
               it "redirects with #{method} method and role #{role}" do
                 set_role(role)
-                patch method, @params
+                patch method, params: {id: server.id}
                 assert_response(:redirect)
               end
             end
@@ -287,7 +251,7 @@ module RocketJobMissionControl
               it "raises authentication error for #{role}" do
                 set_role(role)
                 assert_raises AccessGranted::AccessDenied do
-                  patch method, @params
+                  patch method, params: {id: server.id}
                 end
               end
             end
@@ -299,9 +263,7 @@ module RocketJobMissionControl
             %i[admin editor operator].each do |role|
               it 'redirects to servers' do
                 set_role(role)
-                params = {server_action: server_action}
-                params = {params: params} if Rails.version.to_i >= 5
-                patch :update_all, params
+                patch :update_all, params: {server_action: server_action}
 
                 assert_response(:redirect)
               end

@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
   s.add_dependency "jquery-datatables-rails", "~> 3.3"
   s.add_dependency "jquery-rails"
   s.add_dependency "rails", ">= 5.0"
-  s.add_dependency "rocketjob", "~> 5.2"
+  s.add_dependency "rocketjob", ">= 5.2.0.beta1"
   s.add_dependency "sass-rails", ">= 3.2"
 end

@@ -1,25 +1,24 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gemspec
 
-gem 'rails', '~> 5.2.0'
+gem "rails", "~> 5.2.0"
 
-gem 'rake'
-gem 'minitest'
-gem 'awesome_print'
-gem 'rubyzip', platform: :ruby
-gem 'appraisal'
+gem "appraisal"
+gem "awesome_print"
+gem "minitest"
+gem "rake"
+gem "rubyzip", platform: :ruby
 gem "sprockets", "< 4.0"
 
 group :test do
-  gem 'rails-controller-testing'
-  gem 'minispec-rails', require: false
+  gem "minispec-rails", require: false
+  gem "rails-controller-testing"
 end
 
-# group :development do
-  gem 'rubocop'
+group :development do
+  gem "rubocop"
   # For testing with local copies of the gems:
-  # gem 'rails_semantic_logger', path: '../rails_semantic_logger'
-  gem 'iostreams', path: '../iostreams'
-  gem 'rocketjob', path: '../rocketjob'
-# end
+  # gem 'iostreams', path: '../iostreams'
+  # gem "rocketjob", path: "../rocketjob"
+end

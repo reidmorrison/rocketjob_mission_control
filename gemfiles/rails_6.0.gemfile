@@ -3,21 +3,22 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 6.0.0"
-gem "rake"
-gem "minitest"
-gem "awesome_print"
-gem "rubyzip", platform: :ruby
 gem "appraisal"
+gem "awesome_print"
+gem "minitest"
+gem "rake"
+gem "rubyzip", platform: :ruby
 gem "sprockets", "< 4.0"
-gem "rubocop"
-gem "iostreams", path: "../../iostreams"
-gem "rocketjob", path: "../../rocketjob"
 gem "rails-controller-testing"
 gem "minispec-rails"
 
 group :test do
-  gem "rails-controller-testing"
   gem "minispec-rails", require: false
+  gem "rails-controller-testing"
+end
+
+group :development do
+  gem "rubocop"
 end
 
 gemspec path: "../"

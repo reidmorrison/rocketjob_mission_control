@@ -72,8 +72,8 @@ Start a Rocket Job server running 10 workers:
 Note: Running the Rocket Job server above will complete any running jobs, and process
  the queued jobs. Run db:seed above again after stopping the rocketjob server if needed.
  
-Note: This dummy Rails installation works with Rails 3.2 and Rails 4.2. A new dummy app
- will have to be created to support Rails 5.1. 
+Note: This dummy Rails installation works with Rails 6.0. A new dummy app
+ will have to be created to support Rails 5.2 
 
 For testing purposes the following Jobs are supplied with the rjmc dummy Rails app:
 * AllTypesJob

@@ -2,8 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "rails", "~> 5.2.0"
-
+gem "rails", "~> 6.0.0"
 gem "appraisal"
 gem "awesome_print"
 gem "minitest"
@@ -17,8 +16,8 @@ group :test do
 end
 
 group :development do
-  gem "rubocop"
-  # For testing with local copies of the gems:
-  # gem 'iostreams', path: '../iostreams'
-  # gem "rocketjob", path: "../rocketjob"
+  gem 'rubocop', require: false
+  gem 'rubocop-minitest', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
 end

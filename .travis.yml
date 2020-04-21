@@ -14,7 +14,6 @@ matrix:
     - name: "Rails 5.2 on JRuby 9.2.11.1"
       rvm: jruby-9.2.11.1
       gemfile: gemfiles/rails_5.2.gemfile
-
     - name: "Rails 6.0 on Ruby 2.6.6"
       rvm: 2.6.6
       gemfile: gemfiles/rails_6.0.gemfile

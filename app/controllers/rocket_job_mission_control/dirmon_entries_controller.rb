@@ -76,7 +76,11 @@ module RocketJobMissionControl
     def edit
       authorize! :edit, @dirmon_entry
     end
-
+    # Copy method is related to Copy button
+    def copy
+      authorize! :copy, @dirmon_entry
+    end
+    
     def update
       authorize! :update, @dirmon_entry
       if properties = params[:rocket_job_dirmon_entry][:properties]

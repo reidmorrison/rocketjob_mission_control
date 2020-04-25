@@ -27,7 +27,7 @@
       <%# It shows the Copy button in each Dirmon%>
       <div class='btn-group'>
         <% if can?(:copy, @dirmon_entry)%>
-        <%= link_to 'Copy', edit_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>
+        <%= link_to 'Copy', copy_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>
         <% end %>
       </div>
       <div class='btn-group'>

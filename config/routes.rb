@@ -59,6 +59,8 @@ RocketJobMissionControl::Engine.routes.draw do
     member do
       put :enable
       put :disable
+      #Create patha the copy_dirmon_entry GET    /dirmon_entries/:id/copy(.:format)
+      get :copy
     end
   end
 

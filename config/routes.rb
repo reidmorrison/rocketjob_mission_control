@@ -61,9 +61,7 @@ RocketJobMissionControl::Engine.routes.draw do
       put :disable
       # Create the path: copy_dirmon_entry GET    /dirmon_entries/:id/copy(.:format)
       get :copy
-      # Create the path: replicate_dirmon_entry PUT    /dirmon_entries/:id/replicate(.:format) rocket_job_mission_control/dirmon_entries#replicate
       # Create the path:                        PATCH  /dirmon_entries/:id/replicate(.:format) rocket_job_mission_control/dirmon_entries#replicate
-      put :replicate
       patch :replicate
     end
   end

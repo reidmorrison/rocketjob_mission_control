@@ -85,7 +85,7 @@ module RocketJobMissionControl
     # the replicate method clones the exixting Dirmon Entity
     def replicate
       authorize! :replicate, @dirmon_entry
-      dirmon_entry_replicate = @dirmon_entry.dup
+      dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))
       if properties = params[:rocket_job_dirmon_entry][:properties]
         dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, dirmon_entry_replicate, false)
       end
@@ -94,7 +94,6 @@ module RocketJobMissionControl
       else
         render :copy
       end
-      dirmon_entry_copy = @dirmon_entry.dup
     end
 
     def update

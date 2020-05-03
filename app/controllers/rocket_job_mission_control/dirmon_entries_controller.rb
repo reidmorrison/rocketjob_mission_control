@@ -82,7 +82,7 @@ module RocketJobMissionControl
       authorize! :copy, @dirmon_entry
     end
     # When you click on the replicate button,
-    # the replicate method clones the exixting Dirmon Entity
+    # the replicate method clones the existing Dirmon Entity
     def replicate
       authorize! :replicate, @dirmon_entry
       dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))

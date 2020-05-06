@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "access-granted", "~> 1.3"
-  s.add_dependency "jquery-datatables-rails", "~> 3.3"
   s.add_dependency "jquery-rails"
   s.add_dependency "rails", ">= 5.0"
   s.add_dependency "rocketjob", ">= 5.2.0"

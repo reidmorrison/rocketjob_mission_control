@@ -10,8 +10,6 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require dataTables/extras/dataTables.responsive
- *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
  *= require_self
  *= require_tree .
  */
@@ -20,3 +18,4 @@
 @import 'fontawesome-all.min';
 @import 'selectize';
 @import 'selectize.bootstrap3';
+@import 'datatables.min';

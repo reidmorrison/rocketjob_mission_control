@@ -12,9 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require dataTables/jquery.dataTables
-//= require dataTables/extras/dataTables.responsive
-//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+//= require datatables.min.js
 //= require bootstrap.min
 //
 // Selectize is used by Array builder in application_helper#editable_field_html

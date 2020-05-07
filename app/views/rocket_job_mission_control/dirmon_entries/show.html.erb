@@ -24,8 +24,12 @@
         <%= link_to 'Destroy', dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', data: { confirm: 'Are you sure?' } %>
         <% end %>
       </div>
-
-
+      <%# It shows the Copy button in each Dirmon%>
+      <div class='btn-group'>
+        <% if can?(:copy, @dirmon_entry)%>
+        <%= link_to 'Copy', copy_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>
+        <% end %>
+      </div>
       <div class='btn-group'>
         <% if can?(:edit, @dirmon_entry)%>
         <%= link_to 'Edit', edit_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>

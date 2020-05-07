@@ -25,9 +25,9 @@ module RocketJobMissionControl
         can %i[edit pause resume retry abort fail update run_now], RocketJob::Job
       end
 
-      # Create, Destroy, Enable, Disable, Edit Dirmon Entries
+      # Create, Destroy, Enable, Disable, Edit, Copy, Replicate Dirmon Entries
       role :dirmon, {dirmon: true} do
-        can %i[create enable disable update edit], RocketJob::DirmonEntry
+        can %i[create enable disable update edit copy replicate], RocketJob::DirmonEntry
       end
 
       # A User can only edit their own jobs

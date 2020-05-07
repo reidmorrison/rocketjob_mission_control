@@ -76,6 +76,25 @@ module RocketJobMissionControl
     def edit
       authorize! :edit, @dirmon_entry
     end
+    # When you click on the Copy button, 
+    # the copy method loads the Dirmon Entity attributes in Copy Dirmon Entry Page
+    def copy
+      authorize! :copy, @dirmon_entry
+    end
+    # When you click on the replicate button,
+    # the replicate method clones the existing Dirmon Entity
+    def replicate
+      authorize! :replicate, @dirmon_entry
+      dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))
+      if properties = params[:rocket_job_dirmon_entry][:properties]
+        dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, dirmon_entry_replicate, false)
+      end
+      if dirmon_entry_replicate.errors.empty? && dirmon_entry_replicate.valid? && dirmon_entry_replicate.update_attributes(dirmon_params)
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(dirmon_entry_replicate))
+      else
+        render :copy
+      end
+    end
 
     def update
       authorize! :update, @dirmon_entry

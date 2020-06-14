@@ -1,7 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 
 require "yaml"
-require "awesome_print"
+require "amazing_print"
 require "rails/version"
 if Rails.version.to_f >= 5.2
   require_relative "../rjmc/config/environment"

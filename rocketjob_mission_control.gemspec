@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "rocketjob_mission_control"
   s.version     = RocketJobMissionControl::VERSION
   s.authors     = ["Michael Cloutier", "Chris Lamb", "Jonathan Whittington", "Reid Morrison"]
-  s.homepage    = "http://rocketjob.io"
+  s.homepage    = "https://rocketjob.io"
   s.summary     = "Ruby's missing batch system."
   s.description = "Rocket Job Mission Control is the Web user interface to manage Rocket Job."
   s.license     = "Apache-2.0"

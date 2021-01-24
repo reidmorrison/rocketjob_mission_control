@@ -72,9 +72,15 @@ class JobSanitizerTest < Minitest::Test
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 1, @job.errors.count
-        assert first = @job.errors.first
-        assert_equal first.first, :properties
-        assert first.second.include?("unexpected token"), first
+        if Rails.version.to_f >= 6.1
+          assert error = @job.errors.first
+          assert_equal error.attribute, :properties
+          assert error.message.include?("unexpected token"), error
+        else
+          assert error = @job.errors.first
+          assert_equal error.first, :properties
+          assert error.second.include?("unexpected token"), error
+        end
         assert_equal({hash_field: "{ bad json }", string: "hello"}, cleansed)
       end
 

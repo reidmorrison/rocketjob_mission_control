@@ -37,9 +37,7 @@ module RocketJobMissionControl
       describe "PATCH #enable" do
         describe "when transition is allowed" do
           before do
-            params = {id: existing_dirmon_entry.id}
-            params = {params: params} if Rails.version.to_i >= 5
-            patch :enable, params
+            patch :enable, params: {id: existing_dirmon_entry.id}
           end
 
           it do
@@ -54,9 +52,7 @@ module RocketJobMissionControl
         describe "when transition is not allowed" do
           before do
             existing_dirmon_entry.enable!
-            params = {id: existing_dirmon_entry.id}
-            params = {params: params} if Rails.version.to_i >= 5
-            patch :enable, params
+            patch :enable, params: {id: existing_dirmon_entry.id}
           end
 
           it "succeeds" do
@@ -73,9 +69,7 @@ module RocketJobMissionControl
         describe "when transition is allowed" do
           before do
             existing_dirmon_entry.enable!
-            params = {id: existing_dirmon_entry.id}
-            params = {params: params} if Rails.version.to_i >= 5
-            patch :disable, params
+            patch :disable, params: {id: existing_dirmon_entry.id}
           end
 
           it do
@@ -89,9 +83,7 @@ module RocketJobMissionControl
 
         describe "when transition is not allowed" do
           before do
-            params = {id: existing_dirmon_entry.id}
-            params = {params: params} if Rails.version.to_i >= 5
-            patch :disable, params
+            patch :disable, params: {id: existing_dirmon_entry.id}
           end
 
           it "succeeds" do
@@ -108,9 +100,7 @@ module RocketJobMissionControl
         let(:entry_params) { {} }
 
         before do
-          params = entry_params
-          params = {params: entry_params} if Rails.version.to_i >= 5
-          get :new, params
+          get :new, params: entry_params
         end
 
         it "succeeds" do
@@ -163,8 +153,7 @@ module RocketJobMissionControl
         describe "with valid parameters" do
           before do
             params = {id: existing_dirmon_entry.id, rocket_job_dirmon_entry: {pattern: "the_path2", job_class_name: job_class_name}}
-            params = {params: params} if Rails.version.to_i >= 5
-            patch :update, params
+            patch :update, params: params
           end
 
           it "redirects to the updated entry" do
@@ -179,8 +168,7 @@ module RocketJobMissionControl
         describe "with invalid parameters" do
           before do
             params = {id: existing_dirmon_entry.id, rocket_job_dirmon_entry: {job_class_name: "FakeAndBadJob"}}
-            params = {params: params} if Rails.version.to_i >= 5
-            patch :update, params
+            patch :update, params: params
           end
 
           it "renders the edit template" do
@@ -209,9 +197,7 @@ module RocketJobMissionControl
           end
 
           before do
-            params = {rocket_job_dirmon_entry: dirmon_params}
-            params = {params: params} if Rails.version.to_i >= 5
-            post :create, params
+            post :create, params: {rocket_job_dirmon_entry: dirmon_params}
           end
 
           it "creates the entry" do
@@ -250,9 +236,7 @@ module RocketJobMissionControl
           end
 
           before do
-            params = {rocket_job_dirmon_entry: dirmon_params}
-            params = {params: params} if Rails.version.to_i >= 5
-            post :create, params
+            post :create, params: {rocket_job_dirmon_entry: dirmon_params}
           end
 
           describe "on model attributes" do
@@ -270,9 +254,7 @@ module RocketJobMissionControl
 
       describe "GET #edit" do
         before do
-          params = {id: existing_dirmon_entry.id}
-          params = {params: params} if Rails.version.to_i >= 5
-          get :edit, params
+          get :edit, params: {id: existing_dirmon_entry.id}
         end
 
         it "succeeds" do
@@ -287,9 +269,7 @@ module RocketJobMissionControl
       describe "GET #show" do
         describe "with an invalid id" do
           before do
-            params = {id: 42}
-            params = {params: params} if Rails.version.to_i >= 5
-            get :show, params
+            get :show, params: {id: 42}
           end
 
           it "redirects" do
@@ -303,9 +283,7 @@ module RocketJobMissionControl
 
         describe "with a valid id" do
           before do
-            params = {id: existing_dirmon_entry.id}
-            params = {params: params} if Rails.version.to_i >= 5
-            get :show, params
+            get :show, params: {id: existing_dirmon_entry.id}
           end
 
           it "succeeds" do
@@ -321,9 +299,7 @@ module RocketJobMissionControl
       describe "DELETE #destroy" do
         describe "with a valid id" do
           before do
-            params = {id: existing_dirmon_entry.id}
-            params = {params: params} if Rails.version.to_i >= 5
-            delete :destroy, params
+            delete :destroy, params: {id: existing_dirmon_entry.id}
           end
 
           it "redirects to index" do
@@ -464,9 +440,7 @@ module RocketJobMissionControl
             %i[admin editor operator manager dirmon].each do |role|
               it "allows role #{role} to access #{method}" do
                 set_role(role)
-                params = {id: existing_dirmon_entry.id}
-                params = {params: params} if Rails.version.to_i >= 5
-                patch :enable, params
+                patch :enable, params: {id: existing_dirmon_entry.id}
 
                 assert_response(:redirect)
               end
@@ -478,9 +452,7 @@ module RocketJobMissionControl
         %i[admin editor operator manager dirmon].each do |role|
           it "creates dirmon entry" do
             set_role(role)
-            params = {rocket_job_dirmon_entry: dirmon_params}
-            params = {params: params} if Rails.version.to_i >= 5
-            post :create, params
+            post :create, params: {rocket_job_dirmon_entry: dirmon_params}
 
             assert_response(:redirect)
           end
@@ -488,9 +460,7 @@ module RocketJobMissionControl
 
         it "deletes dirmon entry" do
           set_role(:admin)
-          params = {id: existing_dirmon_entry.id}
-          params = {params: params} if Rails.version.to_i >= 5
-          delete :destroy, params
+          delete :destroy, params: {id: existing_dirmon_entry.id}
 
           assert_response(:redirect)
         end
@@ -499,9 +469,7 @@ module RocketJobMissionControl
           it "raises authentication error for #{role}" do
             set_role(role)
             assert_raises AccessGranted::AccessDenied do
-              params = {id: existing_dirmon_entry.id}
-              params = {params: params} if Rails.version.to_i >= 5
-              delete :destroy, params
+              delete :destroy, params: {id: existing_dirmon_entry.id}
             end
           end
         end

@@ -2,9 +2,9 @@
 
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.0"
-gem "mongoid", "~> 7.1.0"
-gem "rocketjob"
+gem "rails", "~> 6.1.0"
+gem "mongoid", git: "https://github.com/reidmorrison/mongoid", branch: "ruby_3"
+gem "rocketjob", git: "https://github.com/rocketjob/rocketjob"
 gem "appraisal"
 gem "amazing_print"
 gem "minitest"

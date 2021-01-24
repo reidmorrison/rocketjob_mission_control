@@ -36,8 +36,6 @@ matrix:
 
   allow_failures:
     - rvm: jruby-9.2.14.0
-    - gemfile: gemfiles/rails_6.0.gemfile
-    - gemfile: gemfiles/rails_6.1.gemfile
 
 jdk:
   - openjdk9

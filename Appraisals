@@ -12,6 +12,6 @@ end
 
 appraise "rails_6.1" do
   gem "rails", "~> 6.1.0"
-  gem "mongoid", git: "https://github.com/reidmorrison/mongoid", branch: "ruby_3"
+  gem "mongoid", git: "https://github.com/reidmorrison/mongoid", branch:"7.2-ruby_3"
   gem "rocketjob", git: "https://github.com/rocketjob/rocketjob"
 end

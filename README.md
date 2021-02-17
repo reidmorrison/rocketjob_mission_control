@@ -1,5 +1,5 @@
 # Rocket Job Mission Control
-[![Gem Version](https://badge.fury.io/rb/rocketjob_mission_control.svg)](http://badge.fury.io/rb/rocketjob_mission_control) [![Build Status](https://secure.travis-ci.org/rocketjob/rocketjob_mission_control.png?branch=master)](http://travis-ci.org/rocketjob/rocketjob_mission_control)
+[![Gem Version](https://img.shields.io/gem/v/rocketjob_mission_control.svg)](https://rubygems.org/gems/rocketjob_mission_control) [![Downloads](https://img.shields.io/gem/dt/rocketjob_mission_control.svg)](https://rubygems.org/gems/rocketjob_mission_control) [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](http://opensource.org/licenses/Apache-2.0) ![](https://img.shields.io/badge/status-Production%20Ready-blue.svg) [![Gitter chat](https://img.shields.io/badge/IRC%20(gitter)-Support-brightgreen.svg)](https://gitter.im/rocketjob/support)
 
 Web based management interface for [Rocket Job][0].
 

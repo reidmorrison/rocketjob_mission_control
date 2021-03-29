@@ -1,58 +1,150 @@
-<% status = job.status(Time.zone) %>
-
-<div class='id'>
-  <label>ID:</label> <%= status.delete('_id') %>
-</div>
-
-<% if description = status.delete('description') %>
-  <div class='status-message'><label>Description:</label> <%= description %></div>
-<% end %>
-
-<% if duration = status.delete('duration') %>
-  <div class='status-message'><label>Duration:</label> <%= duration %></div>
-<% end %>
-
-<% if record_count = status.delete('record_count') %>
-  <div class='status-message'><label>Record Count:</label> <%= record_count %></div>
-<% end %>
-
-<div class='created_at'>
-  <label>Created At:</label> <%= status.delete('created_at') %>
-</div>
-
-<% if started_at = status.delete('started_at') %>
-  <div class='status-message'><label>Started At:</label> <%= started_at %></div>
-<% end %>
-
-<% if percent_complete = status.delete('percent_complete') %>
-  <div class='status-message'><label>% Complete:</label> <%= percent_complete %></div>
-<% end %>
-
-<%
-  remaining = {}
-  status.each_pair do |key, value|
-    next if ((value != false) && value.blank?) || ['state', '_type', 'sub_state'].include?(key)
-    if value.kind_of?(Hash) || value.kind_of?(Array)
-      remaining[key] = value
-      next
-    end
-%>
-  <div class='status-message'><label><%= key.to_s.titleize %>:</label> <%= value %></div>
-<% end %>
-
-<div class='clearfix'></div>
-
-<% if job.respond_to?('input') && job.input.failed.count.positive? %>
-  <% status.delete('exception') %>
-  <div class='status-message'>
-    <label><%= 'Exceptions' %>:</label>
-    <%= render partial: 'exceptions', locals: {job: @job} %>
+<div class='status-message'><label>Details:</label></div>
+<div class='row'>
+  <div class='col-md-12'>
+    <table style="width:100%">
+      <tr>
+        <td><label>Status:</label></td>
+        <% if @job[:sub_state] %>
+          <td>
+            <div class="<%= job_state(@job) %>"><%= job_state(@job).to_s.camelcase %> - Batch <%= @job.sub_state.to_s.camelcase %></div>
+          </td>
+          <% if @job.sub_state != :processing %>
+            <td><label>Worker Name:</label></td>
+            <td><%= @job.worker_name || "Queued" %></td>
+          <% end %>
+        <% else %>
+          <td>
+            <div class="<%= job_state(@job) %>"><%= job_state(@job).to_s.camelcase %></div>
+          </td>
+          <td><label>Worker Name:</label></td>
+          <td><%= @job.worker_name %></td>
+        <% end %>
+      </tr>
+      <tr>
+        <td><label>Description: </label></td>
+        <td><%= @job.description %></td>
+      </tr>
+      <tr>
+        <td><label>Priority:</label></td>
+        <td><%= @job.priority %></td>
+        <% if @job.failure_count %>
+          <td><label>Failure Count:</label></td>
+          <td><%= @job.failure_count %></td>
+        <% end %>
+      </tr>
+      <tr>
+        <td><label>ID:</label</td>
+        <td><%= @job.id %></td>
+        <td><label>Destroy on completion?</label></td>
+        <td><%= @job.destroy_on_complete %></td>
+      </tr>
+    </table>
   </div>
+</div>
+</br>
+
+<div class='status-message'><label>Dates:</label></div>
+<div class='row'>
+  <div class='col-md-12'>
+    <table style="width:100%">
+      <tr>
+        <td><label>Created:</label></td>
+        <td><%= job_time(@job.created_at) %></td>
+      </tr>
+      <tr>
+        <td><label><%= job_state_name(@job) %>:</label></td>
+        <td><%= job_state_time(@job) %></td>
+        <td><label><%= job_state_name(@job) %> For:</label></td>
+        <td><%= @job.duration %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</br>
+
+<% if @job.respond_to?(:failed_at_list) && @job.failed_at_list.present? %>
+  <div class='status-message'><label>Retryable:</label></div>
+  <div class='row'>
+    <div class='col-md-12'>
+      <table style="width:100%">
+        <% first = true %>
+        <% @job.failed_at_list.each do |time| %>
+          <% if first %>
+            <tr>
+              <td><label>Retry Limit</label></td>
+              <td><%= @job.retry_limit %></td>
+              <td><label>Failures</label></td>
+              <td><%= job_time(time) %></td>
+            </tr>
+            <% first = false %>
+          <% else %>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><%= job_time(time) %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </table>
+    </div>
+  </div>
+  </br>
 <% end %>
 
-<% remaining.each_pair do |key, value| %>
+<% if @job.respond_to?(:statistics) && @job.statistics.present? %>
   <div class='status-message'>
-    <label><%= key.to_s.titleize %>:</label>
-    <pre><code><%= pretty_print_array_or_hash(value) %></code></pre>
+    <label>Statistics:</label>
+    <pre><code><%= @job.statistics.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
   </div>
+  </br>
+<% end %>
+
+<% if @job.exception.present? %>
+  <div class='status-message'><label>Exception:</label></div>
+  <div class='row'>
+    <div class='col-md-12'>
+      <table style="width:100%">
+        <tr>
+          <td><label>Exception:</label></td>
+          <td><%= @job.exception.class_name %></td>
+        </tr>
+        <tr>
+          <td><label>Message:</label></td>
+          <td><%= @job.exception.message %></td>
+        </tr>
+        <% if @job.exception.backtrace.present?
+             first = true %>
+          <% @job.exception.backtrace.each do |line| %>
+            <% if first %>
+              <tr>
+                <td><label>Backtrace:</label></td>
+                <td><%= line %></td>
+              </tr>
+              <% first = false %>
+            <% else %>
+              <tr>
+                <td></td>
+                <td><%= line %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </table>
+    </div>
+  </div>
+  </br>
+<% end %>
+
+<% if @job.respond_to?(:input_categories) %>
+  <%= render partial: 'input_categories', locals: {job: @job} %>
+<% end %>
+
+<% if @job.respond_to?(:output_categories) %>
+  <%= render partial: 'output_categories', locals: {job: @job} %>
+<% end %>
+
+<% @attributes = job_custom_fields(@job) %>
+<% if @attributes.present? %>
+  <%= render partial: 'attributes', locals: {attributes: @attributes} %>
 <% end %>

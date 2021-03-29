@@ -1,0 +1,54 @@
+<div class='status-message'><label>Attributes:</label></div>
+<div class='row'>
+  <div class='col-md-12'>
+    <table style="width:100%">
+      <% @attributes.each_pair do |key, value| %>
+        <% next if value.is_a?(Array) || value.is_a?(Hash) %>
+        <tr>
+          <td><label><%= key.to_s.camelize %>:</label></td>
+          <td><%= value %></td>
+        </tr>
+      <% end %>
+      <% @attributes.each_pair do |key, value| %>
+        <% next unless value.is_a?(Array) %>
+        <% first = true %>
+        <% value.each do |item| %>
+          <% if first %>
+            <tr>
+              <td><label><%= key.to_s.camelize %>:</label></td>
+              <% if item.is_a?(Hash) || item.is_a?(Array) %>
+                <td>
+                  <pre><code><%= pretty_print_array_or_hash(item) %></code></pre>
+                </td>
+              <% else %>
+                <td><%= item %></td>
+              <% end %>
+            </tr>
+            <% first = false %>
+          <% else %>
+            <tr>
+              <td></td>
+              <% if item.is_a?(Hash) || item.is_a?(Array) %>
+                <td>
+                  <pre><code><%= pretty_print_array_or_hash(item) %></code></pre>
+                </td>
+              <% else %>
+                <td><%= item %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% @attributes.each_pair do |key, value| %>
+        <% next unless value.is_a?(Hash) %>
+        <tr>
+          <td><label><%= key.to_s.camelize %>:</label></td>
+          <td>
+            <pre><code><%= pretty_print_array_or_hash(value) %></code></pre>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+</br>

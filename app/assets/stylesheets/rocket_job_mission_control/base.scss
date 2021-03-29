@@ -138,7 +138,7 @@ table.dataTable thead > tr > th {
     }
 
     .queued, .pending, { background-color: #A29F00; }
-    .scheduled { background-color: #92001B; }
+    .scheduled { background-color: purple; }
     .running { background-color: #337ab7; }
     .sleeping { background-color: darkcyan; }
     .completed, .enabled { background-color: green; }
@@ -299,7 +299,7 @@ table.dataTable thead > tr > th {
         vertical-align: middle;
 
         i.queued { color: #A29F00; }
-        i.scheduled { color: #92001B; }
+        i.scheduled { color: purple; }
         i.running { color: #337ab7; }
         i.sleeping { color: darkcyan; }
         i.completed { color: green; }

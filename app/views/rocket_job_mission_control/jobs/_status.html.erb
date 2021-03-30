@@ -1,137 +1,19 @@
-<div class='status-message'><label>Details:</label></div>
-<div class='row'>
-  <div class='col-md-12'>
-    <table style="width:100%">
-      <tr>
-        <td><label>Status:</label></td>
-        <% if @job[:sub_state] %>
-          <td>
-            <div class="<%= job_state(@job) %>"><%= job_state(@job).to_s.camelcase %> - Batch <%= @job.sub_state.to_s.camelcase %></div>
-          </td>
-          <% if @job.sub_state != :processing %>
-            <td><label>Worker Name:</label></td>
-            <td><%= @job.worker_name || "Queued" %></td>
-          <% end %>
-        <% else %>
-          <td>
-            <div class="<%= job_state(@job) %>"><%= job_state(@job).to_s.camelcase %></div>
-          </td>
-          <td><label>Worker Name:</label></td>
-          <td><%= @job.worker_name %></td>
-        <% end %>
-      </tr>
-      <tr>
-        <td><label>Description: </label></td>
-        <td><%= @job.description %></td>
-      </tr>
-      <tr>
-        <td><label>Priority:</label></td>
-        <td><%= @job.priority %></td>
-        <% if @job.failure_count %>
-          <td><label>Failure Count:</label></td>
-          <td><%= @job.failure_count %></td>
-        <% end %>
-      </tr>
-      <tr>
-        <td><label>ID:</label</td>
-        <td><%= @job.id %></td>
-        <td><label>Destroy on completion?</label></td>
-        <td><%= @job.destroy_on_complete %></td>
-      </tr>
-    </table>
-  </div>
-</div>
-</br>
+<%= render partial: 'details', locals: {job: @job} %>
 
-<div class='status-message'><label>Dates:</label></div>
-<div class='row'>
-  <div class='col-md-12'>
-    <table style="width:100%">
-      <tr>
-        <td><label>Created:</label></td>
-        <td><%= job_time(@job.created_at) %></td>
-      </tr>
-      <tr>
-        <td><label><%= job_state_name(@job) %>:</label></td>
-        <td><%= job_state_time(@job) %></td>
-        <td><label><%= job_state_name(@job) %> For:</label></td>
-        <td><%= @job.duration %></td>
-      </tr>
-    </table>
-  </div>
-</div>
-</br>
+<%= render partial: 'dates', locals: {job: @job} %>
 
 <% if @job.respond_to?(:failed_at_list) && @job.failed_at_list.present? %>
-  <div class='status-message'><label>Retryable:</label></div>
-  <div class='row'>
-    <div class='col-md-12'>
-      <table style="width:100%">
-        <% first = true %>
-        <% @job.failed_at_list.each do |time| %>
-          <% if first %>
-            <tr>
-              <td><label>Retry Limit</label></td>
-              <td><%= @job.retry_limit %></td>
-              <td><label>Failures</label></td>
-              <td><%= job_time(time) %></td>
-            </tr>
-            <% first = false %>
-          <% else %>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><%= job_time(time) %></td>
-            </tr>
-          <% end %>
-        <% end %>
-      </table>
-    </div>
-  </div>
-  </br>
+  <%= render partial: 'retryable', locals: {job: @job} %>
+<% end %>
+
+<% if @job.exception.present? %>
+  <%= render partial: 'exception', locals: {job: @job} %>
 <% end %>
 
 <% if @job.respond_to?(:statistics) && @job.statistics.present? %>
   <div class='status-message'>
     <label>Statistics:</label>
     <pre><code><%= @job.statistics.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
-  </div>
-  </br>
-<% end %>
-
-<% if @job.exception.present? %>
-  <div class='status-message'><label>Exception:</label></div>
-  <div class='row'>
-    <div class='col-md-12'>
-      <table style="width:100%">
-        <tr>
-          <td><label>Exception:</label></td>
-          <td><%= @job.exception.class_name %></td>
-        </tr>
-        <tr>
-          <td><label>Message:</label></td>
-          <td><%= @job.exception.message %></td>
-        </tr>
-        <% if @job.exception.backtrace.present?
-             first = true %>
-          <% @job.exception.backtrace.each do |line| %>
-            <% if first %>
-              <tr>
-                <td><label>Backtrace:</label></td>
-                <td><%= line %></td>
-              </tr>
-              <% first = false %>
-            <% else %>
-              <tr>
-                <td></td>
-                <td><%= line %></td>
-              </tr>
-            <% end %>
-          <% end %>
-        <% end %>
-      </table>
-    </div>
   </div>
   </br>
 <% end %>

@@ -2,15 +2,20 @@ module RocketJobMissionControl
   module JobsHelper
     # The fields that RJMC already displays, all other will be rendered under the custom section.
     DISPLAYED_FIELDS = %w[
-      _id _type completed_at created_at
+      _id _type
+      completed_at created_at cron_schedule
       description destroy_on_complete download_encryption
-      exception
+      exception expires_at
       failed_at_list failure_count
       input_categories
+      log_level
       output_categories output_path
       percent_complete priority
-      retry_limit run_at
+      record_count retry_limit run_at
       started_at state statistics sub_state
+      throttle_group throttle_running_workers
+      upload_file_name
+      worker_name
     ]
 
     def job_icon(job)
@@ -40,7 +45,8 @@ module RocketJobMissionControl
     def job_state_time(job)
       return job_time(job.run_at) if job.scheduled?
 
-      job_time(job.running? ? job.started_at : job.completed_at)
+      job_time(job.completed_at || job.started_at || job.created_at )
+      # job_time(job.running? ? job.started_at : job.completed_at)
     end
 
     def job_estimated_time_left(job)
@@ -57,7 +63,7 @@ module RocketJobMissionControl
       return unless job.completed?
 
       secs = job.seconds.to_f
-      ((record_count.to_f / secs) * 60 * 60).round if job.record_count&.positive? && (secs > 0.0)
+      ((job.record_count.to_f / secs) * 60 * 60).round if job.record_count&.positive? && (secs > 0.0)
     end
 
     def job_custom_fields(job)

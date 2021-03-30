@@ -1,0 +1,33 @@
+<div class='lead'>Exception:</div>
+<div class='row'>
+  <div class='col-md-12'>
+    <table>
+      <tr>
+        <td><label>Exception:</label></td>
+        <td><%= @job.exception.class_name %></td>
+      </tr>
+      <tr>
+        <td><label>Message:</label></td>
+        <td><%= @job.exception.message %></td>
+      </tr>
+      <% if @job.exception.backtrace.present?
+           first = true %>
+        <% @job.exception.backtrace.each do |line| %>
+          <% if first %>
+            <tr>
+              <td><label>Backtrace:</label></td>
+              <td><%= line %></td>
+            </tr>
+            <% first = false %>
+          <% else %>
+            <tr>
+              <td></td>
+              <td><%= line %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </table>
+  </div>
+</div>
+</br>

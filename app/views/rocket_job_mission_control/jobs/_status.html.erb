@@ -15,7 +15,7 @@
     <label>Statistics:</label>
     <pre><code><%= @job.statistics.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
   </div>
-  </br>
+  <br/>
 <% end %>
 
 <% if @job.respond_to?(:input_categories) %>

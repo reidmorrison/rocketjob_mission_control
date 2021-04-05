@@ -9,7 +9,12 @@
       <% if !@job.queued? %>
         <tr>
           <td><label><%= job_state_name(@job) %>:</label></td>
-          <td><%= job_state_time(@job) %></td>
+          <td>
+            <%= job_state_time(@job) %>
+            <% unless @job.scheduled? %>
+              , <%= RocketJob.seconds_as_duration(Time.now - (@job.completed_at || @job.started_at || @job.created_at)) %> ago
+            <% end %>
+          </td>
         </tr>
       <% end %>
       <% if @job.scheduled? %>
@@ -20,11 +25,6 @@
         <tr>
           <td><label>Runs In:</label></td>
           <td><%= RocketJob.seconds_as_duration(@job.run_at - Time.now) %></td>
-        </tr>
-      <% else %>
-        <tr>
-          <td><label><%= job_state_name(@job) %> For:</label></td>
-          <td><%= RocketJob.seconds_as_duration(Time.now - (@job.completed_at || @job.started_at || @job.created_at)) %></td>
         </tr>
       <% end %>
       <% if @job.expires_at %>

@@ -9,41 +9,35 @@
 
 <%= form_for @dirmon_entry, url: {action: action} do |f| %>
   <div class='row'>
-    <div class='col-md-6'>
-      <div class='name form-group'>
-        <%= f.label :name %>
-        <%= f.text_field :name, class: 'form-control' %>
-      </div>
-    </div>
-
-    <div class='col-md-6'>
-      <div class='job form-group'>
-        <%= f.label :job_class_name %>
-        <%= f.text_field :job_class_name, class: 'form-control', disabled: action != :create %>
-      </div>
-    </div>
-  </div>
-
-  <div class='path form-group'>
-    <%= f.label :pattern %>
-    <%= f.text_field :pattern, class: 'form-control' %>
-  </div>
-
-  <div class='path form-group'>
-    <%= f.label :archive_directory %>
-    <%= f.text_field :archive_directory, class: 'form-control' %>
-  </div>
-
-  <div class='row'>
     <div class='col-md-12'>
       <% if @dirmon_entry.job_class %>
-        <div class='lead'>Job Properties</div>
-
         <div class='arguments'>
           <div class='job_arguments form-group'></div>
 
+          <div class='form-group'>
+            <%= f.label :name %>
+            <%= f.text_field :name, class: 'form-control' %>
+          </div>
+
+          <div class='form-group'>
+            <%= f.label "Job Class" %>
+            <%= f.text_field :job_class_name, class: 'form-control', disabled: action != :create %>
+          </div>
+
+          <div class='form-group'>
+            <%= f.label :pattern %>
+            <%= f.text_field :pattern, class: 'form-control' %>
+          </div>
+
+          <div class='form-group'>
+            <%= f.label :archive_directory %>
+            <%= f.text_field :archive_directory, class: 'form-control' %>
+          </div>
+
+          <div class='lead'>Properties</div>
           <%= f.fields_for :properties do |properties| %>
-            <% @dirmon_entry.job_class.user_editable_fields.each do |property_name| %>
+            <% @dirmon_entry.job_class.user_editable_fields.sort.each do |property_name| %>
+              <% next if property_name == :run_at %>
               <div class='form-group'>
                 <%= properties.label property_name.to_s %>
                 <%= editable_field_html(@dirmon_entry.job_class, property_name, @dirmon_entry.properties[property_name], properties, true) %>
@@ -55,24 +49,54 @@
               <% @job.input_categories.each do |category| %>
                 <div class='lead'><%= category.name.to_s.titleize %></div>
                 <div class='form-group'>
-                  <%= properties.label "Format" %>
-                  <% options = extract_inclusion_values(RocketJob::Category::Input, :format) %>
-                  <%= properties.select(:format, options, {include_blank: true, selected: category.format}, {class: "selectize form-control"}) %>
+                  <% dirmon_category = @dirmon_entry.properties[category.name.to_s] %>
                   <%= properties.label "Columns" %>
-                  <% options = Array(category.columns) %>
+                  <% options = dirmon_category ? Array(dirmon_category["columns"]) : [] %>
                   <%= properties.select(:columns, options_for_select(options, options), {include_hidden: false}, {class: "selectize form-control", multiple: true}) %>
+
+                  <%= properties.label "Format" %>
+                  <% options = extract_inclusion_values(RocketJob::Category::Input, :format, true) %>
+                  <% value = dirmon_category["format"] if dirmon_category %>
+                  <%= properties.select(:format, options, {include_blank: true, selected: value}, {class: "selectize form-control"}) %>
+
+                  <%= properties.label "Format Options" %>
+                  [JSON Hash]
+                  <% value = dirmon_category["format_options"] if dirmon_category %>
+                  <%= f.text_field(:format_options, value: value ? value.to_json : "", class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}') %>
+
+                  <%= properties.label "Mode" %>
+                  <% options = extract_inclusion_values(RocketJob::Category::Input, :mode, true) %>
+                  <% value = dirmon_category["mode"] if dirmon_category %>
+                  <%= properties.select(:mode, options, {include_blank: true, selected: value}, {class: "selectize form-control"}) %>
+
+                  <%= properties.label "Skip and ignore unknown columns" %>
+                  <% options = extract_inclusion_values(RocketJob::Category::Input, :skip_unknown, true) %>
+                  <% value = dirmon_category["skip_unknown"] if dirmon_category %>
+                  <%= properties.select(:skip_unknown, options, {include_blank: true, selected: value}, {class: "selectize form-control"}) %>
+
+                  <%= properties.label "Slice Size" %>
+                  <% value = dirmon_category["slice_size"] if dirmon_category %>
+                  <%= properties.number_field(:slice_size, value: value, class: "form-control") %>
                 </div>
               <% end %>
               <div class='lead'>Output Categories</div>
               <% @job.output_categories.each do |category| %>
                 <div class='lead'><%= category.name.to_s.titleize %></div>
                 <div class='form-group'>
-                  <%= properties.label "Format" %>
-                  <% options = extract_inclusion_values(RocketJob::Category::Output, :format) %>
-                  <%= properties.select(:format, options, {include_blank: true, selected: category.format}, {class: "selectize form-control"}) %>
+                  <% dirmon_category = @dirmon_entry.properties[category.name.to_s] %>
                   <%= properties.label "Columns" %>
-                  <% options = Array(category.columns) %>
+                  <% options = dirmon_category ? Array(dirmon_category["columns"]) : [] %>
                   <%= properties.select(:columns, options_for_select(options, options), {include_hidden: false}, {class: "selectize form-control", multiple: true}) %>
+
+                  <%= properties.label "Format" %>
+                  <% options = extract_inclusion_values(RocketJob::Category::Output, :format, true) %>
+                  <% value = dirmon_category["format"] if dirmon_category %>
+                  <%= properties.select(:format, options, {include_blank: true, selected: value}, {class: "selectize form-control"}) %>
+
+                  <%= properties.label "Format Options" %>
+                  [JSON Hash]
+                  <% value = dirmon_category["format_options"] if dirmon_category %>
+                  <%= f.text_field(:format_options, value: value ? value.to_json : "", class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}') %>
                 </div>
               <% end %>
             <% end %>

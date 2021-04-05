@@ -43,7 +43,7 @@ module RocketJobMissionControl
 
     # Returns [Array] list of inclusion values for this attribute.
     # Returns nil when there are no inclusion values for this attribute.
-    def extract_inclusion_values(klass, attribute)
+    def extract_inclusion_values(klass, attribute, include_nil_option)
       values = nil
 
       klass.validators_on(attribute).each do |validator|
@@ -57,7 +57,10 @@ module RocketJobMissionControl
     end
 
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
-    def editable_field_html(klass, field_name, value, f, include_nil_selectors = false)
+    #   include_nil_option:
+    #     Is used by dirmon entries where a nil value just means no value selected.
+    #     Prevents filling default values in for all fields in the dirmon entry
+    def editable_field_html(klass, field_name, value, f, include_nil_option = false)
       # When editing a job the values are of the correct type.
       # When editing a dirmon entry values are strings.
       field = klass.fields[field_name.to_s]
@@ -67,40 +70,25 @@ module RocketJobMissionControl
       placeholder = nil if placeholder.is_a?(Proc)
 
       case field.type.name
-      when "Symbol", "String", "Integer"
-        options = extract_inclusion_values(klass, field_name)
-        str     = "[#{field.type.name}]\n".html_safe
+      when "Integer"
+        options = extract_inclusion_values(klass, field_name, include_nil_option)
+        f.number_field(field_name, in: options, include_blank: include_nil_option, value: value, class: "form-control", placeholder: placeholder)
+      when "String", "Symbol", "Mongoid::StringifiedSymbol"
+        options = extract_inclusion_values(klass, field_name, include_nil_option)
         if options
-          str + f.select(field_name, options, {include_blank: options.include?(nil) || include_nil_selectors, selected: value}, {class: "selectize form-control"})
+          f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
         else
-          if field.type.name == "Integer"
-            str + f.number_field(field_name, value: value, class: "form-control", placeholder: placeholder)
-          else
-            str + f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)
-          end
+          f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)
         end
+      when "Boolean", "Mongoid::Boolean"
+        options = extract_inclusion_values(klass, field_name, include_nil_option) || [nil, "true", "false"]
+        f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
       when "Hash"
         "[JSON Hash]\n".html_safe +
           f.text_field(field_name, value: value ? value.to_json : "", class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
       when "Array"
         options = Array(value)
-        "[Array]\n".html_safe +
-          f.select(field_name, options_for_select(options, options), {include_hidden: false}, {class: "selectize form-control", multiple: true})
-      when "Mongoid::Boolean"
-        name = "#{field_name}_true".to_sym
-        value = value.to_s
-        str = '<div class="radio-buttons">'.html_safe
-        str << f.radio_button(field_name, "true", checked: value == "true")
-        str << " ".html_safe + f.label(name, "true")
-        str << " ".html_safe + f.radio_button(field_name, "false", checked: value == "false")
-        str << " ".html_safe + f.label(name, "false")
-        # Allow this field to be unset (nil).
-        if include_nil_selectors
-          str << " ".html_safe + f.radio_button(field_name, "", checked: value == "")
-          str << " ".html_safe + f.label(name, "nil")
-        end
-
-        str << "</div>".html_safe
+        f.select(field_name, options_for_select(options, options), {include_hidden: false}, {class: "selectize form-control", multiple: true})
       else
         "[#{field.type.name}]".html_safe +
           f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)

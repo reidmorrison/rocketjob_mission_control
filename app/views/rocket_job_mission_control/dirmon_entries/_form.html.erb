@@ -49,7 +49,8 @@
               <% @job.input_categories.each do |category| %>
                 <div class='lead'><%= category.name.to_s.titleize %></div>
                 <div class='form-group'>
-                  <% dirmon_category = @dirmon_entry.properties[category.name.to_s] %>
+                  <% dirmon_category = dirmon_entry_find_category(@dirmon_entry.properties["input_categories"], category.name) %>
+
                   <%= properties.label "Columns" %>
                   <% options = dirmon_category ? Array(dirmon_category["columns"]) : [] %>
                   <%= properties.select(:columns, options_for_select(options, options), {include_hidden: false}, {class: "selectize form-control", multiple: true}) %>
@@ -83,7 +84,8 @@
               <% @job.output_categories.each do |category| %>
                 <div class='lead'><%= category.name.to_s.titleize %></div>
                 <div class='form-group'>
-                  <% dirmon_category = @dirmon_entry.properties[category.name.to_s] %>
+                  <% dirmon_category = dirmon_entry_find_category(@dirmon_entry.properties["output_categories"], category.name) %>
+
                   <%= properties.label "Columns" %>
                   <% options = dirmon_category ? Array(dirmon_category["columns"]) : [] %>
                   <%= properties.select(:columns, options_for_select(options, options), {include_hidden: false}, {class: "selectize form-control", multiple: true}) %>
@@ -104,7 +106,7 @@
         </div>
       <% end %>
 
-      <div class='buttons pull-right'>
+      <div class='buttons'>
         <%= f.submit action, class: 'btn btn-primary' %>
         <%= link_to 'cancel', :back, class: 'btn btn-default' %>
       </div>

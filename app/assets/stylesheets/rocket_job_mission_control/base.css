@@ -1,0 +1,449 @@
+html,
+body,
+#wrapper,
+#wrapper > .container-fluid,
+#main,
+.row.row-offcanvas.row-offcanvas-left {
+  height: 100%;
+}
+.navbar-default {
+  background-image: linear-gradient(90deg, #000, #99120f);
+}
+#wrapper {
+  background-color: #f7f7f7;
+}
+.footer {
+  position: relative;
+  height: 100px;
+  clear: both;
+  padding-top: 20px;
+}
+/* Datatables */
+table.datatable {
+  border-collapse: collapse;
+}
+.dataTables_wrapper {
+  margin-top: 2em;
+}
+.dt-reload {
+  margin: 1em 0;
+}
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc:after {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: block;
+  font-family: "Font Awesome 5 Free";
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+table.dataTable thead .sorting:after {
+  content: "\f0c9";
+}
+table.dataTable thead .sorting_asc:after {
+  content: "\f160";
+}
+table.dataTable thead .sorting_desc:after {
+  content: "\f161";
+}
+table.dataTable thead > tr > th {
+  padding-left: 30px;
+}
+.datatable .card td {
+  vertical-align: middle;
+}
+.inline-job-actions > a {
+  display: inline-block;
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 1px;
+}
+.job-list {
+  height: 100%;
+  min-height: 768px;
+}
+/* Job Edit Page */
+.edit_job textarea.description-block {
+  height: 166px;
+}
+.edit_job .buttons {
+  margin-top: 1em;
+}
+.job-status .lead {
+  color: #50555b;
+  float: left;
+  margin-top: 1em;
+  vertical-align: middle;
+}
+.job-status p {
+  font-size: 14px;
+  color: #666;
+}
+.job-status .welcome_screen {
+  text-align: center;
+  margin-top: 2%;
+}
+.job-status .welcome_screen h1 {
+  margin-bottom: 10px;
+}
+.job-status .welcome_screen p {
+  font-size: 16px;
+}
+.job-status .job-actions {
+  float: left;
+  margin-top: 23px;
+  margin-left: 20px;
+}
+.job-status .job-actions .btn {
+  padding: 2px 6px;
+}
+.job-status .pagination-buttons {
+  float: left;
+  margin-top: 23px;
+  margin-left: 20px;
+}
+.job-status .job-state {
+  margin-left: 20px;
+  padding: 0;
+  font-size: 12px;
+  margin-top: 25px;
+  vertical-align: middle;
+  float: left;
+}
+.job-status .job-state .left {
+  float: left;
+  text-shadow: 0 2px 3px #000;
+  background-color: #404650;
+  color: #fff;
+  padding: 2px 6px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.job-status .job-state .right {
+  float: left;
+  color: #fff;
+  padding: 2px 6px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.job-status .job-state .queued,
+.job-status .job-state .pending {
+  background-color: #a29f00;
+}
+.job-status .job-state .scheduled {
+  background-color: purple;
+}
+.job-status .job-state .running {
+  background-color: #337ab7;
+}
+.job-status .job-state .sleeping {
+  background-color: darkcyan;
+}
+.job-status .job-state .completed,
+.job-status .job-state .enabled {
+  background-color: green;
+}
+.job-status .job-state .paused,
+.job-status .job-state .disabled {
+  background-color: orange;
+}
+.job-status .job-state .failed {
+  background-color: red;
+}
+.job-status .job-state .aborted {
+  background-color: darkorange;
+}
+.job-status .priority {
+  display: inline-block;
+  vertical-align: middle;
+  float: right;
+  margin-top: 20px;
+}
+.job-status .priority .form-control {
+  width: 47px;
+  height: 34px;
+}
+.job-status .priority-set {
+  float: right;
+  padding: 7px 14px;
+  font-weight: bold;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+#content {
+  margin-top: 60px;
+  padding: 20px;
+}
+#main {
+  padding-left: 0;
+}
+.white-background {
+  background-color: #fff;
+}
+/* Sidebar */
+#sidebar {
+  padding: 0px;
+  padding-top: 15px;
+  margin-top: 5em;
+}
+#sidebar,
+#sidebar a {
+  color: #555;
+  background-color: transparent;
+  padding-left: 5px;
+}
+#sidebar .nav li > a:hover {
+  color: #000;
+  background-color: #ddd;
+}
+@media screen and (max-width: 768px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    transition: all 0.25s ease-out;
+  }
+  .row-offcanvas-left.active {
+    left: 33%;
+  }
+  .row-offcanvas-left.active .sidebar-offcanvas {
+    left: -33%;
+    position: absolute;
+    top: 0;
+    width: 33%;
+    margin-left: 5px;
+  }
+  #sidebar,
+  #sidebar a,
+  #sidebar-footer a {
+    padding-left: 6px;
+  }
+}
+/* Header Styles */
+#header {
+  padding: 5px;
+  border-radius: 0;
+  border-bottom: 1px solid #ddd;
+  position: fixed;
+  z-index: 1000;
+  right: 0;
+  left: 0;
+}
+#header .navbar {
+  position: relative;
+}
+#header .brand {
+  position: absolute;
+  left: 50%;
+  margin-left: -96px !important;
+  display: block;
+}
+#header .brand img {
+  display: inline;
+  height: 40px;
+  position: relative;
+  bottom: 3px;
+  left: 8px;
+}
+#header .first {
+  left: 15px;
+}
+#header .last {
+  right: 15px;
+}
+#header a.navbar-brand.brand {
+  font-size: 23px;
+  color: white;
+  font-weight: bold;
+  top: -5px;
+}
+#header a.navbar-brand.brand span {
+  display: inline-block;
+  position: relative;
+  left: -3px;
+  color: orangered;
+  font-weight: bold;
+}
+#jobs-menu {
+  margin-top: 1.5em;
+  background-color: #b3b3b3;
+  border-color: white;
+}
+.job-search-box {
+  padding: 20px 100px;
+}
+.list .card:nth-child(1) {
+  border-top: 1px solid #ddd;
+}
+.list .card:nth-child(odd) {
+  background-color: #fff;
+}
+.list .card {
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  height: 100%;
+  background-color: #f7f7f7;
+}
+.list .card:hover {
+  cursor: pointer;
+  background-color: #dadada;
+}
+.list .card .inner {
+  padding: 0.5em;
+  position: relative;
+  margin: 0 0 0 10px;
+}
+.list .card .inner .title {
+  display: inline-block;
+  vertical-align: middle;
+}
+.list .card .inner .title i.queued {
+  color: #a29f00;
+}
+.list .card .inner .title i.scheduled {
+  color: purple;
+}
+.list .card .inner .title i.running {
+  color: #337ab7;
+}
+.list .card .inner .title i.sleeping {
+  color: darkcyan;
+}
+.list .card .inner .title i.completed {
+  color: green;
+}
+.list .card .inner .title i.paused {
+  color: orange;
+}
+.list .card .inner .title i.failed {
+  color: red;
+}
+.list .card .inner .title i.aborted {
+  color: darkorange;
+}
+.list .card .inner .title i.enabled {
+  color: green;
+}
+.list .card .inner .title i.disabled {
+  color: orange;
+}
+.list .card .inner .title h3 {
+  font-weight: bold;
+  margin: 0;
+  font-size: 16px;
+}
+.list .card .inner .lead {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+.list .card .inner .duration,
+.list .card .inner .description,
+.list .card .inner .completion {
+  color: #7c735c;
+  font-size: 18px;
+  font-weight: 200;
+}
+.list .card .inner .batch {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  background-color: #444;
+  border-radius: 30px;
+  padding: 4px 10px;
+  color: #fff;
+  z-index: 2;
+}
+.list .selected {
+  border-bottom: 1px solid blue;
+  border-right: 1px solid blue;
+  border-top: 1px solid blue;
+  background-color: lightcyan;
+}
+.grid {
+  padding: 1em;
+  font-size: 0.85em;
+}
+.grid .card {
+  padding: 1em;
+}
+.grid .card .inner {
+  padding: 1em;
+  border-radius: 3px;
+  display: inline-block;
+  background: #fff;
+  width: 100%;
+  min-height: 250px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-shadow: 0px 1px 2px 0 #ccc;
+  position: relative;
+  text-align: center;
+}
+.grid .card .inner .title,
+.grid .card .inner .state,
+.grid .card .inner .threads,
+.grid .card .inner .time {
+  margin-bottom: 10px;
+}
+.grid .card .inner .actions {
+  padding: 10px 0;
+  background: #f5f5f5;
+  border: 1px solid #eee;
+  border-radius: 2px;
+}
+.grid .card .inner .title {
+  text-align: center;
+}
+.grid .card .inner .title h3 {
+  font-weight: bold;
+  margin: 0;
+  font-size: 16px;
+}
+.priority-group {
+  width: 67px;
+  margin: 0 auto;
+}
+.priority-group input {
+  text-align: right;
+}
+.priority-group .input-group-btn-vertical {
+  position: relative;
+  white-space: nowrap;
+  width: 1%;
+  vertical-align: middle;
+  display: table-cell;
+}
+.priority-group .input-group-btn-vertical > .btn {
+  display: block;
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  padding: 8px;
+  margin-left: -1px;
+  position: relative;
+  border-radius: 0;
+}
+.priority-group .input-group-btn-vertical > .btn:first-child {
+  border-right: 0;
+}
+.priority-group .input-group-btn-vertical > .btn:last-child {
+  margin-top: -2px;
+  border-right: 0;
+}
+.priority-group .input-group-btn-vertical i {
+  position: absolute;
+  top: 0;
+  left: 4px;
+}
+.code-block {
+  margin-top: 25px;
+}
+.status {
+  padding: 1em;
+}

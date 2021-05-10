@@ -11,11 +11,10 @@
  * file per style scope.
  *
  *= require_self
+ *= require bootstrap.min
+ *= require fontawesome-all.min
+ *= require selectize
+ *= require selectize.bootstrap3
+ *= require datatables.min
  *= require_tree .
  */
-
-@import 'bootstrap.min';
-@import 'fontawesome-all.min';
-@import 'selectize';
-@import 'selectize.bootstrap3';
-@import 'datatables.min';

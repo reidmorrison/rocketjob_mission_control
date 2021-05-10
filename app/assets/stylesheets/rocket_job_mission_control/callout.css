@@ -4,74 +4,72 @@
   border-left-width: 0.5em;
 }
 .callout-queued {
-  border-left-color: #A29F00;
-  a {
-    color: #A29F00;
-  }
+  border-left-color: #a29f00;
+}
+.callout-queued a {
+  color: #a29f00;
 }
 .callout-running {
   border-left-color: #337ab7;
-  a {
-    color: #337ab7;
-  }
+}
+.callout-running a {
+  color: #337ab7;
 }
 .callout-sleeping {
   border-left-color: darkcyan;
-  a {
-    color: darkcyan;
-  }
+}
+.callout-sleeping a {
+  color: darkcyan;
 }
 .callout-scheduled {
   border-left-color: purple;
-  a {
-    color: purple;
-  }
+}
+.callout-scheduled a {
+  color: purple;
 }
 .callout-completed {
   border-left-color: green;
-  a {
-    color: green;
-  }
+}
+.callout-completed a {
+  color: green;
 }
 .callout-paused {
   border-left-color: orange;
-  a {
-    color: orange;
-  }
+}
+.callout-paused a {
+  color: orange;
 }
 .callout-failed {
   border-left-color: red;
-  a {
-    color: red;
-  }
+}
+.callout-failed a {
+  color: red;
 }
 .callout-aborted {
   border-left-color: darkorange;
-  a {
-    color: darkorange;
-  }
 }
-
+.callout-aborted a {
+  color: darkorange;
+}
 /* Used by Dirmon Entries */
 .callout-pending {
   border-color: orange;
-  a {
-    color: orange;
-  }
+}
+.callout-pending a {
+  color: orange;
 }
 .callout-enabled {
   border-left-color: green;
-  a {
-    color: green;
-  }
+}
+.callout-enabled a {
+  color: green;
 }
 .callout-disabled {
   border-left-color: grey;
-  a {
-    color: grey;
-  }
 }
-
+.callout-disabled a {
+  color: grey;
+}
 /* Used by Servers */
 .callout-top {
   border: 1px solid #eee;
@@ -79,31 +77,31 @@
 }
 .callout-info {
   border-left-color: #1b809e;
-  .title {
-    color: #1b809e;
-  }
+}
+.callout-info .title {
+  color: #1b809e;
 }
 .callout-success {
   border-left-color: #3c763d;
-  .title {
-    color: #3c763d;
-  }
+}
+.callout-success .title {
+  color: #3c763d;
 }
 .callout-warning {
   border-left-color: #aa6708;
-  .title {
-    color: #aa6708;
-  }
+}
+.callout-warning .title {
+  color: #aa6708;
 }
 .callout-alert {
   border-left-color: #ce4844;
-  .title {
-    color: #ce4844;
-  }
+}
+.callout-alert .title {
+  color: #ce4844;
 }
 .callout-zombie {
   border-left-color: darkred;
-  .title {
-    color: darkred;
-  }
+}
+.callout-zombie .title {
+  color: darkred;
 }

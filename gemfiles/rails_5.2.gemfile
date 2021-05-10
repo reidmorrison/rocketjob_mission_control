@@ -5,12 +5,13 @@ source "https://rubygems.org"
 gem "rails", "~> 5.2.0"
 gem "mongoid", "~> 7.1.0"
 gem "rocketjob"
-gem "appraisal"
-gem "amazing_print"
-gem "minitest"
-gem "rake"
 gem "rubyzip", platform: :ruby
 gem "sprockets", "< 4.0"
+
+group :test, :development do
+  gem "amazing_print"
+  gem "minitest"
+end
 
 group :test do
   gem "minispec-rails", require: false

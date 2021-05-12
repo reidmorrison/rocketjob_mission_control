@@ -47,7 +47,7 @@ module RocketJobMissionControl
       {display: "Started", value: :started, field: "started_at"},
       {display: "Actions", value: :action_buttons, orderable: false}
     ].freeze
-    RUNNING_FIELDS = (COMMON_FIELDS + %i[record_count collect_output input_categories output_categories encrypt compress slice_size priority sub_state percent_complete]).freeze
+    RUNNING_FIELDS = (COMMON_FIELDS + %i[record_count input_categories output_categories priority sub_state percent_complete]).freeze
 
     SCHEDULED_COLUMNS = [
       {display: "Class", value: :class_with_link, field: "_type"},

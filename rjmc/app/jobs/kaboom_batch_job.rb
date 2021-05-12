@@ -1,7 +1,8 @@
 # Create a test job that fails with different errors for RJMC testing:
 #
 # count = 100
-# job   = KaboomBatchJob.new(slice_size: 1)
+# job   = KaboomBatchJob.new
+# job.input_category.slice_size = 1
 # job.upload do |stream|
 #   count.times { |i| stream << "Slice number #{i}" }
 # end

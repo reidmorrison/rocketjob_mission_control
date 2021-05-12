@@ -26,7 +26,8 @@ module RocketJobMissionControl
       end
 
       let :failed_job do
-        job = KaboomBatchJob.new(slice_size: 1)
+        job = KaboomBatchJob.new
+        job.input_category.slice_size = 1
         job.upload do |stream|
           stream << "first record"
           stream << "second record"

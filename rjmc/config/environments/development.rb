@@ -39,10 +39,7 @@ Rails.application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
-
-  if Rails.version.to_f >= 5.2
-    config.assets.check_precompiled_asset = false
-  end
+  config.assets.check_precompiled_asset = false
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true

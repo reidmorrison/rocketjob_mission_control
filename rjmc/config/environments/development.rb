@@ -40,6 +40,10 @@ Rails.application.configure do
   # number of complex assets.
   config.assets.debug = true
 
+  if Rails.version.to_f >= 5.2
+    config.assets.check_precompiled_asset = false
+  end
+
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 

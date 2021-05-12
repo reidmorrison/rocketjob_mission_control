@@ -1,0 +1,7 @@
+#servers .server-collection-actions {
+  margin: 1em 0;
+}
+#servers .actions > a {
+  display: inline;
+  margin: 5px;
+}

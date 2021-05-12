@@ -10,12 +10,13 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_self
- *= require_tree .
+ *= require bootstrap.min
+ *= require rocket_job_mission_control/base
+ *= require rocket_job_mission_control/callout
+ *= require rocket_job_mission_control/jobs
+ *= require rocket_job_mission_control/worker_processes
+ *= require fontawesome-all.min
+ *= require selectize
+ *= require selectize.bootstrap3
+ *= require datatables.min
  */
-
-@import 'bootstrap.min';
-@import 'fontawesome-all.min';
-@import 'selectize';
-@import 'selectize.bootstrap3';
-@import 'datatables.min';

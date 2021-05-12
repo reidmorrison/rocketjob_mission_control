@@ -9,7 +9,6 @@ module RocketJobMissionControl
 
     require "rocketjob"
     require "jquery-rails"
-    require "sass-rails"
     require "access-granted"
     begin
       require "rocketjob_enterprise"

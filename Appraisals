@@ -2,7 +2,6 @@ appraise "rails_5.2" do
   gem "rails", "~> 5.2.0"
   gem "mongoid", "~> 7.1.0"
   gem "rocketjob", git: "https://github.com/rocketjob/rocketjob"
-  gem "sprockets", "< 3.0"
 end
 
 appraise "rails_6.0" do

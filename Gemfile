@@ -4,7 +4,7 @@ gemspec
 
 gem "rails", "~> 6.1.0"
 gem "mongoid", git: "https://github.com/reidmorrison/mongoid", branch:"7.2-ruby_3"
-gem "rocketjob", path: "../rocketjob"
+gem "rocketjob", git: "https://github.com/reidmorrison/rocketjob"
 gem "appraisal"
 gem "amazing_print"
 gem "minitest"

@@ -1,28 +1,34 @@
 <div class='job-list'>
   <div class='list'>
-    <div class='row'>
-      <div class='col-sm-10'>
-        <h2><%= @description %> Jobs</h2>
-      </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class='row'>
+          <div class='col-sm-10'>
+            <h2><%= @description %> Jobs</h2>
+          </div>
 
-      <div class='col-sm-2'>
-        <div class='btn btn-default pull-right dt-reload' data-behavior='reload'>
-          <i class='fas fa-sync'></i>
+          <div class='col-sm-2'>
+            <div class='btn btn-default pull-right dt-reload' data-behavior='reload'>
+              <i class='fas fa-sync'></i>
+            </div>
+          </div>
         </div>
       </div>
+
+      <div class="panel-body">
+        <table class='table datatable jobs-datatable' data-source='<%= @data_table_url %>' style='width: 100%'>
+          <thead>
+            <tr>
+              <% @columns.each do |column| %>
+                <th><%= column[:display] %></th>
+              <% end %>
+            </tr>
+          </thead>
+
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
-
-    <table class='table datatable jobs-datatable' data-source='<%= @data_table_url %>' style='width: 100%'>
-      <thead>
-        <tr>
-          <% @columns.each do |column| %>
-            <th><%= column[:display] %></th>
-          <% end %>
-        </tr>
-      </thead>
-
-      <tbody></tbody>
-    </table>
   </div>
 </div>
 

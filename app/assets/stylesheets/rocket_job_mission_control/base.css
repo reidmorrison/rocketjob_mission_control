@@ -5,6 +5,9 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
 .navbar-default { background-image: linear-gradient(90deg, #000, #99120f); }
 .navbar-default .navbar-nav > li > a { color: #fff; }
 .navbar-default .navbar-nav > li > a:hover { color: #aaa; }
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border: 0;
+}
 
 #wrapper { background-color: #f7f7f7; }
 
@@ -18,7 +21,11 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
 /* Datatables */
 table.datatable { border-collapse: collapse; }
 .dataTables_wrapper { margin-top: 2em; }
-.dt-reload { margin: 1em 0; }
+
+h2 {
+  margin-top: 10px;
+  font-size: 1.8rem;
+}
 
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
   position: absolute;
@@ -36,6 +43,9 @@ table.dataTable thead .sorting:after { content: "\f0c9"; }
 table.dataTable thead .sorting_asc:after { content: "\f160"; }
 table.dataTable thead .sorting_desc:after { content: "\f161"; }
 table.dataTable thead > tr > th { padding-left: 30px; }
+
+
+.dataTables_info, .dataTables_paginate { margin-top: 20px !important; }
 
 .datatable .card td { vertical-align: middle; }
 
@@ -148,7 +158,7 @@ table.dataTable thead > tr > th { padding-left: 30px; }
 
 #content {
   margin-top: 60px;
-  padding: 20px;
+  padding: 40px;
 }
 
 #main { padding-left: 0; }
@@ -198,7 +208,7 @@ table.dataTable thead > tr > th { padding-left: 30px; }
 #header {
   padding: 5px;
   border-radius: 0;
-  border-bottom: 1px solid #ddd;
+  border: 0;
   position: fixed;
   z-index: 1000;
   right: 0;

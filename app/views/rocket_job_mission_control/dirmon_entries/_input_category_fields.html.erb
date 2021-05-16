@@ -1,0 +1,54 @@
+<div class="nested-fields">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h2><%= f.object.try(:name) %></h2>
+    </div>
+
+    <div class="panel-body">
+      <%= f.hidden_field :_destroy %>
+      
+      <div>
+        <%= f.label :columns %>
+        <% options = [] %>
+        <% value = "" %>
+        <%= f.select(:columns, options, { include_blank: true, selected: value }, { class: "selectize form-control" }) %>
+
+      </div>
+      
+      <div>
+        <%= f.label :format %>
+        <% options = [] %>
+        <% value = "" %>
+        <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "selectize form-control" }) %>
+      </div>
+      
+      <div>
+        <%= f.label :format_options %>
+        <%= f.text_field :format_options %>
+      </div>
+
+      <div>
+        <%= f.label :mode %>
+        <% options = [] %>
+        <% value = "" %>
+        <%= f.select(:mode, options, { include_blank: true, selected: value }, { class: "selectize form-control" }) %>
+      </div>
+
+      <div>
+        <%= f.label :skip_unknown %>
+        <% options = [] %>
+        <% value = "" %>
+        <%= f.select(:skip_unknown, options, { include_blank: true, selected: value }, { class: "selectize form-control" }) %>
+      </div>
+
+      <div>
+        <%= f.label :slice_size %>
+        <%= f.number_field :slice_size %>
+      </div>
+
+      <div>
+        <%= link_to "Remove", '#', class: "remove_fields btn btn-danger" %>
+      </div>
+    </div>
+  </div>
+</div>

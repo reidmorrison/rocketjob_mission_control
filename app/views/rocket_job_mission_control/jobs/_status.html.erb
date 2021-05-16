@@ -1,49 +1,25 @@
-<div class="row">
-  <div class="col-sm-4">
-    <%= render partial: "details", locals: { job: @job } %>
-  </div>
-
-  <div class="col-sm-4">
-    <%= render partial: "dates", locals: { job: @job } %>
-  </div>
-
-  <div class="col-sm-4">
-    <% if @job.respond_to?(:failed_at_list) && @job.failed_at_list.present? %>
-      <%= render partial: "retryable", locals: { job: @job } %>
-    <% end %>
-  </div>
-</div>
-
+<%= render partial: 'details', locals: {job: @job} %>
+<%= render partial: 'dates', locals: {job: @job} %>
+<% if @job.respond_to?(:failed_at_list) && @job.failed_at_list.present? %>
+  <%= render partial: 'retryable', locals: {job: @job} %>
+<% end %>
 <% if @job.exception.present? %>
-  <%= render partial: "exception", locals: { job: @job } %>
+  <%= render partial: 'exception', locals: {job: @job} %>
 <% end %>
-
 <% if @job.respond_to?(:statistics) && @job.statistics.present? %>
-  <div class="status-message">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4>Statistics:</h4>
-      </div>
-
-      <div class="panel-body">
-        <pre><code class="language-ruby">
-<%= @job.statistics.ai(plain: true, ruby19_syntax: true, sort_keys: true) %>
-        </code></pre>
-      </div>
-    </div>
+  <div class='status-message'>
+    <label>Statistics:</label>
+    <pre><code><%= @job.statistics.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
   </div>
+  <br/>
 <% end %>
-
 <% if @job.respond_to?(:input_categories) %>
-  <%= render partial: "input_categories", locals: { job: @job } %>
+  <%= render partial: 'input_categories', locals: {job: @job} %>
 <% end %>
-
 <% if @job.respond_to?(:output_categories) %>
-  <%= render partial: "output_categories", locals: { job: @job } %>
+  <%= render partial: 'output_categories', locals: {job: @job} %>
 <% end %>
-
 <% @attributes = job_custom_fields(@job) %>
-
 <% if @attributes.present? %>
-  <%= render partial: "attributes", locals: { attributes: @attributes } %>
+  <%= render partial: 'attributes', locals: {attributes: @attributes} %>
 <% end %>

@@ -1,9 +1,6 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4>Attributes</h4>
-  </div>
-
-  <div class="panel-body">
+<div class='lead'>Attributes:</div>
+<div class='row'>
+  <div class='col-md-12'>
     <table>
       <% @attributes.each_pair do |key, value| %>
         <% next if value.is_a?(Array) || value.is_a?(Hash) %>
@@ -33,7 +30,7 @@
                 <td><label><%= key %>:</label></td>
                 <% if item.is_a?(Hash) || item.is_a?(Array) %>
                   <td>
-                    <pre><code class="language-jsonp"><%= pretty_print_array_or_hash(item) %></code></pre>
+                    <pre><code><%= pretty_print_array_or_hash(item) %></code></pre>
                   </td>
                 <% else %>
                   <td><%= item %></td>
@@ -45,7 +42,7 @@
                 <td></td>
                 <% if item.is_a?(Hash) || item.is_a?(Array) %>
                   <td>
-                    <pre><code class="language-json5"><%= pretty_print_array_or_hash(item) %></code></pre>
+                    <pre><code><%= pretty_print_array_or_hash(item) %></code></pre>
                   </td>
                 <% else %>
                   <td><%= item %></td>
@@ -72,7 +69,7 @@
                         <td><label><%= key2.to_s.titleize %>:</label></td>
                         <% if value2.is_a?(Hash) || value2.is_a?(Array) %>
                           <td>
-                            <pre><code class="language-jsonp"><%= pretty_print_array_or_hash(value2) %></code></pre>
+                            <pre><code><%= pretty_print_array_or_hash(value2) %></code></pre>
                           </td>
                         <% else %>
                           <td><%= value2 %></td>
@@ -89,3 +86,4 @@
     </table>
   </div>
 </div>
+<br/>

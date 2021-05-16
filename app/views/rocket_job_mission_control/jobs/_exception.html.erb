@@ -1,30 +1,33 @@
-<div class="panel panel-danger">
-  <div class="panel-heading">
-    <h4>Exception</h4>
-  </div>
-
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-md-12">
-        <label>Class:</label>
-        <pre><code class="language-ruby">
-<%= @job.exception.class_name %>
-        </code></pre>
-
-        <label>Message:</label>
-        <pre><code class="language-ruby">
-<%= @job.exception.message %>"
-        </code></pre>
-
-        <% if @job.exception.backtrace.present? %>
-          <label>Backtrace:</label>
-          <pre><code class="language-ruby">
-<% @job.exception.backtrace.each do |line| %>
-  <p><%= line %><p>
-<% end %>
-          </code></pre>
+<div class='lead'>Exception:</div>
+<div class='row'>
+  <div class='col-md-12'>
+    <table>
+      <tr>
+        <td><label>Exception:</label></td>
+        <td><%= @job.exception.class_name %></td>
+      </tr>
+      <tr>
+        <td><label>Message:</label></td>
+        <td><%= @job.exception.message %></td>
+      </tr>
+      <% if @job.exception.backtrace.present?
+           first = true %>
+        <% @job.exception.backtrace.each do |line| %>
+          <% if first %>
+            <tr>
+              <td><label>Backtrace:</label></td>
+              <td><%= line %></td>
+            </tr>
+            <% first = false %>
+          <% else %>
+            <tr>
+              <td></td>
+              <td><%= line %></td>
+            </tr>
+          <% end %>
         <% end %>
-      </div>
-    </div>
+      <% end %>
+    </table>
   </div>
 </div>
+<br/>

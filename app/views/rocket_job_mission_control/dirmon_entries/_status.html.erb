@@ -1,37 +1,22 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4>Details</h4>
-  </div>
-
-  <div class="panel-body">
-    <label>Job Class</label>
-    <pre><code class="language-ruby">
-<%= @dirmon_entry.job_class_name %>
-    </code></pre>
-
-    <pre><code class="language-ruby">
-id: "<%= @dirmon_entry.id %>"
-pattern: "<%= @dirmon_entry.pattern %>",
-archive_directory: "<%= @dirmon_entry.archive_directory %>"
-    </code></pre>
+<div class='row'>
+  <div class='col-md-12'>
+    <div><label>Job Class:</label><%= @dirmon_entry.job_class_name %></div>
+    <div><label>Pattern:</label><%= @dirmon_entry.pattern %></div>
+    <div><label>Archive Directory:</label><%= @dirmon_entry.archive_directory %></div>
+    <div class='id'><label>ID:</label><%= @dirmon_entry.id %></div>
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4>Properties</h4>
-  </div>
-
-  <div class="panel-body">
+<div class='lead'>Properties</div>
+<div class='row'>
+  <div class='col-md-12'>
     <% @dirmon_entry.properties.keys.sort.each do |name| %>
       <% value = @dirmon_entry.properties[name] %>
-      <div class="parameters">
+      <div class='parameters'>
         <label><%= name.to_s.titleize %>:</label>
 
         <% if value.is_a?(Array) || value.is_a?(Hash) %>
-          <pre><code class="language-jsonp">
-<%= pretty_print_array_or_hash(value) %>
-          </code></pre>
+          <pre><code><%= pretty_print_array_or_hash(value) %></code></pre>
         <% else %>
           <%= value %>
         <% end %>

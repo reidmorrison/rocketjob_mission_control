@@ -24,6 +24,38 @@
             <% end %>
           </div>
         </div>
+
+        <% if @job.class.respond_to?(:defined_input_categories) && @job.class.respond_to?(:defined_output_categories) %>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="panel panel-primary">
+                <div class="panel-body">
+                  <div class='lead'>Input Categories</div>
+
+                  <% f.fields_for :input_categories do |input_category_form| %>
+                    <%= render "input_category_fields.html", f: input_category_form, locals: { job: @job } %>
+                  <% end %>
+
+                  <%= link_to_add_fields "Add Input Categories", f, :input_categories, "primary" %>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="panel panel-success">
+                <div class="panel-body">
+                  <div class='lead'>Output Categories</div>
+
+                  <% f.fields_for :output_categories do |output_category_form| %>
+                    <%= render "output_category_fields.html", f: output_category_form, locals: { job: @job } %>
+                  <% end %>
+
+                  <%= link_to_add_fields "Add Output Categories", f, :output_categories, "success" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
 

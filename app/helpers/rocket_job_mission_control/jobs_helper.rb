@@ -122,5 +122,12 @@ module RocketJobMissionControl
         ""
       end
     end
+
+    def job_find_category(categories, category_name = :main)
+      return unless categories
+
+      categories.each { |category| return category if category_name == (category["name"] || :main).to_sym }
+      nil
+    end
   end
 end

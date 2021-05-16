@@ -1,126 +1,154 @@
-<div class='lead'>Input Categories:</div>
-<% @job.input_categories.each do |category| %>
-  <div class='row'>
-    <div class='col-md-12'>
-      <div class='status-message'><label><%= category.name.to_s.camelcase %>:</label></div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h4>Input Categories</h4>
+  </div>
+
+  <div class="panel-body">
+    <% @job.input_categories.each do |category| %>
       <div class='row'>
         <div class='col-md-12'>
-          <table>
-            <% if category.name == :main %>
-              <tr>
-                <td><label>Record Count:</label></td>
-                <td><%= @job.record_count %></td>
-              </tr>
-              <% if @job.completed? %>
-                <tr>
-                  <td><label>Records Per Hour:</label></td>
-                  <td><%= job_records_per_hour(@job) %></td>
-                </tr>
-              <% elsif @job.running? || @job.paused? || @job.failed? %>
-                <tr>
-                  <td><label>Progress:</label></td>
-                  <td><%= @job.percent_complete %> %</td>
-                </tr>
-                <% if @job.running? %>
+          <div class="panel panel-primary">
+            <div class='panel-heading'>
+              <div class='status-message'>
+                <label><%= category.name.to_s.camelcase %></label>
+              </div>
+            </div>
+
+            <div class='panel-body'>
+              <table>
+                <% if category.name == :main %>
                   <tr>
-                    <td><label>Est. Time Remaining:</label></td>
-                    <td><%= job_estimated_time_left(@job) %></td>
+                    <td><label>Record Count:</label></td>
+                    <td><%= @job.record_count %></td>
+                  </tr>
+
+                  <% if @job.completed? %>
+                    <tr>
+                      <td><label>Records Per Hour:</label></td>
+                      <td><%= job_records_per_hour(@job) %></td>
+                    </tr>
+                  <% elsif @job.running? || @job.paused? || @job.failed? %>
+                    <tr>
+                      <td><label>Progress:</label></td>
+                      <td><%= @job.percent_complete %> %</td>
+                    </tr>
+
+                    <% if @job.running? %>
+                      <tr>
+                        <td><label>Est. Time Remaining:</label></td>
+                        <td><%= job_estimated_time_left(@job) %></td>
+                      </tr>
+                    <% end %>
+
+                    <tr>
+                      <td><label>Queued Slices:</label></td>
+                      <td><%= @job.input.queued.count %></td>
+                    </tr>
+
+                    <tr>
+                      <td><label>Active Slices:</label></td>
+                      <td><%= @job.input.running.count %></td>
+                    </tr>
+
+                    <tr>
+                      <td><label>Failed Slices:</label></td>
+                      <td><%= @job.input.failed.count %></td>
+                    </tr>
+                  <% end %>
+
+                  <tr>
+                    <td><label>Slice Size:</label></td>
+                    <td><%= category.slice_size %></td>
                   </tr>
                 <% end %>
-                <tr>
-                  <td><label>Queued Slices:</label></td>
-                  <td><%= @job.input.queued.count %></td>
-                </tr>
-                <tr>
-                  <td><label>Active Slices:</label></td>
-                  <td><%= @job.input.running.count %></td>
-                </tr>
-                <tr>
-                  <td><label>Failed Slices:</label></td>
-                  <td><%= @job.input.failed.count %></td>
-                </tr>
-              <% end %>
-              <tr>
-                <td><label>Slice Size:</label></td>
-                <td><%= category.slice_size %></td>
-              </tr>
-            <% end %>
-            <% if category.serializer %>
-              <tr>
-                <td><label>Serializer:</label></td>
-                <td><%= category.serializer %></td>
-              </tr>
-            <% end %>
-            <% if category.file_name %>
-              <tr>
-                <td><label>File Name:</label></td>
-                <td><%= category.file_name %></td>
-              </tr>
-            <% end %>
-            </tr>
-            <% if category.format %>
-              <tr>
-                <td><label>Format:</label></td>
-                <td><%= category.format %></td>
-              </tr>
-              <tr>
-                <td><label>Header Cleanser:</label></td>
-                <td><%= category.header_cleanser %></td>
-              </tr>
-              <% if category.allowed_columns %>
-                <tr>
-                  <td><label>Allowed Columns:</label></td>
-                  <td><%= category.allowed_columns.ai(plain: true) %></td>
-                </tr>
-              <% end %>
-              <% if category.required_columns %>
-                <tr>
-                  <td><label>Required Columns:</label></td>
-                  <td><%= category.required_columns.ai(plain: true) %></td>
-                </tr>
-              <% end %>
-              <% if category.skip_unknown %>
-                <tr>
-                  <td><label>Skip Unknown Columns:</label></td>
-                  <td><%= category.skip_unknown %></td>
-                </tr>
-              <% end %>
-              <% if category.mode != :line %>
-                <tr>
-                  <td><label>Mode:</label></td>
-                  <td><%= category.mode %></td>
-                </tr>
-              <% end %>
-              <% if category.format_options %>
-                <tr>
-                  <td><label>Format Options:</label></td>
-                  <td>
-                    <pre><code><%= category.format_options.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
-                  </td>
-                </tr>
-              <% end %>
-            <% end %>
-            <% if category.columns %>
-              <% first = true %>
-              <% category.columns.each do |item| %>
-                <% if first %>
+
+                <% if category.serializer %>
                   <tr>
-                    <td><label>Columns:</label></td>
-                    <td><%= item %></td>
-                  </tr>
-                  <% first = false %>
-                <% else %>
-                  <tr>
-                    <td></td>
-                    <td><%= item %></td>
+                    <td><label>Serializer:</label></td>
+                    <td><%= category.serializer %></td>
                   </tr>
                 <% end %>
-              <% end %>
-            <% end %>
-          </table>
+
+                <% if category.file_name %>
+                  <tr>
+                    <td><label>File Name:</label></td>
+                    <td><%= category.file_name %></td>
+                  </tr>
+                <% end %>
+
+                </tr>
+
+                <% if category.format %>
+                  <tr>
+                    <td><label>Format:</label></td>
+                    <td><%= category.format %></td>
+                  </tr>
+
+                  <tr>
+                    <td><label>Header Cleanser:</label></td>
+                    <td><%= category.header_cleanser %></td>
+                  </tr>
+
+                  <% if category.allowed_columns %>
+                    <tr>
+                      <td><label>Allowed Columns:</label></td>
+                      <td><%= category.allowed_columns.ai(plain: true) %></td>
+                    </tr>
+                  <% end %>
+
+                  <% if category.required_columns %>
+                    <tr>
+                      <td><label>Required Columns:</label></td>
+                      <td><%= category.required_columns.ai(plain: true) %></td>
+                    </tr>
+                  <% end %>
+
+                  <% if category.skip_unknown %>
+                    <tr>
+                      <td><label>Skip Unknown Columns:</label></td>
+                      <td><%= category.skip_unknown %></td>
+                    </tr>
+                  <% end %>
+
+                  <% if category.mode != :line %>
+                    <tr>
+                      <td><label>Mode:</label></td>
+                      <td><%= category.mode %></td>
+                    </tr>
+                  <% end %>
+
+                  <% if category.format_options %>
+                    <tr>
+                      <td><label>Format Options:</label></td>
+                      <td>
+                        <pre><code class="language-ruby"><%= category.format_options.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+
+                <% if category.columns %>
+                  <% first = true %>
+                  <% category.columns.each do |item| %>
+                    <% if first %>
+                      <tr>
+                        <td><label>Columns:</label></td>
+                        <td><%= item %></td>
+                      </tr>
+                      <% first = false %>
+                    <% else %>
+                      <tr>
+                        <td></td>
+                        <td><%= item %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
   </div>
-  <br/>
-<% end %>
+</div>

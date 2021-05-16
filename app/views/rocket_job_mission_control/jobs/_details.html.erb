@@ -1,86 +1,23 @@
-<div class='lead'>Details:</div>
-<div class='row'>
-  <div class='col-md-12 job-status'>
-    <table>
-      <tr>
-        <td><label>State:</label></td>
-        <td>
-          <div class='job-state inline-block'>
-            <div class='left'>State</div>
-            <div class="<%= job_state(@job) %> right"><%= job_state(@job) %></div>
-          </div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4>Details</h4>
+  </div>
 
-          <% if sub_state = @job['sub_state'] %>
-            <div class='job-state inline-block'>
-              <div class='left'>Batch</div>
-              <div class='running right'><%= @job.sub_state %></div>
-            </div>
-          <% end %>
-        </td>
-      </tr>
-      <% if @job.description %>
-        <tr>
-          <td><label>Description: </label></td>
-          <td><%= @job.description %></td>
-        </tr>
-      <% end %>
-      <% if @job.respond_to?(:cron_schedule) && @job.cron_schedule %>
-        <tr>
-          <td><label>Cron Schedule:</label></td>
-          <td><%= @job.cron_schedule %></td>
-        </tr>
-      <% end %>
-      <% if @job.respond_to?(:upload_file_name) && @job.upload_file_name %>
-        <tr>
-          <td><label>Upload File Name:</label></td>
-          <td><%= @job.upload_file_name %></td>
-        </tr>
-      <% end %>
-      <tr>
-        <td><label>Priority:</label></td>
-        <td><%= @job.priority %></td>
-      </tr>
-      <% if @job.failure_count.to_i > 0 %>
-        <tr>
-          <td><label>Failure Count:</label></td>
-          <td><%= @job.failure_count %></td>
-        </tr>
-      <% end %>
-      <% if @job.log_level %>
-        <tr>
-          <td><label>Log Level</label></td>
-          <td><%= @job.log_level %></td>
-        </tr>
-      <% end %>
-      <% if @job.respond_to?(:throttle_group) && @job.throttle_group %>
-        <tr>
-          <td><label>Throttle Group:</label></td>
-          <td><%= @job.throttle_group %></td>
-        </tr>
-      <% end %>
-      <% if @job.respond_to?(:throttle_running_workers) && @job.throttle_running_workers %>
-        <tr>
-          <td><label>Throttle Running Workers:</label></td>
-          <td><%= @job.throttle_running_workers %></td>
-        </tr>
-      <% end %>
-      <% if @job.worker_name %>
-        <tr>
-          <td><label>Worker Name:</label></td>
-          <td><%= @job.worker_name %></td>
-        </tr>
-      <% end %>
-      <% unless @job.completed? %>
-        <tr>
-          <td><label>Destroy on completion?</label></td>
-          <td><%= @job.destroy_on_complete %></td>
-        </tr>
-      <% end %>
-      <tr>
-        <td><label>ID:</label></td>
-        <td><%= @job.id %></td>
-      </tr>
-    </table>
+  <div class="panel-body">
+    <pre><code class="language-json5">
+state: "<%= job_state(@job) %>",
+batch: "<%= @job.try(:sub_state) %>",
+description: "<%= @job.try(:description) %>",
+cron_schedule: "<%= @job.try(:cron_schedule) %>",
+upload_file_name: "<%= @job.try(:upload_file_name) %>",
+priority: "<%= @job.try(:priority) %>",
+failure_count: "<%= @job.try(:failure_count) %>",
+log_level: <%= @job.try(:log_level) %>",
+throttle_group: <%= @job.try(:throttle_group) %>",
+throttle_running_workers: <%= @job.try(:throttle_running_workers) %>",
+worker_name: "<%= @job.try(:worker_name) %>",
+destroy_on_completion: "<%= @job.try(:destroy_on_complete) %>",
+id: "<%= @job.try(:id) %>"
+    </code></pre>
   </div>
 </div>
-<br/>

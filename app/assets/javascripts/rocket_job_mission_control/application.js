@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require datatables.min.js
 //= require bootstrap.min
+//= require prism
 //
 // Selectize is used by Array builder in application_helper#editable_field_html
 //= require microplugin

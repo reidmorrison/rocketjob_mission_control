@@ -22,11 +22,6 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
 table.datatable { border-collapse: collapse; }
 .dataTables_wrapper { margin-top: 2em; }
 
-h2 {
-  margin-top: 10px;
-  font-size: 1.8rem;
-}
-
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
   position: absolute;
   top: 8px;
@@ -44,6 +39,10 @@ table.dataTable thead .sorting_asc:after { content: "\f160"; }
 table.dataTable thead .sorting_desc:after { content: "\f161"; }
 table.dataTable thead > tr > th { padding-left: 30px; }
 
+div.row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
 
 .dataTables_info, .dataTables_paginate { margin-top: 20px !important; }
 
@@ -104,25 +103,29 @@ table.dataTable thead > tr > th { padding-left: 30px; }
   margin-left: 20px;
   padding: 0;
   font-size: 12px;
-  margin-top: 25px;
+  margin-top: 0;
   vertical-align: middle;
   float: left;
 }
 
+h3 { margin-top: 0; }
+
 .job-status .job-state .left {
   float: left;
   text-shadow: 0 2px 3px #000;
+  font-weight: bold;
   background-color: #404650;
   color: #fff;
-  padding: 2px 6px;
+  padding: 6px 12px;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
 }
 
 .job-status .job-state .right {
   float: left;
+  font-weight: bold;
   color: #fff;
-  padding: 2px 6px;
+  padding: 6px 12px;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }

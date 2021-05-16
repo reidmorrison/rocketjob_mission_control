@@ -1,27 +1,16 @@
-<div class='lead'>Retryable:</div>
-<div class='row'>
-  <div class='col-md-12'>
-    <table>
-      <% first = true %>
-      <% @job.failed_at_list.each do |time| %>
-        <% if first %>
-          <tr>
-            <td><label>Retry Limit</label></td>
-            <td><%= @job.retry_limit %></td>
-            <td><label>Failures</label></td>
-            <td><%= job_time(time) %></td>
-          </tr>
-          <% first = false %>
-        <% else %>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><%= job_time(time) %></td>
-          </tr>
-        <% end %>
-      <% end %>
-    </table>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4>Retryable</h4>
+  </div>
+
+  <div class="panel-body">
+    <pre><code class="language-ruby">
+
+<% @job.failed_at_list.each do |time| %>
+<label>Retry Limit:</label> <%= @job.retry_limit %>
+<label>Failures:</label> <%= job_time(time) %>
+
+<% end %>
+    </code></pre>
   </div>
 </div>
-<br/>

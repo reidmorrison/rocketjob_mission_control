@@ -1,51 +1,60 @@
-<div class='row'>
-  <div id='job'>
-    <div class='lead'><%= image_tag('rocket_job_mission_control/rocket-icon-64x64.png') %><%= @job.class.name %>
+<div id="job">
+  <div class="page-header">
+    <h3 class="pull-left"><%= @job.class.name %></h3>
 
-    <div class='btn-toolbar job-actions'>
+    <div class="job-status inline-block pull-left">
+      <div class="job-state">
+        <div class="left">status</div>
+        <div class="<%= @job.state %> right"><%= @job.state %></div>
+      </div>
+    </div>
+
+    <div class="btn-toolbar job-actions pull-right">
       <% if @job.scheduled? && can?(:run_now, @job) %>
-        <div class='btn-group'>
-          <%= job_action_links_for_show('Run', rocket_job_mission_control.run_now_job_path(@job), :patch) %>
+        <div class="btn-group">
+          <%= job_action_links_for_show("Run", rocket_job_mission_control.run_now_job_path(@job), :patch) %>
         </div>
       <% end %>
 
-      <div class='left-margin'>
+      <div class="btn-toolbar" role="toolbar">
         <% valid_events = @job.aasm.events.collect { |e| e.name } %>
 
         <% if valid_events.include?(:pause) && @job.pausable? && can?(:pause, @job) %>
-          <%= job_action_links_for_show('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
+          <%= job_action_links_for_show("Pause", rocket_job_mission_control.pause_job_path(@job), :patch) %>
         <% end %>
 
         <% if valid_events.include?(:resume) && can?(:resume, @job) %>
-          <%= job_action_links_for_show('Resume', rocket_job_mission_control.resume_job_path(@job), :patch) %>
+          <%= job_action_links_for_show("Resume", rocket_job_mission_control.resume_job_path(@job), :patch) %>
         <% end %>
 
         <% if valid_events.include?(:retry) && can?(:retry, @job) %>
-          <%= job_action_links_for_show('Retry', rocket_job_mission_control.retry_job_path(@job), :patch) %>
+          <%= job_action_links_for_show("Retry", rocket_job_mission_control.retry_job_path(@job), :patch) %>
         <% end %>
 
         <% if valid_events.include?(:fail) && can?(:fail, @job) %>
-          <%= job_action_links_for_show('Fail', rocket_job_mission_control.fail_job_path(@job), :patch) %>
+          <%= job_action_links_for_show("Fail", rocket_job_mission_control.fail_job_path(@job), :patch) %>
         <% end %>
 
         <% if valid_events.include?(:abort) && can?(:abort, @job) %>
-          <%= job_action_links_for_show('Abort', rocket_job_mission_control.abort_job_path(@job), :patch) %>
+          <%= job_action_links_for_show("Abort", rocket_job_mission_control.abort_job_path(@job), :patch) %>
         <% end %>
 
         <% if can?(:destroy, @job) %>
-          <%= job_action_links_for_show('Destroy', rocket_job_mission_control.job_path(@job), :delete) %>
+          <%= job_action_links_for_show("Destroy", rocket_job_mission_control.job_path(@job), :delete) %>
         <% end %>
 
         <% unless @job.completed? || @job.aborted? %>
-          <div class='btn-group'>
+          <div class="btn-group">
             <% if can?(:edit, @job) %>
-              <%= link_to 'Edit', edit_job_path(@job), class: 'btn btn-primary' %>
+              <%= link_to "Edit", edit_job_path(@job), class: "btn btn-primary" %>
             <% end %>
           </div>
         <% end %>
       </div>
     </div>
-    </div>
+
+    <div class="clearfix"></div>
   </div>
 </div>
-<%= render partial: 'status', locals: {job: @job} %>
+
+<%= render partial: "status", locals: { job: @job } %>

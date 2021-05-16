@@ -1,20 +1,20 @@
-<div class='dirmon-list'>
-  <div class='list'>
+<div class="dirmon-list">
+  <div class="list">
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
           <div class="col-sm-12">
-            <h2 class="pull-left"><%= @description %> Dirmon Entries</h2>
+            <h3 class="pull-left"><%= @description %> Dirmon Entries</h3>
 
-            <div class='btn btn-warning pull-right dt-reload' data-behavior='reload'>
-              <i class='fas fa-sync'></i>
+            <div class="btn btn-warning pull-right dt-reload" data-behavior="reload">
+              <i class="fas fa-sync"></i>
             </div>
           </div>
         </div>
       </div>
-        
+
       <div class="panel-body">
-        <table class='table datatable dirmon-datatable' data-source='<%= @data_table_url %>' style='width: 100%'>
+        <table class="table datatable dirmon-datatable" data-source="<%= @data_table_url %>" style="width: 100%">
           <thead>
             <tr>
               <th>Name</th>

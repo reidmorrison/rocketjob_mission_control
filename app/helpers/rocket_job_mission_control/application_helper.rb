@@ -96,7 +96,7 @@ module RocketJobMissionControl
     end
 
     # This method creates a link with `data-id` `data-fields` attributes. These attributes are used to create new instances of the nested fields through Javascript.
-    def link_to_add_fields(name, f, association)
+    def link_to_add_fields(name, f, association, option)
       # Takes an object (@job) and creates a new instance of its associated model (:properties)
       new_object = f.object.send(association).klass.new
 
@@ -124,7 +124,7 @@ module RocketJobMissionControl
       # The `fields:` are rendered from the `fields` blocks.
       # We use `gsub("\n", "")` to remove anywhite space from the rendered partial.
       # The `id:` value needs to match the value used in `child_index: id`.
-      link_to(name, '#', class: "add_fields btn btn-default", data: { id: id, fields: fields.gsub("\n", "") })
+      link_to(name, '#', class: "add_fields btn btn-#{option}", data: { id: id, fields: fields.gsub("\n", "") })
     end
   end
 end

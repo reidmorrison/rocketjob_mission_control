@@ -11,12 +11,13 @@
  * file per style scope.
  *
  *= require bootstrap.min
- *= require rocket_job_mission_control/base
- *= require rocket_job_mission_control/callout
- *= require rocket_job_mission_control/jobs
- *= require rocket_job_mission_control/worker_processes
  *= require fontawesome-all.min
  *= require selectize
  *= require selectize.bootstrap3
  *= require datatables.min
+ *= require prism
+ *= require rocket_job_mission_control/base
+ *= require rocket_job_mission_control/callout
+ *= require rocket_job_mission_control/jobs
+ *= require rocket_job_mission_control/worker_processes
  */

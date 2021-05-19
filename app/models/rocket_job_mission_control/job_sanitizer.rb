@@ -41,8 +41,6 @@ module RocketJobMissionControl
         end
       end
 
-      binding.irb
-
       if properties.key?(:input_categories_attributes)
         permissible_params[:input_categories] = sanitize_categories(properties[:input_categories_attributes])
       end

@@ -1,4 +1,4 @@
-<% job_category = job_find_category(@job.attributes["output_categories"], f.object.try(:name)) %>
+<% output_category = f.object %>
 
 <div class="nested-fields">
   <div class="panel panel-success">
@@ -6,34 +6,28 @@
       <div class="row">
         <div class="col-sm-12">
           <h4 class="pull-left"><%= f.object.try(:name) %></h4>
-
-          <div class="pull-right">
-            <%= link_to "Remove", '#', class: "remove_fields btn btn-danger" %>
-          </div>
         </div>
       </div>
     </div>
 
     <div class="panel-body">
-      <%= f.hidden_field :_destroy %>
-
       <div class="form-group">
         <%= f.label :columns %>
-        <% options = job_category ? Array(job_category["columns"]) : [] %>
+        <% options = output_category ? Array(output_category["columns"]) : nil %>
         <%= f.select(:columns, options_for_select(options, options), { include_hidden: false }, { class: "selectize form-control", multiple: true }) %>
       </div>
 
       <div class="form-group">
         <%= f.label :format %>
         <% options = extract_inclusion_values(RocketJob::Category::Output, :format, true) %>
-        <% value = job_category["format"] if job_category %>
+        <% value = output_category["format"] if output_category %>
         <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "selectize form-control" }) %>
       </div>
 
       <div class="form-group">
         <%= f.label :format_options %>
-        <% value = job_category["format_options"] if job_category %>
-        <%= f.text_field(:format_options, value: value ? value.to_json : "", class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}') %>
+        <% value = output_category["format_options"] if output_category %>
+        <%= f.text_field(:format_options, value: value ? value.to_json : nil, class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}') %>
       </div>
     </div>
   </div>

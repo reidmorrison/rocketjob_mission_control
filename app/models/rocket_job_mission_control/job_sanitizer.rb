@@ -17,6 +17,8 @@ module RocketJobMissionControl
     #     Default: true
     def self.sanitize(properties, job_class, target, nil_blank = true)
       permissible_params = {}
+
+      # Cleanse UEF
       job_class.user_editable_fields.each do |field_name|
         next unless value = properties[field_name]
 
@@ -38,7 +40,31 @@ module RocketJobMissionControl
           permissible_params[field_name] = value
         end
       end
+
+      binding.irb
+
+      if properties.key?(:input_categories_attributes)
+        permissible_params[:input_categories] = sanitize_categories(properties[:input_categories_attributes])
+      end
+
+      if properties.key?(:output_categories_attributes)
+        permissible_params[:output_categories] = sanitize_categories(properties[:output_categories_attributes])
+      end
+
       permissible_params
+    end
+
+    def self.sanitize_categories(properties)
+      categories = []
+
+      properties.each_pair do |_, category|
+        h = category.to_h.reject{|_, v| v.blank?}
+        h.delete(:columns) if h[:columns] == [""]
+        h[:format_options] = JSON.parse(h[:format_options]) if h.key?(:format_options)
+        categories << h
+      end
+
+      categories
     end
   end
 end

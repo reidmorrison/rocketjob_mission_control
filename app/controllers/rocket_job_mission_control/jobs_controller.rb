@@ -74,7 +74,8 @@ module RocketJobMissionControl
 
     def update
       authorize! :update, @job
-      permitted_params = JobSanitizer.sanitize(params[:job], @job.class, @job)
+      permitted_params = JobSanitizer.sanitize(job_params, @job.class, @job)
+
       if @job.errors.empty? && @job.valid? && @job.update_attributes(permitted_params)
         redirect_to job_path(@job)
       else
@@ -264,7 +265,24 @@ module RocketJobMissionControl
     end
 
     def job_params
-      params.require(:job).permit(@job.class.user_editable_fields)
+      params.require(:job).permit(
+        @job.class.user_editable_fields,
+        input_categories_attributes: [
+          :id,
+          :format,
+          :format_options,
+          :mode,
+          :skip_unknown,
+          :slice_size,
+          columns: []
+        ],
+        output_categories: [
+          :id,
+          :format,
+          :format_options,
+          columns: []
+        ]
+      )
     end
 
     def error_occurred(exception)

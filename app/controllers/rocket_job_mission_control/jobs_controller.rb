@@ -276,7 +276,7 @@ module RocketJobMissionControl
           :slice_size,
           columns: []
         ],
-        output_categories: [
+        output_categories_attributes: [
           :id,
           :format,
           :format_options,

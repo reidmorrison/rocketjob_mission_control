@@ -18,7 +18,6 @@ module RocketJobMissionControl
     def self.sanitize(properties, job_class, target, nil_blank = true)
       permissible_params = {}
 
-      # Cleanse UEF
       job_class.user_editable_fields.each do |field_name|
         next unless value = properties[field_name]
 

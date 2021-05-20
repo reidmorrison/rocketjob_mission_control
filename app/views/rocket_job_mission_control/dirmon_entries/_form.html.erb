@@ -8,7 +8,7 @@
   <% end %>
 <% end %>
 
-<%= form_for @dirmon_entry, url: {action: action} do |f| %>
+<%= form_for @dirmon_entry, url: { action: action } do |f| %>
   <div class="row">
     <div class="col-md-12">
       <% if @dirmon_entry.job_class %>
@@ -64,14 +64,10 @@
                     <div class="panel-body">
                       <div class='lead'>Input Categories</div>
 
-                      <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
-
-                      <%= form_for @job, url: { action: action } do |f| %>
-                        <% f.fields_for :input_categories do |input_category_form| %>
-                          <%= render "input_category_fields.html", f: input_category_form, locals: { dirmon_entry: @dirmon_entry } %>
+                      <% @dirmon_entry.job_class.from_properties(@dirmon_entry.properties).input_categories.each do |input_categories| %>
+                        <%= p.fields_for "input_categories_attributes[]", input_categories  do |i| %>
+                          <%= render "input_category_fields.html", f: i %>
                         <% end %>
-
-                        <%= link_to_add_fields "Add Input Categories", f, :input_categories, "primary" %>
                       <% end %>
                     </div>
                   </div>
@@ -82,14 +78,10 @@
                     <div class="panel-body">
                       <div class='lead'>Output Categories</div>
 
-                      <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
-
-                      <%= form_for @job, url: { action: action } do |f| %>
-                        <% f.fields_for :output_categories do |output_category_form| %>
-                          <%= render "output_category_fields.html", f: output_category_form, locals: { dirmon_entry: @dirmon_entry } %>
+                      <% @dirmon_entry.job_class.from_properties(@dirmon_entry.properties).output_categories.each do |output_categories| %>
+                        <%= p.fields_for "output_categories_attributes[]", output_categories  do |o| %>
+                          <%= render "output_category_fields.html", f: o %>
                         <% end %>
-
-                        <%= link_to_add_fields "Add Output Categories", f, :output_categories, "success" %>
                       <% end %>
                     </div>
                   </div>

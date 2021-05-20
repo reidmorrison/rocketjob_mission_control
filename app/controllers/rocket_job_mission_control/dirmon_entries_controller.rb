@@ -12,7 +12,6 @@ module RocketJobMissionControl
 
     rescue_from AccessGranted::AccessDenied do |exception|
       raise exception if Rails.env.development? || Rails.env.test?
-
       redirect_to :back, alert: "Access not authorized."
     end
 
@@ -56,6 +55,7 @@ module RocketJobMissionControl
     def create
       authorize! :create, RocketJob::DirmonEntry
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
+
       if properties = params[:rocket_job_dirmon_entry][:properties]
         @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
       end
@@ -76,7 +76,7 @@ module RocketJobMissionControl
     def edit
       authorize! :edit, @dirmon_entry
     end
-    # When you click on the Copy button, 
+    # When you click on the Copy button,
     # the copy method loads the Dirmon Entity attributes in Copy Dirmon Entry Page
     def copy
       authorize! :copy, @dirmon_entry
@@ -86,9 +86,11 @@ module RocketJobMissionControl
     def replicate
       authorize! :replicate, @dirmon_entry
       dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))
+
       if properties = params[:rocket_job_dirmon_entry][:properties]
         dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, dirmon_entry_replicate, false)
       end
+
       if dirmon_entry_replicate.errors.empty? && dirmon_entry_replicate.valid? && dirmon_entry_replicate.update_attributes(dirmon_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(dirmon_entry_replicate))
       else
@@ -98,9 +100,8 @@ module RocketJobMissionControl
 
     def update
       authorize! :update, @dirmon_entry
-      if properties = params[:rocket_job_dirmon_entry][:properties]
-        @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
-      end
+      @dirmon_entry.properties = JobSanitizer.sanitize(dirmon_params, @dirmon_entry.job_class, @dirmon_entry)
+
       if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update_attributes(dirmon_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
@@ -110,6 +111,7 @@ module RocketJobMissionControl
 
     def enable
       authorize! :enable, @dirmon_entry
+
       if @dirmon_entry.may_enable?
         @dirmon_entry.enable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
@@ -121,6 +123,7 @@ module RocketJobMissionControl
 
     def disable
       authorize! :disable, @dirmon_entry
+
       if @dirmon_entry.may_disable?
         @dirmon_entry.disable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
@@ -148,15 +151,12 @@ module RocketJobMissionControl
     def find_entry_or_redirect
       unless @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
         flash[:alert] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
-
         redirect_to(dirmon_entries_path)
       end
     end
 
     def dirmon_params
-      params.
-        fetch(:rocket_job_dirmon_entry, {}).
-        permit(:name, :archive_directory, :pattern, :job_class_name)
+      params.require(:rocket_job_dirmon_entry).permit!
     end
 
     def render_datatable(entries, description)
@@ -165,6 +165,7 @@ module RocketJobMissionControl
           @description = description
           render :index
         end
+
         format.json do
           query                 = RocketJobMissionControl::Query.new(entries, name: :asc)
           query.search_columns  = %i[job_class_name name pattern]

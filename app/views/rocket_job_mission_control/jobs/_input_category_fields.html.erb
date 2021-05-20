@@ -13,7 +13,7 @@
     <div class="panel-body">
       <div class="form-group">
         <%= f.label :columns %>
-        <% options = input_category ? Array(input_category["columns"]) : nil %>
+        <% options = input_category ? Array(input_category["columns"]) : [] %>
         <%= f.select(:columns, options_for_select(options, options), { include_blank: true }, { class: "selectize form-control", multiple: true }) %>
       </div>
 

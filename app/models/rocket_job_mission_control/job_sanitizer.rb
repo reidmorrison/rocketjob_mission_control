@@ -15,7 +15,7 @@ module RocketJobMissionControl
     #     true: Nil out blank fields.
     #     false: Do not return blank fields.
     #     Default: true
-    def self.sanitize(properties, job_class, nil_blank = true)
+    def self.sanitize(properties, job_class, target, nil_blank = true)
       permissible_params = {}
 
       job_class.user_editable_fields.each do |field_name|
@@ -41,11 +41,13 @@ module RocketJobMissionControl
       end
 
       if properties.key?(:input_categories_attributes)
-        permissible_params[:input_categories] = sanitize_categories(properties[:input_categories_attributes])
+        categories                            = sanitize_categories(properties[:input_categories_attributes])
+        permissible_params[:input_categories] = categories unless categories == [{}]
       end
 
       if properties.key?(:output_categories_attributes)
-        permissible_params[:output_categories] = sanitize_categories(properties[:output_categories_attributes])
+        categories                             = sanitize_categories(properties[:output_categories_attributes])
+        permissible_params[:output_categories] = categories unless categories == [{}]
       end
 
       permissible_params
@@ -55,7 +57,7 @@ module RocketJobMissionControl
       categories = []
 
       properties.each_pair do |_, category|
-        h = category.to_h.reject{|_, v| v.blank?}
+        h = category.to_h.reject { |_, v| v.blank? }
         h.delete(:columns) if h[:columns] == [""]
         h[:format_options] = JSON.parse(h[:format_options]) if h.key?(:format_options)
         categories << h

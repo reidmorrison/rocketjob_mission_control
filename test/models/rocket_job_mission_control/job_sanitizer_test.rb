@@ -18,7 +18,7 @@ class JobSanitizerTest < Minitest::Test
           symbol:  "name",
           secure:  "Not permissible"
         }
-        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, false)
+        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 0, @job.errors.count
         assert_equal 3, cleansed.count
         assert_equal({string: "hello", integer: "12", symbol: "name"}, cleansed)
@@ -32,7 +32,7 @@ class JobSanitizerTest < Minitest::Test
           secure:    "Not permissible",
           log_level: ""
         }
-        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, false)
+        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 0, @job.errors.count
         assert_equal 0, cleansed.count
       end
@@ -46,7 +46,7 @@ class JobSanitizerTest < Minitest::Test
           secure:     "Not permissible",
           log_level:  ""
         }
-        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, true)
+        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, true)
         assert_equal 0, @job.errors.count, @job.errors
         assert_equal 5, cleansed.count
         assert_equal({log_level: nil, hash_field: nil, integer: nil, string: nil, symbol: nil}, cleansed)
@@ -58,7 +58,7 @@ class JobSanitizerTest < Minitest::Test
           secure:     "Not permissible",
           hash_field: '{"state":"FL"}'
         }
-        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, false)
+        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 0, @job.errors.count
         assert_equal 1, cleansed.count
         assert_equal({"state" => "FL"}, cleansed[:hash_field])
@@ -70,7 +70,7 @@ class JobSanitizerTest < Minitest::Test
           secure:     "Not permissible",
           hash_field: "{ bad json }"
         }
-        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, false)
+        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 1, @job.errors.count
         if Rails.version.to_f >= 6.1
           assert error = @job.errors.first
@@ -88,7 +88,7 @@ class JobSanitizerTest < Minitest::Test
         properties = {
           hash_field: "{ }"
         }
-        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, false)
+        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 0, @job.errors.count
         assert_equal({hash_field: {}}, cleansed)
       end

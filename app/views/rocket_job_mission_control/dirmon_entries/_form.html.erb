@@ -11,7 +11,6 @@
 <%= form_for @dirmon_entry, url: { action: action } do |f| %>
   <div class="row">
     <div class="col-md-12">
-      <% if @dirmon_entry.job_class %>
         <div class="arguments">
           <div class="panel panel-default">
             <div class="panel-body">
@@ -39,6 +38,7 @@
             </div>
           </div>
 
+        <% if @dirmon_entry.job_class %>
           <%= f.fields_for :properties do |p| %>
             <div class="panel panel-default">
               <div class="panel-heading">

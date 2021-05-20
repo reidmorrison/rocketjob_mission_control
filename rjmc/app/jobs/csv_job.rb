@@ -19,7 +19,10 @@
 # job.save!
 class CSVJob < RocketJob::Job
   include RocketJob::Batch
-  include RocketJob::Batch::Tabular::Input
+
+  input_category format: :csv
+
+  field :optional, type: String, user_editable: true
 
   self.destroy_on_complete = false
 

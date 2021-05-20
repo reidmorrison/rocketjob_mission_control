@@ -97,8 +97,9 @@ module RocketJobMissionControl
         path,
         method: http_method,
         title:  "#{action} job",
-        class:  "btn btn-default",
-        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
+        class:  "btn btn-default btn-group",
+        role:   "group",
+        data:   { confirm: t(:confirm, scope: %i[job action], action: action) }
       )
     end
 
@@ -108,8 +109,9 @@ module RocketJobMissionControl
         path,
         method: http_method,
         title:  "#{action} job",
-        class:  "btn btn-primary",
-        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
+        class:  "btn btn-default btn-group",
+        role:   "group",
+        data:   { confirm: t(:confirm, scope: %i[job action], action: action) }
       )
     end
 
@@ -119,6 +121,13 @@ module RocketJobMissionControl
       else
         ""
       end
+    end
+
+    def job_find_category(categories, category_name = :main)
+      return unless categories
+
+      categories.each { |category| return category if category_name == (category["name"] || :main).to_sym }
+      nil
     end
   end
 end

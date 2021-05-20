@@ -12,7 +12,6 @@
         <% if (@dirmon_entry.disabled? || @dirmon_entry.pending?) && can?(:enable, @dirmon_entry) %>
           <%= link_to 'Enable', enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default' %>
         <% end %>
-
         <% if @dirmon_entry.enabled? && can?(:disable, @dirmon_entry)%>
           <%= link_to 'Disable', disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default', data: { confirm: 'Are you sure?' } %>
         <% end %>

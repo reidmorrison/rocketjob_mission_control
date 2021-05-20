@@ -10,7 +10,7 @@ gem "amazing_print"
 gem "minitest"
 gem "rake"
 gem "rubyzip", platform: :ruby
-gem "sprockets", "< 4.0"
+gem "sprockets"
 
 group :test do
   gem "minispec-rails", require: false

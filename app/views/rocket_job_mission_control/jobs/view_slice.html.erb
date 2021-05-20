@@ -11,7 +11,7 @@
         <div class='clearfix'></div>
 
         <div class='message'>
-          <pre><code><%= @failure_exception.message %></code></pre>
+          <pre><code class="language-html"><%= @failure_exception.message %></code></pre>
         </div>
 
       </div>
@@ -41,7 +41,7 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        document.getElementById(<%= @view_slice_pagination[:record_number] %>).focus();
-    });
+  $(document).ready(function () {
+    document.getElementById(<%= @view_slice_pagination[:record_number] %>).focus();
+  });
 </script>

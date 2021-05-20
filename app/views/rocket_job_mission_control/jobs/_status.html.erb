@@ -1,15 +1,11 @@
 <%= render partial: 'details', locals: {job: @job} %>
-
 <%= render partial: 'dates', locals: {job: @job} %>
-
 <% if @job.respond_to?(:failed_at_list) && @job.failed_at_list.present? %>
   <%= render partial: 'retryable', locals: {job: @job} %>
 <% end %>
-
 <% if @job.exception.present? %>
   <%= render partial: 'exception', locals: {job: @job} %>
 <% end %>
-
 <% if @job.respond_to?(:statistics) && @job.statistics.present? %>
   <div class='status-message'>
     <label>Statistics:</label>
@@ -17,15 +13,12 @@
   </div>
   <br/>
 <% end %>
-
 <% if @job.respond_to?(:input_categories) %>
   <%= render partial: 'input_categories', locals: {job: @job} %>
 <% end %>
-
 <% if @job.respond_to?(:output_categories) %>
   <%= render partial: 'output_categories', locals: {job: @job} %>
 <% end %>
-
 <% @attributes = job_custom_fields(@job) %>
 <% if @attributes.present? %>
   <%= render partial: 'attributes', locals: {attributes: @attributes} %>

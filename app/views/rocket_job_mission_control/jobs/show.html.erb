@@ -11,31 +11,24 @@
 
       <div class='left-margin'>
         <% valid_events = @job.aasm.events.collect { |e| e.name } %>
-
         <% if valid_events.include?(:pause) && @job.pausable? && can?(:pause, @job) %>
           <%= job_action_links_for_show('Pause', rocket_job_mission_control.pause_job_path(@job), :patch) %>
         <% end %>
-
         <% if valid_events.include?(:resume) && can?(:resume, @job) %>
           <%= job_action_links_for_show('Resume', rocket_job_mission_control.resume_job_path(@job), :patch) %>
         <% end %>
-
         <% if valid_events.include?(:retry) && can?(:retry, @job) %>
           <%= job_action_links_for_show('Retry', rocket_job_mission_control.retry_job_path(@job), :patch) %>
         <% end %>
-
         <% if valid_events.include?(:fail) && can?(:fail, @job) %>
           <%= job_action_links_for_show('Fail', rocket_job_mission_control.fail_job_path(@job), :patch) %>
         <% end %>
-
         <% if valid_events.include?(:abort) && can?(:abort, @job) %>
           <%= job_action_links_for_show('Abort', rocket_job_mission_control.abort_job_path(@job), :patch) %>
         <% end %>
-
         <% if can?(:destroy, @job) %>
           <%= job_action_links_for_show('Destroy', rocket_job_mission_control.job_path(@job), :delete) %>
         <% end %>
-
         <% unless @job.completed? || @job.aborted? %>
           <div class='btn-group'>
             <% if can?(:edit, @job) %>

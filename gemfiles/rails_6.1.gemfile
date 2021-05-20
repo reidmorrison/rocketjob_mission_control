@@ -4,13 +4,13 @@ source "https://rubygems.org"
 
 gem "rails", "~> 6.1.0"
 gem "mongoid", git: "https://github.com/reidmorrison/mongoid", branch: "7.2-ruby_3"
-gem "rocketjob", git: "https://github.com/rocketjob/rocketjob"
+gem "rocketjob", git: "https://github.com/reidmorrison/rocketjob"
 gem "appraisal"
 gem "amazing_print"
 gem "minitest"
 gem "rake"
 gem "rubyzip", platform: :ruby
-gem "sprockets", "< 4.0"
+gem "sprockets"
 
 group :test do
   gem "minispec-rails", require: false

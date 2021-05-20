@@ -15,7 +15,7 @@ module RocketJobMissionControl
     #     true: Nil out blank fields.
     #     false: Do not return blank fields.
     #     Default: true
-    def self.sanitize(properties, job_class, target, nil_blank = true)
+    def self.sanitize(properties, job_class, nil_blank = true)
       permissible_params = {}
 
       job_class.user_editable_fields.each do |field_name|

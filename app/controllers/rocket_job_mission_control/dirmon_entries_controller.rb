@@ -57,7 +57,7 @@ module RocketJobMissionControl
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
 
       if properties = params[:rocket_job_dirmon_entry][:properties]
-        @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
+        @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, false)
       end
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.save
@@ -88,7 +88,7 @@ module RocketJobMissionControl
       dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))
 
       if properties = params[:rocket_job_dirmon_entry][:properties]
-        dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, dirmon_entry_replicate, false)
+        dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, false)
       end
 
       if dirmon_entry_replicate.errors.empty? && dirmon_entry_replicate.valid? && dirmon_entry_replicate.update_attributes(dirmon_params)
@@ -100,9 +100,9 @@ module RocketJobMissionControl
 
     def update
       authorize! :update, @dirmon_entry
-      @dirmon_entry.properties = JobSanitizer.sanitize(dirmon_params, @dirmon_entry.job_class, @dirmon_entry)
+      sanitized_params = DirmonSanitizer.sanitize(dirmon_params, @dirmon_entry.job_class)
 
-      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update_attributes(dirmon_params)
+      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update_attributes(sanitized_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         render :edit

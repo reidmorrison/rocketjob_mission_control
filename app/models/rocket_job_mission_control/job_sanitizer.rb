@@ -1,6 +1,6 @@
 module RocketJobMissionControl
   module JobSanitizer
-    CATEGORIES_FIELDS = %i[id format format_options mode skip_unknown slice_size columns].freeze
+    CATEGORIES_FIELDS = %i[id name format format_options mode skip_unknown slice_size columns].freeze
 
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
     # Parameters

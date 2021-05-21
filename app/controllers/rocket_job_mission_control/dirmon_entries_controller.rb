@@ -152,7 +152,7 @@ module RocketJobMissionControl
     end
 
     def dirmon_params
-      params.require(:rocket_job_dirmon_entry).permit(:name, :archive_directory, :pattern, :job_class_name, :properties)
+      params.fetch(:rocket_job_dirmon_entry, {}).permit(:name, :archive_directory, :pattern, :job_class_name, :properties)
     end
 
     def render_datatable(entries, description)

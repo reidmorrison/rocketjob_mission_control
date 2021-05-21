@@ -58,13 +58,14 @@
             </div>
 
             <% if @dirmon_entry.job_class.respond_to?(:defined_input_categories) && @dirmon_entry.job_class.respond_to?(:defined_output_categories) %>
+                <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
               <div class="row">
                 <div class="col-sm-6">
                   <div class="panel panel-primary">
                     <div class="panel-body">
                       <div class='lead'>Input Categories</div>
 
-                      <% @dirmon_entry.job_class.from_properties(@dirmon_entry.properties).input_categories.each do |input_categories| %>
+                      <% @job.input_categories.each do |input_categories| %>
                         <%= p.fields_for "input_categories_attributes[]", input_categories  do |i| %>
                           <%= render "input_category_fields.html", f: i %>
                         <% end %>
@@ -78,7 +79,7 @@
                     <div class="panel-body">
                       <div class='lead'>Output Categories</div>
 
-                      <% @dirmon_entry.job_class.from_properties(@dirmon_entry.properties).output_categories.each do |output_categories| %>
+                      <% @job.output_categories.each do |output_categories| %>
                         <%= p.fields_for "output_categories_attributes[]", output_categories  do |o| %>
                           <%= render "output_category_fields.html", f: o %>
                         <% end %>

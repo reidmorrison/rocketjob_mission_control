@@ -96,7 +96,7 @@ module RocketJobMissionControl
 
     def update
       authorize! :update, @dirmon_entry
-      sanitized_params = DirmonSanitizer.sanitize(dirmon_params, @dirmon_entry.job_class, @dirmon_entry)
+      sanitized_params = DirmonSanitizer.sanitize(params[:rocket_job_dirmon_entry], @dirmon_entry.job_class, @dirmon_entry)
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update_attributes(sanitized_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
@@ -152,9 +152,7 @@ module RocketJobMissionControl
     end
 
     def dirmon_params
-      params.
-        fetch(:rocket_job_dirmon_entry, {}).
-        permit(:name, :archive_directory, :pattern, :job_class_name, :properties)
+      params.require(:rocket_job_dirmon_entry).permit(:name, :archive_directory, :pattern, :job_class_name, :properties)
     end
 
     def render_datatable(entries, description)

@@ -43,7 +43,7 @@ module RocketJobMissionControl
 
     # Returns [Array] list of inclusion values for this attribute.
     # Returns nil when there are no inclusion values for this attribute.
-    def extract_inclusion_values(klass, attribute, include_nil_option)
+    def extract_inclusion_values(klass, attribute)
       values = nil
 
       klass.validators_on(attribute).each do |validator|
@@ -57,10 +57,7 @@ module RocketJobMissionControl
     end
 
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
-    #   include_nil_option:
-    #     Is used by dirmon entries where a nil value just means no value selected.
-    #     Prevents filling default values in for all fields in the dirmon entry
-    def editable_field_html(klass, field_name, value, f, include_nil_option = false)
+    def editable_field_html(klass, field_name, value, f)
       # When editing a job the values are of the correct type.
       # When editing a dirmon entry values are strings.
       field = klass.fields[field_name.to_s]
@@ -71,17 +68,17 @@ module RocketJobMissionControl
 
       case field.type.name
       when "Integer"
-        options = extract_inclusion_values(klass, field_name, include_nil_option)
-        f.number_field(field_name, in: options, include_blank: include_nil_option, value: value, class: "form-control", placeholder: placeholder)
+        options = extract_inclusion_values(klass, field_name)
+        f.number_field(field_name, in: options, include_blank: false, value: value, class: "form-control", placeholder: placeholder)
       when "String", "Symbol", "Mongoid::StringifiedSymbol"
-        options = extract_inclusion_values(klass, field_name, include_nil_option)
+        options = extract_inclusion_values(klass, field_name)
         if options
           f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
         else
           f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)
         end
       when "Boolean", "Mongoid::Boolean"
-        options = extract_inclusion_values(klass, field_name, include_nil_option) || [nil, "true", "false"]
+        options = extract_inclusion_values(klass, field_name) || [nil, "true", "false"]
         f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
       when "Hash"
         "[JSON Hash]\n".html_safe +

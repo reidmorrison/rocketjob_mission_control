@@ -21,7 +21,7 @@
 
       <div class="form-group">
         <%= f.label :format %>
-        <% options = extract_inclusion_values(RocketJob::Category::Output, :format, true) %>
+        <% options = extract_inclusion_values(RocketJob::Category::Output, :format) %>
         <% value = output_category.format %>
         <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "selectize form-control" }) %>
       </div>

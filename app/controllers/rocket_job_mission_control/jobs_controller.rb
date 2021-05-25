@@ -269,6 +269,7 @@ module RocketJobMissionControl
         @job.class.user_editable_fields,
         input_categories_attributes: [
           :id,
+          :name,
           :format,
           :format_options,
           :mode,
@@ -278,6 +279,7 @@ module RocketJobMissionControl
         ],
         output_categories_attributes: [
           :id,
+          :name,
           :format,
           :format_options,
           columns: []

@@ -5,28 +5,30 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-sm-12">
-          <h4><%= f.object.try(:name) %></h4>
+          <h4><%= output_category.name %></h4>
         </div>
       </div>
     </div>
 
     <div class="panel-body">
+      <%= f.hidden_field :name, value: output_category.name %>
+
       <div class="form-group">
         <%= f.label :columns %>
-        <% options = output_category ? Array(output_category["columns"]) : nil %>
+        <% options = output_category.columns || [] %>
         <%= f.select(:columns, options_for_select(options, options), { include_hidden: false }, { class: "selectize form-control", multiple: true }) %>
       </div>
 
       <div class="form-group">
         <%= f.label :format %>
         <% options = extract_inclusion_values(RocketJob::Category::Output, :format, true) %>
-        <% value = output_category["format"] if output_category %>
+        <% value = output_category.format %>
         <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "selectize form-control" }) %>
       </div>
 
       <div class="form-group">
         <%= f.label :format_options %>
-        <% value = output_category["format_options"] if output_category %>
+        <% value = output_category.format_options %>
         <%= f.text_field(:format_options, value: value ? value.to_json : nil, class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}') %>
       </div>
     </div>

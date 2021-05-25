@@ -11,7 +11,6 @@
 <div class='row'>
   <div class='col-md-12'>
     <% @dirmon_entry.properties.keys.sort.each do |name| %>
-      <% next if (name == "input_categories") || (name == "output_categories") %>
       <% value = @dirmon_entry.properties[name] %>
       <div class='parameters'>
         <label><%= name.to_s.titleize %>:</label>
@@ -25,13 +24,3 @@
     <% end %>
   </div>
 </div>
-
-<% if @dirmon_entry.job_class.respond_to?(:defined_input_categories) || @dirmon_entry.job_class.respond_to?(:defined_output_categories) %>
-  <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
-  <% if @job.respond_to?(:input_categories) %>
-    <%= render partial: 'input_categories', locals: {job: @job} %>
-  <% end %>
-  <% if @job.respond_to?(:output_categories) %>
-    <%= render partial: 'output_categories', locals: {job: @job} %>
-  <% end %>
-<% end %>

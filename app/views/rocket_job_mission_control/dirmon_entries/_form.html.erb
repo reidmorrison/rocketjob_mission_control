@@ -39,7 +39,8 @@
           </div>
 
         <% if @dirmon_entry.job_class %>
-          <%= f.fields_for :properties do |p| %>
+            <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
+            <%= f.fields_for :properties do |p| %>
             <div class="panel panel-default">
               <div class="panel-heading">
                 <strong>Properties</strong>
@@ -51,14 +52,14 @@
 
                   <div class="form-group">
                     <%= p.label property_name.to_s %>
-                    <%= editable_field_html(@dirmon_entry.job_class, property_name, @dirmon_entry.properties[property_name], p, true) %>
+                    <%#= editable_field_html(@dirmon_entry.job_class, property_name, @dirmon_entry.properties[property_name], p, true) %>
+                    <%= editable_field_html(@dirmon_entry.job_class, property_name, @job.public_send(property_name), p, true) %>
                   </div>
                 <% end %>
               </div>
             </div>
 
             <% if @dirmon_entry.job_class.respond_to?(:defined_input_categories) && @dirmon_entry.job_class.respond_to?(:defined_output_categories) %>
-                <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
               <div class="row">
                 <div class="col-sm-6">
                   <div class="panel panel-primary">

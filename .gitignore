@@ -12,3 +12,4 @@ Gemfile.lock
 .tool-versions
 .generators
 .rakeTasks
+.history

@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand navbar-light navbar-bg">
+  <a class="sidebar-toggle js-sidebar-toggle">
+    <i class="hamburger align-self-center"></i>
+  </a>
+
+  <form class="d-none d-sm-inline-block">
+    <div class="input-group input-group-navbar">
+      <input type="text" class="form-control" placeholder="Search…" aria-label="Search" />
+      <button class="btn" type="button"><i class="align-middle" data-feather="search"></i></button>
+    </div>
+  </form>
+
+  <div class="navbar-collapse collapse">
+    <ul class="navbar-nav navbar-align">
+      <li><%= link_to running_jobs_path, class: "dropdown-item #{active_page(running_jobs_path)}" do %>Jobs<% end %></li>
+      <li><%= link_to servers_path, class: "dropdown-item #{active_page(servers_path)}" do %>Servers<% end %></li>
+      <li><%= link_to active_workers_path, class: "dropdown-item #{active_page(active_workers_path)}" do %>Workers<% end %></li>
+      <li><%= link_to enabled_dirmon_entries_path, class: "dropdown-item #{active_page(enabled_dirmon_entries_path)}" do %>Directory Monitoring<% end %></li>
+    </ul>
+  </div>
+</nav>

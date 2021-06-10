@@ -1,10 +1,10 @@
 $:.push File.expand_path("lib", __dir__)
 
-require "rocket_job_mission_control/version"
+require "rocketjob_mission_control/version"
 
 Gem::Specification.new do |s|
   s.name        = "rocketjob_mission_control"
-  s.version     = RocketJobMissionControl::VERSION
+  s.version     = RocketjobMissionControl::VERSION
   s.authors     = ["Michael Cloutier", "Chris Lamb", "Jonathan Whittington", "Reid Morrison"]
   s.homepage    = "https://rocketjob.io"
   s.summary     = "Ruby's missing batch system."
@@ -17,5 +17,6 @@ Gem::Specification.new do |s|
   s.add_dependency "access-granted", "~> 1.3"
   s.add_dependency "jquery-rails"
   s.add_dependency "railties", ">= 5.0"
-  s.add_dependency 'rocketjob', '>= 6.0.0.beta'
+  s.add_dependency "rocketjob", ">= 6.0.0.beta"
+  s.add_dependency "webpacker", [">= 4.0", "< 6"]
 end

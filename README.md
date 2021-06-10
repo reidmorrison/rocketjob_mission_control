@@ -61,7 +61,7 @@ bundle
 Add the following route to `config/routes.rb`:
 
 ```ruby
-mount RocketJobMissionControl::Engine => 'rocketjob'
+mount RocketjobMissionControl::Engine => 'rocketjob'
 ```
 
 ## Development and Testing

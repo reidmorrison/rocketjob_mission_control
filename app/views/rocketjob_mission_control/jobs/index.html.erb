@@ -1,0 +1,42 @@
+<div class="job-list">
+  <div class="mb-3">
+    <div class="list">
+      <div class="row">
+        <div class="col-10">
+          <h1 class="h3 d-inline align-middle"><%= @description %> Jobs</h1>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="btn btn-default pull-right dt-reload" data-behavior="reload">
+            <i class="fas fa-sync"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <table id="datatables-responsive" class="table table-striped datatable jobs-datatable" data-source="<%= @data_table_url %>" style="width: 100%">
+          <thead>
+            <tr>
+              <% @columns.each do |column| %>
+                <th><%= column[:display] %></th>
+              <% end %>
+            </tr>
+          </thead>
+
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  jQuery(function () {
+    new RjmcDatatable(
+      $(".jobs-datatable"),
+      <%= @table_layout.to_json.html_safe %>
+    );
+  });
+</script>

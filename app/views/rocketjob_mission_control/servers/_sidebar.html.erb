@@ -1,0 +1,15 @@
+<ul class='nav hidden-xs' id='lg-menu'>
+  <li>
+    <%= link_to(servers_path, class: "sidebar-link") do %>
+      <i class='fas fa-list'></i> All
+    <% end %>
+  </li>
+
+  <% @states.each do |state| %>
+    <li class="sidebar-item #{state}">
+      <%= link_to("#{state}_servers".to_sym, class: "sidebar-link") do %>
+        <i class="fas <%= state_icon(state) %>"></i> <%= state.capitalize%> (<%= server_counts_by_state(state)%>)
+      <% end %>
+    </li>
+  <% end %>
+</ul>

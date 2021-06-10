@@ -1,0 +1,21 @@
+<li class="sidebar-item">
+  <% if can?(:create, RocketJob::DirmonEntry) %>
+    <%= link_to(new_dirmon_entry_path, class: "sidebar-link") do %>
+      <i class='fas fa-plus'></i> Create
+    <% end %>
+  <% end %>
+</li>
+
+<li class="sidebar-item">
+  <%= link_to(dirmon_entries_path, class: "sidebar-link") do %>
+    <i class='fas fa-list'></i> All
+  <% end %>
+</li>
+
+<% RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state| %>
+  <li class="sidebar-item <%= state %>">
+    <%= link_to("#{state}_dirmon_entries".to_sym, class: "sidebar-link") do %>
+      <i class="fas <%= state_icon(state) %>"></i> <%= state.capitalize %> (<%= dirmon_counts_by_state(state) %>)
+    <% end %>
+  </li>
+<% end %>

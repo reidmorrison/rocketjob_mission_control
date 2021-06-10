@@ -13,10 +13,10 @@ class KaboomBatchJob < RocketJob::Job
   self.destroy_on_complete = false
 
   def perform(_record)
-    if rocket_job_record_number.even?
-      raise "Blowing up on record: #{rocket_job_record_number}"
+    if rocketjob_record_number.even?
+      raise "Blowing up on record: #{rocketjob_record_number}"
     else
-      raise ArgumentError, "Blowing up on record: #{rocket_job_record_number}"
+      raise ArgumentError, "Blowing up on record: #{rocketjob_record_number}"
     end
   end
 end

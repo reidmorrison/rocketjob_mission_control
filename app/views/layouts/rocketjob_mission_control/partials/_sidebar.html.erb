@@ -1,0 +1,36 @@
+<nav id="sidebar" class="sidebar js-sidebar">
+  <div class="sidebar-content js-simplebar">
+    <a class="sidebar-brand" href="/">
+      <span class="sidebar-brand-text align-middle">
+        <sup><%= image_tag('rocketjob_mission_control/rocket-icon-64x64.png', size: "40x40") %></sup>
+        Mission Control
+      </span>
+
+      <svg class="sidebar-brand-icon align-middle" width="32px" height="32px" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" color="#FFFFFF" style="margin-left: -3px">
+        <path d="M12 4L20 8.00004L12 12L4 8.00004L12 4Z"></path>
+        <path d="M20 12L12 16L4 12"></path>
+        <path d="M20 16L12 20L4 16"></path>
+      </svg>
+    </a>
+
+    <ul class="sidebar-nav">
+      <%= render partial: "rocketjob_mission_control/jobs/sidebar" if @jobs_sidebar %>
+      <%= render partial: "rocketjob_mission_control/dirmon_entries/sidebar" if @dirmon_sidebar %>
+      <%= render partial: "rocketjob_mission_control/servers/sidebar" if @servers_sidebar %>
+    </ul>
+
+    <div class="sidebar-cta">
+      <div class="sidebar-cta-content">
+        <strong class="d-inline-block mb-2">
+          RocketJob
+        </strong>
+
+        <div class="mb-3 text-sm">Ruby's missing batch system!</div>
+
+        <div class="d-grid">
+          <a href="https://rocketjob.io/" class="btn btn-outline-primary" target="_blank">Visit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

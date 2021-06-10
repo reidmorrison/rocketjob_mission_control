@@ -1,0 +1,14 @@
+{
+  "application.js": "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js",
+  "application.js.map": "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js.map",
+  "entrypoints": {
+    "application": {
+      "js": [
+        "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js"
+      ],
+      "js.map": [
+        "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js.map"
+      ]
+    }
+  }
+}

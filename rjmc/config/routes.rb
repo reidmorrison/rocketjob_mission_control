@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount RocketJobMissionControl::Engine => "/"
+  mount RocketjobMissionControl::Engine => "/"
 end

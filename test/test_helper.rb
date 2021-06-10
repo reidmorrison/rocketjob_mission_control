@@ -11,9 +11,9 @@ require "minispec/rails"
 ActionController::TestCase
 
 class ActionController::TestCase
-  include RocketJobMissionControl::Engine.routes.url_helpers
+  include RocketjobMissionControl::Engine.routes.url_helpers
 
   setup do
-    @routes = RocketJobMissionControl::Engine.routes
+    @routes = RocketjobMissionControl::Engine.routes
   end
 end

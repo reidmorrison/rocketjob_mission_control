@@ -11,6 +11,7 @@ gem "minitest"
 gem "rake"
 gem "rubyzip", platform: :ruby
 gem "sprockets"
+gem "webpacker", "~> 5.0"
 
 group :test do
   gem "minispec-rails", require: false
@@ -18,8 +19,8 @@ group :test do
 end
 
 group :development do
-  gem 'rubocop', require: false
-  gem 'rubocop-minitest', require: false
-  gem 'rubocop-performance', require: false
-  gem 'rubocop-rails', require: false
+  gem "rubocop", require: false
+  gem "rubocop-minitest", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
 end

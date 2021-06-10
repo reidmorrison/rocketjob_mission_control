@@ -1,5 +1,5 @@
 # @formatter:off
-RocketJobMissionControl::Engine.routes.draw do
+RocketjobMissionControl::Engine.routes.draw do
   resources :jobs, only: %i[index show update destroy edit] do
     collection do
       get :running,   to: "jobs#running"
@@ -61,12 +61,12 @@ RocketJobMissionControl::Engine.routes.draw do
       put :disable
       # Create the path: copy_dirmon_entry GET    /dirmon_entries/:id/copy(.:format)
       get :copy
-      # Create the path:                        PATCH  /dirmon_entries/:id/replicate(.:format) rocket_job_mission_control/dirmon_entries#replicate
+      # Create the path:                        PATCH  /dirmon_entries/:id/replicate(.:format) rocketjob_mission_control/dirmon_entries#replicate
       patch :replicate
     end
   end
 
-  get "rocket_job_mission_control/test" => "test#index" if Rails.env.test?
+  get "rocketjob_mission_control/test" => "test#index" if Rails.env.test?
 
   root to: "jobs#running"
 end

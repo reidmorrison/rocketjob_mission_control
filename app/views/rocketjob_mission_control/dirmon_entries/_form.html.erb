@@ -1,0 +1,106 @@
+<% action ||= :create %>
+
+<% if @dirmon_entry.errors.present? %>
+  <div class="alert alert-alert">Invalid Dirmon entry!</div>
+
+  <% @dirmon_entry.errors.messages.each_pair do |field, message| %>
+    <div class="message"><%= field %>: <%= message %></div>
+  <% end %>
+<% end %>
+
+<%= form_for @dirmon_entry, url: { action: action } do |f| %>
+  <div class="row">
+    <div class="col-md-12">
+        <div class="arguments">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="job_arguments form-group"></div>
+
+              <div class="form-group">
+                <%= f.label :name %>
+                <%= f.text_field :name, class: "form-control" %>
+              </div>
+
+              <div class="form-group">
+                <%= f.label "Job Class" %>
+                <%= f.text_field :job_class_name, class: "form-control", disabled: action != :create %>
+              </div>
+
+              <div class="form-group">
+                <%= f.label :pattern %>
+                <%= f.text_field :pattern, class: "form-control" %>
+              </div>
+
+              <div class="form-group">
+                <%= f.label :archive_directory %>
+                <%= f.text_field :archive_directory, class: "form-control" %>
+              </div>
+            </div>
+          </div>
+
+        <% if @dirmon_entry.job_class %>
+            <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
+            <%= f.fields_for :properties do |p| %>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <strong>Properties</strong>
+              </div>
+
+              <div class="panel-body">
+                <% @dirmon_entry.job_class.user_editable_fields.sort.each do |property_name| %>
+                  <% next if property_name == :run_at %>
+
+                  <div class="form-group">
+                    <%= p.label property_name.to_s %>
+                    <%= editable_field_html(@dirmon_entry.job_class, property_name, @job.public_send(property_name), p) %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+
+            <% if @dirmon_entry.job_class.respond_to?(:defined_input_categories) && @dirmon_entry.job_class.respond_to?(:defined_output_categories) %>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="panel panel-primary">
+                    <div class="panel-body">
+                      <div class='lead'>Input Categories</div>
+
+                      <% @job.input_categories.each do |input_categories| %>
+                        <%= p.fields_for "input_categories_attributes[]", input_categories  do |i| %>
+                          <%= render "input_category_fields.html", f: i %>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <div class="panel panel-success">
+                    <div class="panel-body">
+                      <div class='lead'>Output Categories</div>
+
+                      <% @job.output_categories.each do |output_categories| %>
+                        <%= p.fields_for "output_categories_attributes[]", output_categories  do |o| %>
+                          <%= render "output_category_fields.html", f: o %>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class='buttons'>
+        <%= f.submit action, class: 'btn btn-primary' %>
+        <%= link_to 'cancel', :back, class: 'btn btn-default' %>
+      </div>
+
+      <% if action == :create %>
+        <%= button_tag 'properties', type: 'button', class: 'btn btn-default', id: 'properties', data: { url: rocketjob_mission_control.new_dirmon_entry_path } %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

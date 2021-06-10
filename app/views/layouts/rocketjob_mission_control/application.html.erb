@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Rocket Job Mission Control" />
+    <meta name="author" content="RocketJob" />
+    <meta name="keywords" content="rocketjob, rails jobs, dashboard, admin" />
+
+    <title><%= title %></title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= image_path('rocketjob_mission_control/favicon-16x16.png') %>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= image_path('rocketjob_mission_control/favicon-32x32.png') %>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= image_path('rocketjob_mission_control/apple-touch-icon.png') %>">
+    <link rel="mask-icon" href="<%= image_path('rocketjob_mission_control/safari-pinned-tab.svg') %>" color="#5bbad5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" />
+
+    <%= yield :meta %>
+
+    <%= stylesheet_link_tag "rocketjob_mission_control/application", media: "all" %>
+
+    <%= javascript_include_tag "rocketjob_mission_control/application" %>
+    <%= javascript_pack_tag "application", "data-turbolinks-track": "reload" %>
+
+    <%= csrf_meta_tag %>
+  </head>
+
+  <body class="rocketjob" data-theme="dark" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
+    <div class="wrapper">
+      <%= render partial: "layouts/rocketjob_mission_control/partials/sidebar" %>
+
+      <div class="main">
+        <%= render partial: "layouts/rocketjob_mission_control/partials/header" %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <%= render partial: "layouts/rocketjob_mission_control/partials/flash" %>
+            <%= yield %>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

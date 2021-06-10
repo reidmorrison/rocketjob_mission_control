@@ -1,0 +1,13 @@
+<li class="sidebar-item">
+  <%= link_to(jobs_path, class: "sidebar-link") do %>
+    <i class='fas fa-list'></i> All
+  <% end %>
+</li>
+
+<% job_states_with_scheduled.each do |state| %>
+  <li class="sidebar-item <%= state %>">
+    <%= link_to("#{state}_jobs".to_sym, class: "sidebar-link") do %>
+      <i class="fas <%= state_icon(state) %>"></i> <%= state.capitalize %> (<%= job_counts_by_state(state) %>)
+    <% end %>
+  </li>
+<% end %>

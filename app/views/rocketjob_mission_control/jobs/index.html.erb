@@ -16,7 +16,7 @@
 
     <div class="card">
       <div class="card-body">
-        <table id="datatables-responsive" class="table table-striped datatable jobs-datatable" data-source="<%= @data_table_url %>" style="width: 100%">
+        <table id="jobs_datatable" class="table table-striped datatable jobs-datatable" data-columns="<%= @table_layout.to_json %>" data-source="<%= @data_table_url %>" style="width: 100%">
           <thead>
             <tr>
               <% @columns.each do |column| %>
@@ -31,12 +31,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  jQuery(function () {
-    new RjmcDatatable(
-      $(".jobs-datatable"),
-      <%= @table_layout.to_json.html_safe %>
-    );
-  });
-</script>

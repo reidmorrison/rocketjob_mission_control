@@ -11,10 +11,4 @@
  * file per style scope.
  *
  *= require rocketjob_mission_control/adminkit/light
- *= require rocketjob_mission_control/selectize
- *= require rocketjob_mission_control/selectize.bootstrap3
- *= require rocketjob_mission_control/base
- *= require rocketjob_mission_control/callout
- *= require rocketjob_mission_control/jobs
- *= require rocketjob_mission_control/worker_processes
  */

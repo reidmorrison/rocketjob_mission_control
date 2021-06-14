@@ -1,14 +1,14 @@
 {
-  "application.js": "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js",
-  "application.js.map": "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js.map",
   "entrypoints": {
-    "application": {
+    "rocketjob_mission_control/application": {
       "js": [
-        "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js"
+        "/rocketjob-mission-control-packs/js/rocketjob_mission_control/application-587a1c8b8fbf6af83145.js"
       ],
       "js.map": [
-        "/rocketjob-mission-control-packs/js/application-7f4c1d9cba9011b8d7aa.js.map"
+        "/rocketjob-mission-control-packs/js/rocketjob_mission_control/application-587a1c8b8fbf6af83145.js.map"
       ]
     }
-  }
+  },
+  "rocketjob_mission_control/application.js": "/rocketjob-mission-control-packs/js/rocketjob_mission_control/application-587a1c8b8fbf6af83145.js",
+  "rocketjob_mission_control/application.js.map": "/rocketjob-mission-control-packs/js/rocketjob_mission_control/application-587a1c8b8fbf6af83145.js.map"
 }

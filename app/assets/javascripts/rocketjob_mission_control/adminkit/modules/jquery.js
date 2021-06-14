@@ -1,1 +1,0 @@
-import "script-loader!jquery";

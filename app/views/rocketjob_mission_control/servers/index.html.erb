@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <table class='table datatable servers-datatable' data-source='<%= @data_table_url %>' style='width: 100%'>
+      <table id="servers_datatable" class="table datatable servers-datatable" data-source="<%= @data_table_url %>" style="width: 100%">
         <thead>
           <tr>
             <th>Hostname : PID</th>
@@ -51,12 +51,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  jQuery(function () {
-    new RjmcDatatable(
-      $('.servers-datatable'),
-      [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}, {data: '4', orderable: false}]
-    );
-  });
-</script>

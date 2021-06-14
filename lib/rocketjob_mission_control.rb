@@ -5,7 +5,7 @@ module RocketjobMissionControl
     def webpacker
       @webpacker ||= ::Webpacker::Instance.new(
         root_path: RocketjobMissionControl::Engine.root,
-        config_path: RocketjobMissionControl::Engine.root.join("config", "Webpacker.yml")
+        config_path: RocketjobMissionControl::Engine.root.join("config", "webpacker.yml")
       )
     end
   end

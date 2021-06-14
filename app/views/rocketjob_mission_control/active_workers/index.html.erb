@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <table class='table datatable active-workers-datatable' data-source='<%= active_workers_url(format: 'json') %>' style='width: 100%'>
+    <table id="active_workers_datatable" class='table datatable active-workers-datatable' data-source='<%= active_workers_url(format: 'json') %>' style='width: 100%'>
       <thead>
         <tr>
           <th>Worker Name</th>
@@ -34,12 +34,3 @@
     </table>
   </div>
 </div>
-
-<script>
-  jQuery(function() {
-    new RjmcDatatable(
-      $('.active-workers-datatable'),
-      [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}],
-      { ordering: false, searching: false });
-  });
-</script>

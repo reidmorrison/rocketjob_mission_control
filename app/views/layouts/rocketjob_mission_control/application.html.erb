@@ -7,6 +7,7 @@
     <meta name="description" content="Rocket Job Mission Control" />
     <meta name="author" content="RocketJob" />
     <meta name="keywords" content="rocketjob, rails jobs, dashboard, admin" />
+    <meta name="turbolinks-visit-control" content="reload">
 
     <title><%= title %></title>
 
@@ -19,10 +20,8 @@
 
     <%= yield :meta %>
 
-    <%= stylesheet_link_tag "rocketjob_mission_control/application", media: "all" %>
-
-    <%= javascript_include_tag "rocketjob_mission_control/application" %>
-    <%= javascript_pack_tag "application", "data-turbolinks-track": "reload" %>
+    <%= stylesheet_link_tag "rocketjob_mission_control/application", media: "all", "data-turbolinks-track": "reload" %>
+    <%= javascript_pack_tag "rocketjob_mission_control/application", "data-turbolinks-track": "reload" %>
 
     <%= csrf_meta_tag %>
   </head>

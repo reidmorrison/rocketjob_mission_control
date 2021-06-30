@@ -11,7 +11,6 @@
 <%= form_for @dirmon_entry, url: { action: action } do |f| %>
   <div class="row">
     <div class="col-md-12">
-      <% if @dirmon_entry.job_class %>
         <div class="arguments">
           <div class="panel panel-default">
             <div class="panel-body">
@@ -39,7 +38,9 @@
             </div>
           </div>
 
-          <%= f.fields_for :properties do |p| %>
+        <% if @dirmon_entry.job_class %>
+            <% @job = @dirmon_entry.job_class.from_properties(@dirmon_entry.properties) %>
+            <%= f.fields_for :properties do |p| %>
             <div class="panel panel-default">
               <div class="panel-heading">
                 <strong>Properties</strong>
@@ -51,7 +52,7 @@
 
                   <div class="form-group">
                     <%= p.label property_name.to_s %>
-                    <%= editable_field_html(@dirmon_entry.job_class, property_name, @dirmon_entry.properties[property_name], p, true) %>
+                    <%= editable_field_html(@dirmon_entry.job_class, property_name, @job.public_send(property_name), p) %>
                   </div>
                 <% end %>
               </div>
@@ -64,7 +65,7 @@
                     <div class="panel-body">
                       <div class='lead'>Input Categories</div>
 
-                      <% @dirmon_entry.job_class.from_properties(@dirmon_entry.properties).input_categories.each do |input_categories| %>
+                      <% @job.input_categories.each do |input_categories| %>
                         <%= p.fields_for "input_categories_attributes[]", input_categories  do |i| %>
                           <%= render "input_category_fields.html", f: i %>
                         <% end %>
@@ -78,7 +79,7 @@
                     <div class="panel-body">
                       <div class='lead'>Output Categories</div>
 
-                      <% @dirmon_entry.job_class.from_properties(@dirmon_entry.properties).output_categories.each do |output_categories| %>
+                      <% @job.output_categories.each do |output_categories| %>
                         <%= p.fields_for "output_categories_attributes[]", output_categories  do |o| %>
                           <%= render "output_category_fields.html", f: o %>
                         <% end %>

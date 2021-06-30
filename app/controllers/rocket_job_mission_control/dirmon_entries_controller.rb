@@ -1,14 +1,8 @@
 module RocketJobMissionControl
   class DirmonEntriesController < RocketJobMissionControl::ApplicationController
-    if Rails.version.to_i < 5
-      before_filter :find_entry_or_redirect, except: %i[index disabled enabled failed pending new create]
-      before_filter :authorize_read, only: %i[index disabled enabled failed pending]
-      before_filter :show_sidebar
-    else
-      before_action :find_entry_or_redirect, except: %i[index disabled enabled failed pending new create]
-      before_action :authorize_read, only: %i[index disabled enabled failed pending]
-      before_action :show_sidebar
-    end
+    before_action :find_entry_or_redirect, except: %i[index disabled enabled failed pending new create]
+    before_action :authorize_read, only: %i[index disabled enabled failed pending]
+    before_action :show_sidebar
 
     rescue_from AccessGranted::AccessDenied do |exception|
       raise exception if Rails.env.development? || Rails.env.test?
@@ -76,11 +70,13 @@ module RocketJobMissionControl
     def edit
       authorize! :edit, @dirmon_entry
     end
+
     # When you click on the Copy button,
     # the copy method loads the Dirmon Entity attributes in Copy Dirmon Entry Page
     def copy
       authorize! :copy, @dirmon_entry
     end
+
     # When you click on the replicate button,
     # the replicate method clones the existing Dirmon Entity
     def replicate
@@ -100,7 +96,10 @@ module RocketJobMissionControl
 
     def update
       authorize! :update, @dirmon_entry
-      sanitized_params = DirmonSanitizer.sanitize(dirmon_params, @dirmon_entry.job_class, @dirmon_entry)
+      sanitized_params = DirmonSanitizer.sanitize(params[:rocket_job_dirmon_entry], @dirmon_entry.job_class, @dirmon_entry)
+      properties       = DirmonSanitizer.diff_properties(sanitized_params[:properties], @dirmon_entry)
+
+      sanitized_params[:properties] = properties
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update_attributes(sanitized_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
@@ -156,9 +155,7 @@ module RocketJobMissionControl
     end
 
     def dirmon_params
-      params.
-        fetch(:rocket_job_dirmon_entry, {}).
-        permit(:name, :archive_directory, :pattern, :job_class_name, :properties)
+      params.fetch(:rocket_job_dirmon_entry, {}).permit(:name, :archive_directory, :pattern, :job_class_name, :properties)
     end
 
     def render_datatable(entries, description)

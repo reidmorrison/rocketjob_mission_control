@@ -1,5 +1,7 @@
 module RocketJobMissionControl
   module JobSanitizer
+    CATEGORIES_FIELDS = %i[id name format format_options mode skip_unknown slice_size columns].freeze
+
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
     # Parameters
     #   properties [Hash]
@@ -57,10 +59,18 @@ module RocketJobMissionControl
       categories = []
 
       properties.each_pair do |_, category|
-        h = category.to_h.reject { |_, v| v.blank? }
-        h.delete(:columns) if h[:columns] == [""]
-        h[:format_options] = JSON.parse(h[:format_options]) if h.key?(:format_options)
-        categories << h
+        hash = {}
+        CATEGORIES_FIELDS.each do |key|
+          next unless category.key?(key)
+
+          value = category[key]
+          next if value.blank?
+          next if (key == :columns) && value == [""]
+
+          value     = JSON.parse(value) if key == :format_options
+          hash[key] = value
+        end
+        categories << hash
       end
 
       categories

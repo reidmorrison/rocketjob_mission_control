@@ -19,6 +19,10 @@ class DirmonSanitizerTest < Minitest::Test
       end
     end
 
+    let :sample_job do
+      SampleJob.new
+    end
+
     let :job_class_name do
       SampleJob.name
     end
@@ -29,6 +33,15 @@ class DirmonSanitizerTest < Minitest::Test
         zip_code:                     12345,
         input_categories_attributes:  {0 => {format: :json}},
         output_categories_attributes: {0 => {name: :errors, format: :json}}
+      }
+    end
+
+    let :sanitized_properties do
+      {
+        client_name:       "Jill",
+        zip_code:          45673,
+        input_categories:  [{name: "main", format: "json", slice_size: 100, skip_unknown: "false"}],
+        output_categories: [{name: "errors", format: "json"}]
       }
     end
 
@@ -57,7 +70,7 @@ class DirmonSanitizerTest < Minitest::Test
       end
 
       it "strips blank values" do
-        params     = {
+        params   = {
           name:              "",
           job_class_name:    "",
           pattern:           "",
@@ -70,10 +83,63 @@ class DirmonSanitizerTest < Minitest::Test
             output_categories_attributes: {0 => {name: "", format: ""}}
           }
         }
-        cleansed   = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
+        cleansed = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
         assert_equal 0, dirmon_entry.errors.count
         expected = {}
         assert_equal expected, cleansed
+      end
+    end
+
+    describe ".diff_category" do
+      it "returns only different values" do
+        default_category = sample_job.input_category
+        properties       = {
+          name:         "main",
+          format:       "psv",
+          slice_size:   100,
+          skip_unknown: false
+        }
+        updated_category = RocketJob::Category::Input.new(properties)
+
+        diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
+
+        expected = {:format => "psv", :name => "main"}
+        assert_equal expected, diff
+      end
+
+      it "is empty with no changes" do
+        default_category = sample_job.input_category
+        properties       = {
+          name:         "main",
+          format:       "csv",
+          slice_size:   100,
+          skip_unknown: false
+        }
+        updated_category = RocketJob::Category::Input.new(properties)
+
+        diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
+
+        expected = {}
+        assert_equal expected, diff
+      end
+
+      it "empty" do
+        default_category = sample_job.input_category
+        properties       = {}
+        updated_category = RocketJob::Category::Input.new(properties)
+
+        diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
+
+        expected = {}
+        assert_equal expected, diff
+      end
+    end
+
+    describe ".diff_properties" do
+      it "returns only different values" do
+        diff     = RocketJobMissionControl::DirmonSanitizer.diff_properties(sanitized_properties, dirmon_entry)
+        expected = {:client_name => "Jill", :zip_code => 45673, :input_categories => [{:format => "json", :name => "main"}], :output_categories => [{:format => "json", :name => "errors"}]}
+        assert_equal expected, diff
       end
     end
   end

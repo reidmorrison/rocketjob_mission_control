@@ -3,7 +3,12 @@
 <% if @job.respond_to?(:failed_at_list) && @job.failed_at_list.present? %>
   <%= render partial: 'retryable', locals: {job: @job} %>
 <% end %>
-<% if @job.exception.present? %>
+<% if @job.respond_to?(:input) && @job.input.failed.count.positive? %>
+  <div class='status-message'>
+    <label><%= 'Exceptions' %>:</label>
+    <%= render partial: 'exceptions', locals: {job: @job} %>
+  </div>
+<% elsif @job.exception.present? %>
   <%= render partial: 'exception', locals: {job: @job} %>
 <% end %>
 <% if @job.respond_to?(:statistics) && @job.statistics.present? %>

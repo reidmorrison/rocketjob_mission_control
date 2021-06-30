@@ -76,7 +76,9 @@ module RocketJobMissionControl
       authorize! :update, @job
       permitted_params = JobSanitizer.sanitize(job_params, @job.class, @job)
 
-      if @job.errors.empty? && @job.valid? && @job.update_attributes(permitted_params)
+      assign_job_values(@job, permitted_params)
+
+      if @job.errors.empty? && @job.valid? && @job.save
         redirect_to job_path(@job)
       else
         render :edit
@@ -248,6 +250,24 @@ module RocketJobMissionControl
 
     private
 
+    def assign_job_values(target, hash)
+      hash.each_pair do |attribute, value|
+        if attribute == :input_categories
+          value.each do |category_hash|
+            h = category_hash.dup
+            assign_job_values(target.input_category(h.delete(:name)), h)
+          end
+        elsif attribute == :output_categories
+          value.each do |category_hash|
+            h = category_hash.dup
+            assign_job_values(target.output_category(h.delete(:name)), h)
+          end
+        elsif attribute != :id
+          target.send("#{attribute}=", value)
+        end
+      end
+    end
+
     def authorize_read
       authorize! :read, RocketJob::Job
     end
@@ -269,6 +289,7 @@ module RocketJobMissionControl
         @job.class.user_editable_fields,
         input_categories_attributes: [
           :id,
+          :name,
           :format,
           :format_options,
           :mode,
@@ -278,6 +299,7 @@ module RocketJobMissionControl
         ],
         output_categories_attributes: [
           :id,
+          :name,
           :format,
           :format_options,
           columns: []
@@ -326,7 +348,7 @@ module RocketJobMissionControl
         h             = {data: index.to_s}
         h[:width]     = column[:width] if column.key?(:width)
         h[:orderable] = column[:orderable] if column.key?(:orderable)
-        index += 1
+        index         += 1
         h
       end
     end

@@ -8,7 +8,6 @@ module RocketJobMissionControl
     isolate_namespace RocketJobMissionControl
 
     require "rocketjob"
-    require "jquery-rails"
     require "access-granted"
     begin
       require "rocketjob_enterprise"

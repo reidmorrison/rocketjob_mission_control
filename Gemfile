@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "rails", "~> 6.1.0"
-gem "mongoid", git: "https://github.com/reidmorrison/mongoid", branch:"7.2-ruby_3"
+gem "mongoid", git: "https://github.com/reidmorrison/mongoid", branch: "7.2-ruby_3"
 gem "rocketjob", git: "https://github.com/reidmorrison/rocketjob"
 gem "appraisal"
 gem "amazing_print"
@@ -18,8 +18,8 @@ group :test do
 end
 
 group :development do
-  gem 'rubocop', require: false
-  gem 'rubocop-minitest', require: false
-  gem 'rubocop-performance', require: false
-  gem 'rubocop-rails', require: false
+  gem "rubocop", require: false
+  gem "rubocop-minitest", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
 end

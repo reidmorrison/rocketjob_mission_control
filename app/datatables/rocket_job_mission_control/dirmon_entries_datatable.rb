@@ -17,7 +17,7 @@ module RocketJobMissionControl
       <<-EOS
         <a href="#{dirmon_entry_path(dirmon.id)}">
           <i class="#{state_icon(dirmon.state)}" style="font-size: 75%" title="#{dirmon.state}"></i>
-          #{dirmon.name}
+          #{h(dirmon.name)}
         </a>
       EOS
     end

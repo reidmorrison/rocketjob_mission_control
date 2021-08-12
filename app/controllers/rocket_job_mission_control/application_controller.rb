@@ -25,6 +25,8 @@ module RocketJobMissionControl
     end
 
     def login
+      return unless Config.authorization_callback
+
       @login ||= begin
         args = instance_exec(&Config.authorization_callback)
         args[:login]

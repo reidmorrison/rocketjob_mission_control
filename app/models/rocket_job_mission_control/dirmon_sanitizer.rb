@@ -42,8 +42,8 @@ module RocketJobMissionControl
             categories << props unless props.empty?
           end
           properties[:output_categories] = categories unless categories.empty?
-        else
-          properties[name] = value unless default_job.public_send(name) == updated_job.public_send(name)
+        elsif default_job.public_send(name) != updated_job.public_send(name)
+          properties[name] = value.is_a?(String) ? value.gsub(/\r\n/, "\n") : value
         end
       end
       properties

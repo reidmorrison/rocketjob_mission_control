@@ -6,9 +6,9 @@
     <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name), method: :patch) do |f| %>
       <% @lines.each_with_index do |line, index| %>
         <% if @line_index == index %>
-          <%= f.text_area :records, :value => line, class: 'input_slices', id: index, multiple: true %>
+          <%= f.text_area :records, value: line, class: 'input_slices', id: index, multiple: true, rows: 14, cols: 10, wrap: "soft" %>
         <% else %>
-          <%= f.hidden_field :records, :value => line, class: 'input_slices', id: index, multiple: true %>
+          <%= f.hidden_field :records, value: line, class: 'input_slices', id: index, multiple: true %>
         <% end %>
       <% end %>
 

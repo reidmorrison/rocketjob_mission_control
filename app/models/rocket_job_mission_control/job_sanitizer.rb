@@ -27,6 +27,8 @@ module RocketJobMissionControl
         next unless field&.type
 
         case field.type.name
+        when "String"
+          value.gsub(/\r\n/, "\n")
         when "Hash"
           begin
             value = value.blank? ? nil : JSON.parse(value)

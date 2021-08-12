@@ -2,6 +2,7 @@
 <div class='row'>
   <div class='col-md-12'>
     <table>
+      <%# All NON (array||hash) values first %>
       <% @attributes.each_pair do |key, value| %>
         <% next if value.is_a?(Array) || value.is_a?(Hash) %>
         <% key = key.to_s.titleize %>
@@ -10,10 +11,12 @@
           <% if value.nil? %>
             <td><label>nil</label></td>
           <% else %>
-            <td><%= value %></td>
+            <td><%= simple_format(value) %></td>
           <% end %>
         </tr>
       <% end %>
+
+      <%# All Array Values %>
       <% @attributes.each_pair do |key, value| %>
         <% next unless value.is_a?(Array) %>
         <% key = key.to_s.titleize %>
@@ -52,6 +55,8 @@
           <% end %>
         <% end %>
       <% end %>
+
+      <%# All Hash Values %>
       <% @attributes.each_pair do |key, value| %>
         <% next unless value.is_a?(Hash) %>
         <% key = key.to_s.titleize %>

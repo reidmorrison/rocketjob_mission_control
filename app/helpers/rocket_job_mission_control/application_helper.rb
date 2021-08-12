@@ -75,7 +75,7 @@ module RocketJobMissionControl
         if options
           f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
         else
-          f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)
+          f.text_field(field_name, value: value ? value.gsub(/\n/, '\n') : "", class: "form-control", placeholder: placeholder)
         end
       when "Boolean", "Mongoid::Boolean"
         options = extract_inclusion_values(klass, field_name) || [nil, "true", "false"]

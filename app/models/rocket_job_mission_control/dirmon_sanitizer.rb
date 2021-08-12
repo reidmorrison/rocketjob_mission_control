@@ -43,7 +43,7 @@ module RocketJobMissionControl
           end
           properties[:output_categories] = categories unless categories.empty?
         elsif default_job.public_send(name) != updated_job.public_send(name)
-          properties[name] = value.is_a?(String) ? value.gsub!(/\r\n/, "\n") : value
+          properties[name] = value.is_a?(String) ? value.gsub(/\r\n/, "\n") : value
         end
       end
       properties

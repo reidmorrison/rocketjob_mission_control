@@ -29,10 +29,12 @@ RocketJob::Jobs::SimpleJob.new(priority: 90).start!
 # KaboomBatchJob with exceptions.
 count = 100
 job   = KaboomBatchJob.new
-job.input_category.slice_size = 1
+job.input_category.serializer = :none
+job.input_category.slice_size = 10
 job.upload do |stream|
-  count.times { |i| stream << "Slice number #{i}" }
+  count.times { |i| stream << "Line number #{i + 1}" }
 end
+
 # Manually run job to get some failures without needing workers.
 while job.input.queued.count.positive?
   begin

@@ -183,7 +183,7 @@ module RocketJobMissionControl
       slice = @job.input.failed.skip(offset).first
 
       # Converts \r\n line breaks to \n
-      updated_records.each { |record| record.gsub!(/\r\n/, "\n") }
+      updated_records.each { |record| record.gsub(/\r\n/, "\n") }
 
       # Assings modified slice (from the form) back to slice
       slice.records = updated_records

@@ -28,7 +28,7 @@ module RocketJobMissionControl
 
         case field.type.name
         when "String"
-          value.gsub!(/\r\n/, "\n")
+          value.gsub(/\r\n/, "\n")
         when "Hash"
           begin
             value = value.blank? ? nil : JSON.parse(value)

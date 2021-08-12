@@ -56,6 +56,14 @@ module RocketJobMissionControl
       values
     end
 
+    def escape(s)
+      s.dump[1..-2]
+    end
+
+    def unescape(s)
+      "\"#{s}\"".undump
+    end
+
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
     def editable_field_html(klass, field_name, value, f)
       # When editing a job the values are of the correct type.
@@ -75,7 +83,7 @@ module RocketJobMissionControl
         if options
           f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
         else
-          f.text_field(field_name, value: value ? value.gsub(/\n/, '\n') : "", class: "form-control", placeholder: placeholder)
+          f.text_area(field_name, value: value ? value : "", class: "form-control", placeholder: placeholder)
         end
       when "Boolean", "Mongoid::Boolean"
         options = extract_inclusion_values(klass, field_name) || [nil, "true", "false"]

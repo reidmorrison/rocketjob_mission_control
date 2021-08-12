@@ -182,6 +182,9 @@ module RocketJobMissionControl
       # Finds specific slice [Array]
       slice = @job.input.failed.skip(offset).first
 
+      # Converts \r\n line breaks to \n
+      updated_records[0] = updated_records[0].gsub(/\r\n/, "\n")
+
       # Assings modified slice (from the form) back to slice
       slice.records = updated_records
 

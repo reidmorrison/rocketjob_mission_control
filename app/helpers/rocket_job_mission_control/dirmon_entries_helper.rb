@@ -11,5 +11,9 @@ module RocketJobMissionControl
       categories.each { |category| return category if category_name == (category["name"] || :main).to_sym }
       nil
     end
+    
+    def rocket_job_mission_control
+      @@rocket_job_mission_control_engine_url_helpers ||= RocketJobMissionControl::Engine.routes.url_helpers
+    end
   end
 end

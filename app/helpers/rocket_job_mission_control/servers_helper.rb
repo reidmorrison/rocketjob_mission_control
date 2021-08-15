@@ -26,5 +26,9 @@ module RocketJobMissionControl
         map[server.state] || "callout-info"
       end
     end
+    
+    def rocket_job_mission_control
+      @@rocket_job_mission_control_engine_url_helpers ||= RocketJobMissionControl::Engine.routes.url_helpers
+    end
   end
 end

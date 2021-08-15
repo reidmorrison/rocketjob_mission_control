@@ -10,8 +10,10 @@
           <td><label><%= key %>:</label></td>
           <% if value.nil? %>
             <td><label>nil</label></td>
+          <% elsif !value.respond_to?(:to_s)%>
+            <td><label>Invalid Value</label></td>
           <% else %>
-            <td><%= simple_format(value) %></td>
+            <td><%= simple_format(value.to_s) %></td>
           <% end %>
         </tr>
       <% end %>

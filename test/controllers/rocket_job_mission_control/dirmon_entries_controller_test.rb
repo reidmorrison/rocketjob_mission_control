@@ -60,7 +60,7 @@ module RocketJobMissionControl
           end
 
           it "alerts the user" do
-            assert_equal I18n.t(:failure, scope: %i[dirmon_entry enable]), flash[:alert]
+            assert_equal I18n.t(:failure, scope: %i[dirmon_entry enable]), flash[:danger]
           end
         end
       end
@@ -91,7 +91,7 @@ module RocketJobMissionControl
           end
 
           it "alerts the user" do
-            assert_equal I18n.t(:failure, scope: %i[dirmon_entry disable]), flash[:alert]
+            assert_equal I18n.t(:failure, scope: %i[dirmon_entry disable]), flash[:danger]
           end
         end
       end
@@ -277,7 +277,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[dirmon_entry find], id: 42), flash[:alert]
+            assert_equal I18n.t(:failure, scope: %i[dirmon_entry find], id: 42), flash[:danger]
           end
         end
 

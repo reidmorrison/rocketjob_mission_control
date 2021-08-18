@@ -115,7 +115,7 @@ module RocketJobMissionControl
         @dirmon_entry.enable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert] = t(:failure, scope: %i[dirmon_entry enable])
+        flash[:danger] = t(:failure, scope: %i[dirmon_entry enable])
         render(:show)
       end
     end
@@ -127,7 +127,7 @@ module RocketJobMissionControl
         @dirmon_entry.disable!
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        flash[:alert] = t(:failure, scope: %i[dirmon_entry disable])
+        flash[:danger] = t(:failure, scope: %i[dirmon_entry disable])
         render(:show)
       end
     end
@@ -149,7 +149,7 @@ module RocketJobMissionControl
 
     def find_entry_or_redirect
       unless @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
-        flash[:alert] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
+        flash[:danger] = t(:failure, scope: %i[dirmon_entry find], id: ActionController::Base.helpers.sanitize(params[:id]))
         redirect_to(dirmon_entries_path)
       end
     end

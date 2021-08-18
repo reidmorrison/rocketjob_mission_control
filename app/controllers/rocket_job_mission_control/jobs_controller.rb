@@ -231,14 +231,14 @@ module RocketJobMissionControl
       offset     = params.fetch(:offset, 0).to_i
 
       unless error_type.present?
-        flash[:notice] = t(:no_errors, scope: %i[job failures])
+        flash[:warning] = t(:no_errors, scope: %i[job failures])
         redirect_to(job_path(@job))
       end
 
       scope = @job.input.failed.where("exception.class_name" => error_type)
       count = scope.count
       unless count.positive?
-        flash[:notice] = t(:no_errors, scope: %i[job failures])
+        flash[:warning] = t(:no_errors, scope: %i[job failures])
         redirect_to(job_path(@job))
       end
 
@@ -281,7 +281,7 @@ module RocketJobMissionControl
 
     def find_job_or_redirect
       unless @job = RocketJob::Job.where(id: params[:id]).first
-        flash[:alert] = t(:failure, scope: %i[job find], id: params[:id])
+        flash[:danger] = t(:failure, scope: %i[job find], id: ActionController::Base.helpers.sanitize(params[:id]))
 
         redirect_to(jobs_path)
       end

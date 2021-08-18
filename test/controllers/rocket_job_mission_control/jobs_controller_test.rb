@@ -65,7 +65,7 @@ module RocketJobMissionControl
             end
 
             it "adds a flash alert message" do
-              assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:alert]
+              assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
             end
           end
 
@@ -121,7 +121,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:alert]
+            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
           end
         end
 
@@ -159,7 +159,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:alert]
+            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
           end
         end
 
@@ -189,7 +189,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:alert]
+            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
           end
         end
 
@@ -204,7 +204,7 @@ module RocketJobMissionControl
             end
 
             it "notifies the user" do
-              assert_equal I18n.t(:no_errors, scope: %i[job failures]), flash[:notice]
+              assert_equal I18n.t(:no_errors, scope: %i[job failures]), flash[:warning]
             end
           end
 

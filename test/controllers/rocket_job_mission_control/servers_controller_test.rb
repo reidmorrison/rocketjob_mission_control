@@ -65,7 +65,7 @@ module RocketJobMissionControl
             end
 
             it "does not display an error message" do
-              assert_nil flash[:alert]
+              assert_nil flash[:danger]
             end
           end
         end
@@ -90,7 +90,7 @@ module RocketJobMissionControl
           end
 
           it "displays a flash message" do
-            assert_equal I18n.t(:success, scope: %i[server destroy]), flash[:notice]
+            assert_equal I18n.t(:success, scope: %i[server destroy]), flash[:success]
           end
 
           it "destroys the server" do
@@ -108,7 +108,7 @@ module RocketJobMissionControl
           end
 
           it "displays a flash message" do
-            assert_equal I18n.t(:failure, scope: %i[server find], id: 999_999), flash[:alert]
+            assert_equal I18n.t(:failure, scope: %i[server find], id: 999_999), flash[:danger]
           end
         end
       end

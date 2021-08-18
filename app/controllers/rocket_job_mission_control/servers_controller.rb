@@ -62,9 +62,9 @@ module RocketJobMissionControl
         RocketJob::Server.destroy_zombies
       elsif VALID_ACTIONS.include?(server_action)
         RocketJob::Subscribers::Server.publish(server_action)
-        flash[:notice] = t(:success, scope: %i[server update_all], action: server_action.to_s)
+        flash[:success] = t(:success, scope: %i[server update_all], action: server_action.to_s)
       else
-        flash[:alert] = t(:invalid, scope: %i[server update_all])
+        flash[:danger] = t(:invalid, scope: %i[server update_all])
       end
 
       # TODO: Refresh the same page it was on
@@ -76,7 +76,7 @@ module RocketJobMissionControl
     def stop
       authorize! :stop, @server
       RocketJob::Subscribers::Server.publish(:stop, server_id: @server.id)
-      flash[:notice] = t(:success, scope: %i[server update_one], action: "stop", name: @server.name)
+      flash[:success] = t(:success, scope: %i[server update_one], action: "stop", name: @server.name)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -86,7 +86,7 @@ module RocketJobMissionControl
     def destroy
       authorize! :destroy, @server
       @server.destroy
-      flash[:notice] = t(:success, scope: %i[server destroy])
+      flash[:success] = t(:success, scope: %i[server destroy])
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -96,7 +96,7 @@ module RocketJobMissionControl
     def pause
       authorize! :pause, @server
       RocketJob::Subscribers::Server.publish(:pause, server_id: @server.id)
-      flash[:notice] = t(:success, scope: %i[server update_one], action: "pause", name: @server.name)
+      flash[:success] = t(:success, scope: %i[server update_one], action: "pause", name: @server.name)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -106,7 +106,7 @@ module RocketJobMissionControl
     def resume
       authorize! :resume, @server
       RocketJob::Subscribers::Server.publish(:resume, server_id: @server.id)
-      flash[:notice] = t(:success, scope: %i[server update_one], action: "resume", name: @server.name)
+      flash[:success] = t(:success, scope: %i[server update_one], action: "resume", name: @server.name)
 
       respond_to do |format|
         format.html { redirect_to servers_path }
@@ -140,7 +140,7 @@ module RocketJobMissionControl
 
     def find_server_or_redirect
       unless @server = RocketJob::Server.where(id: params[:id]).first
-        flash[:alert] = t(:failure, scope: %i[server find], id: params[:id])
+        flash[:danger] = t(:failure, scope: %i[server find], id: params[:id])
 
         redirect_to(servers_path)
       end

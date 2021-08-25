@@ -2,90 +2,24 @@
 <div class='row'>
   <div class='col-md-12'>
     <table>
-      <%# All NON (array||hash) values first %>
-      <% @attributes.each_pair do |key, value| %>
-        <% next if value.is_a?(Array) || value.is_a?(Hash) %>
-        <% key = key.to_s.titleize %>
+      <% @attributes.keys.sort.each do |key| %>
+        <%
+          value = @attributes[key]
+          key = key.to_s.titleize
+        %>
         <tr>
           <td><label><%= key %>:</label></td>
           <% if value.nil? %>
             <td><label>nil</label></td>
           <% else %>
-            <td><%= value.is_a?(String) ? simple_format(value) : value %></td>
+            <td>
+              <% if value.is_a?(String) %>
+                <pre><code><%= simple_format(value) %></code></pre>
+              <% else %>
+                <%= value.ai(html: true, plain: true) %>
+              <% end %>
+            </td>
           <% end %>
-        </tr>
-      <% end %>
-
-      <%# All Array Values %>
-      <% @attributes.each_pair do |key, value| %>
-        <% next unless value.is_a?(Array) %>
-        <% key = key.to_s.titleize %>
-        <% if value.empty? %>
-          <tr>
-            <td><label><%= key %>:</label></td>
-            <td><label>[]</label></td>
-          </tr>
-        <% else %>
-          <% first = true %>
-          <% value.each do |item| %>
-            <% if first %>
-              <tr>
-                <td><label><%= key %>:</label></td>
-                <% if item.is_a?(Hash) || item.is_a?(Array) %>
-                  <td>
-                    <pre><code><%= pretty_print_array_or_hash(item) %></code></pre>
-                  </td>
-                <% else %>
-                  <td><%= item.is_a?(String) ? simple_format(item) : item %></td>
-                <% end %>
-              </tr>
-              <% first = false %>
-            <% else %>
-              <tr>
-                <td></td>
-                <% if item.is_a?(Hash) || item.is_a?(Array) %>
-                  <td>
-                    <pre><code><%= pretty_print_array_or_hash(item) %></code></pre>
-                  </td>
-                <% else %>
-                  <td><%= item.is_a?(String) ? simple_format(item) : item %></td>
-                <% end %>
-              </tr>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
-
-      <%# All Hash Values %>
-      <% @attributes.each_pair do |key, value| %>
-        <% next unless value.is_a?(Hash) %>
-        <% key = key.to_s.titleize %>
-        <tr>
-          <th valign="top"><label><%= key %>:</label></th>
-          <td>
-            <% if value.empty? %>
-              <label>{}</label>
-            <% else %>
-              <div class='row'>
-                <div class='col-md-12'>
-                  <table>
-                    <% value.each_pair do |key2, value2| %>
-                      <tr>
-                        <td><label><%= key2.to_s.titleize %>:</label></td>
-                        <% if value2.is_a?(Hash) || value2.is_a?(Array) %>
-                          <td>
-                            <pre><code><%= pretty_print_array_or_hash(value2) %></code></pre>
-                          </td>
-                        <% else %>
-                          <td><%= value2.is_a?(String) ? simple_format(value2) : value2 %></td>
-                        <% end %>
-                      </tr>
-                    <% end %>
-                  </table>
-                </div>
-              </div>
-            <% end %>
-          </td>
         </tr>
       <% end %>
     </table>

@@ -1,3 +1,3 @@
 module RocketJobMissionControl
-  VERSION = "6.0.0.beta".freeze
+  VERSION = "6.0.0".freeze
 end

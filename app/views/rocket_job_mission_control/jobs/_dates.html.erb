@@ -3,33 +3,29 @@
   <div class='col-md-12'>
     <table>
       <tr>
-        <td><label>Created:</label></td>
+        <td><label>Created at:</label></td>
         <td><%= job_time(@job.created_at) %></td>
       </tr>
-      <% if !@job.queued? %>
+      <% unless @job.queued? %>
         <tr>
-          <td><label><%= job_state_name(@job) %>:</label></td>
+          <td><label><%= job_state_name(@job) %> at:</label></td>
           <td>
             <%= job_state_time(@job) %>
             <% unless @job.scheduled? %>
-              , <%= RocketJob.seconds_as_duration(Time.now - (@job.completed_at || @job.started_at || @job.created_at)) %> ago
+              (<%= RocketJob.seconds_as_duration(Time.now - (@job.completed_at || @job.started_at || @job.created_at)) %> ago)
             <% end %>
           </td>
         </tr>
       <% end %>
       <% if @job.scheduled? %>
         <tr>
-          <td><label>Run At:</label></td>
-          <td><%= job_time(@job.run_at) %></td>
-        </tr>
-        <tr>
-          <td><label>Runs In:</label></td>
-          <td><%= RocketJob.seconds_as_duration(@job.run_at - Time.now) %></td>
+          <td><label>Scheduled to run at:</label></td>
+          <td><%= job_time(@job.run_at) %> (<%= RocketJob.seconds_as_duration(@job.run_at - Time.now) %> from now)</td>
         </tr>
       <% end %>
       <% if @job.expires_at %>
         <tr>
-          <td><label>Expires At:</label></td>
+          <td><label>Expires at:</label></td>
           <td><%= job_time(@job.expires_at) %></td>
         </tr>
       <% end %>

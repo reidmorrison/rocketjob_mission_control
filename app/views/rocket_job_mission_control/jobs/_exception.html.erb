@@ -10,22 +10,11 @@
         <td><label>Message:</label></td>
         <td><%= @job.exception.message %></td>
       </tr>
-      <% if @job.exception.backtrace.present?
-           first = true %>
-        <% @job.exception.backtrace.each do |line| %>
-          <% if first %>
-            <tr>
-              <td><label>Backtrace:</label></td>
-              <td><%= line %></td>
-            </tr>
-            <% first = false %>
-          <% else %>
-            <tr>
-              <td></td>
-              <td><%= line %></td>
-            </tr>
-          <% end %>
-        <% end %>
+      <% if @job.exception.backtrace.present? %>
+        <tr>
+          <td><label>Backtrace:</label></td>
+          <td><%= @job.exception.backtrace.ai(html: true, plain: true) %></td>
+        </tr>
       <% end %>
     </table>
   </div>

@@ -3,6 +3,10 @@
 <% if @job.respond_to?(:failed_at_list) && @job.failed_at_list.present? %>
   <%= render partial: 'retryable', locals: {job: @job} %>
 <% end %>
+<% @attributes = job_custom_fields(@job) %>
+<% if @attributes.present? %>
+  <%= render partial: 'attributes', locals: {attributes: @attributes} %>
+<% end %>
 <% if @job.respond_to?(:input) && @job.input.failed.count.positive? %>
   <div class='status-message'>
     <label><%= 'Exceptions' %>:</label>
@@ -14,17 +18,13 @@
 <% if @job.respond_to?(:statistics) && @job.statistics.present? %>
   <div class='status-message'>
     <label>Statistics:</label>
-    <pre><code><%= @job.statistics.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
+    <td><%= @job.statistics.ai(html: true, plain: true, sort_keys: true) %></td>
   </div>
   <br/>
 <% end %>
-<% if @job.respond_to?(:input_categories) %>
+<% if @job.respond_to?(:input_categories) && @job.input_categories.present? %>
   <%= render partial: 'input_categories', locals: {job: @job} %>
 <% end %>
-<% if @job.respond_to?(:output_categories) %>
+<% if @job.respond_to?(:output_categories) && @job.output_categories.present?  %>
   <%= render partial: 'output_categories', locals: {job: @job} %>
-<% end %>
-<% @attributes = job_custom_fields(@job) %>
-<% if @attributes.present? %>
-  <%= render partial: 'attributes', locals: {attributes: @attributes} %>
 <% end %>

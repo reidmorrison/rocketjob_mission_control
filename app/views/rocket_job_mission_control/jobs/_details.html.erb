@@ -46,10 +46,43 @@
           <td><%= @job.failure_count %></td>
         </tr>
       <% end %>
-      <% if @job.log_level %>
+      <% if @job.respond_to?(:input_category) %>
         <tr>
-          <td><label>Log Level</label></td>
-          <td><%= @job.log_level %></td>
+          <td><label>Record Count:</label></td>
+          <td><%= @job.record_count %></td>
+        </tr>
+        <% if @job.completed? %>
+          <tr>
+            <td><label>Records Per Hour:</label></td>
+            <td><%= job_records_per_hour(@job) %></td>
+          </tr>
+        <% elsif @job.running? || @job.paused? || @job.failed? %>
+          <tr>
+            <td><label>Progress:</label></td>
+            <td><%= @job.percent_complete %> %</td>
+          </tr>
+          <% if @job.running? %>
+            <tr>
+              <td><label>Est. Time Remaining:</label></td>
+              <td><%= job_estimated_time_left(@job) %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td><label>Queued Slices:</label></td>
+            <td><%= @job.input.queued.count %></td>
+          </tr>
+          <tr>
+            <td><label>Active Slices:</label></td>
+            <td><%= @job.input.running.count %></td>
+          </tr>
+          <tr>
+            <td><label>Failed Slices:</label></td>
+            <td><%= @job.input.failed.count %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td><label>Slice Size:</label></td>
+          <td><%= @job.input_category.slice_size %></td>
         </tr>
       <% end %>
       <% if @job.respond_to?(:throttle_group) && @job.throttle_group %>
@@ -62,6 +95,12 @@
         <tr>
           <td><label>Throttle Running Workers:</label></td>
           <td><%= @job.throttle_running_workers %></td>
+        </tr>
+      <% end %>
+      <% if @job.log_level %>
+        <tr>
+          <td><label>Log Level</label></td>
+          <td><%= @job.log_level %></td>
         </tr>
       <% end %>
       <% if @job.worker_name %>

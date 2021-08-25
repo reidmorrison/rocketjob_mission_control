@@ -2,25 +2,14 @@
 <div class='row'>
   <div class='col-md-12'>
     <table>
-      <% first = true %>
-      <% @job.failed_at_list.each do |time| %>
-        <% if first %>
-          <tr>
-            <td><label>Retry Limit</label></td>
-            <td><%= @job.retry_limit %></td>
-            <td><label>Failures</label></td>
-            <td><%= job_time(time) %></td>
-          </tr>
-          <% first = false %>
-        <% else %>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><%= job_time(time) %></td>
-          </tr>
-        <% end %>
-      <% end %>
+      <tr>
+        <td><label>Retry Limit</label></td>
+        <td><%= @job.retry_limit %></td>
+      </tr>
+      <tr>
+        <td><label>Failures</label></td>
+        <td><%= @job.failed_at_list.ai(html: true, plain: true) %></td>
+      </tr>
     </table>
   </div>
 </div>

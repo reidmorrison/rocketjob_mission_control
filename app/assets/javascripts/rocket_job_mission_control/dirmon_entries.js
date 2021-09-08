@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).on('ready', function () {
+$(document).on('turbolinks:load', function () {
   $('.filter .state-toggle').on('change', function () {
     var active_states = $('.filter :checked');
     var param_string  = "?";

@@ -9,6 +9,9 @@ module RocketJobMissionControl
 
     require "rocketjob"
     require "access-granted"
+    require "jquery-rails"
+    require "turbolinks"
+
     begin
       require "rocketjob_enterprise"
     rescue LoadError

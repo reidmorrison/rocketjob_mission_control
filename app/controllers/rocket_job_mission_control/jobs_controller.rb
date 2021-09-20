@@ -289,7 +289,7 @@ module RocketJobMissionControl
 
     def job_params
       params.require(:job).permit(
-        @job.class.user_editable_fields,
+        job_fields,
         input_categories_attributes: [
           :id,
           :name,
@@ -308,6 +308,13 @@ module RocketJobMissionControl
           columns: []
         ]
       )
+    end
+
+    def job_fields
+      @job.class.user_editable_fields.collect do |field_name|
+        field = @job.class.fields[field_name.to_s]
+        field.type.name == "Array" ? {field_name.to_sym => []} : field_name.to_sym
+      end
     end
 
     def error_occurred(exception)

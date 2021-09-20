@@ -92,8 +92,8 @@ module RocketJobMissionControl
         "[JSON Hash]\n".html_safe +
           f.text_field(field_name, value: value ? value.to_json : "", class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
       when "Array"
-        options = Array(value)
-        f.text_field(field_name, {class: "selectize form-control", multiple: true})
+        options = value.present? ? Array(value) : nil
+        f.text_field(field_name, value: options, class: "selectize form-control", multiple: true)
       else
         "[#{field.type.name}]".html_safe +
           f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)

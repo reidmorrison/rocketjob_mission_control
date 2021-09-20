@@ -81,7 +81,7 @@ class JobSanitizerTest < Minitest::Test
           assert_equal error.first, :properties
           assert error.second.include?("unexpected token"), error
         end
-        assert_equal({hash_field: "{ bad json }", string: "hello"}, cleansed)
+        assert_equal({string: "hello"}, cleansed)
       end
 
       it "Keeps empty JSON Hash" do

@@ -10,15 +10,14 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery-3.5.1.min.js
+//= require rocket_job_mission_control/jquery-3.5.1.min
 //= require rails-ujs
-//= require datatables.min.js
-//= require bootstrap.min
+//= require turbolinks
+//= require rocket_job_mission_control/datatables.min
+//= require rocket_job_mission_control/datatable_init
+//= require rocket_job_mission_control/bootstrap.min
+//= require rocket_job_mission_control/base
+//= require rocket_job_mission_control/dirmon_entries
+//= require rocket_job_mission_control/selectize.min
+//= require rocket_job_mission_control/selectize_init
 //
-// Selectize is used by Array builder in application_helper#editable_field_html
-//= require microplugin
-//= require sifter
-//= require selectize
-// End selectize dependencies
-//
-//= require_tree .

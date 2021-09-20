@@ -34,6 +34,7 @@ module RocketJobMissionControl
             value = value.blank? ? nil : JSON.parse(value)
           rescue JSON::ParserError => e
             target.errors.add(:properties, e.message)
+            value = nil
           end
         end
 

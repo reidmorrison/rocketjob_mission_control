@@ -8,7 +8,7 @@ RocketJob::Jobs::SimpleJob.create!(run_at: 1.year.from_now)
 
 # Queued Jobs
 RocketJob::Jobs::SimpleJob.create!
-AllTypesJob.create!(string: "Hello World")
+AllTypesJob.create!(string: "Hello World", string_values: "three")
 
 # Paused Jobs
 RocketJob::Jobs::SimpleJob.new.pause!

@@ -16,7 +16,7 @@
       </div>
 
       <div class="panel-body">
-        <table class='table datatable jobs-datatable' data-source='<%= @data_table_url %>' style='width: 100%'>
+        <table class='table datatable jobs-datatable' data-turbolinks='false' data-source='<%= @data_table_url %>' style='width: 100%'>
           <thead>
             <tr>
               <% @columns.each do |column| %>

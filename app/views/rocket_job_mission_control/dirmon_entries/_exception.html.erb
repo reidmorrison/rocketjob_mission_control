@@ -1,0 +1,22 @@
+<div class='lead'>Exception:</div>
+<div class='row'>
+  <div class='col-md-12'>
+    <table>
+      <tr>
+        <td><label>Exception:</label></td>
+        <td><%= @dirmon_entry.exception.class_name %></td>
+      </tr>
+      <tr>
+        <td><label>Message:</label></td>
+        <td><%= @dirmon_entry.exception.message %></td>
+      </tr>
+      <% if @dirmon_entry.exception.backtrace.present? %>
+        <tr>
+          <td><label>Backtrace:</label></td>
+          <td><%= @dirmon_entry.exception.backtrace.ai(html: true, plain: true) %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+<br/>

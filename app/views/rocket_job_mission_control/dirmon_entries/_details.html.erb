@@ -1,0 +1,33 @@
+<div class='lead'>Details:</div>
+<div class='row'>
+  <div class='col-md-12 job-status'>
+    <table>
+      <tr>
+        <td><label>State:</label></td>
+        <td>
+          <div class='job-state inline-block'>
+            <div class='left'>State</div>
+            <div class="<%= @dirmon_entry.state %> right"><%= @dirmon_entry.state %></div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Job Class:</label></td>
+        <td><%= @dirmon_entry.job_class_name %></td>
+      </tr>
+      <tr>
+        <td><label>Pattern:</label></td>
+        <td><%= @dirmon_entry.pattern %></td>
+      </tr>
+      <tr>
+        <td><label>Archive Directory:</label></td>
+        <td><%= @dirmon_entry.archive_directory %></td>
+      </tr>
+      <tr>
+        <td><label>ID:</label></td>
+        <td><%= @dirmon_entry.id %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<br/>

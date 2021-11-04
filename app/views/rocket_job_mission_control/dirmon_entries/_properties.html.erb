@@ -1,0 +1,28 @@
+<div class='lead'>Properties:</div>
+<div class='row'>
+  <div class='col-md-12'>
+    <table>
+      <% @dirmon_entry.properties.keys.sort.each do |key| %>
+        <%
+          value = @dirmon_entry.properties[key]
+          key = key.to_s.titleize
+        %>
+        <tr>
+          <td><label><%= key %>:</label></td>
+          <% if value.nil? %>
+            <td><label>nil</label></td>
+          <% else %>
+            <td>
+              <% if value.is_a?(String) %>
+                <pre><code><%= simple_format(value) %></code></pre>
+              <% else %>
+                <%= value.ai(html: true, plain: true) %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+<br/>

@@ -15,9 +15,9 @@ module RocketJobMissionControl
 
       let :existing_dirmon_entry do
         RocketJob::DirmonEntry.create!(
-          name:           "Test",
+          name:           "Existing path test",
           job_class_name: job_class_name,
-          pattern:        "the_path"
+          pattern:        "existing_path"
         )
       end
 
@@ -26,9 +26,9 @@ module RocketJobMissionControl
       let :one_dirmon_entry_for_every_state do
         dirmon_entry_states.collect do |state|
           RocketJob::DirmonEntry.create!(
-            name:           "Test",
+            name:           "Test_for_state_#{state}",
             job_class_name: job_class_name,
-            pattern:        "the_path",
+            pattern:        "path_for_state_#{state}",
             state:          state
           )
         end
@@ -375,27 +375,27 @@ module RocketJobMissionControl
                 json          = JSON.parse(response.body)
                 expected_data = {
                   pending:  {
-                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.pending.first.id}\">\n          <i class=\"fas fa-inbox pending\" style=\"font-size: 75%\" title=\"pending\"></i>\n          Test\n        </a>\n",
+                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.pending.first.id}\">\n          <i class=\"fas fa-inbox pending\" style=\"font-size: 75%\" title=\"pending\"></i>\n          Test_for_state_pending\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
-                    "2"           => "the_path",
+                    "2"           => "path_for_state_pending",
                     "DT_RowClass" => "card callout callout-pending"
                   },
                   enabled:  {
-                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.enabled.first.id}\">\n          <i class=\"fas fa-check enabled\" style=\"font-size: 75%\" title=\"enabled\"></i>\n          Test\n        </a>\n",
+                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.enabled.first.id}\">\n          <i class=\"fas fa-check enabled\" style=\"font-size: 75%\" title=\"enabled\"></i>\n          Test_for_state_enabled\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
-                    "2"           => "the_path",
+                    "2"           => "path_for_state_enabled",
                     "DT_RowClass" => "card callout callout-enabled"
                   },
                   failed:   {
-                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.failed.first.id}\">\n          <i class=\"fas fa-exclamation-triangle failed\" style=\"font-size: 75%\" title=\"failed\"></i>\n          Test\n        </a>\n",
+                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.failed.first.id}\">\n          <i class=\"fas fa-exclamation-triangle failed\" style=\"font-size: 75%\" title=\"failed\"></i>\n          Test_for_state_failed\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
-                    "2"           => "the_path",
+                    "2"           => "path_for_state_failed",
                     "DT_RowClass" => "card callout callout-failed"
                   },
                   disabled: {
-                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.disabled.first.id}\">\n          <i class=\"fas fa-stop disabled\" style=\"font-size: 75%\" title=\"disabled\"></i>\n          Test\n        </a>\n",
+                    "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.disabled.first.id}\">\n          <i class=\"fas fa-stop disabled\" style=\"font-size: 75%\" title=\"disabled\"></i>\n          Test_for_state_disabled\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
-                    "2"           => "the_path",
+                    "2"           => "path_for_state_disabled",
                     "DT_RowClass" => "card callout callout-disabled"
                   }
                 }
@@ -404,7 +404,7 @@ module RocketJobMissionControl
                   assert_equal 0, json["draw"]
                   assert_equal 4, json["recordsTotal"]
                   assert_equal 4, json["recordsFiltered"]
-                  assert_equal [expected_data[:pending], expected_data[:enabled], expected_data[:failed], expected_data[:disabled]], json["data"]
+                  assert_equal [expected_data[:disabled], expected_data[:enabled], expected_data[:failed], expected_data[:pending]], json["data"]
                 else
                   assert_equal 0, json["draw"]
                   assert_equal 1, json["recordsTotal"]

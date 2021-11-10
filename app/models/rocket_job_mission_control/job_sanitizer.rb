@@ -36,6 +36,11 @@ module RocketJobMissionControl
             target.errors.add(:properties, e.message)
             value = nil
           end
+        when "Array"
+          # remove blank entries from rails converted arrays when using multi-select input
+          if !value.blank?
+            value.reject! { |v| v.empty? }
+          end
         end
 
         if value.blank? && !value.is_a?(Hash)

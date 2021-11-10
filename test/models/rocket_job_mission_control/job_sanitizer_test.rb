@@ -92,6 +92,15 @@ class JobSanitizerTest < Minitest::Test
         assert_equal 0, @job.errors.count
         assert_equal({hash_field: {}}, cleansed)
       end
+
+      it "removes blank entries from rails converted arrays when using multi-select input" do
+        properties = {
+          array: ["", "rf@exp.com", "rm@exp.com", "lb@exp.com"]
+        }
+        cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+        assert_equal 0, @job.errors.count
+        assert_equal({array: ["rf@exp.com", "rm@exp.com", "lb@exp.com"]}, cleansed)
+      end
     end
   end
 end

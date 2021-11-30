@@ -20,7 +20,7 @@ module RocketJobMissionControl
           else
             {roles: %i[admin]}
           end
-        AccessPolicy.new(Authorization.new(**@args))
+        RocketJobMissionControl::AccessPolicy.new(Authorization.new(**@args))
       end
     end
 

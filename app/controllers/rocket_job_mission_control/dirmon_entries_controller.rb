@@ -87,9 +87,14 @@ module RocketJobMissionControl
         dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, @dirmon_entry, false)
       end
 
-      if dirmon_entry_replicate.errors.empty? && dirmon_entry_replicate.valid? && dirmon_entry_replicate.update_attributes(dirmon_params)
+      if dirmon_entry_replicate.update_attributes(dirmon_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(dirmon_entry_replicate))
       else
+        dirmon_params.each { |k,v| @dirmon_entry.send("#{k}=", v) }
+        @dirmon_entry.properties = dirmon_entry_replicate.properties
+        dirmon_entry_replicate.errors.messages.each_pair do |field, message|
+          @dirmon_entry.errors.add(field, message)
+        end
         render :copy
       end
     end

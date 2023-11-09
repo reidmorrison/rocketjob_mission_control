@@ -67,7 +67,7 @@
 
                       <% @job.input_categories.each do |input_categories| %>
                         <%= p.fields_for "input_categories_attributes[]", input_categories  do |i| %>
-                          <%= render "input_category_fields.html", f: i %>
+                          <%= render "input_category_fields", f: i %>
                         <% end %>
                       <% end %>
                     </div>
@@ -81,7 +81,7 @@
 
                       <% @job.output_categories.each do |output_categories| %>
                         <%= p.fields_for "output_categories_attributes[]", output_categories  do |o| %>
-                          <%= render "output_category_fields.html", f: o %>
+                          <%= render "output_category_fields", f: o %>
                         <% end %>
                       <% end %>
                     </div>

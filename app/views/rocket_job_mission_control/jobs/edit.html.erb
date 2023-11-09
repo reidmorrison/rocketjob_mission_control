@@ -33,7 +33,7 @@
                   <div class='lead'>Input Categories</div>
 
                   <%= f.fields_for :input_categories do |i| %>
-                    <%= render "input_category_fields.html", f: i %>
+                    <%= render "input_category_fields", f: i %>
                   <% end %>
                 </div>
               </div>
@@ -45,7 +45,7 @@
                   <div class='lead'>Output Categories</div>
 
                   <%= f.fields_for :output_categories do |o| %>
-                    <%= render "output_category_fields.html", f: o %>
+                    <%= render "output_category_fields", f: o %>
                   <% end %>
                 </div>
               </div>

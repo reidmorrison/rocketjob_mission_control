@@ -17,14 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - rails: "6.0"
-            ruby: 2.7
           - rails: "6.1"
-            ruby: "3.0"
+            ruby: "2.7"
           - rails: "7.0"
-            ruby: 3.1
-          - mongoid: "7.1"
-            ruby: 3.2
+            ruby: "3.1"
+          - rails: "7.1"
+            ruby: "3.2"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}.gemfile
       DISPLAY: ":99.0"

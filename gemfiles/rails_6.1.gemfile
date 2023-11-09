@@ -3,12 +3,13 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 6.1.0"
+gem "sprockets-rails"
 gem "appraisal"
 gem "minitest"
 gem "rake"
 gem "rubyzip", platform: :ruby
 gem "sprockets"
-gem "mongoid", "~> 7.3"
+gem "mongoid", "~> 7.5.0"
 
 group :test do
   gem "minispec-rails", require: false

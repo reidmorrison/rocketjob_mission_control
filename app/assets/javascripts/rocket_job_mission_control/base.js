@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).on("turbolinks:load", function () {
+$(document).on("turbo:load", function () {
   return toggleCanvas();
 });
 

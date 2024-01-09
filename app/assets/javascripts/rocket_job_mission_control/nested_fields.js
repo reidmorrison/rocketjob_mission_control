@@ -101,7 +101,7 @@ var removeFields = function () {
   }]);
 
   return removeFields;
-}(); // Wait for turbolinks to load, otherwise `document.querySelectorAll()` won't work
+}(); // Wait for turbo to load, otherwise `document.querySelectorAll()` won't work
 
 
 window.addEventListener('DOMContentLoaded', function () {

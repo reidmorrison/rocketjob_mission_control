@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency "railties", ">= 6.0"
   s.add_dependency "rocketjob", "~> 6.3"
   s.add_dependency "amazing_print", "~> 1.3"
-  s.add_dependency "turbolinks", "~> 5"
+  s.add_dependency "turbo-rails"
 end

@@ -17,3 +17,7 @@ class ActionController::TestCase
     @routes = RocketJobMissionControl::Engine.routes
   end
 end
+
+class ActionDispatch::IntegrationTest
+  include TurboAssertionsHelper
+end

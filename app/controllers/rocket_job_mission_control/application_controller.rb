@@ -4,6 +4,8 @@ module RocketJobMissionControl
 
     around_action :with_time_zone
 
+    include Turbo::Redirection
+
     private
 
     def with_time_zone(&block)

@@ -33,9 +33,10 @@ module RocketJobMissionControl
       {display: "Record Count", value: :record_count, field: "record_count"},
       {display: "Priority", value: :priority, field: "priority"},
       {display: "Queued For", value: :duration, field: "duration", orderable: false},
+      {display: "Throttled", value: :throttled, field: "throttled_by", orderable: false},
       {display: "Actions", value: :action_buttons, orderable: false}
     ].freeze
-    QUEUED_FIELDS = (COMMON_FIELDS + %i[record_count run_at priority]).freeze
+    QUEUED_FIELDS = (COMMON_FIELDS + %i[record_count run_at priority throttled_by]).freeze
 
     RUNNING_COLUMNS = [
       {display: "Class", value: :class_with_link, field: "_type"},
@@ -45,9 +46,12 @@ module RocketJobMissionControl
       {display: "Workers", value: :worker_count, field: "worker_count", orderable: false},
       {display: "Priority", value: :priority, field: "priority"},
       {display: "Started", value: :started, field: "started_at"},
+      {display: "Throttled", value: :throttled, field: "throttled_by", orderable: false},
       {display: "Actions", value: :action_buttons, orderable: false}
     ].freeze
-    RUNNING_FIELDS = (COMMON_FIELDS + %i[record_count input_categories output_categories priority sub_state percent_complete]).freeze
+    RUNNING_FIELDS = (
+      COMMON_FIELDS + %i[record_count input_categories output_categories priority sub_state percent_complete throttled_by]
+    ).freeze
 
     SCHEDULED_COLUMNS = [
       {display: "Class", value: :class_with_link, field: "_type"},
@@ -122,6 +126,12 @@ module RocketJobMissionControl
 
     def record_count(job)
       job.attributes.key?("record_count") ? h(job.record_count) : 0
+    end
+
+    # Human readable reason why a job's processing is currently being throttled.
+    # Blank when the job is not throttled, or when running an older rocketjob.
+    def throttled(job)
+      h(job.throttled_by) if job.respond_to?(:throttled_by) && job.throttled_by
     end
 
     def started(job)

@@ -1,5 +1,5 @@
 <ul class='nav hidden-xs' id='lg-menu'>
-  <li>
+  <li class="<%= 'active' if current_page?(dirmon_entries_path) || current_page?(new_dirmon_entry_path) %>">
 
     <% if can?(:create, RocketJob::DirmonEntry) %>
       <%= link_to(new_dirmon_entry_path) do %>
@@ -13,7 +13,7 @@
   </li>
 
   <% RocketJob::DirmonEntry.aasm.states.map { |s| s.name.to_s }.each do |state| %>
-    <li class="<%= state %>">
+    <li class="<%= state %><%= ' active' if current_page?(send("#{state}_dirmon_entries_path")) %>">
       <%= link_to("#{state}_dirmon_entries".to_sym) do %>
         <i class="fas <%= state_icon(state) %>"></i> <%= state.capitalize %> (<%= dirmon_counts_by_state(state) %>)
       <% end %>

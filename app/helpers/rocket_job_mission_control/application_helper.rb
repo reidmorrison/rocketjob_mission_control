@@ -21,6 +21,12 @@ module RocketJobMissionControl
       STATE_ICON_MAP[state.to_sym] + " " + state.to_s
     end
 
+    # Whether a known status icon exists for the given state (e.g. "completed").
+    # Used to decide whether to show a status icon next to a page title.
+    def state?(state)
+      STATE_ICON_MAP.key?(state.to_s.downcase.to_sym)
+    end
+
     def site_title
       "Rocket Job Mission Control"
     end
@@ -30,8 +36,10 @@ module RocketJobMissionControl
       h(@full_title || [@page_title, site_title].compact.join(" | "))
     end
 
-    def active_page(path)
-      "active" if current_page?(path)
+    # Highlights a top-nav item for every page in that section by matching the
+    # current controller, e.g. "Jobs" stays active across running/failed/etc.
+    def active_page(*controllers)
+      "active" if controllers.map(&:to_s).include?(controller_name)
     end
 
     def pretty_print_array_or_hash(arguments)

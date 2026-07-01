@@ -1,12 +1,12 @@
 <ul class='nav hidden-xs' id='lg-menu'>
-  <li>
+  <li class="<%= 'active' if current_page?(servers_path) %>">
     <%= link_to(servers_path) do %>
       <i class='fas fa-list'></i> All
     <% end %>
   </li>
 
   <% @states.each do |state| %>
-    <li class="#{state}">
+    <li class="<%= state %><%= ' active' if current_page?(send("#{state}_servers_path")) %>">
       <%= link_to("#{state}_servers".to_sym) do %>
         <i class="fas <%= state_icon(state) %>"></i> <%= state.capitalize%> (<%= server_counts_by_state(state)%>)
       <% end %>

@@ -97,8 +97,7 @@ module RocketJobMissionControl
         path,
         method: http_method,
         title:  "#{action} job",
-        class:  "btn btn-default btn-group",
-        role:   "group",
+        class:  "btn btn-default",
         data:   { confirm: t(:confirm, scope: %i[job action], action: action) }
       )
     end

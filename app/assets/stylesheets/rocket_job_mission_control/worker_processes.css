@@ -5,3 +5,24 @@
   display: inline;
   margin: 5px;
 }
+
+/* Row action buttons: cosmic-blue, matching the toolbar buttons exactly
+   (including the destructive stop/destroy actions). */
+#servers .actions > a.btn {
+  padding: 2px 9px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #fff;
+  background-color: var(--cosmic-blue);
+  background-image: none;
+  border: 1px solid var(--cosmic-blue-dark);
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(13, 19, 48, 0.25);
+}
+#servers .actions > a.btn:hover,
+#servers .actions > a.btn:focus,
+#servers .actions > a.btn:active {
+  color: #fff;
+  background-color: var(--cosmic-blue-dark);
+  border-color: var(--cosmic-blue-dark);
+}

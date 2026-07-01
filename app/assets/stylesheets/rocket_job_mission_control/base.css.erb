@@ -87,12 +87,29 @@ div.row {
 
 .datatable .card td { vertical-align: middle; }
 
-.inline-job-actions > a {
+/* Row action buttons: compact, themed cosmic-blue to match the toolbar. The
+   `a.btn` selector is needed to outrank the per-row `.callout-<state> a` link
+   colors (rows get a `callout-<state>` class), which would otherwise tint the
+   button text green/red/etc. */
+.inline-job-actions > a.btn {
   display: inline-block;
-  padding: 1px 5px;
+  margin: 0 2px;
+  padding: 2px 9px;
   font-size: 12px;
-  line-height: 1.5;
-  border-radius: 1px;
+  line-height: 1.6;
+  color: #fff;
+  background-color: var(--cosmic-blue);
+  background-image: none;
+  border: 1px solid var(--cosmic-blue-dark);
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(13, 19, 48, 0.25);
+}
+.inline-job-actions > a.btn:hover,
+.inline-job-actions > a.btn:focus {
+  color: #fff;
+  text-decoration: none;
+  background-color: var(--cosmic-blue-dark);
+  border-color: var(--cosmic-blue-dark);
 }
 
 .job-list {

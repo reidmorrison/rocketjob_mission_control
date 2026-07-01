@@ -28,9 +28,13 @@
 	 border-bottom: 0;
 	 border-radius: 0;
 	 word-wrap: normal;
+	 /* Cosmic dark navy code surface */
+	 color: var(--cosmic-code-text);
+	 background-color: var(--cosmic-code-bg);
+	 border: 1px solid var(--cosmic-code-border);
 }
  .error pre:last-child {
-	 border: 1px solid #ccc;
+	 border: 1px solid var(--cosmic-code-border);
 }
  .pagination {
 	 margin-top: 1em;

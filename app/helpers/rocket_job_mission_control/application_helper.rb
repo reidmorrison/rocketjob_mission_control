@@ -30,8 +30,10 @@ module RocketJobMissionControl
       h(@full_title || [@page_title, site_title].compact.join(" | "))
     end
 
-    def active_page(path)
-      "active" if current_page?(path)
+    # Highlights a top-nav item for every page in that section by matching the
+    # current controller, e.g. "Jobs" stays active across running/failed/etc.
+    def active_page(*controllers)
+      "active" if controllers.map(&:to_s).include?(controller_name)
     end
 
     def pretty_print_array_or_hash(arguments)

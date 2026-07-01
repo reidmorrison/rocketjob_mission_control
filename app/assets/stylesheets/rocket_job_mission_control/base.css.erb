@@ -2,14 +2,50 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   height: 100%;
 }
 
-.navbar-default { background-image: linear-gradient(90deg, #000, #99120f); }
-.navbar-default .navbar-nav > li > a { color: #fff; }
-.navbar-default .navbar-nav > li > a:hover { color: #aaa; }
+/* Cosmic theme palette (ported from the semantic_logger v5 docs). */
+:root {
+  --cosmic-space:  #05060f;
+  --cosmic-blue:   #1565d8;
+  --cosmic-blue-dark: #0d47a1;
+  --cosmic-flame:  #ff6a18;
+  --cosmic-flame-border: #ff8a2a;
+  --cosmic-code-bg: #0d1330;
+  --cosmic-code-border: #232a4d;
+  --cosmic-code-text: #e6e6f0;
+}
+
+/* Deep-space starfield header banner with a dark overlay, replacing the old
+   red/black gradient. */
+.navbar-default {
+  background-color: var(--cosmic-space);
+  background-image: linear-gradient(rgba(5, 8, 24, 0.78), rgba(5, 8, 24, 0.86)), url('<%= image_path("rocket_job_mission_control/header-banner.jpg") %>');
+  background-size: cover;
+  background-position: center;
+}
+.navbar-default .navbar-nav > li > a { color: rgba(255, 255, 255, 0.75); }
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #fff;
+  background-color: rgba(255, 106, 24, 0.35);
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #fff;
+  background-color: rgba(255, 106, 24, 0.85);
+}
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
   border: 0;
 }
 
 #wrapper { background-color: #f7f7f7; }
+
+/* Cosmic-blue link accent. Deliberately a bare `a` selector (specificity 0,0,0,1)
+   so it overrides Bootstrap's default link color but still loses to the more
+   specific status-colored links (e.g. `.callout-running a`) and to nav/sidebar
+   links, which keep their own colors. */
+a { color: var(--cosmic-blue); }
+a:hover, a:focus { color: var(--cosmic-blue-dark); }
 
 .footer {
   position: relative;
@@ -245,12 +281,31 @@ h3 { margin-top: 0; }
   top: -5px;
 }
 
+/* Two-tone glossy brand title echoing the key art: blue "Rocket", orange "Job".
+   Falls back to solid colors where background-clip:text is unsupported. */
 #header a.navbar-brand.brand span {
   display: inline-block;
   position: relative;
-  left: -3px;
-  color: orangered;
   font-weight: bold;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+}
+#header a.navbar-brand.brand span.brand-rocket { color: #3a9bff; }
+#header a.navbar-brand.brand span.brand-job { color: #ff9e3d; margin-left: 0.25em; }
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  #header a.navbar-brand.brand span.brand-rocket,
+  #header a.navbar-brand.brand span.brand-job {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  #header a.navbar-brand.brand span.brand-rocket {
+    background-image: linear-gradient(180deg, #9ad4ff 0%, #3a9bff 55%, #0d5ad6 100%);
+  }
+  #header a.navbar-brand.brand span.brand-job {
+    background-image: linear-gradient(180deg, #ffd27a 0%, #ff9e3d 55%, #f3700f 100%);
+  }
 }
 
 #jobs-menu {

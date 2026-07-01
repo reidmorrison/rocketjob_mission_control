@@ -16,6 +16,7 @@
  *= require rocket_job_mission_control/selectize.bootstrap3
  *= require rocket_job_mission_control/datatables.min
  *= require rocket_job_mission_control/base
+ *= require rocket_job_mission_control/syntax_highlighting
  *= require rocket_job_mission_control/callout
  *= require rocket_job_mission_control/jobs
  *= require rocket_job_mission_control/worker_processes

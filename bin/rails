@@ -4,6 +4,10 @@
 ENGINE_ROOT = File.expand_path("..", __dir__)
 ENGINE_PATH = File.expand_path("../lib/rocket_job_mission_control/engine", __dir__)
 
+# The dummy application used to run the engine lives in rjmc/ rather than the
+# conventional test/dummy, so point APP_PATH at it for `rails server`, `console`, etc.
+APP_PATH = File.expand_path("../rjmc/config/application", __dir__)
+
 # Set up gems listed in the Gemfile.
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
 require "bundler/setup" if File.exist?(ENV["BUNDLE_GEMFILE"])

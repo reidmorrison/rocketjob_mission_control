@@ -2,20 +2,16 @@ source "https://rubygems.org"
 
 gem "amazing_print"
 gem "puma"
-gem "rails", "~> 7.1.0"
+gem "rails", "~> 8.1.0"
 gem "sprockets-rails"
 
-gem "rails_semantic_logger"
+gem "rails_semantic_logger" # , path: "../../rails_semantic_logger"
+gem "rocketjob", github: "reidmorrison/rocketjob" # path: "../../rocketjob"
 gem "rocketjob_mission_control", path: "../"
-
-# gem "uglifier", ">= 1.3.0"
-# gem "coffee-rails", "~> 4.2"
-# gem "turbolinks", "~> 5"
-# gem "jbuilder", "~> 2.5"
 
 group :development do
   gem "listen"
   gem "web-console"
 end
 
-gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+gem "tzinfo-data", platforms: %i[windows jruby]

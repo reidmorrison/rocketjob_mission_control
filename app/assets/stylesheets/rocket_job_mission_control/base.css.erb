@@ -216,10 +216,11 @@ h3 { margin-top: 0; }
   margin-top: 0;
   padding-top: calc(5em + 15px);
   min-height: 100vh;
-  /* Lighter navy than the near-black header, so the two are clearly distinct
-     while staying in the cosmic family. */
-  background-color: #1c2447;
-  background-image: linear-gradient(180deg, #232c56 0%, #171d3a 100%);
+  /* Dark grey brushed-metal rail, sampled from the chrome rocket icon
+     (#5B5D62 body metal -> #3E454F gunmetal shadow). Clearly distinct from the
+     near-black header. */
+  background-color: #494b50;
+  background-image: linear-gradient(180deg, #494b50 0%, #2c313a 100%);
 }
 
 #sidebar, #sidebar a {
@@ -241,11 +242,21 @@ h3 { margin-top: 0; }
   background-color: var(--cosmic-flame-active);
 }
 
-/* Fixed, narrower sidebar on wide screens, with the content area filling the
-   rest. Below 768px the layout falls back to Bootstrap's offcanvas grid, which
-   shrinks the sidebar to icons. */
-@media screen and (min-width: 768px) {
-  #sidebar { width: 180px; }
+/* Fixed-width sidebar rail on wide screens. The sidebar is taken out of flow
+   (position: fixed) so it no longer shares Bootstrap's float row with #main;
+   #main simply reserves 180px on the left. This avoids the content dropping
+   below the tall floated sidebar. Below 769px the layout falls back to
+   Bootstrap's offcanvas grid, which shrinks the sidebar to icons. */
+@media screen and (min-width: 769px) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 180px;
+    overflow-y: auto;
+    z-index: 900; /* below the fixed header (z-index 1000) */
+  }
   #main {
     float: none;
     width: auto;
@@ -281,6 +292,7 @@ h3 { margin-top: 0; }
   border: 0;
   position: fixed;
   z-index: 1000;
+  top: 0;
   right: 0;
   left: 0;
 }

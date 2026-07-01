@@ -38,6 +38,7 @@ var RjmcDatatable = function () {
     this.searching  = opts.searching != null ? opts.searching : true;
     this.pageLength = opts.pageLength != null ? opts.pageLength : 10;
     this.order      = opts.order != null ? opts.order : [];
+    this.dom        = opts.dom != null ? opts.dom : null;
     this.reload     = $("[data-behavior='reload']");
     this.initializeTable();
     this.setEvents();
@@ -46,7 +47,7 @@ var RjmcDatatable = function () {
   _createClass(RjmcDatatable, [{
     key:   'initializeTable',
     value: function initializeTable() {
-      return this.data = this.table.DataTable({
+      var config = {
         pagingType: 'full_numbers',
         pageLength: this.pageLength,
         responsive: true,
@@ -57,7 +58,11 @@ var RjmcDatatable = function () {
         ordering:   this.ordering,
         searching:  this.searching,
         order:      this.order
-      });
+      };
+      if (this.dom != null) {
+        config.dom = this.dom;
+      }
+      return this.data = this.table.DataTable(config);
     }
   }, {
     key:   'setEvents',

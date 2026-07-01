@@ -14,3 +14,8 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym "RESTful"
 # end
+
+# So Zeitwerk expects app/jobs/csv_job.rb to define CSVJob rather than CsvJob.
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym "CSV"
+end

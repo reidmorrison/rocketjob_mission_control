@@ -40,13 +40,12 @@ Run bundler to install the gems:
 
     bundle
     
-If you have Rocket Job and/or Rocket Job Pro checked out locally, you can point to those installations
-instead of the current gems by editing Gemfile and uncommenting the following 2 lines as applicable:
+If you have Rocket Job checked out locally, you can point to that installation
+instead of the current gem by editing Gemfile and uncommenting the following line:
 
 ~~~ruby
-# For testing with local copies of the gems:
+# For testing with a local copy of the gem:
 gem 'rocketjob', path: '../../rocketjob'
-gem 'rocketjob_pro', path: '../../rocketjob_pro'
 ~~~
 
 Optionally pre-load the database with jobs in the various states to assist with development:
@@ -79,8 +78,8 @@ For testing purposes the following Jobs are supplied with the rjmc dummy Rails a
 * AllTypesJob
     * Ideal for DirmonEntry Testing.
 * CSVJob
-    * For testing against RocketJob Pro.
+    * For testing batch jobs.
 * KaboomBatchJob
-    * For testing against RocketJob Pro.
+    * For testing batch jobs.
     * Creates test data with intentional errors and exceptions.
     

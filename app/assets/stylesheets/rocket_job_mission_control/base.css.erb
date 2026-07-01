@@ -112,6 +112,62 @@ div.row {
   border-color: var(--cosmic-blue-dark);
 }
 
+/* Primary buttons (Save/Edit and form submits) themed to the cosmic-blue accent. */
+.btn-primary {
+  background-color: var(--cosmic-blue);
+  border-color: var(--cosmic-blue-dark);
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+  color: #fff;
+  background-color: var(--cosmic-blue-dark);
+  border-color: var(--cosmic-blue-dark);
+}
+
+/* Center the show-page action toolbar and let its groups flow inline. */
+.job-actions {
+  margin-left: 0;
+  text-align: center;
+}
+.job-actions .btn-group,
+.job-actions .left-margin {
+  float: none;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 0;
+}
+
+/* Detail/show page action toolbar buttons -> cosmic-blue, spaced as
+   individual buttons (they otherwise sit flush as a btn-group). */
+.job-actions .btn {
+  margin: 0 3px 4px 3px;
+  color: #fff;
+  background-color: var(--cosmic-blue);
+  background-image: none;
+  border: 1px solid var(--cosmic-blue-dark);
+  border-radius: 4px;
+}
+.job-actions .btn:hover,
+.job-actions .btn:focus,
+.job-actions .btn:active {
+  color: #fff;
+  background-color: var(--cosmic-blue-dark);
+  border-color: var(--cosmic-blue-dark);
+}
+
+/* Detail/show page label:value tables span the full content width, with the
+   label column shrunk to its content so the value column takes the rest. */
+.col-md-12 > table {
+  width: 100%;
+}
+.col-md-12 > table > tbody > tr > td:first-child,
+.col-md-12 > table > tr > td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .job-list {
   height: 100%;
   min-height: 768px;

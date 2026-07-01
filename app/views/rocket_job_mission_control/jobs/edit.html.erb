@@ -1,5 +1,9 @@
 <div class='container-fluid'>
-  <div class='lead'>Edit <%= @job._type %></div>
+  <div class="panel panel-default">
+    <div class="panel-heading page-title-bar">
+      <h2 class='page-title'>Edit <%= @job._type %></h2>
+    </div>
+  </div>
 
   <% if @job.errors.present? %>
     <div class='alert alert-alert'>

@@ -204,22 +204,36 @@ h3 { margin-top: 0; }
 
 .white-background { background-color: #fff; }
 
-/* Sidebar */
+/* Sidebar - cosmic deep-space rail matching the header. */
 #sidebar {
   padding: 0px;
-  padding-top: 15px;
-  margin-top: 5em;
+  /* Was margin-top:5em + padding-top:15px. Use padding instead so the dark rail
+     runs up behind the fixed header rather than leaving a light gap, and stretch
+     it to full viewport height. */
+  margin-top: 0;
+  padding-top: calc(5em + 15px);
+  min-height: 100vh;
+  background-color: var(--cosmic-space);
+  background-image: linear-gradient(180deg, #05060f 0%, #0b1026 100%);
 }
 
 #sidebar, #sidebar a {
-  color: #555;
+  color: rgba(255, 255, 255, 0.75);
   background-color: transparent;
   padding-left: 5px;
 }
 
-#sidebar .nav li > a:hover {
-  color: #000;
-  background-color: #ddd;
+#sidebar .nav > li > a:hover,
+#sidebar .nav > li > a:focus {
+  color: #fff;
+  background-color: rgba(255, 106, 24, 0.35);
+}
+
+#sidebar .nav > .active > a,
+#sidebar .nav > .active > a:hover,
+#sidebar .nav > .active > a:focus {
+  color: #fff;
+  background-color: rgba(255, 106, 24, 0.85);
 }
 
 @media screen and (max-width: 768px) {

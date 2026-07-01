@@ -21,6 +21,12 @@ module RocketJobMissionControl
       STATE_ICON_MAP[state.to_sym] + " " + state.to_s
     end
 
+    # Whether a known status icon exists for the given state (e.g. "completed").
+    # Used to decide whether to show a status icon next to a page title.
+    def state?(state)
+      STATE_ICON_MAP.key?(state.to_s.downcase.to_sym)
+    end
+
     def site_title
       "Rocket Job Mission Control"
     end

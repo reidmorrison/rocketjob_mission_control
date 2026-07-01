@@ -59,7 +59,7 @@ a:hover, a:focus { color: var(--cosmic-blue-dark); }
 
 /* Datatables */
 table.datatable { border-collapse: collapse; }
-.dataTables_wrapper { margin-top: 2em; }
+.dataTables_wrapper { margin-top: 0; }
 
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
   position: absolute;
@@ -200,7 +200,7 @@ h3 { margin-top: 0; }
 
 #content {
   margin-top: 60px;
-  padding: 40px;
+  padding: 15px;
 }
 
 #main { padding-left: 0; }
@@ -385,16 +385,39 @@ h3 { margin-top: 0; }
   vertical-align: middle;
 }
 
-.list .card .inner .title i.queued { color: #a29f00; }
-.list .card .inner .title i.scheduled { color: purple; }
-.list .card .inner .title i.running { color: #337ab7; }
-.list .card .inner .title i.sleeping { color: darkcyan; }
-.list .card .inner .title i.completed { color: green; }
-.list .card .inner .title i.paused { color: orange; }
-.list .card .inner .title i.failed { color: red; }
-.list .card .inner .title i.aborted { color: darkorange; }
-.list .card .inner .title i.enabled { color: green; }
-.list .card .inner .title i.disabled { color: orange; }
+.list .card .inner .title i.queued,    .page-title i.queued    { color: #a29f00; }
+.list .card .inner .title i.scheduled, .page-title i.scheduled { color: purple; }
+.list .card .inner .title i.running,   .page-title i.running   { color: #337ab7; }
+.list .card .inner .title i.sleeping,  .page-title i.sleeping  { color: darkcyan; }
+.list .card .inner .title i.completed, .page-title i.completed { color: green; }
+.list .card .inner .title i.paused,    .page-title i.paused    { color: orange; }
+.list .card .inner .title i.failed,    .page-title i.failed    { color: red; }
+.list .card .inner .title i.aborted,   .page-title i.aborted   { color: darkorange; }
+.list .card .inner .title i.enabled,   .page-title i.enabled   { color: green; }
+.list .card .inner .title i.disabled,  .page-title i.disabled  { color: orange; }
+
+/* Jobs/servers/dirmon list page title: cosmic-blue heading (theme accent) with
+   a state-colored status icon. */
+.page-title {
+  color: var(--cosmic-blue);
+  font-weight: normal;
+}
+.page-title i {
+  margin-right: 0.35em;
+  font-size: 0.85em;
+}
+
+/* Title bar for the list panel heading: a lighter version of the gunmetal
+   sidebar gradient. Title text goes light for contrast; the state-colored icon
+   still pops. */
+.job-list .panel-heading {
+  background-color: #5b5d62;
+  background-image: linear-gradient(180deg, #5b5d62 0%, #494b50 100%);
+  border-bottom-color: #3e454f;
+}
+.job-list .panel-heading .page-title {
+  color: #eef2fb;
+}
 
 .list .card .inner .title h3 {
   font-weight: bold;

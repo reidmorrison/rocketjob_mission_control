@@ -406,16 +406,20 @@ h3 { margin-top: 0; }
   margin-right: 0.35em;
   font-size: 0.85em;
 }
+/* Server-specific states (not present in the card-list rules above). */
+.page-title i.starting { color: #337ab7; }
+.page-title i.stopping { color: darkorange; }
+.page-title i.zombie   { color: darkred; }
 
 /* Title bar for the list panel heading: a lighter version of the gunmetal
    sidebar gradient. Title text goes light for contrast; the state-colored icon
    still pops. */
-.job-list .panel-heading {
+.page-title-bar {
   background-color: #5b5d62;
   background-image: linear-gradient(180deg, #5b5d62 0%, #494b50 100%);
   border-bottom-color: #3e454f;
 }
-.job-list .panel-heading .page-title {
+.page-title-bar .page-title {
   color: #eef2fb;
 }
 

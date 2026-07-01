@@ -1,8 +1,8 @@
-<div class='lead'>Input Categories:</div>
+<div class='section-header'>Input Categories</div>
 <% @job.input_categories.each do |category| %>
   <div class='row'>
     <div class='col-md-12'>
-      <div class='lead'><label><%= category.name.to_s.camelcase %>:</label></div>
+      <div class='subsection-header'><%= category.name.to_s.camelcase %></div>
       <div class='row'>
         <div class='col-md-12'>
           <table>

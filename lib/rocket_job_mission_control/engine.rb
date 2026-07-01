@@ -10,11 +10,6 @@ module RocketJobMissionControl
     require "rocketjob"
     require "access-granted"
 
-    begin
-      require "rocketjob_enterprise"
-    rescue LoadError
-    end
-
     config.rocket_job_mission_control = ::RocketJobMissionControl::Config
 
     config.to_prepare do

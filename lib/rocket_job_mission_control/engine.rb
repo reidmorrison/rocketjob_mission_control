@@ -9,7 +9,6 @@ module RocketJobMissionControl
 
     require "rocketjob"
     require "access-granted"
-    require "turbolinks"
 
     begin
       require "rocketjob_enterprise"

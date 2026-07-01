@@ -9,6 +9,9 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
   --cosmic-blue-dark: #0d47a1;
   --cosmic-flame:  #ff6a18;
   --cosmic-flame-border: #ff8a2a;
+  /* Darker, muted flame for the selected/active state so it reads clearly
+     without the bright orange glare. */
+  --cosmic-flame-active: #a34a0c;
   --cosmic-code-bg: #0d1330;
   --cosmic-code-border: #232a4d;
   --cosmic-code-text: #e6e6f0;
@@ -32,7 +35,7 @@ html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: #fff;
-  background-color: rgba(255, 106, 24, 0.85);
+  background-color: var(--cosmic-flame-active);
 }
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
   border: 0;
@@ -235,7 +238,7 @@ h3 { margin-top: 0; }
 #sidebar .nav > .active > a:hover,
 #sidebar .nav > .active > a:focus {
   color: #fff;
-  background-color: rgba(255, 106, 24, 0.85);
+  background-color: var(--cosmic-flame-active);
 }
 
 /* Fixed, narrower sidebar on wide screens, with the content area filling the

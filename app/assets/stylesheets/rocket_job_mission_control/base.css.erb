@@ -157,16 +157,50 @@ div.row {
   border-color: var(--cosmic-blue-dark);
 }
 
-/* Detail/show page label:value tables span the full content width, with the
-   label column shrunk to its content so the value column takes the rest. */
+/* Detail/show page label:value tables: full width with a clean, professional
+   look - zebra striping, comfortable padding, and a muted bold label column
+   shrunk to its content so the value column takes the rest. */
 .col-md-12 > table {
   width: 100%;
+  margin-bottom: 1.5em;
+  border: 1px solid #e6e9f0;
+  border-radius: 4px;
 }
-.col-md-12 > table > tbody > tr > td:first-child,
-.col-md-12 > table > tr > td:first-child {
+.col-md-12 > table td {
+  padding: 7px 14px;
+  vertical-align: top;
+}
+.col-md-12 > table tr:nth-child(even) {
+  background-color: #f5f7fb;
+}
+.col-md-12 > table td:first-child {
   width: 1%;
   white-space: nowrap;
+  color: #5a6572;
 }
+.col-md-12 > table td:first-child label {
+  margin-bottom: 0;
+  font-weight: 600;
+  color: inherit;
+}
+
+/* Input/Output Categories sub-panels themed to the brand two-tone:
+   Input (panel-primary) = cosmic blue, Output (panel-success) = flame orange. */
+.panel-primary { border-color: var(--cosmic-blue); }
+.panel-primary > .panel-heading {
+  color: #fff;
+  background-color: var(--cosmic-blue);
+  border-color: var(--cosmic-blue);
+}
+.panel-primary > .panel-heading + .panel-collapse > .panel-body { border-top-color: var(--cosmic-blue); }
+
+.panel-success { border-color: #e8760f; }
+.panel-success > .panel-heading {
+  color: #fff;
+  background-color: #e8760f;
+  border-color: #e8760f;
+}
+.panel-success > .panel-heading + .panel-collapse > .panel-body { border-top-color: #e8760f; }
 
 .job-list {
   height: 100%;
@@ -500,6 +534,44 @@ h3 { margin-top: 0; }
 }
 .page-title-bar .page-title {
   color: #eef2fb;
+}
+/* Links in the title (e.g. the job-class link on the slice/exception pages)
+   stay readable on the dark bar. */
+.page-title-bar .page-title a {
+  color: #fff;
+  text-decoration: underline;
+}
+.page-title-bar .page-title a:hover,
+.page-title-bar .page-title a:focus {
+  color: #fff;
+  text-decoration: none;
+}
+/* Keep pagination controls from inflating the title-bar height so it matches
+   the other list titles. */
+.page-title-bar .pagination-buttons,
+.page-title-bar .pagination-buttons .pagination {
+  margin: 0;
+}
+
+/* Consistent, themed section sub-headers on the detail/show pages
+   (Details, Dates, Exceptions, Input Categories, ...). */
+.section-header {
+  margin: 1.5em 0 0.75em;
+  padding-bottom: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--cosmic-blue);
+  border-bottom: 2px solid #dce3f0;
+}
+.section-header:first-child {
+  margin-top: 0;
+}
+/* Nested sub-header (e.g. each category name under Input/Output Categories). */
+.subsection-header {
+  margin: 1em 0 0.5em;
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--cosmic-blue);
 }
 
 /* Themed collection-action buttons in the DataTables toolbar: individual,

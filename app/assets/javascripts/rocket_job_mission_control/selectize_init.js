@@ -1,4 +1,4 @@
-$(document).on("turbolinks:load", function () {
+$(function () {
   $(".selectize").selectize({
     create:       true,
     hideSelected: true

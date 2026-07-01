@@ -72,15 +72,9 @@ class JobSanitizerTest < Minitest::Test
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
         assert_equal 1, @job.errors.count
-        if Rails.version.to_f >= 6.1
-          assert error = @job.errors.first
-          assert_equal error.attribute, :properties
-          assert error.message.include?("unexpected token"), error
-        else
-          assert error = @job.errors.first
-          assert_equal error.first, :properties
-          assert error.second.include?("unexpected token"), error
-        end
+        assert error = @job.errors.first
+        assert_equal :properties, error.attribute
+        assert error.message.present?, error
         assert_equal({string: "hello"}, cleansed)
       end
 

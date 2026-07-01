@@ -109,6 +109,17 @@
           <td><%= @job.worker_name %></td>
         </tr>
       <% end %>
+      <% if @job.respond_to?(:throttled_by) && @job.throttled_by %>
+        <tr>
+          <td><label>Throttled By:</label></td>
+          <td>
+            <%= @job.throttled_by %>
+            <% if @job.throttled_at %>
+              (<%= RocketJob.seconds_as_duration(Time.now - @job.throttled_at) %> ago)
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
       <% unless @job.completed? %>
         <tr>
           <td><label>Destroy on completion?</label></td>

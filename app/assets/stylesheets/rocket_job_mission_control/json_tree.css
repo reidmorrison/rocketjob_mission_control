@@ -1,0 +1,97 @@
+/* Cosmic theme for jquery.json-viewer (see jquery.json-viewer.js). Structure is
+   from the upstream stylesheet; the palette is retuned to match the navy code
+   surface and the token colors used in syntax_highlighting.css: green strings,
+   gold literals, sky-blue keys. */
+
+.json-tree {
+  background-color: var(--cosmic-code-bg);
+  border: 1px solid var(--cosmic-code-border);
+  border-radius: 3px;
+  color: var(--cosmic-code-text);
+  overflow-x: auto;
+}
+
+/* Root element */
+.json-document {
+  margin: 0;
+  padding: 1em 1.5em;
+  font-family: Menlo, Consolas, Monaco, "Courier New", monospace;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/* Nested object / array indentation guides */
+ul.json-dict, ol.json-array {
+  list-style-type: none;
+  margin: 0 0 0 1px;
+  border-left: 1px dotted var(--cosmic-code-border);
+  padding-left: 1.5em;
+}
+
+/* Object keys (rendered as plain text or inside toggle links) */
+.json-document > .json-toggle,
+ul.json-dict > li > .json-toggle,
+ul.json-dict > li {
+  color: #7ec8ff; /* sky-blue, matches Name tokens */
+}
+
+.json-string {
+  color: #9ad48b; /* green, matches Literal.String */
+  word-break: break-word;
+}
+.json-literal {
+  color: #ffd27a; /* gold, matches Literal.Number */
+  font-weight: bold;
+}
+a.json-string {
+  text-decoration: underline;
+}
+
+/* Toggle button */
+a.json-toggle {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+a.json-toggle:focus {
+  outline: none;
+}
+a.json-toggle:before {
+  font-size: 1.1em;
+  color: #7d86b8; /* muted violet-grey, matches Comment tokens */
+  content: "\25BC"; /* down arrow */
+  position: absolute;
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  line-height: 1em;
+  left: -1.2em;
+}
+a.json-toggle:hover:before {
+  color: var(--cosmic-code-text);
+}
+a.json-toggle.collapsed:before {
+  /* Rotated down arrow, avoids the right arrow rendering smaller in some browsers */
+  transform: rotate(-90deg);
+}
+
+/* Collapsed-node placeholder ("N items") */
+a.json-placeholder {
+  color: #7d86b8;
+  padding: 0 1em;
+  text-decoration: none;
+}
+a.json-placeholder:hover {
+  text-decoration: underline;
+}
+
+/* Plain-text fallback when JavaScript is unavailable */
+.json-tree noscript pre {
+  margin: 0;
+  padding: 1em 1.5em;
+  color: var(--cosmic-code-text);
+  background: transparent;
+  border: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

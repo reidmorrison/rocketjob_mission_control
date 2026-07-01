@@ -19,4 +19,6 @@
 //= require rocket_job_mission_control/dirmon_entries
 //= require rocket_job_mission_control/selectize.min
 //= require rocket_job_mission_control/selectize_init
+//= require rocket_job_mission_control/jquery.json-viewer
+//= require rocket_job_mission_control/json_tree_init
 //

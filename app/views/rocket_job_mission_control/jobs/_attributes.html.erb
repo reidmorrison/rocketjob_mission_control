@@ -15,8 +15,10 @@
             <td>
               <% if value.is_a?(String) %>
                 <pre><code><%= simple_format(value) %></code></pre>
+              <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
+                <%= render_json_tree(value) %>
               <% else %>
-                <%= value.ai(html: true, plain: true) %>
+                <label><%= value %></label>
               <% end %>
             </td>
           <% end %>

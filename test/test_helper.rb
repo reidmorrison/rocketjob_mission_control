@@ -1,7 +1,6 @@
 ENV["RAILS_ENV"] ||= "test"
 
 require "yaml"
-require "amazing_print"
 require "rails/version"
 require_relative "../rjmc/config/environment"
 require "minitest/autorun"

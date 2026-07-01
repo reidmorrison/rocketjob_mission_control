@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "access-granted", "~> 1.3"
-  s.add_dependency "amazing_print", "~> 1.3"
   s.add_dependency "railties", ">= 7.2"
   s.add_dependency "rocketjob", "~> 6.3"
 end

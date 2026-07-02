@@ -256,6 +256,10 @@ failed_slice.worker_name = WORKERS[1]
 failed_slice.start
 failed_slice.fail!(slice_exception)
 
+# Mark the job as processing slices so the active slice above is reported as an
+# active worker, driving the "Show Workers" button on the batch job view.
+partial_batch.update!(sub_state: :processing)
+
 # ---------------------------------------------------------------------------
 # Servers (populates the Servers view)
 # ---------------------------------------------------------------------------

@@ -159,7 +159,7 @@ kaboom.input_category.slice_size = 10
 kaboom.upload do |stream|
   100.times { |i| stream << "Line number #{i + 1}" }
 end
-while kaboom.input.queued.count.positive?
+while kaboom.running? || kaboom.queued?
   begin
     kaboom.perform_now
   rescue StandardError
@@ -177,6 +177,40 @@ pending_batch.upload do |stream|
   25.times { |i| stream << "pat,#{30 + i},NY" }
 end
 pending_batch.save!
+
+# Partially completed running batch job, to exercise the slice progress bar on
+# the job details view. record_count is set during upload (before the job runs),
+# so the bar can show real progress. There are no workers, so simulate progress
+# by hand: 100 records at a slice_size of 10 uploads 10 slices. Rocket Job
+# deletes each input slice as it completes, so completed slices are inferred
+# from record_count. Delete six to represent completed work, mark one active and
+# one failed, and leave two queued (Completed 6, Active 1, Failed 1, Queued 2).
+partial_batch = CSVJob.new(description: "Partially processed import")
+partial_batch.input_category.slice_size = 10
+partial_batch.upload do |stream|
+  stream << "name,age,state"
+  100.times { |i| stream << "sam,#{20 + i},TX" }
+end
+pretend_running!(partial_batch, WORKERS[0])
+
+# Six completed slices: Rocket Job removes input slices once they finish.
+partial_batch.input.queued.limit(6).to_a.each(&:destroy)
+
+# One active slice, running on a worker.
+active_slice             = partial_batch.input.queued.first
+active_slice.worker_name = WORKERS[0]
+active_slice.start!
+
+# One failed slice, with an exception explaining why.
+slice_exception = begin
+  raise ArgumentError, "Invalid state code for record: 'ZZ'"
+rescue ArgumentError => e
+  e
+end
+failed_slice             = partial_batch.input.queued.first
+failed_slice.worker_name = WORKERS[1]
+failed_slice.start
+failed_slice.fail!(slice_exception)
 
 # ---------------------------------------------------------------------------
 # Servers (populates the Servers view)

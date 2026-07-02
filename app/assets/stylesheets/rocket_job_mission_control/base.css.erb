@@ -285,6 +285,49 @@ h3 { margin-top: 0; }
 .job-status .job-state .failed { background-color: red; }
 .job-status .job-state .aborted { background-color: darkorange; }
 
+/* Batch job slice progress bar: a single horizontal stacked bar whose
+   segments reuse the state colors above (Queued, Active, Failed, Completed). */
+.slice-bar {
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  height: 22px;
+  border-radius: 3px;
+  overflow: hidden;
+  background-color: #eee;
+}
+
+.slice-bar-segment { height: 100%; }
+.slice-bar-segment.queued    { background-color: #a29f00; }
+.slice-bar-segment.running   { background-color: #337ab7; }
+.slice-bar-segment.failed    { background-color: red; }
+.slice-bar-segment.completed { background-color: green; }
+
+.slice-bar-legend {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.slice-bar-legend-item {
+  display: inline-block;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.slice-bar-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.slice-bar-swatch.queued    { background-color: #a29f00; }
+.slice-bar-swatch.running   { background-color: #337ab7; }
+.slice-bar-swatch.failed    { background-color: red; }
+.slice-bar-swatch.completed { background-color: green; }
+
 .job-status .priority {
   display: inline-block;
   vertical-align: middle;

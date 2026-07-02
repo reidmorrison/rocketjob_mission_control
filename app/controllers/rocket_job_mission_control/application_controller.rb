@@ -20,8 +20,13 @@ module RocketJobMissionControl
           else
             {roles: %i[admin]}
           end
-        RocketJobMissionControl::AccessPolicy.new(Authorization.new(**@args))
+        access_policy_class.new(Authorization.new(**@args))
       end
+    end
+
+    def access_policy_class
+      policy = Config.access_policy_class || RocketJobMissionControl::AccessPolicy
+      policy.is_a?(Class) ? policy : policy.to_s.constantize
     end
 
     def login

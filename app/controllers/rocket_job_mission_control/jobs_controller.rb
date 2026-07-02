@@ -286,7 +286,7 @@ module RocketJobMissionControl
     end
 
     def find_job_or_redirect
-      return if @job = RocketJob::Job.where(id: params[:id]).first
+      return if (@job = RocketJob::Job.where(id: params[:id]).first)
 
       flash[:danger] = t(:failure, scope: %i[job find], id: params[:id])
 

@@ -181,7 +181,7 @@ module RocketJobMissionControl
       end
       buttons += job_action_link("Retry", retry_job_path(job), :patch).to_s if events.include?(:retry) && view.can?(:retry, job)
       buttons += job_action_link("Destroy", job_path(job), :delete).to_s if view.can?(:destroy, job)
-      buttons + "</div>"
+      "#{buttons}</div>"
     end
 
     def valid_events(job)

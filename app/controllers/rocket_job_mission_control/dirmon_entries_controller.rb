@@ -51,7 +51,7 @@ module RocketJobMissionControl
       authorize! :create, RocketJob::DirmonEntry
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
 
-      if properties = params[:rocket_job_dirmon_entry][:properties]
+      if (properties = params[:rocket_job_dirmon_entry][:properties])
         @dirmon_entry.properties = JobSanitizer.sanitize(properties, @dirmon_entry.job_class, @dirmon_entry, false)
       end
 
@@ -84,7 +84,7 @@ module RocketJobMissionControl
       authorize! :replicate, @dirmon_entry
       dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))
 
-      if properties = params[:rocket_job_dirmon_entry][:properties]
+      if (properties = params[:rocket_job_dirmon_entry][:properties])
         dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, @dirmon_entry,
                                                                   false)
       end
@@ -155,7 +155,7 @@ module RocketJobMissionControl
     end
 
     def find_entry_or_redirect
-      return if @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
+      return if (@dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first)
 
       flash[:danger] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
       redirect_to(dirmon_entries_path)

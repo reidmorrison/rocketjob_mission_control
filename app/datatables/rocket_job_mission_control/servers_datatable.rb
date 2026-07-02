@@ -71,7 +71,7 @@ data: {confirm: "Stop this server?"}).to_s
 data: {confirm: confirmation}).to_s
       end
 
-      actions + "</div>"
+      "#{actions}</div>"
     end
 
     def valid_events(server)

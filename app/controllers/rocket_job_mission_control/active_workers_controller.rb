@@ -3,7 +3,7 @@ module RocketJobMissionControl
     def index
       authorize! :read, RocketJob::Worker
       @server_name = params[:server_name]
-      if job_id = params[:job_id]
+      if (job_id = params[:job_id])
         @job = RocketJob::Job.find(job_id)
       end
 

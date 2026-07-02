@@ -7,7 +7,7 @@ module RocketJobMissionControl
     private
 
     def with_time_zone(&block)
-      return unless time_zone = session["time_zone"] || "UTC"
+      return unless (time_zone = session["time_zone"] || "UTC")
 
       Time.use_zone(time_zone, &block)
     end

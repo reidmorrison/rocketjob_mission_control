@@ -32,7 +32,7 @@ module RocketJobMissionControl
       query.search_term = search[:value] if search.present? && search[:value].present? && search.present?
 
       # Sort order
-      if order_by = extract_sort(params[:order])
+      if (order_by = extract_sort(params[:order]))
         query.order_by = order_by
       end
 

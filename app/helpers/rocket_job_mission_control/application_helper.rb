@@ -18,7 +18,7 @@ module RocketJobMissionControl
     }.freeze
 
     def state_icon(state)
-      STATE_ICON_MAP[state.to_sym] + " " + state.to_s
+      "#{STATE_ICON_MAP[state.to_sym]} #{state}"
     end
 
     # Whether a known status icon exists for the given state (e.g. "completed").
@@ -144,7 +144,7 @@ placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
         # `association.to_s.singularize + "_fields"` ends up evaluating to `address_fields`
         # The render function will then look for `views/people/_address_fields.html.erb`
         # The render function also needs to be passed the value of 'builder', because `views/dirmon_entries/_input_categories.html.erb` needs this to render the form tags.
-        render(association.to_s.singularize + "_fields", f: builder)
+        render("#{association.to_s.singularize}_fields", f: builder)
       end
 
       # This renders a simple link, but passes information into `data` attributes.

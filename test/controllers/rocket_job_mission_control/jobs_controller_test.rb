@@ -352,13 +352,12 @@ module RocketJobMissionControl
                   }
                 }
 
+                assert_equal 0, json["draw"]
                 if state == :index
-                  assert_equal 0, json["draw"]
                   assert_equal 6, json["recordsTotal"]
                   assert_equal 6, json["recordsFiltered"]
                   compare_array_of_hashes(expected_data.values, json["data"])
                 else
-                  assert_equal 0, json["draw"]
                   assert_equal 1, json["recordsTotal"]
                   assert_equal 1, json["recordsFiltered"]
                   # Columns change by state

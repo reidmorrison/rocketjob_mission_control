@@ -16,7 +16,7 @@ module RocketJobMissionControl
       throttle_group throttle_running_workers
       upload_file_name
       worker_name
-    ]
+    ].freeze
 
     def job_icon(job)
       state = job_state(job)

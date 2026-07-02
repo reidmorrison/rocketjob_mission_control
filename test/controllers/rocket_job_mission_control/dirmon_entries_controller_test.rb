@@ -400,13 +400,12 @@ module RocketJobMissionControl
                   }
                 }
 
+                assert_equal 0, json["draw"]
                 if state == :index
-                  assert_equal 0, json["draw"]
                   assert_equal 4, json["recordsTotal"]
                   assert_equal 4, json["recordsFiltered"]
                   assert_equal [expected_data[:disabled], expected_data[:enabled], expected_data[:failed], expected_data[:pending]], json["data"]
                 else
-                  assert_equal 0, json["draw"]
                   assert_equal 1, json["recordsTotal"]
                   assert_equal 1, json["recordsFiltered"]
                   assert_equal [expected_data[state]], json["data"]

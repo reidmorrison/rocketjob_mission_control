@@ -9,11 +9,11 @@
         <% if msg.kind_of? Array %>
           <ul class="list-unstyled margin-bottom-0">
             <% msg.each do |m| %>
-              <li><%= m.html_safe %></li>
+              <li><%= m %></li>
             <% end %>
           </ul>
         <% else %>
-          <%= msg.to_s.html_safe %>
+          <%= msg.to_s %>
         <% end %>
       </div>
     <% end %>

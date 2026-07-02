@@ -29,9 +29,7 @@ module RocketJobMissionControl
     def extract_query_params
       # Search term
       search = params[:search]
-      if search.present? && search[:value].present?
-        query.search_term = search[:value] if search.present?
-      end
+      query.search_term = search[:value] if search.present? && search[:value].present? && search.present?
 
       # Sort order
       if order_by = extract_sort(params[:order])
@@ -39,10 +37,10 @@ module RocketJobMissionControl
       end
 
       # Pagination
-      unless params[:length].present? && params[:length] == "-1"
-        query.start     = params[:start].to_i
-        query.page_size = params.fetch(:length, 10).to_i
-      end
+      return if params[:length].present? && params[:length] == "-1"
+
+      query.start     = params[:start].to_i
+      query.page_size = params.fetch(:length, 10).to_i
     end
 
     def extract_sort(order)

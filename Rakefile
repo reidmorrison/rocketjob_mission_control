@@ -3,7 +3,7 @@ require "rubygems"
 require "bundler/setup"
 
 require "rails/version"
-APP_RAKEFILE = File.expand_path("../rjmc/Rakefile", __FILE__)
+APP_RAKEFILE = File.expand_path("rjmc/Rakefile", __dir__)
 load "rails/tasks/engine.rake"
 
 require "rake/testtask"

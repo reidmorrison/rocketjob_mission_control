@@ -195,10 +195,10 @@ module RocketJobMissionControl
       else
         flash[:danger] = "Error updating slice."
       end
-    rescue EncodingError => exc
+    rescue EncodingError => e
       # Mongo only stores UTF-8, so a record left with invalid bytes cannot be
       # saved. Surface it instead of returning a 500.
-      flash[:danger] = "Error updating slice: #{exc.message}"
+      flash[:danger] = "Error updating slice: #{e.message}"
       redirect_to view_slice_job_path(@job, error_type: params[:error_type])
     end
 
@@ -286,17 +286,17 @@ module RocketJobMissionControl
     end
 
     def find_job_or_redirect
-      unless @job = RocketJob::Job.where(id: params[:id]).first
-        flash[:danger] = t(:failure, scope: %i[job find], id: params[:id])
+      return if @job = RocketJob::Job.where(id: params[:id]).first
 
-        redirect_to(jobs_path)
-      end
+      flash[:danger] = t(:failure, scope: %i[job find], id: params[:id])
+
+      redirect_to(jobs_path)
     end
 
     def job_params
       params.require(:job).permit(
         job_fields,
-        input_categories_attributes: [
+        input_categories_attributes:  [
           :id,
           :name,
           :format,
@@ -304,14 +304,14 @@ module RocketJobMissionControl
           :mode,
           :skip_unknown,
           :slice_size,
-          columns: []
+          {columns: []}
         ],
         output_categories_attributes: [
           :id,
           :name,
           :format,
           :format_options,
-          columns: []
+          {columns: []}
         ]
       )
     end
@@ -364,7 +364,7 @@ module RocketJobMissionControl
         h             = {data: index.to_s}
         h[:width]     = column[:width] if column.key?(:width)
         h[:orderable] = column[:orderable] if column.key?(:orderable)
-        index         += 1
+        index += 1
         h
       end
     end

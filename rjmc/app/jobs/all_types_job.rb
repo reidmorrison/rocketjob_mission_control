@@ -9,7 +9,7 @@ class AllTypesJob < RocketJob::Job
   field :boolean, type: Mongoid::Boolean, user_editable: true
   field :secure, type: String
 
-  validates :string_values, inclusion: %w(one two three)
+  validates :string_values, inclusion: %w[one two three]
 
   def perform
   end

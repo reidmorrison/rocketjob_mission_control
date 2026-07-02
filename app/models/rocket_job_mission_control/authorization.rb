@@ -1,8 +1,7 @@
 module RocketJobMissionControl
   class Authorization
     ROLES = %i[admin editor operator manager dirmon user view].freeze
-    attr_accessor *ROLES
-    attr_accessor :login
+    attr_accessor(*ROLES, :login)
 
     def initialize(roles: [], login: nil)
       @login = login

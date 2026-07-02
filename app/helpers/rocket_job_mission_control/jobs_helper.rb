@@ -33,30 +33,31 @@ module RocketJobMissionControl
       end
     end
 
-    def job_state_name(job)
+    def job_state_name(_job)
       job_state(@job).to_s.camelcase
     end
 
     def job_time(time)
       return "" unless time
+
       time.in_time_zone(Time.zone)
     end
 
     def job_state_time(job)
       return job_time(job.run_at) if job.scheduled?
 
-      job_time(job.completed_at || job.started_at || job.created_at )
+      job_time(job.completed_at || job.started_at || job.created_at)
       # job_time(job.running? ? job.started_at : job.completed_at)
     end
 
     def job_estimated_time_left(job)
-      if job.record_count && job.running? && job.record_count.positive?
-        percent = job.percent_complete
-        if percent >= 5
-          secs = job.seconds.to_f
-          RocketJob.seconds_as_duration((((secs / percent) * 100) - secs))
-        end
-      end
+      return unless job.record_count && job.running? && job.record_count.positive?
+
+      percent = job.percent_complete
+      return unless percent >= 5
+
+      secs = job.seconds.to_f
+      RocketJob.seconds_as_duration(((secs / percent) * 100) - secs)
     end
 
     def job_records_per_hour(job)
@@ -124,10 +125,10 @@ module RocketJobMissionControl
 
     def job_counts_by_state(state)
       @job_counts ||= begin
-                        counts          = RocketJob::Job.counts_by_state
-                        counts[:queued] = counts[:queued_now] || 0
-                        counts
-                      end
+        counts          = RocketJob::Job.counts_by_state
+        counts[:queued] = counts[:queued_now] || 0
+        counts
+      end
       @job_counts.fetch(state.downcase.to_sym, 0)
     end
 
@@ -138,7 +139,7 @@ module RocketJobMissionControl
         method: http_method,
         title:  "#{action} job",
         class:  "btn btn-default",
-        data:   { confirm: t(:confirm, scope: %i[job action], action: action) }
+        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
       )
     end
 
@@ -150,7 +151,7 @@ module RocketJobMissionControl
         title:  "#{action} job",
         class:  "btn btn-default btn-group",
         role:   "group",
-        data:   { confirm: t(:confirm, scope: %i[job action], action: action) }
+        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
       )
     end
 

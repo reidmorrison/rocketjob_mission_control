@@ -1,6 +1,7 @@
 module RocketJobMissionControl
   class ServersDatatable < AbstractDatatable
-    delegate :server_icon, :server_path, :stop_server_path, :resume_server_path, :pause_server_path, :server_card_class, to: :@view
+    delegate :server_icon, :server_path, :stop_server_path, :resume_server_path, :pause_server_path, :server_card_class,
+             to: :@view
 
     def initialize(view, query)
       query.display_columns = %w[name heartbeat.workers started_at heartbeat.updated_at]
@@ -45,15 +46,18 @@ module RocketJobMissionControl
       events  = valid_events(server)
 
       if events.include?(:resume) && view.can?(:resume, server)
-        actions += (link_to "resume", resume_server_path(server), method: :patch, class: "btn btn-default", data: {confirm: "Resume this server?"}).to_s
+        actions += (link_to "resume", resume_server_path(server), method: :patch, class: "btn btn-default",
+data: {confirm: "Resume this server?"}).to_s
       end
 
       if events.include?(:pause) && view.can?(:pause, server)
-        actions += (link_to "pause", pause_server_path(server), method: :patch, class: "btn btn-default", data: {confirm: "Pause this server?"}).to_s
+        actions += (link_to "pause", pause_server_path(server), method: :patch, class: "btn btn-default",
+data: {confirm: "Pause this server?"}).to_s
       end
 
       if events.include?(:stop) && view.can?(:stop, server)
-        actions += (link_to "stop", stop_server_path(server), method: :patch, class: "btn btn-danger", data: {confirm: "Stop this server?"}).to_s
+        actions += (link_to "stop", stop_server_path(server), method: :patch, class: "btn btn-danger",
+data: {confirm: "Stop this server?"}).to_s
       end
 
       if server.stopping? && view.can?(:destroy, server)
@@ -63,10 +67,11 @@ module RocketJobMissionControl
           confirmation << "Warning!\n\nDestroying this server will hard kill its active workers/jobs.\nKilled jobs will be requeued for processing on another worker.\n\n"
         end
         confirmation << "Are you sure you want to destroy #{server.name} ?"
-        actions += (link_to "destroy", server_path(server), method: :delete, class: "btn btn-danger", data: {confirm: confirmation}).to_s
+        actions += (link_to "destroy", server_path(server), method: :delete, class: "btn btn-danger",
+data: {confirm: confirmation}).to_s
       end
 
-      actions += "</div>"
+      actions + "</div>"
     end
 
     def valid_events(server)

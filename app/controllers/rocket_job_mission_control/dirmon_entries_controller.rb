@@ -42,9 +42,9 @@ module RocketJobMissionControl
       @dirmon_entry             = RocketJob::DirmonEntry.new(dirmon_params)
       @previous_job_class_names = RocketJob::DirmonEntry.distinct(:job_class_name)
 
-      if dirmon_params[:job_class_name] && !@dirmon_entry.job_class
-        @dirmon_entry.errors.add(:job_class_name, "Invalid Job Class")
-      end
+      return unless dirmon_params[:job_class_name] && !@dirmon_entry.job_class
+
+      @dirmon_entry.errors.add(:job_class_name, "Invalid Job Class")
     end
 
     def create
@@ -85,13 +85,14 @@ module RocketJobMissionControl
       dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))
 
       if properties = params[:rocket_job_dirmon_entry][:properties]
-        dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, @dirmon_entry, false)
+        dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, @dirmon_entry,
+                                                                  false)
       end
 
       if dirmon_entry_replicate.update(dirmon_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(dirmon_entry_replicate))
       else
-        dirmon_params.each { |k,v| @dirmon_entry.send("#{k}=", v) }
+        dirmon_params.each { |k, v| @dirmon_entry.send("#{k}=", v) }
         @dirmon_entry.properties = dirmon_entry_replicate.properties
         dirmon_entry_replicate.errors.messages.each_pair do |field, message|
           @dirmon_entry.errors.add(field, message)
@@ -154,10 +155,10 @@ module RocketJobMissionControl
     end
 
     def find_entry_or_redirect
-      unless @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
-        flash[:danger] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
-        redirect_to(dirmon_entries_path)
-      end
+      return if @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
+
+      flash[:danger] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
+      redirect_to(dirmon_entries_path)
     end
 
     def dirmon_params

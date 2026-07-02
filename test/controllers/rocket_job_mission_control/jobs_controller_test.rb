@@ -37,10 +37,8 @@ module RocketJobMissionControl
 
         # Run all 3 slices now to get exceptions for each.
         3.times do
-          begin
-            job.perform_now
-          rescue ArgumentError, RuntimeError, EOFError
-          end
+          job.perform_now
+        rescue ArgumentError, RuntimeError, EOFError
         end
         job
       end
@@ -233,7 +231,7 @@ module RocketJobMissionControl
             end
 
             it "returns the first exception" do
-              assert_equal error_type,                    assigns(:failure_exception).class_name
+              assert_equal error_type, assigns(:failure_exception).class_name
               assert_equal failed_slice.exception.message, assigns(:failure_exception).message
               assert assigns(:failure_exception).backtrace.present?
             end
@@ -438,7 +436,7 @@ module RocketJobMissionControl
         end
 
         it "paginates from the requested offset" do
-          assert_equal 0,                                  assigns(:view_slice_pagination)[:offset]
+          assert_equal 0, assigns(:view_slice_pagination)[:offset]
           assert_equal failed_slice.processing_record_number, assigns(:view_slice_pagination)[:record_number]
         end
 

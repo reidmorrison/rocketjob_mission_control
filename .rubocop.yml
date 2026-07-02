@@ -1,5 +1,10 @@
 inherit_from: .rubocop_todo.yml
 
+plugins:
+  - rubocop-minitest
+  - rubocop-performance
+  - rubocop-rails
+
 # Merge (rather than replace) Exclude lists from .rubocop_todo.yml so a cop that
 # is both softened here and grandfathered there keeps both exclusions.
 inherit_mode:
@@ -54,7 +59,7 @@ Metrics/BlockLength:
   Exclude:
     - 'test/**/*'
     - '**/*/cli.rb'
-  ExcludedMethods:
+  AllowedMethods:
     - 'aasm'
     - 'included'
 

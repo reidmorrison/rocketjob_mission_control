@@ -49,9 +49,7 @@ module RocketJobMissionControl
       sort_by = {}
       order.each_pair do |_key, value|
         name = query.display_columns[value[:column].to_i]
-        if name.blank?
-          raise(ArgumentError, "Invalid column id: #{value[:column]}. Must fit #{query.display_columns.inspect}")
-        end
+        raise(ArgumentError, "Invalid column id: #{value[:column]}. Must fit #{query.display_columns.inspect}") if name.blank?
 
         sort_by[name] = value[:dir]
       end

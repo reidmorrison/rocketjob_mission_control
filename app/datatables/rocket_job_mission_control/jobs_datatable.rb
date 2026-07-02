@@ -1,7 +1,7 @@
 module RocketJobMissionControl
   class JobsDatatable < AbstractDatatable
     delegate :job_path, :job_icon, :edit_job_path, :state_icon, :job_state,
-             :abort_job_path, :job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
+             :abort_job_path, :fail_job_path, :run_now_job_path, :pause_job_path,
              :resume_job_path, :retry_job_path, :exception_job_path, :job_action_link, :exceptions_job_path, to: :@view
 
     COMMON_FIELDS = %i[id _type description completed_at created_at started_at state worker_name login].freeze

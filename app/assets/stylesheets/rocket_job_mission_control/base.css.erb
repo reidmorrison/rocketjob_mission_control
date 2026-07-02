@@ -126,6 +126,23 @@ div.row {
   border-color: var(--cosmic-blue-dark);
 }
 
+/* Secondary buttons (Cancel and other non-primary actions): a solid light-grey
+   fill instead of Bootstrap's default white, so they read as buttons against
+   the page background. */
+.btn-default {
+  color: #333;
+  background-color: #e6e9f0;
+  border-color: #c7cede;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active {
+  color: #333;
+  background-color: #d4d9e6;
+  border-color: #b3bbd0;
+}
+
 /* Center the show-page action toolbar and let its groups flow inline. */
 .job-actions {
   margin-left: 0;
@@ -615,6 +632,74 @@ h3 { margin-top: 0; }
   font-size: 15px;
   font-weight: bold;
   color: var(--cosmic-blue);
+}
+
+/* Job exception backtrace: one frame per row, with a right-aligned line number.
+   Noise frames (gems / Ruby internals) are hidden until the "Full Backtrace"
+   toggle adds `show-full` to the table (see backtrace.js). */
+.section-header .backtrace-toggle {
+  float: right;
+  font-weight: normal;
+}
+.backtrace .backtrace-line-number {
+  width: 1%;
+  text-align: right;
+  color: #999;
+  white-space: nowrap;
+  padding-right: 12px;
+}
+.backtrace .backtrace-noise {
+  display: none;
+}
+.backtrace.show-full .backtrace-noise {
+  display: table-row;
+}
+
+/* Job slice records: one record per row with a right-aligned line number and a
+   per-row Edit action. The record that raised the exception is highlighted. */
+.records .records-line-number {
+  width: 1%;
+  text-align: right;
+  color: #999;
+  white-space: nowrap;
+  padding-right: 12px;
+}
+.records .records-action {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+.records code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.records .records-failed {
+  background-color: #fdecea;
+}
+.records .records-failed .records-line-number {
+  color: var(--danger, #d9534f);
+  font-weight: bold;
+}
+
+/* Slice record editor: full-width, monospace textarea sized for long records
+   (up to a few KB), with spaced action buttons below it. */
+textarea.input_slices {
+  font-family: monospace;
+  margin-bottom: 1em;
+}
+
+/* Highlight for an unprintable / invalid byte rendered as a \xHH escape in a
+   read-only record, so the byte that broke the record stands out. */
+.record-escape {
+  padding: 0 3px;
+  color: #a94442;
+  background-color: #fdecea;
+  border: 1px solid #f0c5c1;
+  border-radius: 3px;
+  font-weight: bold;
+}
+#submit .btn {
+  margin-right: 6px;
 }
 
 /* Themed collection-action buttons in the DataTables toolbar: individual,

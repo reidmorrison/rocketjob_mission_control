@@ -1,24 +1,36 @@
-<div class='edit_input'>
-  <div class='col-md-10'>
-    <% valid_events = @job.aasm.events.collect { |e| e.name } %>
-    <br>
-    <br>
-    <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name), method: :patch) do |f| %>
-      <% @lines.each_with_index do |line, index| %>
-        <% if @line_index == index %>
-          <%= f.text_area :records, value: line, class: 'input_slices', id: index, multiple: true, rows: 14, cols: 10, wrap: "soft" %>
-        <% else %>
-          <%= f.hidden_field :records, value: line, class: 'input_slices', id: index, multiple: true %>
+<div class='row'>
+  <div class='col-md-12'>
+    <div class="panel panel-default">
+      <div class="panel-heading page-title-bar">
+        <h2 class='page-title'>
+          <%= link_to(@job.class.name, job_path(@job)) %> Edit Slice
+        </h2>
+      </div>
+    </div>
+
+    <div class='job-status'>
+      <div class='section-header'>Edit Record: <%= @first_record_number + @line_index %></div>
+
+      <p class='help-block'>
+        Unprintable bytes are shown as <code>\xHH</code> escapes (for example a null byte as <code>\x00</code>)
+        and are converted back to the original bytes when saved. A literal backslash is shown as <code>\\</code>.
+      </p>
+
+      <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name), method: :patch) do |f| %>
+        <% @lines.each_with_index do |line, index| %>
+          <% if @line_index == index %>
+            <%= f.text_area :records, value: escape_record(line), class: 'input_slices form-control', id: index, multiple: true, rows: 20, wrap: "soft" %>
+          <% else %>
+            <%= f.hidden_field :records, value: escape_record(line), class: 'input_slices', id: index, multiple: true %>
+          <% end %>
         <% end %>
+
+        <div id='submit'>
+          <%= f.submit 'Save', class: 'btn btn-primary' %>
+          <%= link_to 'Delete', delete_line_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: @line_index), :data => {:confirm => "Record #{@first_record_number + @line_index} will be deleted from the slice. Are you sure?"}, method: :patch, class: 'btn btn-danger' %>
+          <%= link_to 'Cancel', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first.processing_record_number), class: 'btn btn-default' %>
+        </div>
       <% end %>
-
-      <div id='submit'>
-        <%= f.submit 'Save', class: 'btn btn-primary' %>
-        <%= link_to 'Delete', delete_line_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: @line_index), :data => {:confirm => 'Are you sure?'}, method: :patch, class: 'btn btn-danger' %>
-        <%= link_to 'Cancel', view_slice_job_path(@job, error_type: @failure_exception.class_name, record_number: @job.input.failed.first.processing_record_number), class: 'btn btn-default' %>
-    <% end %>
-
     </div>
   </div>
 </div>
-

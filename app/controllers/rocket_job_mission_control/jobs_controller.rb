@@ -151,6 +151,8 @@ module RocketJobMissionControl
       # Instance variables to share with the view and pagination.
       @lines                 = current_failure.records
       @failure_exception     = current_failure.try!(:exception)
+      @failure_record_number = current_failure.try!(:current_record_number)
+      @first_record_number   = current_failure.try!(:first_record_number)
       @view_slice_pagination = {
         record_number: current_failure.processing_record_number,
         offset:        @offset,
@@ -166,9 +168,10 @@ module RocketJobMissionControl
       @line_index        = params[:line_index].to_i
       @offset            = params.fetch(:offset, 0).to_i
       scope              = @job.input.failed.where("exception.class_name" => error_type)
-      current_failure    = scope.order(_id: 1).limit(1).skip(@offset).first
-      @lines             = current_failure.records
-      @failure_exception = current_failure.try!(:exception)
+      current_failure      = scope.order(_id: 1).limit(1).skip(@offset).first
+      @lines               = current_failure.records
+      @failure_exception   = current_failure.try!(:exception)
+      @first_record_number = current_failure.try!(:first_record_number)
     end
 
     def update_slice
@@ -176,14 +179,17 @@ module RocketJobMissionControl
 
       # Params from the edit_slice form
       error_type      = params[:error_type]
-      offset          = params[:offset]
+      offset          = params.fetch(:offset, 0).to_i
       updated_records = params["job"]["records"]
 
-      # Finds specific slice [Array]
-      slice = @job.input.failed.skip(offset).first
+      # Find the same slice edit_slice displayed: filtered by error type and
+      # ordered so the offset selects the matching slice.
+      scope = @job.input.failed.where("exception.class_name" => error_type)
+      slice = scope.order(_id: 1).limit(1).skip(offset).first
 
-      # Converts \r\n line breaks to \n
-      updated_records.each { |record| record.gsub(/\r\n/, "\n") }
+      # Normalize CRLF on the (ASCII-safe) escaped text, then convert the
+      # \xHH / \\ escapes back into the original bytes. See RecordEscaper.
+      updated_records = updated_records.map { |record| RecordEscaper.unescape(record.gsub(/\r\n/, "\n")) }
 
       # Assings modified slice (from the form) back to slice
       slice.records = updated_records
@@ -195,6 +201,11 @@ module RocketJobMissionControl
       else
         flash[:danger] = "Error updating slice."
       end
+    rescue EncodingError => exc
+      # Mongo only stores UTF-8, so a record left with invalid bytes cannot be
+      # saved. Surface it instead of returning a 500.
+      flash[:danger] = "Error updating slice: #{exc.message}"
+      redirect_to view_slice_job_path(@job, error_type: params[:error_type])
     end
 
     def delete_line
@@ -218,8 +229,8 @@ module RocketJobMissionControl
 
       if slice.save
         logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
+        flash[:success] = "Record #{slice.first_record_number + line_index} removed from the slice."
         redirect_to view_slice_job_path(@job, error_type: error_type)
-        flash[:success] = "line removed"
       else
         flash[:danger] = "Error removing line."
       end
@@ -242,8 +253,9 @@ module RocketJobMissionControl
         redirect_to(job_path(@job))
       end
 
-      current_failure    = scope.order(_id: 1).limit(1).skip(offset).first
-      @failure_exception = current_failure.try!(:exception)
+      current_failure        = scope.order(_id: 1).limit(1).skip(offset).first
+      @failure_exception     = current_failure.try!(:exception)
+      @failure_record_number = current_failure.try!(:current_record_number)
 
       @pagination = {
         offset: offset,

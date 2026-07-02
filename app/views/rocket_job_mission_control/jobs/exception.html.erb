@@ -1,10 +1,12 @@
 <div class='row'>
-  <div class='col-md-8'>
+  <div class='col-md-12'>
     <div class="panel panel-default">
       <div class="panel-heading page-title-bar">
         <div class='row'>
           <div class='col-sm-8'>
-            <h2 class='page-title'><%= link_to(@job.class.name, job_path(@job)) %>: <%= @failure_exception.class_name %></h2>
+            <h2 class='page-title'>
+              <%= link_to(@job.class.name, job_path(@job)) %> Exception
+            </h2>
           </div>
 
           <div class='col-sm-4'>
@@ -17,15 +19,43 @@
     </div>
 
     <div class='job-status'>
-      <div class='failures'>
-        <div class='message'>
-          <pre><code class="language-html"><%= @failure_exception.message %></code></pre>
+      <%= render partial: 'exception_details', locals: {exception: @failure_exception, record_number: @failure_record_number} %>
+
+      <% if @failure_exception.backtrace.present? %>
+        <% backtrace = @failure_exception.backtrace %>
+        <% noise     = backtrace.map { |line| backtrace_noise?(line) } %>
+        <%# Only abbreviate when at least one application frame remains, otherwise %>
+        <%# the abbreviated backtrace would be empty. %>
+        <% abbreviate = noise.include?(false) %>
+
+        <div class='section-header'>
+          Backtrace
+          <% if abbreviate && noise.include?(true) %>
+            <button type='button'
+                    class='btn btn-primary btn-sm backtrace-toggle'
+                    data-backtrace-toggle
+                    data-label-full='Full Backtrace'
+                    data-label-abbreviated='Abbreviated Backtrace'>
+              Full Backtrace
+            </button>
+          <% end %>
         </div>
 
-        <div class='error'>
-          <pre class='small'><%= @failure_exception.backtrace.join("\n") %></pre>
+        <div class='row'>
+          <div class='col-md-12'>
+            <table class='table backtrace'>
+              <tbody>
+                <% backtrace.each_with_index do |line, index| %>
+                  <tr class='<%= "backtrace-noise" if abbreviate && noise[index] %>'>
+                    <td class='backtrace-line-number'><%= index + 1 %></td>
+                    <td><code><%= line %></code></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </div>

@@ -64,6 +64,62 @@ module RocketJobMissionControl
         end
       end
 
+      describe "#job_total_slices" do
+        it "returns nil when the record count is unknown" do
+          assert_nil job_total_slices(KaboomBatchJob.new)
+        end
+
+        it "divides the record count by the slice size, rounding up" do
+          job = KaboomBatchJob.new
+          job.input_category.slice_size = 100
+          job.record_count = 250
+          assert_equal 3, job_total_slices(job)
+        end
+      end
+
+      describe "#job_slice_stats" do
+        let :batch_job do
+          job = KaboomBatchJob.new
+          job.input_category.slice_size = 1
+          job.upload do |stream|
+            stream << "first record"
+            stream << "second record"
+            stream << "third record"
+          end
+          job.save!
+          job
+        end
+
+        after do
+          RocketJob::Job.delete_all
+        end
+
+        it "returns the four ordered buckets" do
+          labels = job_slice_stats(batch_job).map(&:first)
+          assert_equal %w[Queued Active Failed Completed], labels
+        end
+
+        it "counts every uploaded slice as queued" do
+          queued = job_slice_stats(batch_job).find { |bucket| bucket.first == "Queued" }
+          assert_equal 3, queued[2]
+          assert_in_delta 100.0, queued[3], 0.01
+        end
+
+        it "derives completed slices from the total minus those still in the queue" do
+          batch_job.input.first.start!
+          stats     = job_slice_stats(batch_job)
+          completed = stats.find { |bucket| bucket.first == "Completed" }
+          active    = stats.find { |bucket| bucket.first == "Active" }
+          assert_equal 1, active[2]
+          assert_equal 0, completed[2]
+        end
+
+        it "reports zero percentages when nothing is known" do
+          percents = job_slice_stats(KaboomBatchJob.new).map(&:last)
+          assert_equal [0, 0, 0, 0], percents
+        end
+      end
+
       describe "#job_action_link" do
         let(:action) { "abort" }
         let(:http_method) { :patch }

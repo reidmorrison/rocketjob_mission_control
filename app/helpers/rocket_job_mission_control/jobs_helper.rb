@@ -66,6 +66,46 @@ module RocketJobMissionControl
       ((job.record_count.to_f / secs) * 60 * 60).round if job.record_count&.positive? && (secs > 0.0)
     end
 
+    # Ordered slice buckets for the batch job progress bar, each as
+    # [label, css_state_class, count, percent_of_bar]. Left to right:
+    # Queued, Active, Failed, Completed.
+    #
+    # Completed input slices are deleted as they finish, so the completed count
+    # is derived from the total expected slices (see #job_total_slices) minus
+    # those still queued, running, or failed. The percentages are normalized so
+    # the four segments always fill the bar.
+    #
+    # The record count is set before a batch job starts running, so until it is
+    # known the total is nil and every percentage is zero, leaving the bar empty.
+    def job_slice_stats(job)
+      queued    = job.input.queued.count
+      active    = job.input.running.count
+      failed    = job.input.failed.count
+      total     = job_total_slices(job)
+      completed = total ? [total - queued - active - failed, 0].max : 0
+
+      buckets = [
+        ["Queued",    "queued",    queued],
+        ["Active",    "running",   active],
+        ["Failed",    "failed",    failed],
+        ["Completed", "completed", completed]
+      ]
+      sum = buckets.sum(&:last)
+      buckets.map do |label, css_class, count|
+        percent = total && sum.positive? ? ((count * 100.0) / sum).round(2) : 0
+        [label, css_class, count, percent]
+      end
+    end
+
+    # Total number of input slices originally created for a batch job, or nil
+    # when the record count is not yet known (for example while records are
+    # still being uploaded).
+    def job_total_slices(job)
+      return nil unless job.record_count&.positive?
+
+      (job.record_count.to_f / job.input_category.slice_size).ceil
+    end
+
     def job_custom_fields(job)
       attrs = job.attributes.dup
       DISPLAYED_FIELDS.each { |key| attrs.delete(key) }

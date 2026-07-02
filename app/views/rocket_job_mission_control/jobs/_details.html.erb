@@ -67,17 +67,24 @@
               <td><%= job_estimated_time_left(@job) %></td>
             </tr>
           <% end %>
+          <% slice_stats = job_slice_stats(@job) %>
           <tr>
-            <td><label>Queued Slices:</label></td>
-            <td><%= @job.input.queued.count %></td>
-          </tr>
-          <tr>
-            <td><label>Active Slices:</label></td>
-            <td><%= @job.input.running.count %></td>
-          </tr>
-          <tr>
-            <td><label>Failed Slices:</label></td>
-            <td><%= @job.input.failed.count %></td>
+            <td><label>Slices:</label></td>
+            <td>
+              <div class='slice-bar'>
+                <% slice_stats.each do |label, css_class, count, percent| %>
+                  <% next if percent.zero? %>
+                  <div class="slice-bar-segment <%= css_class %>" style="width: <%= percent %>%" title="<%= label %>: <%= count %>"></div>
+                <% end %>
+              </div>
+              <div class='slice-bar-legend'>
+                <% slice_stats.each do |label, css_class, count, _percent| %>
+                  <span class='slice-bar-legend-item'>
+                    <span class="slice-bar-swatch <%= css_class %>"></span><%= label %>: <%= count %>
+                  </span>
+                <% end %>
+              </div>
+            </td>
           </tr>
         <% end %>
         <tr>

@@ -12,6 +12,12 @@
       </div>
     <% end %>
 
+    <% if @job.respond_to?(:input_category) && @job.running? && can?(:read, RocketJob::Worker) %>
+      <div class='btn-group'>
+        <%= link_to 'Show Workers', active_workers_path(job_id: @job.id), class: 'btn btn-default' %>
+      </div>
+    <% end %>
+
     <div class='left-margin'>
       <% valid_events = @job.aasm.events.collect { |e| e.name } %>
       <% if valid_events.include?(:pause) && @job.pausable? && can?(:pause, @job) %>

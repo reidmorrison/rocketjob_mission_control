@@ -24,10 +24,11 @@
           <h4> For Job: <%= link_to(@job.class.name, job_path(@job)) %> ID:<%= link_to(@job.id, job_path(@job)) %></h4>
         <% end %>
 
-        <table class='table datatable active-workers-datatable' data-source='<%= active_workers_url(format: 'json') %>' style='width: 100%'>
+        <table class='table datatable active-workers-datatable' data-source='<%= active_workers_url(format: 'json', job_id: @job&.id, server_name: @server_name) %>' style='width: 100%'>
           <thead>
             <tr>
               <th>Worker Name</th>
+              <th>Server</th>
               <th>Class</th>
               <th>Description</th>
               <th>Started</th>
@@ -45,7 +46,7 @@
   jQuery(function() {
     new RjmcDatatable(
       $('.active-workers-datatable'),
-      [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}],
+      [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}, {data: '4'}],
       { ordering: false, searching: false });
   });
 </script>

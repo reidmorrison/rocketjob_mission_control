@@ -38,7 +38,7 @@ module RocketJobMissionControl
           end
         when "Array"
           # remove blank entries from rails converted arrays when using multi-select input
-          value.reject!(&:empty?) unless value.blank?
+          value.presence&.reject!(&:empty?)
         end
 
         if value.blank? && !value.is_a?(Hash)

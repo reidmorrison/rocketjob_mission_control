@@ -153,7 +153,7 @@ placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
       # The `fields:` are rendered from the `fields` blocks.
       # We use `gsub("\n", "")` to remove anywhite space from the rendered partial.
       # The `id:` value needs to match the value used in `child_index: id`.
-      link_to(name, "#", class: "add_fields btn btn-#{option}", data: {id: id, fields: fields.gsub("\n", "")})
+      link_to(name, "#", class: "add_fields btn btn-#{option}", data: {id: id, fields: fields.delete("\n")})
     end
   end
 end

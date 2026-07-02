@@ -26,7 +26,7 @@ class RecordEscaperTest < Minitest::Test
       end
 
       it "escapes invalid UTF-8 bytes" do
-        assert_equal "x\\xA3y", Escaper.escape("x\xA3y".dup.force_encoding("UTF-8"))
+        assert_equal "x\\xA3y", Escaper.escape((+"x\xA3y").force_encoding("UTF-8"))
       end
     end
 
@@ -52,7 +52,7 @@ class RecordEscaperTest < Minitest::Test
         "tab\tnewline\nend",
         "back\\slash",
         "del\x7Fbyte",
-        "invalid\xA3utf8".dup.force_encoding("UTF-8")
+        (+"invalid\xA3utf8").force_encoding("UTF-8")
       ].each do |original|
         it "restores every byte of #{original.inspect}" do
           restored = Escaper.unescape(Escaper.escape(original))

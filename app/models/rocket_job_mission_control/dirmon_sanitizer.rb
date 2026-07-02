@@ -14,7 +14,7 @@ module RocketJobMissionControl
 
       if params.key?(:properties)
         properties                      = JobSanitizer.sanitize(params[:properties], job_class, target, false)
-        permissible_params[:properties] = properties unless properties.blank?
+        permissible_params[:properties] = properties if properties.present?
       end
 
       permissible_params

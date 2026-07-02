@@ -144,9 +144,9 @@ module RocketJobMissionControl
 
       # Instance variables to share with the view and pagination.
       @lines                 = current_failure.records
-      @failure_exception     = current_failure.try!(:exception)
-      @failure_record_number = current_failure.try!(:current_record_number)
-      @first_record_number   = current_failure.try!(:first_record_number)
+      @failure_exception     = current_failure&.exception
+      @failure_record_number = current_failure&.current_record_number
+      @first_record_number   = current_failure&.first_record_number
       @view_slice_pagination = {
         record_number: current_failure.processing_record_number,
         offset:        @offset,
@@ -164,8 +164,8 @@ module RocketJobMissionControl
       scope              = @job.input.failed.where("exception.class_name" => error_type)
       current_failure      = scope.order(_id: 1).limit(1).skip(@offset).first
       @lines               = current_failure.records
-      @failure_exception   = current_failure.try!(:exception)
-      @first_record_number = current_failure.try!(:first_record_number)
+      @failure_exception   = current_failure&.exception
+      @first_record_number = current_failure&.first_record_number
     end
 
     def update_slice
@@ -235,7 +235,7 @@ module RocketJobMissionControl
       error_type = params[:error_type]
       offset     = params.fetch(:offset, 0).to_i
 
-      unless error_type.present?
+      if error_type.blank?
         flash[:warning] = t(:no_errors, scope: %i[job failures])
         redirect_to(job_path(@job))
       end
@@ -248,8 +248,8 @@ module RocketJobMissionControl
       end
 
       current_failure        = scope.order(_id: 1).limit(1).skip(offset).first
-      @failure_exception     = current_failure.try!(:exception)
-      @failure_record_number = current_failure.try!(:current_record_number)
+      @failure_exception     = current_failure&.exception
+      @failure_record_number = current_failure&.current_record_number
 
       @pagination = {
         offset: offset,

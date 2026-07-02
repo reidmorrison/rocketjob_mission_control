@@ -30,7 +30,7 @@ module RocketJobMissionControl
     end
 
     def threads(server)
-      "#{server.try!(:heartbeat).try!(:workers).to_i}/#{server.max_workers}"
+      "#{server&.heartbeat&.workers.to_i}/#{server.max_workers}"
     end
 
     def started_ago(server)
@@ -38,7 +38,7 @@ module RocketJobMissionControl
     end
 
     def time_since_heartbeat(server)
-      "#{RocketJob.seconds_as_duration(Time.now - (server.try!(:heartbeat).try!(:updated_at) || Time.now))} ago"
+      "#{RocketJob.seconds_as_duration(Time.now - (server&.heartbeat&.updated_at || Time.now))} ago"
     end
 
     def action_links_html(server)

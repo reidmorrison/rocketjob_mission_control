@@ -86,7 +86,7 @@ module RocketJobMissionControl
             end
 
             it "transitions the job" do
-              refute_equal state, pausable_job.state
+              assert_not_equal state, pausable_job.state
             end
           end
         end

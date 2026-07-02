@@ -19,9 +19,7 @@ module RocketJobMissionControl
 
     # Count after applying search_term.
     # Pagination settings do not affect this count.
-    def count
-      unsorted_query.count
-    end
+    delegate :count, to: :unsorted_query
 
     # Count before applying search term
     # Pagination settings do not affect this count.

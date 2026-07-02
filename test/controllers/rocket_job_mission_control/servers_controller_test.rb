@@ -94,7 +94,7 @@ module RocketJobMissionControl
           end
 
           it "destroys the server" do
-            refute RocketJob::Server.where(id: server.id).exists?
+            assert_not RocketJob::Server.where(id: server.id).exists?
           end
         end
 

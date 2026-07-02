@@ -44,12 +44,12 @@ module RocketJobMissionControl
     end
 
     def extract_sort(order)
-      return nil unless order.present?
+      return nil if order.blank?
 
       sort_by = {}
       order.each_pair do |_key, value|
         name = query.display_columns[value[:column].to_i]
-        unless name.present?
+        if name.blank?
           raise(ArgumentError, "Invalid column id: #{value[:column]}. Must fit #{query.display_columns.inspect}")
         end
 

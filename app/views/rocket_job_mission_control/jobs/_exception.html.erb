@@ -13,7 +13,7 @@
       <% if @job.exception.backtrace.present? %>
         <tr>
           <td><label>Backtrace:</label></td>
-          <td><%= @job.exception.backtrace.ai(html: true, plain: true) %></td>
+          <td><%= render_json_tree(@job.exception.backtrace) %></td>
         </tr>
       <% end %>
     </table>

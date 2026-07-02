@@ -14,7 +14,7 @@
               <tr>
                 <td><label>Format Options:</label></td>
                 <td>
-                  <pre><code><%= category.format_options.ai(plain: true, ruby19_syntax: true, sort_keys: true) %></code></pre>
+                  <%= render_json_tree(category.format_options) %>
                 </td>
               </tr>
             <% end %>

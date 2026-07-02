@@ -49,6 +49,25 @@ module RocketJobMissionControl
       JSON.generate(arguments, json_string_options).html_safe
     end
 
+    # Arrays/Hashes with more than this many top-level entries are collapsed by
+    # default when rendered as a JSON tree.
+    JSON_TREE_COLLAPSE_THRESHOLD = 10
+
+    # Render an Array or Hash as an interactive, collapsible JSON tree
+    # (see jquery.json-viewer.js / json_tree_init.js). Collections with more than
+    # JSON_TREE_COLLAPSE_THRESHOLD top-level entries start collapsed. The value is
+    # embedded as JSON for the viewer, with a <noscript> plain-text fallback for
+    # when JavaScript is unavailable.
+    def render_json_tree(value)
+      plain     = JSON.parse(value.to_json)
+      collapsed = plain.respond_to?(:size) && plain.size > JSON_TREE_COLLAPSE_THRESHOLD
+
+      content_tag(:div, class: "json-tree", data: {collapsed: collapsed}) do
+        content_tag(:script, raw(ERB::Util.json_escape(JSON.generate(plain))), type: "application/json") +
+          content_tag(:noscript, content_tag(:pre, JSON.pretty_generate(plain)))
+      end
+    end
+
     # Returns [Array] list of inclusion values for this attribute.
     # Returns nil when there are no inclusion values for this attribute.
     def extract_inclusion_values(klass, attribute)

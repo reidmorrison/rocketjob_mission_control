@@ -18,7 +18,7 @@
 <% if @job.respond_to?(:statistics) && @job.statistics.present? %>
   <div class='status-message'>
     <div class='section-header'>Statistics</div>
-    <td><%= @job.statistics.ai(html: true, plain: true, sort_keys: true) %></td>
+    <%= render_json_tree(@job.statistics) %>
   </div>
   <br/>
 <% end %>

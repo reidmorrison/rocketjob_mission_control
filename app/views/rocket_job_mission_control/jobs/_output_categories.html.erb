@@ -30,14 +30,14 @@
               <% if category.format_options %>
                 <tr>
                   <td><label>Format Options:</label></td>
-                  <td><%= category.format_options.ai(html:true, plain: true, ruby19_syntax: true, sort_keys: true) %></td>
+                  <td><%= render_json_tree(category.format_options) %></td>
                 </tr>
               <% end %>
             <% end %>
             <% if category.columns %>
               <tr>
                 <td><label>Columns:</label></td>
-                <td><%= category.columns.ai(html: true, plain: true) %></td>
+                <td><%= render_json_tree(category.columns) %></td>
               </tr>
             <% end %>
           </table>

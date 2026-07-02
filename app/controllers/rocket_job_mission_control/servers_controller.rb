@@ -1,19 +1,13 @@
 module RocketJobMissionControl
   class ServersController < RocketJobMissionControl::ApplicationController
-    if Rails.version.to_i < 5
-      before_filter :find_server_or_redirect, only: %i[stop pause resume destroy]
-      before_filter :authorize_read, only: %i[index starting running paused stopping zombie]
-      before_filter :show_sidebar
-    else
-      before_action :find_server_or_redirect, only: %i[stop pause resume destroy]
-      before_action :authorize_read, only: %i[index starting running paused stopping zombie]
-      before_action :show_sidebar
-    end
+    before_action :find_server_or_redirect, only: %i[stop pause resume destroy]
+    before_action :authorize_read, only: %i[index starting running paused stopping zombie]
+    before_action :show_sidebar
 
     rescue_from AccessGranted::AccessDenied do |exception|
       raise exception if Rails.env.development? || Rails.env.test?
 
-      redirect_to :back, alert: "Access not authorized."
+      redirect_back(fallback_location: servers_path, allow_other_host: false, alert: "Access not authorized.")
     end
 
     def index

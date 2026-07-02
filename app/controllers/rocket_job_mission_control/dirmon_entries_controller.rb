@@ -6,7 +6,8 @@ module RocketJobMissionControl
 
     rescue_from AccessGranted::AccessDenied do |exception|
       raise exception if Rails.env.development? || Rails.env.test?
-      redirect_to :back, alert: "Access not authorized."
+
+      redirect_back(fallback_location: dirmon_entries_path, allow_other_host: false, alert: "Access not authorized.")
     end
 
     def index
@@ -87,7 +88,7 @@ module RocketJobMissionControl
         dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, @dirmon_entry, false)
       end
 
-      if dirmon_entry_replicate.update_attributes(dirmon_params)
+      if dirmon_entry_replicate.update(dirmon_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(dirmon_entry_replicate))
       else
         dirmon_params.each { |k,v| @dirmon_entry.send("#{k}=", v) }
@@ -106,7 +107,7 @@ module RocketJobMissionControl
 
       sanitized_params[:properties] = properties
 
-      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update_attributes(sanitized_params)
+      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update(sanitized_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
         render :edit
@@ -154,7 +155,7 @@ module RocketJobMissionControl
 
     def find_entry_or_redirect
       unless @dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first
-        flash[:danger] = t(:failure, scope: %i[dirmon_entry find], id: ActionController::Base.helpers.sanitize(params[:id]))
+        flash[:danger] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
         redirect_to(dirmon_entries_path)
       end
     end

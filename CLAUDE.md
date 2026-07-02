@@ -10,10 +10,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 RJMC is one of a family of gems by the same author, all checked out one directory up (`../`). When a change touches one of these dependencies, read its source directly rather than the installed gem:
 
-- `../rocketjob` — the batch job engine RJMC manages (`RocketJob::Job`, `Server`, `Worker`, `DirmonEntry`).
-- `../semantic_logger`, `../rails_semantic_logger` — logging (`JobsController#error_occurred` special-cases `SemanticLogger::Logger`).
-- `../iostreams` — streaming file I/O used by Rocket Job batch jobs.
-- `../symmetric-encryption` — encryption used for encrypted slices/fields.
+- `../rocketjob`: the batch job engine RJMC manages (`RocketJob::Job`, `Server`, `Worker`, `DirmonEntry`).
+- `../semantic_logger`, `../rails_semantic_logger`: logging (`JobsController#error_occurred` special-cases `SemanticLogger::Logger`).
+- `../iostreams`: streaming file I/O used by Rocket Job batch jobs.
+- `../symmetric-encryption`: encryption used for encrypted slices/fields.
 
 Rocket Job Pro and Enterprise functionality has been rolled into `rocketjob` itself; there are no separate `rocketjob_pro` / `rocketjob_enterprise` gems. To develop against a local copy of any dependency, point `rjmc/Gemfile` at `path: "../<gem>"`.
 
@@ -23,7 +23,8 @@ Testing uses [Appraisal](https://github.com/thoughtbot/appraisal) to run against
 
 ```bash
 bundle install
-appraisal install                     # generate/install gemfiles/*.gemfile
+appraisal install                     # generate gemfiles/*.gemfile, install using existing *.lock
+appraisal update                      # re-resolve every appraisal to latest allowed versions, regenerate *.lock
 
 bundle exec rake                      # run tests against ALL appraisals (default task)
 appraisal rails_8.1 rake              # run tests for one Rails version
@@ -35,7 +36,11 @@ appraisal rails_8.1 ruby -I'test' test/controllers/rocket_job_mission_control/jo
 bundle exec rubocop                   # lint
 ```
 
+After changing gemspec/Gemfile dependencies (e.g. adding a gem), run `bundle update` then `appraisal update` so both the root lock and every `gemfiles/*.gemfile.lock` pick up the change; `appraisal install` alone will reuse stale appraisal locks.
+
 Note: `bundle exec rake` with no `APPRAISAL_INITIALIZED`/`TRAVIS` env var runs `app:appraisal`, iterating every appraisal. Set `APPRAISAL_INITIALIZED=1` (or run inside `appraisal <name>`) to run the plain `test` task once.
+
+CI (`.github/workflows/ci.yml`) runs the same appraisals on GitHub Actions with a MongoDB service container: Rails 7.2 on Ruby 3.2, Rails 8.0 on Ruby 3.4, Rails 8.1 on Ruby 4.0.
 
 ### Dummy app (`rjmc/`)
 
@@ -60,7 +65,7 @@ The four resources (jobs, servers, active_workers, dirmon_entries) all render se
 
 - `AbstractDatatable` (`as_json`) produces the `{draw, recordsTotal, recordsFiltered, data}` payload DataTables expects, and translates DataTables request params (search value, column ordering, `start`/`length` pagination) into a `Query`.
 - Concrete datatables (`jobs_datatable.rb`, etc.) define the column sets (e.g. `JobsDatatable::RUNNING_COLUMNS`, `RUNNING_FIELDS`) and a `map(record)` that turns one Mongoid document into a table row.
-- `Query` (`app/models/`) wraps a Mongoid scope and applies text search (case-insensitive regex over `search_columns`, `$or` across multiple), sorting, and skip/limit pagination. `count` is post-filter, `unfiltered_count` is pre-filter.
+- `Query` (`app/models/`) wraps a Mongoid scope and applies text search (case-insensitive regex over `search_columns`, `$or` across multiple; the search term is `Regexp.escape`d), sorting, and skip/limit pagination. `count` is post-filter, `unfiltered_count` is pre-filter.
 
 When adding a column to a table, update both the `*_COLUMNS` (display) and `*_FIELDS` (the Mongoid `.only(...)` projection) constants, plus `map`.
 
@@ -68,9 +73,9 @@ When adding a column to a table, update both the `*_COLUMNS` (display) and `*_FI
 
 Uses [access-granted](https://github.com/chaps-io/access-granted). Three pieces:
 
-- `AccessPolicy` (`app/models/`) defines role → permission rules over the `RocketJob::*` classes. Roles: `admin, editor, operator, manager, dirmon, user, view`.
+- `AccessPolicy` (`app/models/`) defines role → permission rules over the `RocketJob::*` classes. Roles: `admin, editor, operator, manager, dirmon, user, view`. The policy class is overridable per host via `Config.access_policy_class` (a Class, or a String/Symbol that is constantized).
 - `Authorization` (`app/models/`) is the "current user" object. Roles are **hierarchical**: constructing it with a role also grants all lower-privilege roles (`inherit_less_privilege_roles`, ordering defined by `ROLES`). The `user` role is scoped so a user may only act on jobs whose `login` matches.
-- `ApplicationController#current_policy` builds the policy from `Config.authorization_callback`. The host app sets this callback (via `config.rocket_job_mission_control.authorization_callback`) returning `{roles:, login:}`. **When no callback is configured, the default is full admin (`{roles: [:admin]}`)** — auth is opt-in by the host.
+- `ApplicationController#current_policy` builds the policy from `Config.authorization_callback`. The host app sets this callback (via `config.rocket_job_mission_control.authorization_callback`) returning `{roles:, login:}`. **When no callback is configured, the default is full admin (`{roles: [:admin]}`)**: auth is opt-in by the host.
 
 Controllers call `authorize! :action, Resource` (provided by access-granted through the policy). `AccessGranted::AccessDenied` is rescued and surfaced as a flash message.
 
@@ -87,10 +92,33 @@ Rocket Job jobs have user-defined fields, so strong-params lists are computed at
 
 ### Engine wiring
 
-`lib/rocket_job_mission_control/engine.rb` `isolate_namespace`s the engine, requires `rocketjob`, and exposes `config.rocket_job_mission_control` → `RocketJobMissionControl::Config` (`mattr_accessor :authorization_callback`). Assets are Sprockets-based.
+`lib/rocket_job_mission_control/engine.rb` `isolate_namespace`s the engine, requires `rocketjob`, and exposes `config.rocket_job_mission_control` → `RocketJobMissionControl::Config` (`mattr_accessor`s: `authorization_callback`, `access_policy_class`).
+
+### Front-end assets
+
+All JS/CSS libraries are vendored files under `app/assets/` (no npm, importmap, or CDN). Current versions: jQuery 3.5.1, Bootstrap 3.4.1, a DataTables 1.10.20 downloader bundle (`datatables.min.js` also contains Buttons 1.6.1, JSZip 2.5.0, pdfmake 0.1.36, and the Flash export module; rebuild it via the datatables.net download builder URL in the file header), Selectize 0.12.4, jquery.json-viewer 1.5.0 (vendored verbatim; upgrade by replacing the file, theming lives in `json_tree.css`), and Font Awesome 5.0.6.
+
+The pipeline is Sprockets-only: `application.js` is a `//= require` manifest (including `rails-ujs`, which powers every `data-method` state-transition link), and several stylesheets are `.css.erb` using `asset_path`. Host apps on Rails 8+ default to Propshaft and must add `sprockets-rails` to use this engine.
+
+## Security-sensitive rendering paths
+
+- The flash partial (`app/views/layouts/rocket_job_mission_control/partials/_flash.html.erb`) renders every message with `html_safe`. Anything interpolated into `flash[...]` (params, exception messages, job data) must be escaped or sanitized at the call site, or it is an XSS vector. There is prior history here: commit 3dee9b6 fixed a reflected XSS from unsanitized `params[:id]` in flash messages.
+- Datatable `map` methods build HTML strings by hand; every dynamic cell value must go through `h(...)` (`AbstractDatatable` delegates `h` to `ERB::Util`) because DataTables renders cells as raw HTML.
+- Several `rescue_from` handlers start with `raise exception if Rails.env.development? || Rails.env.test?`, so their recovery branches only ever execute in production and are invisible to the test suite. Treat changes to those branches as untested until exercised manually.
+
+## Known tech debt (modernization review, July 2026)
+
+Remove items from this list as they are fixed:
+
+1. Vendored JS with published CVEs: DataTables 1.10.20 (CVE-2020-28458, CVE-2021-23445), JSZip 2.5.0 (CVE-2021-23413, CVE-2022-48285), pdfmake 0.1.36, plus the dead Flash export button. Rebuild the bundle on DataTables 2.x without Flash/pdfmake; bump jQuery to 3.7.x.
+2. Bootstrap 3.4.1 is EOL with an unpatched XSS CVE (CVE-2024-6484, carousel; unused here). The big-ticket project: migrate to Bootstrap 5, Propshaft-compatible assets (plain CSS `url()` instead of `.css.erb`), Turbo-friendly action links instead of rails-ujs `data-method`, tom-select instead of Selectize, Font Awesome 6.
+3. Housekeeping: gemspec `s.test_files` is deprecated; CI uses `actions/checkout@v2` (retired Node runtime); no RuboCop, bundler-audit, or dependabot in CI; `.rubocop.yml` `TargetRubyVersion` still 2.4 while the gem requires Ruby >= 3.2.
+
+Fixed in `feature/modernize-security-quick-wins` (was items 1-3): reflected XSS in flash messages (the flash partial no longer calls `html_safe`, so all messages are auto-escaped and no call site needs to sanitize); `redirect_to :back` replaced with `redirect_back(fallback_location:)` in the jobs/servers/dirmon rescue paths; dead `Rails.version.to_i < 5` / `before_filter` branches removed; `update_attributes` replaced with `update`.
 
 ## Conventions
 
-- Ruby >= 3.2 required (`.rubocop.yml` still targets 2.4 for style only). RuboCop enforces trailing dot position, `lf` line endings, and table-aligned hashes — match the heavy column alignment already used throughout the codebase.
+- Ruby >= 3.2 required. RuboCop enforces trailing dot position, `lf` line endings, and table-aligned hashes; match the heavy column alignment already used throughout the codebase.
 - Tests are Minitest via `minispec-rails`; controller tests include the engine's route helpers and set `@routes = RocketJobMissionControl::Engine.routes`.
+- Gem version lives in `lib/rocket_job_mission_control/version.rb`.
 - Per the global writing-style rule, avoid em dashes in prose and comments.

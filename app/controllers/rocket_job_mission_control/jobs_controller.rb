@@ -1,14 +1,8 @@
 module RocketJobMissionControl
   class JobsController < RocketJobMissionControl::ApplicationController
-    if Rails.version.to_i < 5
-      before_filter :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_filter :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
-      before_filter :show_sidebar
-    else
-      before_action :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
-      before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
-      before_action :show_sidebar
-    end
+    before_action :find_job_or_redirect, except: %i[index aborted completed failed paused queued running scheduled]
+    before_action :authorize_read, only: %i[index running paused completed aborted failed queued scheduled]
+    before_action :show_sidebar
 
     rescue_from StandardError, with: :error_occurred
 
@@ -293,7 +287,7 @@ module RocketJobMissionControl
 
     def find_job_or_redirect
       unless @job = RocketJob::Job.where(id: params[:id]).first
-        flash[:danger] = t(:failure, scope: %i[job find], id: ActionController::Base.helpers.sanitize(params[:id]))
+        flash[:danger] = t(:failure, scope: %i[job find], id: params[:id])
 
         redirect_to(jobs_path)
       end
@@ -344,7 +338,7 @@ module RocketJobMissionControl
 
       raise exception if Rails.env.development? || Rails.env.test?
 
-      redirect_to :back
+      redirect_back(fallback_location: jobs_path, allow_other_host: false)
     end
 
     def render_datatable(jobs, description, columns, sort_order)

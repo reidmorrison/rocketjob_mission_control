@@ -83,14 +83,6 @@ module RocketJobMissionControl
       values
     end
 
-    def escape(s)
-      s.dump[1..-2]
-    end
-
-    def unescape(s)
-      "\"#{s}\"".undump
-    end
-
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
     def editable_field_html(klass, field_name, value, f)
       # When editing a job the values are of the correct type.

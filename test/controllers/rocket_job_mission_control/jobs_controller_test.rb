@@ -39,7 +39,7 @@ module RocketJobMissionControl
         3.times do
           begin
             job.perform_now
-          rescue ArgumentError, RuntimeError
+          rescue ArgumentError, RuntimeError, EOFError
           end
         end
         job
@@ -209,8 +209,13 @@ module RocketJobMissionControl
           end
 
           describe "with exception" do
+            # Derive the error type from a real failed slice so the test does not
+            # depend on which error class KaboomBatchJob raised for each slice.
+            let(:failed_slice) { failed_job.input.failed.order(_id: 1).first }
+            let(:error_type)   { failed_slice.exception.class_name }
+
             before do
-              get :exception, params: {id: failed_job.id, error_type: "ArgumentError"}
+              get :exception, params: {id: failed_job.id, error_type: error_type}
             end
 
             it "succeeds" do
@@ -222,13 +227,14 @@ module RocketJobMissionControl
             end
 
             it "paginates" do
-              assert_equal 0, assigns(:pagination)[:offset], assigns(:pagination)
-              assert_equal 1, assigns(:pagination)[:total], assigns(:pagination)
+              expected_total = failed_job.input.failed.where("exception.class_name" => error_type).count - 1
+              assert_equal 0,              assigns(:pagination)[:offset], assigns(:pagination)
+              assert_equal expected_total, assigns(:pagination)[:total],  assigns(:pagination)
             end
 
             it "returns the first exception" do
-              assert_equal "ArgumentError", assigns(:failure_exception).class_name
-              assert_equal "Blowing up on record: 1", assigns(:failure_exception).message
+              assert_equal error_type,                    assigns(:failure_exception).class_name
+              assert_equal failed_slice.exception.message, assigns(:failure_exception).message
               assert assigns(:failure_exception).backtrace.present?
             end
           end
@@ -409,28 +415,143 @@ module RocketJobMissionControl
         end
       end
 
-      %i[view_slice edit_slice].each do |method|
-        describe "with a failed slice" do
-          it "access ##{method}" do
-            params = {:error_type => "ArgumentError", "record_number" => "9", "id" => failed_job.id}
-            get method, params: params
-            assert_response :success
+      # Derive the error type and slice from a real failed slice so the lookups
+      # (which filter by error type) match the slice under test, regardless of
+      # which error class KaboomBatchJob happened to raise for each slice.
+      describe "#view_slice" do
+        let(:failed_slice) { failed_job.input.failed.order(_id: 1).first }
+        let(:error_type)   { failed_slice.exception.class_name }
+
+        before do
+          get :view_slice, params: {id: failed_job.id, error_type: error_type, offset: "0"}
+        end
+
+        it "succeeds" do
+          assert_response :success
+        end
+
+        it "assigns the failed slice details" do
+          assert_equal error_type,                          assigns(:failure_exception).class_name
+          assert_equal failed_slice.current_record_number,  assigns(:failure_record_number)
+          assert_equal failed_slice.first_record_number,    assigns(:first_record_number)
+          assert_equal failed_slice.records,                assigns(:lines)
+        end
+
+        it "paginates from the requested offset" do
+          assert_equal 0,                                  assigns(:view_slice_pagination)[:offset]
+          assert_equal failed_slice.processing_record_number, assigns(:view_slice_pagination)[:record_number]
+        end
+
+        it "renders the exception title and section" do
+          assert_includes response.body, failed_job.class.name
+          assert_includes response.body, "Exception"
+          assert_includes response.body, error_type
+          assert_includes response.body, failed_slice.exception.message
+        end
+
+        it "renders the records section with each record and its number" do
+          assert_includes response.body, "Records"
+          assert_includes response.body, "Content"
+          failed_slice.records.each_with_index do |record, index|
+            assert_includes response.body, record
+            assert_includes response.body, (failed_slice.first_record_number + index).to_s
           end
+        end
+
+        it "highlights the failed record" do
+          assert_includes response.body, "records-failed"
+        end
+
+        it "highlights unprintable bytes in a record" do
+          failed_slice.records = ["null\x00byte"]
+          failed_slice.save!
+          get :view_slice, params: {id: failed_job.id, error_type: error_type, offset: "0"}
+          assert_includes response.body, "record-escape"
+          assert_includes response.body, "\\x00"
+        end
+      end
+
+      describe "#edit_slice" do
+        let(:failed_slice) { failed_job.input.failed.order(_id: 1).first }
+        let(:error_type)   { failed_slice.exception.class_name }
+
+        before do
+          get :edit_slice, params: {id: failed_job.id, error_type: error_type, offset: "0", line_index: "0"}
+        end
+
+        it "succeeds" do
+          assert_response :success
+        end
+
+        it "assigns the slice details" do
+          assert_equal error_type,                       assigns(:failure_exception).class_name
+          assert_equal failed_slice.first_record_number, assigns(:first_record_number)
+          assert_equal failed_slice.records,             assigns(:lines)
+          assert_equal 0,                                assigns(:line_index)
+        end
+
+        it "renders the edit slice title and record header" do
+          assert_includes response.body, "Edit Slice"
+          assert_includes response.body, "Edit Record: #{failed_slice.first_record_number}"
+        end
+
+        it "renders an editable text area for the record" do
+          assert_match(/<textarea[^>]*input_slices/, response.body)
+        end
+
+        it "shows unprintable bytes as escapes in the text area" do
+          failed_slice.records = ["null\x00byte"]
+          failed_slice.save!
+          get :edit_slice, params: {id: failed_job.id, error_type: error_type, offset: "0", line_index: "0"}
+          assert_includes response.body, "null\\x00byte"
+        end
+
+        it "confirms deletion with the record number" do
+          assert_includes response.body, "Record #{failed_slice.first_record_number} will be deleted from the slice."
         end
       end
 
       describe "#update slice" do
+        # Derive the error type from an actual failed slice so the lookup (which
+        # filters by error type) matches the slice that was edited.
+        let(:error_type) { failed_job.input.failed.order(_id: 1).first.exception.class_name }
+
         before do
-          params = {"job" => {"records" => %w[1 2 3]}, "error_type" => "CSV::MalformedCSVError", "offset" => "1", "id" => failed_job.id.to_s}
+          params = {"job" => {"records" => %w[1 2 3]}, "error_type" => error_type, "offset" => "0", "id" => failed_job.id.to_s}
           post :update_slice, params: params
         end
 
         it "redirects" do
-          assert_redirected_to view_slice_job_path(failed_job, error_type: "CSV::MalformedCSVError")
+          assert_redirected_to view_slice_job_path(failed_job, error_type: error_type)
         end
 
         it "adds a flash success message" do
           assert_equal "slice updated", flash[:success]
+        end
+
+        it "unescapes submitted records back to their original bytes" do
+          slice = failed_job.input.failed.order(_id: 1).first
+          post :update_slice, params: {
+            "job"        => {"records" => ["null\\x00byte"]},
+            "error_type" => slice.exception.class_name,
+            "offset"     => "0",
+            "id"         => failed_job.id.to_s
+          }
+          slice.reload
+          assert_equal "null\x00byte", slice.records.first
+        end
+
+        it "reports an error instead of raising when a record cannot be stored" do
+          slice = failed_job.input.failed.order(_id: 1).first
+          # \xA3 unescapes to an invalid UTF-8 byte, which Mongo cannot store.
+          post :update_slice, params: {
+            "job"        => {"records" => ["bad\\xA3byte"]},
+            "error_type" => slice.exception.class_name,
+            "offset"     => "0",
+            "id"         => failed_job.id.to_s
+          }
+          assert_response :redirect
+          assert flash[:danger].present?
         end
       end
     end

@@ -168,5 +168,66 @@ module RocketJobMissionControl
       categories.each { |category| return category if category_name == (category["name"] || :main).to_sym }
       nil
     end
+
+    # Paths that live inside a gem or Ruby's standard library. Frames rooted at
+    # any of these are treated as noise and hidden from the abbreviated
+    # backtrace. This mirrors SemanticLogger::Utils.strip_path? without depending
+    # on that internal method, so it keeps working regardless of the installed
+    # Semantic Logger version.
+    def backtrace_strip_paths
+      @backtrace_strip_paths ||= (Gem.path | [Gem.default_dir, RbConfig::CONFIG["rubylibdir"]]).compact
+    end
+
+    # Returns [true|false] whether the backtrace line originates from a gem or
+    # from Ruby itself, and so should be omitted from the abbreviated backtrace.
+    def backtrace_noise?(line)
+      backtrace_strip_paths.any? { |path| line.to_s.start_with?(path) }
+    end
+
+    # Reversible, ASCII-safe form of a failed record for an edit textarea.
+    # See RecordEscaper; unescape it with RecordEscaper.unescape on save.
+    def escape_record(value)
+      RecordEscaper.escape(value)
+    end
+
+    # Read-only HTML for a failed record, with each unprintable/invalid byte
+    # rendered as a highlighted `\xHH` token. Each highlight carries a hover
+    # tooltip naming the byte, so an operator can see (in context) exactly which
+    # byte broke the record and what it is.
+    def highlight_record(value)
+      safe_join(
+        RecordEscaper.segments(value).map do |type, text|
+          next text if type == :text
+
+          content_tag(:span, text, class: "record-escape", title: record_escape_title(text))
+        end
+      )
+    end
+
+    # Human-readable names for the control bytes that can appear as escapes, used
+    # for the hover tooltip on a highlighted record byte. Tab/LF/CR are shown as
+    # real whitespace, so they never reach here.
+    CONTROL_NAMES = {
+      0x00 => "NUL", 0x01 => "SOH", 0x02 => "STX", 0x03 => "ETX", 0x04 => "EOT",
+      0x05 => "ENQ", 0x06 => "ACK", 0x07 => "BEL", 0x08 => "BS",  0x0B => "VT",
+      0x0C => "FF",  0x0E => "SO",  0x0F => "SI",  0x10 => "DLE", 0x11 => "DC1",
+      0x12 => "DC2", 0x13 => "DC3", 0x14 => "DC4", 0x15 => "NAK", 0x16 => "SYN",
+      0x17 => "ETB", 0x18 => "CAN", 0x19 => "EM",  0x1A => "SUB", 0x1B => "ESC",
+      0x1C => "FS",  0x1D => "GS",  0x1E => "RS",  0x1F => "US",  0x7F => "DEL"
+    }.freeze
+
+    # Tooltip text explaining why a highlighted token is shown as an escape.
+    def record_escape_title(token)
+      if token == "\\\\"
+        "Literal backslash, escaped as \\\\"
+      elsif (match = token.match(/\A\\x(\h{2})\z/))
+        byte = match[1].to_i(16)
+        name = CONTROL_NAMES[byte]
+        base = "Unprintable byte 0x#{match[1]}"
+        name ? "#{base} (#{name})" : base
+      else
+        "Escaped byte"
+      end
+    end
   end
 end

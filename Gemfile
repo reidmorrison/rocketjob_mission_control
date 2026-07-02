@@ -16,6 +16,7 @@ gem "sprockets"
 gem "minispec-rails", require: false
 gem "rails-controller-testing"
 
+gem "bundler-audit", require: false
 gem "rubocop", require: false
 gem "rubocop-minitest", require: false
 gem "rubocop-performance", require: false

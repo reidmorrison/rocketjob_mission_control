@@ -28,7 +28,7 @@ jobs:
       DISPLAY: ":99.0"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -44,3 +44,20 @@ jobs:
 
       - name: Run Tests
         run: bundle exec rake test
+
+  lint:
+    name: "Lint: RuboCop and bundler-audit"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      - name: RuboCop
+        run: bundle exec rubocop --parallel
+
+      - name: bundler-audit
+        run: bundle exec bundle-audit check --update

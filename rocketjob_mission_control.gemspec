@@ -12,10 +12,18 @@ Gem::Specification.new do |s|
   s.license               = "Apache-2.0"
   s.required_ruby_version = ">= 3.2"
 
-  s.files      = Dir["{app,config,db,lib,vendor}/**/*", "LICENSE.txt", "Rakefile", "README.md"]
-  s.test_files = Dir["test/**/*"]
+  s.files = Dir["{app,config,db,lib,vendor}/**/*", "LICENSE.txt", "Rakefile", "README.md"]
 
   s.add_dependency "access-granted", "~> 1.3"
   s.add_dependency "railties", ">= 7.2"
   s.add_dependency "rocketjob", "~> 6.3"
+
+  s.metadata = {
+    "bug_tracker_uri"       => "https://github.com/reidmorrison/rocketjob_mission_control/issues",
+    "changelog_uri"         => "https://github.com/reidmorrison/rocketjob_mission_control/releases",
+    "documentation_uri"     => "https://rocketjob.io",
+    "homepage_uri"          => "https://rocketjob.io",
+    "source_code_uri"       => "https://github.com/reidmorrison/rocketjob_mission_control/tree/v#{RocketJobMissionControl::VERSION}",
+    "rubygems_mfa_required" => "true"
+  }
 end

@@ -2,6 +2,11 @@ module RocketJobMissionControl
   # The authorization callback
   module Config
     mattr_accessor :authorization_callback
+
+    # The access policy class used to authorize actions.
+    # Defaults to RocketJobMissionControl::AccessPolicy when not set.
+    # May be a class, or a String/Symbol naming the class.
+    mattr_accessor :access_policy_class
   end
 
   class Engine < ::Rails::Engine

@@ -9,10 +9,44 @@ module RocketJobMissionControl
     end
   end
 
+  class CustomAccessPolicy < AccessPolicy
+  end
+
   class ApplicationControllerTest < ActionController::TestCase
     tests TestController
 
     describe TestController do
+      describe "#access_policy_class" do
+        before do
+          @original_policy_class = Config.access_policy_class
+          @original_callback     = Config.authorization_callback
+          Config.authorization_callback = nil
+        end
+
+        after do
+          Config.access_policy_class    = @original_policy_class
+          Config.authorization_callback = @original_callback
+        end
+
+        it "defaults to AccessPolicy when not configured" do
+          Config.access_policy_class = nil
+          assert_equal AccessPolicy, @controller.send(:access_policy_class)
+          assert_instance_of AccessPolicy, @controller.send(:current_policy)
+        end
+
+        it "uses a configured policy class" do
+          Config.access_policy_class = CustomAccessPolicy
+          assert_equal CustomAccessPolicy, @controller.send(:access_policy_class)
+          assert_instance_of CustomAccessPolicy, @controller.send(:current_policy)
+        end
+
+        it "constantizes a policy class supplied as a String" do
+          Config.access_policy_class = "RocketJobMissionControl::CustomAccessPolicy"
+          assert_equal CustomAccessPolicy, @controller.send(:access_policy_class)
+          assert_instance_of CustomAccessPolicy, @controller.send(:current_policy)
+        end
+      end
+
       describe "#with_time_zone" do
         before do
           @routes = ActionDispatch::Routing::RouteSet.new

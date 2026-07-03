@@ -14,7 +14,7 @@ module RocketJobMissionControl
       scheduled: "fas fa-clock",
       starting:  "fas fa-cogs",
       stopping:  "fas fa-stop",
-      zombie:    "fas fa-hourglass"
+      zombie:    "fa-solid fa-ghost"
     }.freeze
 
     def state_icon(state)

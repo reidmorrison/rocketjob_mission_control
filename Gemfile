@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "minitest", "~> 5.0"
-gem "mongoid", "~> 9.0.0"
+gem "mongoid", "~> 9.1.0"
 gem "rails", "~> 7.2.0"
 gem "rocketjob", github: "reidmorrison/rocketjob"
 gem "sprockets-rails"

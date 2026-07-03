@@ -551,6 +551,92 @@ module RocketJobMissionControl
           assert flash[:danger].present?
         end
       end
+
+      describe "GET #edit" do
+        describe "with a valid job id" do
+          before do
+            get :edit, params: {id: job.id}
+          end
+
+          it "succeeds" do
+            assert_response :success
+          end
+
+          it "assigns the job" do
+            assert_equal job.id, assigns(:job).id
+          end
+        end
+
+        describe "with an invalid job id" do
+          before do
+            get :edit, params: {id: 42}
+          end
+
+          it "redirects" do
+            assert_redirected_to jobs_path
+          end
+        end
+      end
+
+      describe "DELETE #destroy" do
+        describe "with a valid job id" do
+          before do
+            job
+            delete :destroy, params: {id: job.id}
+          end
+
+          it "redirects to the jobs list" do
+            assert_redirected_to jobs_path
+          end
+
+          it "removes the job" do
+            assert_nil RocketJob::Job.where(id: job.id).first
+          end
+        end
+
+        describe "with an invalid job id" do
+          before do
+            delete :destroy, params: {id: 42}
+          end
+
+          it "redirects" do
+            assert_redirected_to jobs_path
+          end
+        end
+      end
+
+      describe "PATCH #update with an invalid value" do
+        before do
+          # priority must be within 1..100, so this fails validation and the
+          # controller re-renders the edit form instead of redirecting.
+          patch :update, params: {id: job.id, job: {id: job.id, priority: 500}}
+        end
+
+        it "re-renders the edit form" do
+          assert_response :success
+          assert_template :edit
+        end
+
+        it "does not persist the invalid value" do
+          assert_equal 50, job.reload.priority
+        end
+      end
+
+      describe "PATCH #delete_line" do
+        let(:error_type) { failed_job.input.failed.order(_id: 1).first.exception.class_name }
+
+        before do
+          patch :delete_line, params: {id: failed_job.id, error_type: error_type, offset: "0", line_index: "0"}
+        end
+
+        it "redirects to the slice view" do
+          assert_redirected_to view_slice_job_path(failed_job, error_type: error_type)
+        end
+
+        it "adds a flash success message" do
+          assert_match(/removed from the slice/, flash[:success])
+        end
+      end
     end
 
     def set_role(r)

@@ -77,6 +77,36 @@ module RocketJobMissionControl
             end
           end
         end
+
+        describe "with 'destroy_zombies' as the server_action param" do
+          before do
+            patch :update_all, params: {server_action: :destroy_zombies}
+          end
+
+          it "redirects to servers" do
+            assert_redirected_to servers_path
+          end
+
+          it "does not display an error message" do
+            assert_nil flash[:danger]
+          end
+        end
+
+        describe "with an authorized but unsupported server_action param" do
+          before do
+            # :destroy is permitted for an admin but is not one of VALID_ACTIONS,
+            # so it falls through to the invalid branch.
+            patch :update_all, params: {server_action: :destroy}
+          end
+
+          it "redirects to servers" do
+            assert_redirected_to servers_path
+          end
+
+          it "displays an invalid action error message" do
+            assert_equal I18n.t(:invalid, scope: %i[server update_all]), flash[:danger]
+          end
+        end
       end
 
       describe "DELETE #destroy" do

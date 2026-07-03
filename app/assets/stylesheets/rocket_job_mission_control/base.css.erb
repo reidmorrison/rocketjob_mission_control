@@ -85,7 +85,7 @@ div.row {
 
 .dataTables_info, .dataTables_paginate { margin-top: 20px !important; }
 
-.datatable .card td { vertical-align: middle; }
+.datatable .rjmc-card td { vertical-align: middle; }
 
 /* Row action buttons: compact, themed cosmic-blue to match the toolbar. The
    `a.btn` selector is needed to outrank the per-row `.callout-<state> a` link
@@ -526,42 +526,42 @@ h3 { margin-top: 0; }
 
 .job-search-box { padding: 20px 100px; }
 
-.list .card:nth-child(1) { border-top: 1px solid #ddd; }
-.list .card:nth-child(odd) { background-color: #fff; }
+.list .rjmc-card:nth-child(1) { border-top: 1px solid #ddd; }
+.list .rjmc-card:nth-child(odd) { background-color: #fff; }
 
-.list .card {
+.list .rjmc-card {
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
   height: 100%;
   background-color: #f7f7f7;
 }
 
-.list .card:hover {
+.list .rjmc-card:hover {
   cursor: pointer;
   background-color: #dadada;
 }
 
-.list .card .inner {
+.list .rjmc-card .inner {
   padding: 0.5em;
   position: relative;
   margin: 0 0 0 10px;
 }
 
-.list .card .inner .title {
+.list .rjmc-card .inner .title {
   display: inline-block;
   vertical-align: middle;
 }
 
-.list .card .inner .title i.queued,    .page-title i.queued    { color: #a29f00; }
-.list .card .inner .title i.scheduled, .page-title i.scheduled { color: purple; }
-.list .card .inner .title i.running,   .page-title i.running   { color: #337ab7; }
-.list .card .inner .title i.sleeping,  .page-title i.sleeping  { color: darkcyan; }
-.list .card .inner .title i.completed, .page-title i.completed { color: green; }
-.list .card .inner .title i.paused,    .page-title i.paused    { color: orange; }
-.list .card .inner .title i.failed,    .page-title i.failed    { color: red; }
-.list .card .inner .title i.aborted,   .page-title i.aborted   { color: darkorange; }
-.list .card .inner .title i.enabled,   .page-title i.enabled   { color: green; }
-.list .card .inner .title i.disabled,  .page-title i.disabled  { color: orange; }
+.list .rjmc-card .inner .title i.queued,    .page-title i.queued    { color: #a29f00; }
+.list .rjmc-card .inner .title i.scheduled, .page-title i.scheduled { color: purple; }
+.list .rjmc-card .inner .title i.running,   .page-title i.running   { color: #337ab7; }
+.list .rjmc-card .inner .title i.sleeping,  .page-title i.sleeping  { color: darkcyan; }
+.list .rjmc-card .inner .title i.completed, .page-title i.completed { color: green; }
+.list .rjmc-card .inner .title i.paused,    .page-title i.paused    { color: orange; }
+.list .rjmc-card .inner .title i.failed,    .page-title i.failed    { color: red; }
+.list .rjmc-card .inner .title i.aborted,   .page-title i.aborted   { color: darkorange; }
+.list .rjmc-card .inner .title i.enabled,   .page-title i.enabled   { color: green; }
+.list .rjmc-card .inner .title i.disabled,  .page-title i.disabled  { color: orange; }
 
 /* Jobs/servers/dirmon list page title: cosmic-blue heading (theme accent) with
    a state-colored status icon. */
@@ -722,24 +722,24 @@ textarea.input_slices {
   border-color: var(--cosmic-blue-dark);
 }
 
-.list .card .inner .title h3 {
+.list .rjmc-card .inner .title h3 {
   font-weight: bold;
   margin: 0;
   font-size: 16px;
 }
 
-.list .card .inner .lead {
+.list .rjmc-card .inner .lead {
   margin-bottom: 5px;
   font-size: 18px;
 }
 
-.list .card .inner .duration, .list .card .inner .description, .list .card .inner .completion {
+.list .rjmc-card .inner .duration, .list .rjmc-card .inner .description, .list .rjmc-card .inner .completion {
   color: #7c735c;
   font-size: 18px;
   font-weight: 200;
 }
 
-.list .card .inner .batch {
+.list .rjmc-card .inner .batch {
   position: absolute;
   right: -10px;
   top: -10px;
@@ -762,9 +762,9 @@ textarea.input_slices {
   font-size: 0.85em;
 }
 
-.grid .card { padding: 1em; }
+.grid .rjmc-card { padding: 1em; }
 
-.grid .card .inner {
+.grid .rjmc-card .inner {
   padding: 1em;
   border-radius: 3px;
   display: inline-block;
@@ -779,23 +779,23 @@ textarea.input_slices {
   text-align: center;
 }
 
-.grid .card .inner .title,
-.grid .card .inner .state,
-.grid .card .inner .threads,
-.grid .card .inner .time {
+.grid .rjmc-card .inner .title,
+.grid .rjmc-card .inner .state,
+.grid .rjmc-card .inner .threads,
+.grid .rjmc-card .inner .time {
   margin-bottom: 10px;
 }
 
-.grid .card .inner .actions {
+.grid .rjmc-card .inner .actions {
   padding: 10px 0;
   background: #f5f5f5;
   border: 1px solid #eee;
   border-radius: 2px;
 }
 
-.grid .card .inner .title { text-align: center; }
+.grid .rjmc-card .inner .title { text-align: center; }
 
-.grid .card .inner .title h3 {
+.grid .rjmc-card .inner .title h3 {
   font-weight: bold;
   margin: 0;
   font-size: 16px;

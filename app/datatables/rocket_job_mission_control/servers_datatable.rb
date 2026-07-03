@@ -18,7 +18,7 @@ module RocketJobMissionControl
         "2"           => h(started_ago(server)),
         "3"           => h(time_since_heartbeat(server)),
         "4"           => action_links_html(server),
-        "DT_RowClass" => "card callout #{server_card_class(server)}"
+        "DT_RowClass" => "rjmc-card callout #{server_card_class(server)}"
       }
     end
 

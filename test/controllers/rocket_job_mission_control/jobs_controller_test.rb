@@ -308,7 +308,7 @@ module RocketJobMissionControl
                     "2"           => /UTC/,
                     "3"           => /ms/,
                     "4"           => %r{/jobs/#{RocketJob::Jobs::SimpleJob.aborted.first.id}},
-                    "DT_RowClass" => "card callout callout-aborted"
+                    "DT_RowClass" => "rjmc-card callout callout-aborted"
                   },
                   failed:    {
                     "0"           => /#{RocketJob::Jobs::SimpleJob.name}/,
@@ -316,7 +316,7 @@ module RocketJobMissionControl
                     "2"           => /UTC/,
                     "3"           => /ms/,
                     "4"           => %r{/jobs/#{RocketJob::Jobs::SimpleJob.failed.first.id}},
-                    "DT_RowClass" => "card callout callout-failed"
+                    "DT_RowClass" => "rjmc-card callout callout-failed"
                   },
                   paused:    {
                     "0"           => /#{RocketJob::Jobs::SimpleJob.name}/,
@@ -324,7 +324,7 @@ module RocketJobMissionControl
                     "2"           => /UTC/,
                     "3"           => /ms/,
                     "4"           => %r{/jobs/#{RocketJob::Jobs::SimpleJob.paused.first.id}},
-                    "DT_RowClass" => "card callout callout-paused"
+                    "DT_RowClass" => "rjmc-card callout callout-paused"
                   },
                   completed: {
                     "0"           => /#{RocketJob::Jobs::SimpleJob.name}/,
@@ -332,7 +332,7 @@ module RocketJobMissionControl
                     "2"           => /UTC/,
                     "3"           => /ms/,
                     "4"           => %r{/jobs/#{RocketJob::Jobs::SimpleJob.completed.first.id}},
-                    "DT_RowClass" => "card callout callout-completed"
+                    "DT_RowClass" => "rjmc-card callout callout-completed"
                   },
                   running:   {
                     "0"           => /#{RocketJob::Jobs::SimpleJob.name}/,
@@ -340,7 +340,7 @@ module RocketJobMissionControl
                     "2"           => /UTC/,
                     "3"           => /ms/,
                     "4"           => %r{/jobs/#{RocketJob::Jobs::SimpleJob.running.first.id}},
-                    "DT_RowClass" => "card callout callout-running"
+                    "DT_RowClass" => "rjmc-card callout callout-running"
                   },
                   queued:    {
                     "0"           => /#{RocketJob::Jobs::SimpleJob.name}/,
@@ -348,7 +348,7 @@ module RocketJobMissionControl
                     "2"           => /0/,
                     "3"           => /ms/,
                     "4"           => %r{/jobs/#{RocketJob::Jobs::SimpleJob.queued.first.id}},
-                    "DT_RowClass" => "card callout callout-queued"
+                    "DT_RowClass" => "rjmc-card callout callout-queued"
                   }
                 }
 

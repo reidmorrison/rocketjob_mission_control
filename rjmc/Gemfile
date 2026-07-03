@@ -6,7 +6,7 @@ gem "rails", "~> 8.1.0"
 gem "sprockets-rails"
 
 gem "rails_semantic_logger" # , path: "../../rails_semantic_logger"
-gem "rocketjob", github: "reidmorrison/rocketjob" # path: "../../rocketjob"
+gem "rocketjob", github: "reidmorrison/rocketjob", branch: "main" # path: "../../rocketjob"
 gem "rocketjob_mission_control", path: "../"
 
 group :development do

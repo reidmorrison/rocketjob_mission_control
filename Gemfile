@@ -15,6 +15,9 @@ gem "sprockets"
 
 gem "minispec-rails", require: false
 gem "rails-controller-testing"
+gem "simplecov", require: false
+
+gem "solargraph", require: false
 
 gem "bundler-audit", require: false
 gem "rubocop", require: false

@@ -50,9 +50,5 @@ module RocketJobMissionControl
         </a>
       EOS
     end
-
-    def duration(started_at)
-      "#{RocketJob.seconds_as_duration(Time.now - started_at)} ago" if started_at
-    end
   end
 end

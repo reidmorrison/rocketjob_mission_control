@@ -139,11 +139,6 @@ module RocketJobMissionControl
       end
     end
 
-    def properties
-      @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
-      render json: @dirmon_entry
-    end
-
     private
 
     def authorize_read

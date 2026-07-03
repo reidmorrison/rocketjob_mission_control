@@ -1,6 +1,7 @@
 .bundle/
 *.log
 pkg/
+coverage/
 rjmc/tmp/
 rjmc4/tmp/
 *.gem

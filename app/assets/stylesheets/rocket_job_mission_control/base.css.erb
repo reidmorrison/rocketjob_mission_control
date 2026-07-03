@@ -421,11 +421,15 @@ h3 { margin-top: 0; }
   background-color: rgba(255, 106, 24, 0.35);
 }
 
+/* Matches how Bootstrap 5's navbar-dark marks the active top-nav item: full-
+   opacity white text (vs the translucent 0.75 default) with no background,
+   just bolder here since the sidebar has no translucent/solid contrast to
+   lean on the way the navbar's 0.55 -> #fff jump does. */
 #sidebar .nav > .active > a,
 #sidebar .nav > .active > a:hover,
 #sidebar .nav > .active > a:focus {
   color: #fff;
-  background-color: var(--cosmic-flame-active);
+  font-weight: bold;
 }
 
 /* Fixed-width sidebar rail on wide screens. The sidebar is taken out of flow

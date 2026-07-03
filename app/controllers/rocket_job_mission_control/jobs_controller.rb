@@ -144,9 +144,9 @@ module RocketJobMissionControl
 
       # Instance variables to share with the view and pagination.
       @lines                 = current_failure.records
-      @failure_exception     = current_failure.try!(:exception)
-      @failure_record_number = current_failure.try!(:current_record_number)
-      @first_record_number   = current_failure.try!(:first_record_number)
+      @failure_exception     = current_failure&.exception
+      @failure_record_number = current_failure&.current_record_number
+      @first_record_number   = current_failure&.first_record_number
       @view_slice_pagination = {
         record_number: current_failure.processing_record_number,
         offset:        @offset,
@@ -164,8 +164,8 @@ module RocketJobMissionControl
       scope              = @job.input.failed.where("exception.class_name" => error_type)
       current_failure      = scope.order(_id: 1).limit(1).skip(@offset).first
       @lines               = current_failure.records
-      @failure_exception   = current_failure.try!(:exception)
-      @first_record_number = current_failure.try!(:first_record_number)
+      @failure_exception   = current_failure&.exception
+      @first_record_number = current_failure&.first_record_number
     end
 
     def update_slice
@@ -195,10 +195,10 @@ module RocketJobMissionControl
       else
         flash[:danger] = "Error updating slice."
       end
-    rescue EncodingError => exc
+    rescue EncodingError => e
       # Mongo only stores UTF-8, so a record left with invalid bytes cannot be
       # saved. Surface it instead of returning a 500.
-      flash[:danger] = "Error updating slice: #{exc.message}"
+      flash[:danger] = "Error updating slice: #{e.message}"
       redirect_to view_slice_job_path(@job, error_type: params[:error_type])
     end
 
@@ -235,7 +235,7 @@ module RocketJobMissionControl
       error_type = params[:error_type]
       offset     = params.fetch(:offset, 0).to_i
 
-      unless error_type.present?
+      if error_type.blank?
         flash[:warning] = t(:no_errors, scope: %i[job failures])
         redirect_to(job_path(@job))
       end
@@ -248,8 +248,8 @@ module RocketJobMissionControl
       end
 
       current_failure        = scope.order(_id: 1).limit(1).skip(offset).first
-      @failure_exception     = current_failure.try!(:exception)
-      @failure_record_number = current_failure.try!(:current_record_number)
+      @failure_exception     = current_failure&.exception
+      @failure_record_number = current_failure&.current_record_number
 
       @pagination = {
         offset: offset,
@@ -286,17 +286,17 @@ module RocketJobMissionControl
     end
 
     def find_job_or_redirect
-      unless @job = RocketJob::Job.where(id: params[:id]).first
-        flash[:danger] = t(:failure, scope: %i[job find], id: params[:id])
+      return if (@job = RocketJob::Job.where(id: params[:id]).first)
 
-        redirect_to(jobs_path)
-      end
+      flash[:danger] = t(:failure, scope: %i[job find], id: params[:id])
+
+      redirect_to(jobs_path)
     end
 
     def job_params
       params.require(:job).permit(
         job_fields,
-        input_categories_attributes: [
+        input_categories_attributes:  [
           :id,
           :name,
           :format,
@@ -304,14 +304,14 @@ module RocketJobMissionControl
           :mode,
           :skip_unknown,
           :slice_size,
-          columns: []
+          {columns: []}
         ],
         output_categories_attributes: [
           :id,
           :name,
           :format,
           :format_options,
-          columns: []
+          {columns: []}
         ]
       )
     end
@@ -364,7 +364,7 @@ module RocketJobMissionControl
         h             = {data: index.to_s}
         h[:width]     = column[:width] if column.key?(:width)
         h[:orderable] = column[:orderable] if column.key?(:orderable)
-        index         += 1
+        index += 1
         h
       end
     end

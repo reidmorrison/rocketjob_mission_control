@@ -1,5 +1,18 @@
+inherit_from: .rubocop_todo.yml
+
+plugins:
+  - rubocop-minitest
+  - rubocop-performance
+  - rubocop-rails
+
+# Merge (rather than replace) Exclude lists from .rubocop_todo.yml so a cop that
+# is both softened here and grandfathered there keeps both exclusions.
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 3.2
   Exclude:
     - '.git/**/*'
     - '.github/**/*'
@@ -46,7 +59,7 @@ Metrics/BlockLength:
   Exclude:
     - 'test/**/*'
     - '**/*/cli.rb'
-  ExcludedMethods:
+  AllowedMethods:
     - 'aasm'
     - 'included'
 
@@ -75,9 +88,20 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 21
 
-# Initialization Vector abbreviation
+# Short parameter names that are idiomatic here: iv (initialization vector),
+# io, ap, f (Rails form builder), id (record id).
 Naming/MethodParameterName:
-  AllowedNames: ['iv', '_', 'io', 'ap']
+  AllowedNames: ['iv', '_', 'io', 'ap', 'f', 'id']
+
+# The datatables build HTML by hand with heredocs whose delimiters are just
+# visual markers (SERVER, JOB, ...); a "meaningful" name adds no clarity.
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+# The helper modules intentionally memoize the engine's url_helpers in a class
+# variable so it is shared across every host that includes the module.
+Style/ClassVars:
+  Enabled: false
 
 # Does not allow Symbols to load
 Security/YAMLLoad:

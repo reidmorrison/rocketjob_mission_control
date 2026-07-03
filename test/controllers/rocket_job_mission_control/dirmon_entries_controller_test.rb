@@ -109,7 +109,7 @@ module RocketJobMissionControl
 
         it "assigns a new entry" do
           assert assigns(:dirmon_entry).present?
-          refute assigns(:dirmon_entry).persisted?
+          assert_not assigns(:dirmon_entry).persisted?
         end
 
         describe "with form params" do
@@ -205,7 +205,7 @@ module RocketJobMissionControl
           end
 
           it "has no errors" do
-            assert assigns(:dirmon_entry).errors.messages.empty?
+            assert_empty assigns(:dirmon_entry).errors.messages
           end
 
           it "redirects to created entry" do
@@ -246,7 +246,7 @@ module RocketJobMissionControl
             end
 
             it "has errors on the entry" do
-              refute assigns(:dirmon_entry).valid?
+              assert_not assigns(:dirmon_entry).valid?
             end
           end
         end
@@ -307,7 +307,7 @@ module RocketJobMissionControl
           end
 
           it "deletes the entry" do
-            refute RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id).exists?
+            assert_not RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id).exists?
           end
         end
       end
@@ -400,13 +400,12 @@ module RocketJobMissionControl
                   }
                 }
 
+                assert_equal 0, json["draw"]
                 if state == :index
-                  assert_equal 0, json["draw"]
                   assert_equal 4, json["recordsTotal"]
                   assert_equal 4, json["recordsFiltered"]
                   assert_equal [expected_data[:disabled], expected_data[:enabled], expected_data[:failed], expected_data[:pending]], json["data"]
                 else
-                  assert_equal 0, json["draw"]
                   assert_equal 1, json["recordsTotal"]
                   assert_equal 1, json["recordsFiltered"]
                   assert_equal [expected_data[state]], json["data"]

@@ -3,11 +3,14 @@ require "rubygems"
 require "bundler/setup"
 
 require "rails/version"
-APP_RAKEFILE = File.expand_path("../rjmc/Rakefile", __FILE__)
+APP_RAKEFILE = File.expand_path("rjmc/Rakefile", __dir__)
 load "rails/tasks/engine.rake"
 
 require "rake/testtask"
+require "rubocop/rake_task"
 require_relative "lib/rocket_job_mission_control/version"
+
+RuboCop::RakeTask.new
 
 task :gem do
   system "gem build rocketjob_mission_control.gemspec"
@@ -26,10 +29,12 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
-# By default run tests against all appraisals
+# By default run RuboCop once, then the tests against all appraisals.
+# RuboCop is Rails/Ruby-version independent, so it runs at the top level rather
+# than inside each appraisal.
 if !ENV["APPRAISAL_INITIALIZED"] && !ENV["TRAVIS"]
   require "appraisal"
-  task default: "app:appraisal"
+  task default: [:rubocop, "app:appraisal"]
 else
   task default: :test
 end

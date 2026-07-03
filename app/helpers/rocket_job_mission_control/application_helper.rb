@@ -18,7 +18,7 @@ module RocketJobMissionControl
     }.freeze
 
     def state_icon(state)
-      STATE_ICON_MAP[state.to_sym] + " " + state.to_s
+      "#{STATE_ICON_MAP[state.to_sym]} #{state}"
     end
 
     # Whether a known status icon exists for the given state (e.g. "completed").
@@ -96,23 +96,28 @@ module RocketJobMissionControl
       case field.type.name
       when "Integer"
         options = extract_inclusion_values(klass, field_name)
-        f.number_field(field_name, in: options, include_blank: false, value: value, class: "form-control", placeholder: placeholder)
+        f.number_field(field_name, in: options, include_blank: false, value: value, class: "form-control",
+placeholder: placeholder)
       when "String", "Symbol", "Mongoid::StringifiedSymbol"
         options = extract_inclusion_values(klass, field_name)
         if options
-          f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
+          f.select(field_name, options, {include_blank: options.include?(nil), selected: value},
+                   {class: "selectize form-control"})
         else
-          f.text_area(field_name, value: value ? value : "", class: "form-control", placeholder: placeholder)
+          f.text_area(field_name, value: value || "", class: "form-control", placeholder: placeholder)
         end
       when "Boolean", "Mongoid::Boolean"
         options = extract_inclusion_values(klass, field_name) || [nil, "true", "false"]
-        f.select(field_name, options, {include_blank: options.include?(nil), selected: value}, {class: "selectize form-control"})
+        f.select(field_name, options, {include_blank: options.include?(nil), selected: value},
+                 {class: "selectize form-control"})
       when "Hash"
         "[JSON Hash]\n".html_safe +
-          f.text_field(field_name, value: value ? value.to_json : "", class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
+          f.text_field(field_name, value: value ? value.to_json : "", class: "form-control",
+placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
       when "Array"
         options = value.present? ? Array(value) : []
-        f.select(field_name, options_for_select(options, options), {include_hidden: true}, {class: "selectize form-control", multiple: true})
+        f.select(field_name, options_for_select(options, options), {include_hidden: true},
+                 {class: "selectize form-control", multiple: true})
       else
         "[#{field.type.name}]".html_safe +
           f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)
@@ -139,7 +144,7 @@ module RocketJobMissionControl
         # `association.to_s.singularize + "_fields"` ends up evaluating to `address_fields`
         # The render function will then look for `views/people/_address_fields.html.erb`
         # The render function also needs to be passed the value of 'builder', because `views/dirmon_entries/_input_categories.html.erb` needs this to render the form tags.
-        render(association.to_s.singularize + "_fields", f: builder)
+        render("#{association.to_s.singularize}_fields", f: builder)
       end
 
       # This renders a simple link, but passes information into `data` attributes.
@@ -148,7 +153,7 @@ module RocketJobMissionControl
       # The `fields:` are rendered from the `fields` blocks.
       # We use `gsub("\n", "")` to remove anywhite space from the rendered partial.
       # The `id:` value needs to match the value used in `child_index: id`.
-      link_to(name, '#', class: "add_fields btn btn-#{option}", data: { id: id, fields: fields.gsub("\n", "") })
+      link_to(name, "#", class: "add_fields btn btn-#{option}", data: {id: id, fields: fields.delete("\n")})
     end
   end
 end

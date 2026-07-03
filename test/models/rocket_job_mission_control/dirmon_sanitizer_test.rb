@@ -30,7 +30,7 @@ class DirmonSanitizerTest < Minitest::Test
     let :properties do
       {
         client_name:                  "Jack",
-        zip_code:                     12345,
+        zip_code:                     12_345,
         input_categories_attributes:  {0 => {format: :json}},
         output_categories_attributes: {0 => {name: :errors, format: :json}}
       }
@@ -39,7 +39,7 @@ class DirmonSanitizerTest < Minitest::Test
     let :sanitized_properties do
       {
         client_name:       "Jill",
-        zip_code:          45673,
+        zip_code:          45_673,
         input_categories:  [{name: "main", format: "json", slice_size: 100, skip_unknown: "false"}],
         output_categories: [{name: "errors", format: "json"}]
       }
@@ -65,7 +65,7 @@ class DirmonSanitizerTest < Minitest::Test
         }
         cleansed = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
         assert_equal 0, dirmon_entry.errors.count
-        expected = {:archive_directory => "archive/path", :job_class_name => "DirmonSanitizerTest::SampleJob", :name => "Test2", :pattern => "another/path", :properties => {:client_name => "Jack", :zip_code => 12345, :input_categories => [{:format => :json}], :output_categories => [{:name => :errors, :format => :json}]}}
+        expected = {archive_directory: "archive/path", job_class_name: "DirmonSanitizerTest::SampleJob", name: "Test2", pattern: "another/path", properties: {client_name: "Jack", zip_code: 12_345, input_categories: [{format: :json}], output_categories: [{name: :errors, format: :json}]}}
         assert_equal expected, cleansed
       end
 
@@ -103,7 +103,7 @@ class DirmonSanitizerTest < Minitest::Test
 
         diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
 
-        expected = {:format => "psv", :name => "main"}
+        expected = {format: "psv", name: "main"}
         assert_equal expected, diff
       end
 
@@ -138,7 +138,7 @@ class DirmonSanitizerTest < Minitest::Test
     describe ".diff_properties" do
       it "returns only different values" do
         diff     = RocketJobMissionControl::DirmonSanitizer.diff_properties(sanitized_properties, dirmon_entry)
-        expected = {:client_name => "Jill", :zip_code => 45673, :input_categories => [{:format => "json", :name => "main"}], :output_categories => [{:format => "json", :name => "errors"}]}
+        expected = {client_name: "Jill", zip_code: 45_673, input_categories: [{format: "json", name: "main"}], output_categories: [{format: "json", name: "errors"}]}
         assert_equal expected, diff
       end
     end

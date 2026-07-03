@@ -19,7 +19,7 @@ module RocketJobMissionControl
     # readability.
     KEEP_CONTROL = [0x09, 0x0A, 0x0D].freeze
 
-    ESCAPE_TOKEN = /\A\\(?:\\|x\h{2})/.freeze
+    ESCAPE_TOKEN = /\A\\(?:\\|x\h{2})/
 
     # Returns the record split into an ordered list of [type, string] pairs where
     # type is :text for readable content and :escape for a `\xHH` / `\\` token.

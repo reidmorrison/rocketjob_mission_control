@@ -54,7 +54,7 @@ module RocketJobMissionControl
       end
 
       describe "PATCH #update_all" do
-        RocketJobMissionControl::ServersController::VALID_ACTIONS.each do |server_action, _action_message|
+        RocketJobMissionControl::ServersController::VALID_ACTIONS.each do |server_action|
           describe "with '#{server_action}' as the server_action param" do
             before do
               patch :update_all, params: {server_action: server_action}
@@ -94,7 +94,7 @@ module RocketJobMissionControl
           end
 
           it "destroys the server" do
-            refute RocketJob::Server.where(id: server.id).exists?
+            assert_not RocketJob::Server.where(id: server.id).exists?
           end
         end
 
@@ -209,13 +209,12 @@ module RocketJobMissionControl
                   }
                 }
 
+                assert_equal 0, json["draw"]
                 if state == :index
-                  assert_equal 0, json["draw"]
                   assert_equal 4, json["recordsTotal"]
                   assert_equal 4, json["recordsFiltered"]
                   compare_array_of_hashes [expected_data[:starting], expected_data[:running], expected_data[:paused], expected_data[:stopping]], json["data"]
                 else
-                  assert_equal 0, json["draw"]
                   assert_equal 1, json["recordsTotal"]
                   assert_equal 1, json["recordsFiltered"]
                   compare_hash expected_data[state], json["data"].first

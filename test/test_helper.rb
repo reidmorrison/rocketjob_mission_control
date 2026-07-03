@@ -7,12 +7,12 @@ require "minitest/autorun"
 require "rails/test_help"
 require "minispec/rails"
 
-ActionController::TestCase
+module ActionController
+  class TestCase
+    include RocketJobMissionControl::Engine.routes.url_helpers
 
-class ActionController::TestCase
-  include RocketJobMissionControl::Engine.routes.url_helpers
-
-  setup do
-    @routes = RocketJobMissionControl::Engine.routes
+    setup do
+      @routes = RocketJobMissionControl::Engine.routes
+    end
   end
 end

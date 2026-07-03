@@ -1,6 +1,6 @@
 module RocketJobMissionControl
   module DirmonSanitizer
-    DIRMON_FIELDS = %i(archive_directory job_class_name name pattern).freeze
+    DIRMON_FIELDS = %i[archive_directory job_class_name name pattern].freeze
 
     def self.sanitize(params, job_class, target)
       permissible_params = {}
@@ -14,7 +14,7 @@ module RocketJobMissionControl
 
       if params.key?(:properties)
         properties                      = JobSanitizer.sanitize(params[:properties], job_class, target, false)
-        permissible_params[:properties] = properties unless properties.blank?
+        permissible_params[:properties] = properties if properties.present?
       end
 
       permissible_params
@@ -30,7 +30,8 @@ module RocketJobMissionControl
           categories = []
           value.each do |category_properties|
             category_name = category_properties[:name].to_sym
-            props         = diff_category(category_properties, updated_job.input_category(category_name), default_job.input_category(category_name))
+            props         = diff_category(category_properties, updated_job.input_category(category_name),
+                                          default_job.input_category(category_name))
             categories << props unless props.empty?
           end
           properties[:input_categories] = categories unless categories.empty?
@@ -38,7 +39,8 @@ module RocketJobMissionControl
           categories = []
           value.each do |category_properties|
             category_name = category_properties[:name].to_sym
-            props         = diff_category(category_properties, updated_job.output_category(category_name), default_job.output_category(category_name))
+            props         = diff_category(category_properties, updated_job.output_category(category_name),
+                                          default_job.output_category(category_name))
             categories << props unless props.empty?
           end
           properties[:output_categories] = categories unless categories.empty?

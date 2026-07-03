@@ -21,7 +21,7 @@ module RocketJobMissionControl
       permissible_params = {}
 
       job_class.user_editable_fields.each do |field_name|
-        next unless value = properties[field_name]
+        next unless (value = properties[field_name])
 
         field = job_class.fields[field_name.to_s]
         next unless field&.type
@@ -38,9 +38,7 @@ module RocketJobMissionControl
           end
         when "Array"
           # remove blank entries from rails converted arrays when using multi-select input
-          if !value.blank?
-            value.reject! { |v| v.empty? }
-          end
+          value.presence&.reject!(&:empty?)
         end
 
         if value.blank? && !value.is_a?(Hash)

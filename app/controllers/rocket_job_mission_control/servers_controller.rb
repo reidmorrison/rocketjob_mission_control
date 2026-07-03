@@ -133,11 +133,11 @@ module RocketJobMissionControl
     end
 
     def find_server_or_redirect
-      unless @server = RocketJob::Server.where(id: params[:id]).first
-        flash[:danger] = t(:failure, scope: %i[server find], id: params[:id])
+      return if (@server = RocketJob::Server.where(id: params[:id]).first)
 
-        redirect_to(servers_path)
-      end
+      flash[:danger] = t(:failure, scope: %i[server find], id: params[:id])
+
+      redirect_to(servers_path)
     end
 
     def show_sidebar

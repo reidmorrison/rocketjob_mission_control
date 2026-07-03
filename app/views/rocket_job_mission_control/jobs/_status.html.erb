@@ -20,7 +20,6 @@
     <div class='section-header'>Statistics</div>
     <%= render_json_tree(@job.statistics) %>
   </div>
-  <br/>
 <% end %>
 <% if @job.respond_to?(:input_categories) && @job.input_categories.present? %>
   <%= render partial: 'input_categories', locals: {job: @job} %>

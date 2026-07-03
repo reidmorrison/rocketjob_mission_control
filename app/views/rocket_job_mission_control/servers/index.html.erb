@@ -20,8 +20,8 @@
         </div>
 
         <div class="card-body">
-          <%# Hidden here on load, then placed by DataTables into the centered
-              toolbar cell (see the `layout` option in the script below). %>
+          <%# Hidden here on load, then moved by the script into the centered
+              toolbar slot built by the `dom` template below. %>
           <div id='server-collection-actions' class='dt-toolbar-actions text-center' style='display: none;'>
             <div class='action-buttons'>
               <% Array(@actions).each do |action| %>
@@ -59,23 +59,29 @@
 
 <script>
   jQuery(function () {
-    // Reveal the server-side-rendered action buttons and hand the node to
-    // DataTables, which places it in the centered (full-width) cell of the top
-    // toolbar row: length (start) | actions (center) | search (end). This uses
-    // the DataTables 2.x `layout` API, so no manual DOM move is needed.
-    var actions = document.getElementById('server-collection-actions');
-    actions.style.display = '';
-
     new RjmcDatatable(
       $('.servers-datatable'),
       [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}, {data: '4', orderable: false}],
       {
-        layout: {
-          topStart: 'pageLength',
-          top:      actions,
-          topEnd:   'search'
-        }
+        // Three-column top toolbar on a single line: length (left), collection
+        // actions (centered), search (right). The DataTables 2.x `layout` API
+        // renders a custom cell as its own row, so the legacy `dom` template is
+        // used to keep the actions inline with the length/search controls.
+        dom: "<'row'<'col-sm-3'l><'col-sm-6 text-center dt-actions-slot'><'col-sm-3'f>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-5'i><'col-sm-7'p>>"
       }
     );
+
+    // DataTables 2.x renamed its wrapper to .dt-container. Move the collection
+    // action buttons into the centered toolbar slot built above; if that slot
+    // is ever missing, fall back to a slot at the top of the wrapper so the
+    // buttons still appear rather than being detached by appendTo.
+    var $wrapper = $('.servers-datatable').closest('.dt-container');
+    var $slot    = $wrapper.find('.dt-actions-slot');
+    if ($slot.length === 0) {
+      $slot = $("<div class='dt-actions-slot text-center mb-2'></div>").prependTo($wrapper);
+    }
+    $('#server-collection-actions').appendTo($slot).css('display', 'inline-block');
   });
 </script>

@@ -39,7 +39,6 @@ var RjmcDatatable = function () {
     this.pageLength = opts.pageLength != null ? opts.pageLength : 10;
     this.order      = opts.order != null ? opts.order : [];
     this.dom        = opts.dom != null ? opts.dom : null;
-    this.layout     = opts.layout != null ? opts.layout : null;
     this.reload     = $("[data-behavior='reload']");
     this.initializeTable();
     this.setEvents();
@@ -62,9 +61,6 @@ var RjmcDatatable = function () {
       };
       if (this.dom != null) {
         config.dom = this.dom;
-      }
-      if (this.layout != null) {
-        config.layout = this.layout;
       }
       return this.data = this.table.DataTable(config);
     }

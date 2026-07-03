@@ -66,6 +66,14 @@ class QueryTest < Minitest::Test
         assert_equal 2, count
       end
 
+      it "searches directly when there is a single search column" do
+        q                = RocketJobMissionControl::Query.new(NoopJob.all, description: 1)
+        q.search_columns = [:description]
+        q.search_term    = "Job 1"
+
+        assert_equal 2, q.query.to_a.size
+      end
+
       it "paginates with sort" do
         q           = RocketJobMissionControl::Query.new(NoopJob.all, _id: 1)
         q.start     = 1

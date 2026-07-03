@@ -312,6 +312,64 @@ module RocketJobMissionControl
         end
       end
 
+      describe "GET #copy" do
+        before do
+          get :copy, params: {id: existing_dirmon_entry.id}
+        end
+
+        it "succeeds" do
+          assert_response :success
+        end
+
+        it "assigns the entry" do
+          assert_equal existing_dirmon_entry, assigns(:dirmon_entry)
+        end
+      end
+
+      describe "PATCH #replicate" do
+        describe "with valid parameters" do
+          before do
+            patch :replicate, params: {
+              id:                      existing_dirmon_entry.id,
+              rocket_job_dirmon_entry: {
+                name:           "Replicated entry",
+                pattern:        "replicated_path",
+                job_class_name: job_class_name,
+                properties:     {}
+              }
+            }
+          end
+
+          it "redirects to the new entry" do
+            new_entry = RocketJob::DirmonEntry.where(name: "Replicated entry").first
+            assert_redirected_to dirmon_entry_path(new_entry)
+          end
+
+          it "creates a copy without destroying the original" do
+            assert RocketJob::DirmonEntry.where(name: "Replicated entry").exists?
+            assert RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id).exists?
+          end
+        end
+
+        describe "with invalid parameters" do
+          before do
+            patch :replicate, params: {
+              id:                      existing_dirmon_entry.id,
+              rocket_job_dirmon_entry: {name: "Broken", job_class_name: "FakeAndBadJob"}
+            }
+          end
+
+          it "re-renders the copy form" do
+            assert_response :success
+            assert_template :copy
+          end
+
+          it "carries the validation errors on the entry" do
+            assert assigns(:dirmon_entry).errors.present?
+          end
+        end
+      end
+
       ([:index] + dirmon_entry_states).each do |state|
         describe "GET ##{state}" do
           describe "html" do

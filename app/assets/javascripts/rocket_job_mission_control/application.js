@@ -10,7 +10,7 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require rocket_job_mission_control/jquery-3.5.1.min
+//= require rocket_job_mission_control/jquery-3.7.1.min
 //= require rails-ujs
 //= require rocket_job_mission_control/datatables.min
 //= require rocket_job_mission_control/datatable_init

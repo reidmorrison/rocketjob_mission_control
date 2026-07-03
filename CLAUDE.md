@@ -96,7 +96,7 @@ Rocket Job jobs have user-defined fields, so strong-params lists are computed at
 
 ### Front-end assets
 
-All JS/CSS libraries are vendored files under `app/assets/` (no npm, importmap, or CDN). Current versions: jQuery 3.5.1, Bootstrap 3.4.1, a DataTables 1.10.20 downloader bundle (`datatables.min.js` also contains Buttons 1.6.1, JSZip 2.5.0, pdfmake 0.1.36, and the Flash export module; rebuild it via the datatables.net download builder URL in the file header), Selectize 0.12.4, jquery.json-viewer 1.5.0 (vendored verbatim; upgrade by replacing the file, theming lives in `json_tree.css`), and Font Awesome 5.0.6.
+All JS/CSS libraries are vendored files under `app/assets/` (no npm, importmap, or CDN). Current versions: jQuery 3.7.1, Bootstrap 3.4.1, a DataTables 2.3.8 downloader bundle with Bootstrap 3 styling and the Responsive 3.0.8 extension only (`responsive: true` is the sole extension the app uses; rebuild it via the datatables.net download builder URL in the file header, e.g. the `/v/bs/dt-2.3.8/r-3.0.8/` combined CDN path), Selectize 0.12.4, jquery.json-viewer 1.5.0 (vendored verbatim; upgrade by replacing the file, theming lives in `json_tree.css`), and Font Awesome 5.0.6.
 
 The pipeline is Sprockets-only: `application.js` is a `//= require` manifest (including `rails-ujs`, which powers every `data-method` state-transition link), and several stylesheets are `.css.erb` using `asset_path`. Host apps on Rails 8+ default to Propshaft and must add `sprockets-rails` to use this engine.
 
@@ -110,11 +110,12 @@ The pipeline is Sprockets-only: `application.js` is a `//= require` manifest (in
 
 Remove items from this list as they are fixed:
 
-1. Vendored JS with published CVEs: DataTables 1.10.20 (CVE-2020-28458, CVE-2021-23445), JSZip 2.5.0 (CVE-2021-23413, CVE-2022-48285), pdfmake 0.1.36, plus the dead Flash export button. Rebuild the bundle on DataTables 2.x without Flash/pdfmake; bump jQuery to 3.7.x.
-2. Bootstrap 3.4.1 is EOL with an unpatched XSS CVE (CVE-2024-6484, carousel; unused here). The big-ticket project: migrate to Bootstrap 5, Propshaft-compatible assets (plain CSS `url()` instead of `.css.erb`), Turbo-friendly action links instead of rails-ujs `data-method`, tom-select instead of Selectize, Font Awesome 6.
-3. Housekeeping: gemspec `s.test_files` is deprecated; CI uses `actions/checkout@v2` (retired Node runtime); no RuboCop, bundler-audit, or dependabot in CI; `.rubocop.yml` `TargetRubyVersion` still 2.4 while the gem requires Ruby >= 3.2.
+1. Bootstrap 3.4.1 is EOL with an unpatched XSS CVE (CVE-2024-6484, carousel; unused here). The big-ticket project: migrate to Bootstrap 5, Propshaft-compatible assets (plain CSS `url()` instead of `.css.erb`), Turbo-friendly action links instead of rails-ujs `data-method`, tom-select instead of Selectize, Font Awesome 6.
+2. Housekeeping is done (`feature/ci-housekeeping`, PR #108): gemspec `s.test_files` removed; CI on `actions/checkout@v4`; RuboCop, bundler-audit, and dependabot all wired into CI; `.rubocop.yml` `TargetRubyVersion` at 3.2.
 
-Fixed in `feature/modernize-security-quick-wins` (was items 1-3): reflected XSS in flash messages (the flash partial no longer calls `html_safe`, so all messages are auto-escaped and no call site needs to sanitize); `redirect_to :back` replaced with `redirect_back(fallback_location:)` in the jobs/servers/dirmon rescue paths; dead `Rails.version.to_i < 5` / `before_filter` branches removed; `update_attributes` replaced with `update`.
+Fixed in `feature/modernize-vendored-js` (was item 1): the DataTables bundle was rebuilt on 2.3.8 with only Bootstrap 3 styling and Responsive 3.0.8, dropping JSZip, pdfmake, the Flash export button, and every other unused extension (all CVE-bearing pieces were in the dropped set); jQuery bumped 3.5.1 → 3.7.1. The JS bundle shrank from 2.2 MB to ~118 KB.
+
+Fixed in `feature/modernize-security-quick-wins`: reflected XSS in flash messages (the flash partial no longer calls `html_safe`, so all messages are auto-escaped and no call site needs to sanitize); `redirect_to :back` replaced with `redirect_back(fallback_location:)` in the jobs/servers/dirmon rescue paths; dead `Rails.version.to_i < 5` / `before_filter` branches removed; `update_attributes` replaced with `update`.
 
 ## Conventions
 

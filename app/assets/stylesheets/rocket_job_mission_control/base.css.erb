@@ -86,6 +86,14 @@ table.dataTable thead .sorting_asc:after { content: "\f160"; }
 table.dataTable thead .sorting_desc:after { content: "\f161"; }
 table.dataTable thead > tr > th { padding-left: 30px; }
 
+/* Clear separator under the column headers. Bootstrap 5 / DataTables 2 no
+   longer draws a strong header rule, so add one back to distinguish the header
+   row from the data rows. A subtle header fill reinforces it. */
+table.datatable thead > tr > th {
+  background-color: #f0f2f5;
+  border-bottom: 2px solid #adb5bd;
+}
+
 .dt-info, .dt-paging { margin-top: 20px !important; }
 
 .datatable .rjmc-card td { vertical-align: middle; }
@@ -552,13 +560,15 @@ h3 { margin-top: 0; }
   background-color: #dadada;
 }
 
-/* Bootstrap 5 paints every table cell with var(--bs-table-bg), which hides a
-   background set on the <tr>. Re-apply the zebra striping and hover onto the
-   cells so the alternating row colors show on the list tables. The hover rule
-   is last so it wins over the odd-row rule at equal specificity. */
-.list .rjmc-card td { background-color: #f7f7f7; }
-.list .rjmc-card:nth-child(odd) td { background-color: #fff; }
-.list .rjmc-card:hover td { background-color: #dadada; }
+/* Bootstrap 5 paints every table cell with var(--bs-table-bg) (a plain, non
+   -important declaration), which hides a background set on the <tr>. Re-apply
+   the zebra striping and hover onto the cells (with !important to be safe) so
+   the alternating row colors show on the list tables. Even rows use a clearly
+   perceptible grey -- the old #f7f7f7 vs #fff was too subtle to read. The hover
+   rule is last so it wins over the odd-row rule at equal specificity. */
+.list .rjmc-card td { background-color: #eaedf2 !important; }
+.list .rjmc-card:nth-child(odd) td { background-color: #fff !important; }
+.list .rjmc-card:hover td { background-color: #d5dce8 !important; }
 
 .list .rjmc-card .inner {
   padding: 0.5em;
@@ -634,8 +644,13 @@ h3 { margin-top: 0; }
 
 /* Consistent, themed section sub-headers on the detail/show pages
    (Details, Dates, Exceptions, Input Categories, ...). */
+/* Inter-section spacing is driven mainly by the preceding table's 1.5em bottom
+   margin. Keep the section-header top margin small so the flow sections
+   (Details, Dates, Categories) don't gap wider than the `.status-message`
+   sections (Exceptions, Statistics), whose header is a `:first-child` and has
+   no top margin. */
 .section-header {
-  margin: 1.5em 0 0.75em;
+  margin: 0.25em 0 0.75em;
   padding-bottom: 6px;
   font-size: 18px;
   font-weight: bold;

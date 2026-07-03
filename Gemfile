@@ -4,7 +4,7 @@ gemspec
 
 gem "minitest", "~> 5.0"
 gem "mongoid", "~> 9.0.0"
-gem "rails", "~> 7.2.0"
+gem "rails", "~> 8.1.3"
 gem "rocketjob", github: "reidmorrison/rocketjob"
 gem "sprockets-rails"
 

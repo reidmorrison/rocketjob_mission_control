@@ -1,7 +1,7 @@
 <div class='dirmon-list'>
   <div class='list'>
-    <div class="panel panel-default">
-      <div class="panel-heading page-title-bar">
+    <div class="card">
+      <div class="card-header page-title-bar">
         <div class='row'>
           <div class='col-sm-10'>
             <% state = @description.to_s.downcase %>
@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div class="panel-body">
+      <div class="card-body">
         <table class='table datatable dirmon-datatable' data-source='<%= @data_table_url %>' style='width: 100%'>
           <thead>
             <tr>

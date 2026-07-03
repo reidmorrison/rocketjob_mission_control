@@ -1,8 +1,8 @@
 <div id='servers'>
   <div class='server-list'>
     <div class='list'>
-      <div class="panel panel-default">
-        <div class="panel-heading page-title-bar">
+      <div class="card">
+        <div class="card-header page-title-bar">
           <div class='row'>
             <div class='col-sm-10'>
               <% state = @description.to_s.downcase %>
@@ -19,7 +19,7 @@
           </div>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
           <%# Rendered here, then moved by the script into the DataTables toolbar,
               centered between "Show entries" and "Search". %>
           <div id='server-collection-actions' class='dt-toolbar-actions' style='display: none;'>

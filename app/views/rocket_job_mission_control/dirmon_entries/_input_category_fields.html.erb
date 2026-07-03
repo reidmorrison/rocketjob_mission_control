@@ -1,8 +1,8 @@
 <% input_category = f.object %>
 
 <div class="nested-fields">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
+  <div class="card border-primary">
+    <div class="card-header">
       <div class="row">
         <div class="col-sm-12">
           <h4><%= input_category.name %></h4>
@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class="panel-body">
+    <div class="card-body">
       <%= f.hidden_field :name, value: input_category.name %>
 
       <div class="form-group">

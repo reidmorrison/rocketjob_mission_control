@@ -1,6 +1,6 @@
 <div class='container-fluid'>
-  <div class="panel panel-default">
-    <div class="panel-heading page-title-bar">
+  <div class="card">
+    <div class="card-header page-title-bar">
       <h2 class='page-title'>Edit <%= @job._type %></h2>
     </div>
   </div>
@@ -32,8 +32,8 @@
         <% if @job.class.respond_to?(:defined_input_categories) && @job.class.respond_to?(:defined_output_categories) %>
           <div class="row">
             <div class="col-sm-6">
-              <div class="panel panel-primary">
-                <div class="panel-body">
+              <div class="card border-primary">
+                <div class="card-body">
                   <div class='lead'>Input Categories</div>
 
                   <%= f.fields_for :input_categories do |i| %>
@@ -44,8 +44,8 @@
             </div>
 
             <div class="col-sm-6">
-              <div class="panel panel-success">
-                <div class="panel-body">
+              <div class="card border-success">
+                <div class="card-body">
                   <div class='lead'>Output Categories</div>
 
                   <%= f.fields_for :output_categories do |o| %>

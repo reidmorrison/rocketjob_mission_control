@@ -43,7 +43,7 @@ module RocketJobMissionControl
           end
 
           it "returns the correct class" do
-            assert_equal "fas fa-play running", server_icon(server)
+            assert_equal "fa-solid fa-person-running running", server_icon(server)
           end
         end
 

@@ -549,6 +549,14 @@ h3 { margin-top: 0; }
   background-color: #dadada;
 }
 
+/* Bootstrap 5 paints every table cell with var(--bs-table-bg), which hides a
+   background set on the <tr>. Re-apply the zebra striping and hover onto the
+   cells so the alternating row colors show on the list tables. The hover rule
+   is last so it wins over the odd-row rule at equal specificity. */
+.list .rjmc-card td { background-color: #f7f7f7; }
+.list .rjmc-card:nth-child(odd) td { background-color: #fff; }
+.list .rjmc-card:hover td { background-color: #dadada; }
+
 .list .rjmc-card .inner {
   padding: 0.5em;
   position: relative;

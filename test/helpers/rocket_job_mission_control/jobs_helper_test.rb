@@ -11,35 +11,35 @@ module RocketJobMissionControl
         end
 
         it "shows queued" do
-          assert_equal "fas fa-inbox queued", job_icon(job)
+          assert_equal "fa-solid fa-inbox queued", job_icon(job)
         end
 
         it "shows running" do
           job.start
           job.worker_name = "test_worker"
-          assert_equal "fas fa-play running", job_icon(job)
+          assert_equal "fa-solid fa-person-running running", job_icon(job)
         end
 
         it "shows sleeping" do
           job.start
-          assert_equal "fas fa-hourglass sleeping", job_icon(job)
+          assert_equal "fa-solid fa-hourglass sleeping", job_icon(job)
         end
 
         it "shows failed" do
           job.start
           job.fail
-          assert_equal "fas fa-exclamation-triangle failed", job_icon(job)
+          assert_equal "fa-solid fa-triangle-exclamation failed", job_icon(job)
         end
 
         it "shows aborted" do
           job.start
           job.abort
-          assert_equal "fas fa-stop aborted", job_icon(job)
+          assert_equal "fa-solid fa-ban aborted", job_icon(job)
         end
 
         it "handles scheduled special case" do
           job.run_at = 1.day.from_now
-          assert_equal "fas fa-clock scheduled", job_icon(job)
+          assert_equal "fa-solid fa-clock scheduled", job_icon(job)
         end
       end
 

@@ -1,13 +1,9 @@
 <% if flash.present? %>
   <div class="flash text-center">
     <% flash.each do |key, msg| %>
-      <div class="alert alert-<%=key%> alert-dismissable" role="alert">
-        <button class="close" data-dismiss="alert">
-          <span>&times;</span>
-        </button>
-
+      <div class="alert alert-<%=key%> alert-dismissible fade show" role="alert">
         <% if msg.kind_of? Array %>
-          <ul class="list-unstyled margin-bottom-0">
+          <ul class="list-unstyled mb-0">
             <% msg.each do |m| %>
               <li><%= m %></li>
             <% end %>
@@ -15,6 +11,8 @@
         <% else %>
           <%= msg.to_s %>
         <% end %>
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <% end %>
   </div>

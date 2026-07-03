@@ -191,7 +191,7 @@ module RocketJobMissionControl
       if slice.save
         logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
         flash[:success] = "slice updated"
-        redirect_to view_slice_job_path(@job, error_type: error_type)
+        redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset)
       else
         flash[:danger] = "Error updating slice."
       end
@@ -199,7 +199,7 @@ module RocketJobMissionControl
       # Mongo only stores UTF-8, so a record left with invalid bytes cannot be
       # saved. Surface it instead of returning a 500.
       flash[:danger] = "Error updating slice: #{e.message}"
-      redirect_to view_slice_job_path(@job, error_type: params[:error_type])
+      redirect_to view_slice_job_path(@job, error_type: params[:error_type], offset: offset)
     end
 
     def delete_line
@@ -224,7 +224,7 @@ module RocketJobMissionControl
       if slice.save
         logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
         flash[:success] = "Record #{slice.first_record_number + line_index} removed from the slice."
-        redirect_to view_slice_job_path(@job, error_type: error_type)
+        redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset)
       else
         flash[:danger] = "Error removing line."
       end

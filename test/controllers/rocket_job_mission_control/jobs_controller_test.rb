@@ -518,8 +518,8 @@ module RocketJobMissionControl
           post :update_slice, params: params
         end
 
-        it "redirects" do
-          assert_redirected_to view_slice_job_path(failed_job, error_type: error_type)
+        it "redirects back to the same slice" do
+          assert_redirected_to view_slice_job_path(failed_job, error_type: error_type, offset: 0)
         end
 
         it "adds a flash success message" do
@@ -630,7 +630,7 @@ module RocketJobMissionControl
         end
 
         it "redirects to the slice view" do
-          assert_redirected_to view_slice_job_path(failed_job, error_type: error_type)
+          assert_redirected_to view_slice_job_path(failed_job, error_type: error_type, offset: 0)
         end
 
         it "adds a flash success message" do

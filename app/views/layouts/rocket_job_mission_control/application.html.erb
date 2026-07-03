@@ -26,17 +26,15 @@
   <body class='rocket_job'>
     <div id='wrapper'>
       <div class='container-fluid'>
-        <div class='row'>
-          <%= render partial: 'layouts/rocket_job_mission_control/partials/sidebar' %>
+        <%= render partial: 'layouts/rocket_job_mission_control/partials/sidebar' %>
 
-          <div class='white-background' id='main'>
-            <%= render partial: 'layouts/rocket_job_mission_control/partials/header' %>
+        <div class='white-background' id='main'>
+          <%= render partial: 'layouts/rocket_job_mission_control/partials/header' %>
 
-            <div id='content'>
-              <%= render partial: 'layouts/rocket_job_mission_control/partials/flash' %>
+          <div id='content'>
+            <%= render partial: 'layouts/rocket_job_mission_control/partials/flash' %>
 
-              <%= yield %>
-            </div>
+            <%= yield %>
           </div>
         </div>
       </div>

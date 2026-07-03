@@ -12,7 +12,7 @@
             </div>
 
             <div class='col-sm-2'>
-              <div class='btn btn-default pull-right dt-reload' data-behavior='reload'>
+              <div class='btn btn-secondary float-end dt-reload' data-behavior='reload'>
                 <i class='fas fa-sync'></i>
               </div>
             </div>
@@ -31,7 +31,7 @@
                           rocket_job_mission_control.update_all_servers_path(server_action: action),
                           method: :patch,
                           data:   {confirm: t(:confirm, scope: [:server, :update_all], action: action.to_s.singularize.humanize.downcase)},
-                          class:  'btn btn-default'
+                          class:  'btn btn-secondary'
                       ) %>
                 <% end %>
               <% end %>

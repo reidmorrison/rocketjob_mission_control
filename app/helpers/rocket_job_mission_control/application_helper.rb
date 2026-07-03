@@ -102,14 +102,14 @@ placeholder: placeholder)
         options = extract_inclusion_values(klass, field_name)
         if options
           f.select(field_name, options, {include_blank: options.include?(nil), selected: value},
-                   {class: "selectize form-control"})
+                   {class: "selectize form-select"})
         else
           f.text_area(field_name, value: value || "", class: "form-control", placeholder: placeholder)
         end
       when "Boolean", "Mongoid::Boolean"
         options = extract_inclusion_values(klass, field_name) || [nil, "true", "false"]
         f.select(field_name, options, {include_blank: options.include?(nil), selected: value},
-                 {class: "selectize form-control"})
+                 {class: "selectize form-select"})
       when "Hash"
         "[JSON Hash]\n".html_safe +
           f.text_field(field_name, value: value ? value.to_json : "", class: "form-control",
@@ -117,7 +117,7 @@ placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
       when "Array"
         options = value.present? ? Array(value) : []
         f.select(field_name, options_for_select(options, options), {include_hidden: true},
-                 {class: "selectize form-control", multiple: true})
+                 {class: "selectize form-select", multiple: true})
       else
         "[#{field.type.name}]".html_safe +
           f.text_field(field_name, value: value, class: "form-control", placeholder: placeholder)

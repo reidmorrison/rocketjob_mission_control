@@ -681,7 +681,10 @@ h3 { margin-top: 0; }
   white-space: pre-wrap;
   word-break: break-word;
 }
-.records .records-failed {
+/* Highlight the failed record row. Target the cells, not the <tr>: Bootstrap 5
+   paints each cell with var(--bs-table-bg), which would cover a row-level
+   background. */
+.records .records-failed td {
   background-color: #fdecea;
 }
 .records .records-failed .records-line-number {

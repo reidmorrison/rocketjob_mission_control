@@ -1,12 +1,13 @@
 <ul class='nav flex-column d-none d-sm-flex' id='lg-menu'>
-  <li class="<%= 'active' if current_page?(dirmon_entries_path) || current_page?(new_dirmon_entry_path) %>">
-
-    <% if can?(:create, RocketJob::DirmonEntry) %>
+  <% if can?(:create, RocketJob::DirmonEntry) %>
+    <li class="<%= 'active' if current_page?(new_dirmon_entry_path) %>">
       <%= link_to(new_dirmon_entry_path) do %>
         <i class='fas fa-plus'></i> Create
       <% end %>
-    <% end %>
+    </li>
+  <% end %>
 
+  <li class="<%= 'active' if current_page?(dirmon_entries_path) %>">
     <%= link_to(dirmon_entries_path) do %>
       <i class='fas fa-list'></i> All
     <% end %>

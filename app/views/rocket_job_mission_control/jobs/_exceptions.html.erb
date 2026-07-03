@@ -10,21 +10,21 @@
   <tbody>
   <% @job.input.group_exceptions.each do |exception| %>
     <tr>
-      <th><%= exception.count %></th>
-      <th><%= link_to(exception.class_name, exception_job_path(@job, error_type: exception.class_name), class: "card callout") %></th>
+      <td><%= exception.count %></td>
+      <td><%= link_to(exception.class_name, exception_job_path(@job, error_type: exception.class_name), class: "callout") %></td>
 
-      <th>
+      <td>
         <% exception.messages.each do |message| %>
           <div><%= message %></div>
         <% end %>
-      </th>
+      </td>
 
       <% if can?(:view_slice, @job) %>
-      <th>
+      <td>
         <div>
           <%= link_to 'View Slice', view_slice_job_path(@job, error_type: exception.class_name, record_number: @job.input.failed.first.processing_record_number), class: 'btn btn-primary' %>
         </div>
-      </th>
+      </td>
       <% end %>
 
     </tr>

@@ -57,6 +57,50 @@ bin/rocketjob           # start a Rocket Job server with 10 workers (processes q
 
 To develop against a local checkout of Rocket Job, edit `rjmc/Gemfile` to point `rocketjob` at `path:` instead of `github:`. Seed jobs `AllTypesJob`, `CSVJob`, `KaboomBatchJob` live in the dummy app for DirmonEntry / batch / error-path testing.
 
+#### Visual verification with headless Chrome
+
+There is no JS/system test suite, so CSS/markup regressions (Bootstrap version, DataTables styling, etc.) are invisible to `rake`. If the dummy app's dev server is already running (check with `ps aux | grep puma` / `lsof -i :3000` before starting a second one), screenshot and measure it directly instead of guessing at CSS:
+
+```bash
+# The engine mounts at "/" in the dummy app (see rjmc/config/routes.rb), not "/rocketjob".
+open -a "Google Chrome" # or use the path below directly
+
+# Get a real job id to view (states: queued/scheduled/running/paused/failed/completed/aborted):
+cd rjmc && bin/rails runner 'puts RocketJob::Job.where(state: :failed).first&.id'
+
+# Screenshot a page:
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless=new --disable-gpu --hide-scrollbars --window-size=1280,1600 \
+  --screenshot=/tmp/page.png "http://127.0.0.1:3000/jobs/<id>"
+# Then use the Read tool on /tmp/page.png to view it.
+```
+
+For pixel measurements (e.g. comparing gaps between sections, confirming a CSS rule actually applied), use `puppeteer-core` driving the same Chrome binary instead of screenshotting-and-eyeballing:
+
+```bash
+cd <scratchpad dir> && npm init -y && npm install puppeteer-core
+```
+
+```js
+const puppeteer = require('puppeteer-core');
+(async () => {
+  const browser = await puppeteer.launch({
+    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    headless: 'new', args: ['--no-sandbox']
+  });
+  const page = await browser.newPage();
+  await page.setViewport({width: 1280, height: 1600});
+  await page.goto('http://127.0.0.1:3000/jobs/<id>', {waitUntil: 'networkidle0'});
+  const result = await page.evaluate(() => {
+    // e.g. return getBoundingClientRect()/getComputedStyle() for the elements in question
+  });
+  console.log(JSON.stringify(result, null, 2));
+  await browser.close();
+})();
+```
+
+This caught two real bugs during the Bootstrap 5 migration that CSS reading alone missed: the DataTables Bootstrap-5 integration renames its own layout row class (so a selector targeting the documented `.dt-layout-row` matched nothing — the real class was `.row.mt-2`), and a "fixed" zebra-striping rule that was technically applied but visually imperceptible (`#f7f7f7` vs `#fff`). Reading the vendored `datatables.min.js` and `.min.css` is essential for finding the actual class names the Bootstrap 5 integration emits (`grep -oE` for the literal strings) rather than assuming the upstream docs' names still apply after minification/rebuild.
+
 ## Architecture
 
 ### Request flow: DataTables + AJAX

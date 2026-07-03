@@ -70,8 +70,16 @@
       }
     );
 
-    $('#server-collection-actions')
-      .appendTo($('.servers-datatable').closest('.dataTables_wrapper').find('.dt-actions-slot'))
-      .css('display', 'inline-block');
+    // DataTables 2.x renamed its wrapper from .dataTables_wrapper to
+    // .dt-container. Move the collection-action buttons into the centered
+    // toolbar slot built by the `dom` string above; if that slot is ever
+    // missing, fall back to a slot at the top of the wrapper so the buttons
+    // still appear rather than being detached by appendTo.
+    var $wrapper = $('.servers-datatable').closest('.dt-container');
+    var $slot    = $wrapper.find('.dt-actions-slot');
+    if ($slot.length === 0) {
+      $slot = $("<div class='dt-actions-slot text-center mb-2'></div>").prependTo($wrapper);
+    }
+    $('#server-collection-actions').appendTo($slot).css('display', 'inline-block');
   });
 </script>

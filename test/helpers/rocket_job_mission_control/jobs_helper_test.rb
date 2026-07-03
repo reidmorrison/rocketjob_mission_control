@@ -142,6 +142,120 @@ module RocketJobMissionControl
           assert_match(/data-method="patch"/, action_link)
         end
       end
+
+      describe "#job_state_name" do
+        it "camelcases the @job state" do
+          @job = RocketJob::Jobs::SimpleJob.new
+          assert_equal "Queued", job_state_name(@job)
+        end
+
+        it "reflects the scheduled special case" do
+          @job = RocketJob::Jobs::SimpleJob.new(run_at: 1.day.from_now)
+          assert_equal "Scheduled", job_state_name(@job)
+        end
+      end
+
+      describe "#job_state_time" do
+        it "returns the run_at time when scheduled" do
+          run_at = 1.day.from_now
+          job    = RocketJob::Jobs::SimpleJob.new(run_at: run_at)
+          assert_equal run_at.in_time_zone(Time.zone), job_state_time(job)
+        end
+
+        it "falls back to created_at for a queued job" do
+          job = RocketJob::Jobs::SimpleJob.new
+          assert_equal job.created_at.in_time_zone(Time.zone), job_state_time(job)
+        end
+      end
+
+      describe "#job_estimated_time_left" do
+        it "returns nil when the job is not running" do
+          job = KaboomBatchJob.new(record_count: 100)
+          assert_nil job_estimated_time_left(job)
+        end
+
+        it "returns nil when less than five percent complete" do
+          job = KaboomBatchJob.new(record_count: 100)
+          job.stub(:running?, true) do
+            job.stub(:percent_complete, 1) do
+              assert_nil job_estimated_time_left(job)
+            end
+          end
+        end
+
+        it "estimates the remaining duration once enough progress is made" do
+          job = KaboomBatchJob.new(record_count: 100)
+          job.stub(:running?, true) do
+            job.stub(:percent_complete, 50) do
+              job.stub(:seconds, 10.0) do
+                assert_equal RocketJob.seconds_as_duration(10.0), job_estimated_time_left(job)
+              end
+            end
+          end
+        end
+      end
+
+      describe "#job_records_per_hour" do
+        it "returns nil when the job is not completed" do
+          job = KaboomBatchJob.new(record_count: 100)
+          assert_nil job_records_per_hour(job)
+        end
+
+        it "returns records per hour for a completed job" do
+          job = KaboomBatchJob.new(record_count: 100)
+          job.stub(:completed?, true) do
+            job.stub(:seconds, 60.0) do
+              assert_equal 6000, job_records_per_hour(job)
+            end
+          end
+        end
+      end
+
+      describe "#job_selected_class" do
+        let(:job) { RocketJob::Jobs::SimpleJob.new }
+
+        it "returns 'selected' when the job is the selected job" do
+          assert_equal "selected", job_selected_class(job, job)
+        end
+
+        it "returns an empty string when no job is selected" do
+          assert_equal "", job_selected_class(job, nil)
+        end
+
+        it "returns an empty string for a different job" do
+          assert_equal "", job_selected_class(job, RocketJob::Jobs::SimpleJob.new)
+        end
+      end
+
+      describe "#job_find_category" do
+        let(:categories) { [{"name" => "main"}, {"name" => "errors"}] }
+
+        it "returns nil when categories is nil" do
+          assert_nil job_find_category(nil)
+        end
+
+        it "finds the matching category by name" do
+          assert_equal({"name" => "errors"}, job_find_category(categories, :errors))
+        end
+
+        it "returns nil when no category matches" do
+          assert_nil job_find_category(categories, :missing)
+        end
+      end
+
+      describe "#record_escape_title" do
+        it "describes a literal escaped backslash" do
+          assert_equal "Literal backslash, escaped as \\\\", record_escape_title("\\\\")
+        end
+
+        it "names a known control byte" do
+          assert_equal "Unprintable byte 0x00 (NUL)", record_escape_title("\\x00")
+        end
+
+        it "falls back for an unrecognized token" do
+          assert_equal "Escaped byte", record_escape_title("nope")
+        end
+      end
     end
   end
 end

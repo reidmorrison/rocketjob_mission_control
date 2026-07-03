@@ -48,6 +48,66 @@ module RocketJobMissionControl
           end
         end
       end
+
+      describe "#state?" do
+        it "is true for a known state" do
+          assert state?("completed")
+        end
+
+        it "is case insensitive" do
+          assert state?("Running")
+        end
+
+        it "is false for an unknown state" do
+          assert_not state?("bogus")
+        end
+      end
+
+      describe "#render_json_tree" do
+        it "wraps the value in a json-tree container" do
+          html = render_json_tree({"a" => 1})
+          assert_match(/class="json-tree"/, html)
+          assert_match(%r{<script type="application/json">}, html)
+        end
+
+        it "renders a noscript plain-text fallback" do
+          html = render_json_tree([1, 2, 3])
+          assert_match(/<noscript>/, html)
+          assert_match(/<pre>/, html)
+        end
+
+        it "does not collapse small collections" do
+          html = render_json_tree((1..5).to_a)
+          assert_match(/data-collapsed="false"/, html)
+        end
+
+        it "collapses collections past the threshold" do
+          html = render_json_tree((1..20).to_a)
+          assert_match(/data-collapsed="true"/, html)
+        end
+      end
+
+      describe "#extract_inclusion_values" do
+        it "returns the inclusion list for a validated attribute" do
+          klass = Class.new do
+            include ActiveModel::Validations
+            attr_accessor :color
+
+            validates :color, inclusion: {in: %w[red green blue]}
+          end
+          assert_equal %w[red green blue], extract_inclusion_values(klass, :color)
+        end
+
+        it "returns nil when the attribute has no inclusion validator" do
+          klass = Class.new do
+            include ActiveModel::Validations
+            attr_accessor :name
+
+            validates :name, presence: true
+          end
+          assert_nil extract_inclusion_values(klass, :name)
+        end
+      end
     end
   end
 end

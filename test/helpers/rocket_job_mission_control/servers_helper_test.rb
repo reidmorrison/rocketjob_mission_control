@@ -56,7 +56,7 @@ module RocketJobMissionControl
           end
 
           it "returns the correct class" do
-            assert_equal "fas fa-hourglass zombie", server_icon(server)
+            assert_equal "fa-solid fa-ghost zombie", server_icon(server)
           end
         end
       end

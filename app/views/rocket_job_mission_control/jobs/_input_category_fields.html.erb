@@ -16,14 +16,14 @@
       <div class="mb-3">
         <%= f.label :columns %>
         <% options = input_category.columns || [] %>
-        <%= f.select(:columns, options_for_select(options, options), { include_hidden: false }, { class: "selectize form-select", multiple: true }) %>
+        <%= f.select(:columns, options_for_select(options, options), { include_hidden: false }, { class: "tom-select form-select", multiple: true }) %>
       </div>
 
       <div class="mb-3">
         <%= f.label :format %>
         <% options = extract_inclusion_values(RocketJob::Category::Input, :format) %>
         <% value = input_category.format %>
-        <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "selectize form-select" }) %>
+        <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
       </div>
 
       <div class="mb-3">
@@ -36,14 +36,14 @@
         <%= f.label :mode %>
         <% options = extract_inclusion_values(RocketJob::Category::Input, :mode) %>
         <% value = input_category.mode %>
-        <%= f.select(:mode, options, { include_blank: true, selected: value }, { class: "selectize form-select" }) %>
+        <%= f.select(:mode, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
       </div>
 
       <div class="mb-3">
         <%= f.label "Skip and Ignore Unknown Columns" %>
         <% options = extract_inclusion_values(RocketJob::Category::Input, :skip_unknown) %>
         <% value = input_category.skip_unknown %>
-        <%= f.select(:skip_unknown, options, { include_blank: true, selected: value }, { class: "selectize form-select" }) %>
+        <%= f.select(:skip_unknown, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
       </div>
 
       <div class="mb-3">

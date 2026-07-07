@@ -1,0 +1,9 @@
+---
+ignore:
+  # Transitive dependency of ferrum (Cuprite's Chrome driver, used only by the
+  # test suite's system tests). No patched webrick release exists yet, and
+  # ferrum never starts webrick's HTTP server in our usage -- Cuprite drives
+  # Chrome over its own CDP websocket connection, and tests always visit the
+  # real Puma-served dummy app, not anything webrick would serve. Remove this
+  # once a patched webrick is released and picked up.
+  - CVE-2026-38969

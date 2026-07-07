@@ -5,7 +5,6 @@ Rails.application.config.assets.precompile += %w[
   rocket_job_mission_control/favicon-16x16.png
   rocket_job_mission_control/favicon-32x32.png
   rocket_job_mission_control/apple-touch-icon.png
-  rails-ujs.js
 ]
 # The layout links each vendored CSS/JS file individually (no more bundled
 # application.css/js), so each one needs its own entry here -- Sprockets'
@@ -24,6 +23,7 @@ Rails.application.config.assets.precompile += %w[
   rocket_job_mission_control/jobs.css
   rocket_job_mission_control/worker_processes.css
   rocket_job_mission_control/jquery-3.7.1.min.js
+  rocket_job_mission_control/turbo.min.js
   rocket_job_mission_control/datatables.min.js
   rocket_job_mission_control/datatable_init.js
   rocket_job_mission_control/bootstrap.bundle.min.js

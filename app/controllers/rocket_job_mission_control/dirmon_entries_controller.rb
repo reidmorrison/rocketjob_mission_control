@@ -65,7 +65,7 @@ module RocketJobMissionControl
     def destroy
       authorize! :destroy, @dirmon_entry
       @dirmon_entry.destroy
-      redirect_to(dirmon_entries_path)
+      redirect_to(dirmon_entries_path, status: :see_other)
     end
 
     def edit
@@ -120,7 +120,7 @@ module RocketJobMissionControl
 
       if @dirmon_entry.may_enable?
         @dirmon_entry.enable!
-        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry), status: :see_other)
       else
         flash[:danger] = t(:failure, scope: %i[dirmon_entry enable])
         render(:show)
@@ -132,7 +132,7 @@ module RocketJobMissionControl
 
       if @dirmon_entry.may_disable?
         @dirmon_entry.disable!
-        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry), status: :see_other)
       else
         flash[:danger] = t(:failure, scope: %i[dirmon_entry disable])
         render(:show)

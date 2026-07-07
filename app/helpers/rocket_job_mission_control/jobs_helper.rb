@@ -136,10 +136,9 @@ module RocketJobMissionControl
       link_to(
         action,
         path,
-        method: http_method,
-        title:  "#{action} job",
-        class:  "btn btn-secondary",
-        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
+        title: "#{action} job",
+        class: "btn btn-secondary",
+        data:  {turbo_method: http_method, turbo_confirm: t(:confirm, scope: %i[job action], action: action)}
       )
     end
 
@@ -147,11 +146,10 @@ module RocketJobMissionControl
       link_to(
         action,
         path,
-        method: http_method,
-        title:  "#{action} job",
-        class:  "btn btn-secondary btn-group",
-        role:   "group",
-        data:   {confirm: t(:confirm, scope: %i[job action], action: action)}
+        title: "#{action} job",
+        class: "btn btn-secondary btn-group",
+        role:  "group",
+        data:  {turbo_method: http_method, turbo_confirm: t(:confirm, scope: %i[job action], action: action)}
       )
     end
 

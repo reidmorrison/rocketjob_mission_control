@@ -1,6 +1,10 @@
 'use strict';
 
-$(function () {
+// turbo:load fires after the initial page load and after every subsequent
+// Turbo Drive visit, unlike $(document).ready/DOMContentLoaded which only
+// ever fire once per session. The elements queried below are always freshly
+// rendered by each visit, so rebinding on every turbo:load is safe.
+document.addEventListener('turbo:load', function () {
   $('.filter .state-toggle').on('change', function () {
     var active_states = $('.filter :checked');
     var param_string  = "?";

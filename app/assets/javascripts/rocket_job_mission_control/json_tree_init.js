@@ -37,7 +37,10 @@
     });
   }
 
-  $(function() {
+  // turbo:load fires after the initial page load and after every subsequent
+  // Turbo Drive visit, unlike $(document).ready/DOMContentLoaded which only
+  // ever fire once per session.
+  document.addEventListener('turbo:load', function() {
     renderJsonTrees(document);
   });
 

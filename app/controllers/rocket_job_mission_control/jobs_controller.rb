@@ -82,44 +82,44 @@ module RocketJobMissionControl
     def abort
       authorize! :abort, @job
       @job.abort!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def destroy
       authorize! :destroy, @job
       @job.destroy
-      redirect_to(jobs_path)
+      redirect_to(jobs_path, status: :see_other)
     end
 
     def retry
       authorize! :retry, @job
       @job.retry!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def pause
       authorize! :pause, @job
       @job.pause!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def resume
       authorize! :resume, @job
       @job.resume!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def run_now
       authorize! :run_now, @job
       @job.unset(:run_at) if @job.scheduled?
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def fail
       authorize! :fail, @job
       @job.fail!
 
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def show
@@ -224,7 +224,7 @@ module RocketJobMissionControl
       if slice.save
         logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
         flash[:success] = "Record #{slice.first_record_number + line_index} removed from the slice."
-        redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset)
+        redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset), status: :see_other
       else
         flash[:danger] = "Error removing line."
       end

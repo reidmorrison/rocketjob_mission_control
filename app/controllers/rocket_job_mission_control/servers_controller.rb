@@ -63,7 +63,7 @@ module RocketJobMissionControl
 
       # TODO: Refresh the same page it was on
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
@@ -73,7 +73,7 @@ module RocketJobMissionControl
       flash[:success] = t(:success, scope: %i[server update_one], action: "stop", name: @server.name)
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
@@ -83,7 +83,7 @@ module RocketJobMissionControl
       flash[:success] = t(:success, scope: %i[server destroy])
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
@@ -93,7 +93,7 @@ module RocketJobMissionControl
       flash[:success] = t(:success, scope: %i[server update_one], action: "pause", name: @server.name)
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
@@ -103,7 +103,7 @@ module RocketJobMissionControl
       flash[:success] = t(:success, scope: %i[server update_one], action: "resume", name: @server.name)
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 

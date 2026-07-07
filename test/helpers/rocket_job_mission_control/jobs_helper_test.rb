@@ -135,11 +135,11 @@ module RocketJobMissionControl
         end
 
         it "adds prompt for confirmation" do
-          assert_match(/data-confirm="Are you sure you want to abort this job\?"/, action_link)
+          assert_match(/data-turbo-confirm="Are you sure you want to abort this job\?"/, action_link)
         end
 
         it "uses correct http method" do
-          assert_match(/data-method="patch"/, action_link)
+          assert_match(/data-turbo-method="patch"/, action_link)
         end
       end
 

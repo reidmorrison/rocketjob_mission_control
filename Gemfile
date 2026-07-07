@@ -13,7 +13,10 @@ gem "rake"
 gem "rubyzip", platform: :ruby
 gem "sprockets"
 
+gem "capybara"
+gem "cuprite"
 gem "minispec-rails", require: false
+gem "puma"
 gem "rails-controller-testing"
 gem "simplecov", require: false
 

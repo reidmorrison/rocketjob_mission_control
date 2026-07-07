@@ -21,7 +21,7 @@ html, body, #wrapper, #wrapper > .container-fluid, #main {
    red/black gradient. */
 .navbar-default {
   background-color: var(--cosmic-space);
-  background-image: linear-gradient(rgba(5, 8, 24, 0.78), rgba(5, 8, 24, 0.86)), url('<%= image_path("rocket_job_mission_control/header-banner.jpg") %>');
+  background-image: linear-gradient(rgba(5, 8, 24, 0.78), rgba(5, 8, 24, 0.86)), url('../rocket_job_mission_control-images/header-banner.jpg');
   background-size: cover;
   background-position: center;
 }

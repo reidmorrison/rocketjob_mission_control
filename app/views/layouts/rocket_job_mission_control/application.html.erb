@@ -17,8 +17,28 @@
 
     <%= yield :meta %>
 
-    <%= stylesheet_link_tag "rocket_job_mission_control/application", media: 'all' %>
-    <%= javascript_include_tag "rocket_job_mission_control/application" %>
+    <%= stylesheet_link_tag "rocket_job_mission_control/bootstrap.min",
+                            "rocket_job_mission_control/fontawesome-all.min",
+                            "rocket_job_mission_control/tom-select.default.min",
+                            "rocket_job_mission_control/datatables.min",
+                            "rocket_job_mission_control/base",
+                            "rocket_job_mission_control/syntax_highlighting",
+                            "rocket_job_mission_control/json_tree",
+                            "rocket_job_mission_control/callout",
+                            "rocket_job_mission_control/jobs",
+                            "rocket_job_mission_control/worker_processes",
+                            media: "all" %>
+    <%= javascript_include_tag "rocket_job_mission_control/jquery-3.7.1.min",
+                               "rails-ujs",
+                               "rocket_job_mission_control/datatables.min",
+                               "rocket_job_mission_control/datatable_init",
+                               "rocket_job_mission_control/bootstrap.bundle.min",
+                               "rocket_job_mission_control/dirmon_entries",
+                               "rocket_job_mission_control/tom-select.complete.min",
+                               "rocket_job_mission_control/tom_select_init",
+                               "rocket_job_mission_control/jquery.json-viewer",
+                               "rocket_job_mission_control/json_tree_init",
+                               "rocket_job_mission_control/backtrace" %>
 
     <%= csrf_meta_tag %>
   </head>

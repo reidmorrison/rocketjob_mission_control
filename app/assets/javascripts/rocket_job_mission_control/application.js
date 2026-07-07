@@ -17,8 +17,8 @@
 //= require rocket_job_mission_control/bootstrap.min
 //= require rocket_job_mission_control/base
 //= require rocket_job_mission_control/dirmon_entries
-//= require rocket_job_mission_control/selectize.min
-//= require rocket_job_mission_control/selectize_init
+//= require rocket_job_mission_control/tom-select.complete.min
+//= require rocket_job_mission_control/tom_select_init
 //= require rocket_job_mission_control/jquery.json-viewer
 //= require rocket_job_mission_control/json_tree_init
 //= require rocket_job_mission_control/backtrace

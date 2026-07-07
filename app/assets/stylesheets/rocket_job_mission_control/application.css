@@ -12,8 +12,7 @@
  *
  *= require rocket_job_mission_control/bootstrap.min
  *= require rocket_job_mission_control/fontawesome-all.min
- *= require rocket_job_mission_control/selectize
- *= require rocket_job_mission_control/selectize.bootstrap3
+ *= require rocket_job_mission_control/tom-select.default.min
  *= require rocket_job_mission_control/datatables.min
  *= require rocket_job_mission_control/base
  *= require rocket_job_mission_control/syntax_highlighting

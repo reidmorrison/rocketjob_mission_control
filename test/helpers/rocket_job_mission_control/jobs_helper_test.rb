@@ -17,28 +17,33 @@ module RocketJobMissionControl
         it "shows running" do
           job.start
           job.worker_name = "test_worker"
+
           assert_equal "fa-solid fa-person-running running", job_icon(job)
         end
 
         it "shows sleeping" do
           job.start
+
           assert_equal "fa-solid fa-hourglass sleeping", job_icon(job)
         end
 
         it "shows failed" do
           job.start
           job.fail
+
           assert_equal "fa-solid fa-triangle-exclamation failed", job_icon(job)
         end
 
         it "shows aborted" do
           job.start
           job.abort
+
           assert_equal "fa-solid fa-ban aborted", job_icon(job)
         end
 
         it "handles scheduled special case" do
           job.run_at = 1.day.from_now
+
           assert_equal "fa-solid fa-clock scheduled", job_icon(job)
         end
       end
@@ -59,6 +64,7 @@ module RocketJobMissionControl
         it "returns job counts for a state" do
           RocketJob::Job.delete_all
           RocketJob::Jobs::SimpleJob.create!
+
           assert_equal 1, job_counts_by_state(:queued), RocketJob::Job.counts_by_state
           assert_equal 0, job_counts_by_state(:running), RocketJob::Job.counts_by_state
         end
@@ -73,6 +79,7 @@ module RocketJobMissionControl
           job = KaboomBatchJob.new
           job.input_category.slice_size = 100
           job.record_count = 250
+
           assert_equal 3, job_total_slices(job)
         end
       end
@@ -96,11 +103,13 @@ module RocketJobMissionControl
 
         it "returns the four ordered buckets" do
           labels = job_slice_stats(batch_job).map(&:first)
+
           assert_equal %w[Queued Active Failed Completed], labels
         end
 
         it "counts every uploaded slice as queued" do
           queued = job_slice_stats(batch_job).find { |bucket| bucket.first == "Queued" }
+
           assert_equal 3, queued[2]
           assert_in_delta 100.0, queued[3], 0.01
         end
@@ -110,12 +119,14 @@ module RocketJobMissionControl
           stats     = job_slice_stats(batch_job)
           completed = stats.find { |bucket| bucket.first == "Completed" }
           active    = stats.find { |bucket| bucket.first == "Active" }
+
           assert_equal 1, active[2]
           assert_equal 0, completed[2]
         end
 
         it "reports zero percentages when nothing is known" do
           percents = job_slice_stats(KaboomBatchJob.new).map(&:last)
+
           assert_equal [0, 0, 0, 0], percents
         end
       end
@@ -135,22 +146,24 @@ module RocketJobMissionControl
         end
 
         it "adds prompt for confirmation" do
-          assert_match(/data-confirm="Are you sure you want to abort this job\?"/, action_link)
+          assert_match(/data-turbo-confirm="Are you sure you want to abort this job\?"/, action_link)
         end
 
         it "uses correct http method" do
-          assert_match(/data-method="patch"/, action_link)
+          assert_match(/data-turbo-method="patch"/, action_link)
         end
       end
 
       describe "#job_state_name" do
         it "camelcases the @job state" do
           @job = RocketJob::Jobs::SimpleJob.new
+
           assert_equal "Queued", job_state_name(@job)
         end
 
         it "reflects the scheduled special case" do
           @job = RocketJob::Jobs::SimpleJob.new(run_at: 1.day.from_now)
+
           assert_equal "Scheduled", job_state_name(@job)
         end
       end
@@ -159,11 +172,13 @@ module RocketJobMissionControl
         it "returns the run_at time when scheduled" do
           run_at = 1.day.from_now
           job    = RocketJob::Jobs::SimpleJob.new(run_at: run_at)
+
           assert_equal run_at.in_time_zone(Time.zone), job_state_time(job)
         end
 
         it "falls back to created_at for a queued job" do
           job = RocketJob::Jobs::SimpleJob.new
+
           assert_equal job.created_at.in_time_zone(Time.zone), job_state_time(job)
         end
       end
@@ -171,6 +186,7 @@ module RocketJobMissionControl
       describe "#job_estimated_time_left" do
         it "returns nil when the job is not running" do
           job = KaboomBatchJob.new(record_count: 100)
+
           assert_nil job_estimated_time_left(job)
         end
 
@@ -198,6 +214,7 @@ module RocketJobMissionControl
       describe "#job_records_per_hour" do
         it "returns nil when the job is not completed" do
           job = KaboomBatchJob.new(record_count: 100)
+
           assert_nil job_records_per_hour(job)
         end
 

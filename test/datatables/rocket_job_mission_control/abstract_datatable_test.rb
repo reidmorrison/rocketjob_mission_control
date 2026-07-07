@@ -32,17 +32,20 @@ module RocketJobMissionControl
       describe "pagination params" do
         it "applies start and page size from the request" do
           datatable = build(start: "5", length: "25")
+
           assert_equal 5, datatable.query.start
           assert_equal 25, datatable.query.page_size
         end
 
         it "defaults the page size to 10" do
           datatable = build(start: "0")
+
           assert_equal 10, datatable.query.page_size
         end
 
         it "skips pagination when length is -1 (show all)" do
           datatable = build(length: "-1")
+
           assert_nil datatable.query.start
           assert_nil datatable.query.page_size
         end
@@ -51,11 +54,13 @@ module RocketJobMissionControl
       describe "search params" do
         it "assigns the search term when present" do
           datatable = build(search: {value: "widgets"})
+
           assert_equal "widgets", datatable.query.search_term
         end
 
         it "leaves the search term unset when blank" do
           datatable = build(search: {value: ""})
+
           assert_nil datatable.query.search_term
         end
       end
@@ -63,6 +68,7 @@ module RocketJobMissionControl
       describe "sort params" do
         it "maps a column index and direction onto the query order" do
           datatable = build(order: {"0" => {column: "1", dir: "asc"}})
+
           assert_equal({"state" => "asc"}, datatable.query.order_by)
         end
 

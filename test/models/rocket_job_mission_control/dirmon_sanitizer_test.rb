@@ -64,8 +64,10 @@ class DirmonSanitizerTest < Minitest::Test
           properties:        properties
         }
         cleansed = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
+
         assert_equal 0, dirmon_entry.errors.count
         expected = {archive_directory: "archive/path", job_class_name: "DirmonSanitizerTest::SampleJob", name: "Test2", pattern: "another/path", properties: {client_name: "Jack", zip_code: 12_345, input_categories: [{format: :json}], output_categories: [{name: :errors, format: :json}]}}
+
         assert_equal expected, cleansed
       end
 
@@ -84,8 +86,10 @@ class DirmonSanitizerTest < Minitest::Test
           }
         }
         cleansed = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
+
         assert_equal 0, dirmon_entry.errors.count
         expected = {}
+
         assert_equal expected, cleansed
       end
     end
@@ -104,6 +108,7 @@ class DirmonSanitizerTest < Minitest::Test
         diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
 
         expected = {format: "psv", name: "main"}
+
         assert_equal expected, diff
       end
 
@@ -120,6 +125,7 @@ class DirmonSanitizerTest < Minitest::Test
         diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
 
         expected = {}
+
         assert_equal expected, diff
       end
 
@@ -131,6 +137,7 @@ class DirmonSanitizerTest < Minitest::Test
         diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
 
         expected = {}
+
         assert_equal expected, diff
       end
     end
@@ -139,6 +146,7 @@ class DirmonSanitizerTest < Minitest::Test
       it "returns only different values" do
         diff     = RocketJobMissionControl::DirmonSanitizer.diff_properties(sanitized_properties, dirmon_entry)
         expected = {client_name: "Jill", zip_code: 45_673, input_categories: [{format: "json", name: "main"}], output_categories: [{format: "json", name: "errors"}]}
+
         assert_equal expected, diff
       end
     end

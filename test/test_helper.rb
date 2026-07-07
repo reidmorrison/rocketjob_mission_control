@@ -12,6 +12,7 @@ require_relative "../rjmc/config/environment"
 require "minitest/autorun"
 require "rails/test_help"
 require "minispec/rails"
+require_relative "system_test_case"
 
 module ActionController
   class TestCase

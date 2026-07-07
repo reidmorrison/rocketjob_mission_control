@@ -4,6 +4,7 @@ class JobSanitizerTest < Minitest::Test
   describe RocketJobMissionControl::JobSanitizer do
     before do
       @job = AllTypesJob.new
+
       assert_equal 0, @job.errors.count
     end
 
@@ -19,6 +20,7 @@ class JobSanitizerTest < Minitest::Test
           secure:  "Not permissible"
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+
         assert_equal 0, @job.errors.count
         assert_equal 3, cleansed.count
         assert_equal({string: "hello", integer: "12", symbol: "name"}, cleansed)
@@ -33,6 +35,7 @@ class JobSanitizerTest < Minitest::Test
           log_level: ""
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+
         assert_equal 0, @job.errors.count
         assert_equal 0, cleansed.count
       end
@@ -47,6 +50,7 @@ class JobSanitizerTest < Minitest::Test
           log_level:  ""
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, true)
+
         assert_equal 0, @job.errors.count, @job.errors
         assert_equal 5, cleansed.count
         assert_equal({log_level: nil, hash_field: nil, integer: nil, string: nil, symbol: nil}, cleansed)
@@ -59,6 +63,7 @@ class JobSanitizerTest < Minitest::Test
           hash_field: '{"state":"FL"}'
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+
         assert_equal 0, @job.errors.count
         assert_equal 1, cleansed.count
         assert_equal({"state" => "FL"}, cleansed[:hash_field])
@@ -71,10 +76,11 @@ class JobSanitizerTest < Minitest::Test
           hash_field: "{ bad json }"
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+
         assert_equal 1, @job.errors.count
         assert error = @job.errors.first
         assert_equal :properties, error.attribute
-        assert error.message.present?, error
+        assert_predicate error.message, :present?, error
         assert_equal({string: "hello"}, cleansed)
       end
 
@@ -83,6 +89,7 @@ class JobSanitizerTest < Minitest::Test
           hash_field: "{ }"
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+
         assert_equal 0, @job.errors.count
         assert_equal({hash_field: {}}, cleansed)
       end
@@ -92,6 +99,7 @@ class JobSanitizerTest < Minitest::Test
           array: ["", "rf@exp.com", "rm@exp.com", "lb@exp.com"]
         }
         cleansed = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+
         assert_equal 0, @job.errors.count
         assert_equal({array: ["rf@exp.com", "rm@exp.com", "lb@exp.com"]}, cleansed)
       end

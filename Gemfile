@@ -13,7 +13,10 @@ gem "rake"
 gem "rubyzip", platform: :ruby
 gem "sprockets"
 
+gem "capybara"
+gem "cuprite"
 gem "minispec-rails", require: false
+gem "puma"
 gem "rails-controller-testing"
 gem "simplecov", require: false
 
@@ -21,6 +24,8 @@ gem "solargraph", require: false
 
 gem "bundler-audit", require: false
 gem "rubocop", require: false
+gem "rubocop-capybara", require: false
 gem "rubocop-minitest", require: false
 gem "rubocop-performance", require: false
 gem "rubocop-rails", require: false
+gem "rubocop-rake", require: false

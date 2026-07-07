@@ -22,10 +22,11 @@ class QueryTest < Minitest::Test
         count       = 0
         previous_id = nil
         RocketJobMissionControl::Query.new(NoopJob.all, _id: 1).query.each do |job|
-          assert(previous_id < job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
+          assert_operator(previous_id, :<, job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
           previous_id = job.id
           count += 1
         end
+
         assert_equal @jobs.count, count
       end
 
@@ -33,10 +34,11 @@ class QueryTest < Minitest::Test
         count       = 0
         previous_id = nil
         RocketJobMissionControl::Query.new(NoopJob.all, _id: -1).query.each do |job|
-          assert(previous_id > job.id, "Wrong sort order. #{previous_id} > #{job.id}") if previous_id
+          assert_operator(previous_id, :>, job.id, "Wrong sort order. #{previous_id} > #{job.id}") if previous_id
           previous_id = job.id
           count += 1
         end
+
         assert_equal @jobs.count, count
       end
 
@@ -44,10 +46,11 @@ class QueryTest < Minitest::Test
         count    = 0
         previous = nil
         RocketJobMissionControl::Query.new(NoopJob.all, description: 1).query.each do |job|
-          assert(previous < job.description, "Wrong sort order. #{previous} < #{job.description}") if previous
+          assert_operator(previous, :<, job.description, "Wrong sort order. #{previous} < #{job.description}") if previous
           previous = job.description
           count += 1
         end
+
         assert_equal @jobs.count, count
       end
 
@@ -59,10 +62,11 @@ class QueryTest < Minitest::Test
         count       = 0
         previous_id = nil
         q.query.each do |job|
-          assert(previous_id < job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
+          assert_operator(previous_id, :<, job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
           previous_id = job.id
           count += 1
         end
+
         assert_equal 2, count
       end
 
@@ -82,10 +86,11 @@ class QueryTest < Minitest::Test
         count       = 0
         previous_id = nil
         q.query.each do |job|
-          assert(previous_id < job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
+          assert_operator(previous_id, :<, job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
           previous_id = job.id
           count += 1
         end
+
         assert_equal 3, count
       end
 
@@ -99,10 +104,11 @@ class QueryTest < Minitest::Test
         count       = 0
         previous_id = nil
         q.query.each do |job|
-          assert(previous_id < job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
+          assert_operator(previous_id, :<, job.id, "Wrong sort order. #{previous_id} < #{job.id}") if previous_id
           previous_id = job.id
           count += 1
         end
+
         assert_equal 3, count
       end
 
@@ -110,10 +116,11 @@ class QueryTest < Minitest::Test
         count    = 0
         previous = nil
         RocketJobMissionControl::Query.new(NoopJob.all, record_count: 1).query.each do |job|
-          assert(previous < job.record_count, "Wrong sort order. #{previous} < #{job.record_count}") if previous
+          assert_operator(previous, :<, job.record_count, "Wrong sort order. #{previous} < #{job.record_count}") if previous
           previous = job.record_count
           count   += 1
         end
+
         assert_equal @jobs.count, count
       end
 
@@ -121,10 +128,11 @@ class QueryTest < Minitest::Test
         count    = 0
         previous = nil
         RocketJobMissionControl::Query.new(NoopJob.all, record_count: -1).query.each do |job|
-          assert(previous > job.record_count, "Wrong sort order. #{previous} > #{job.record_count}") if previous
+          assert_operator(previous, :>, job.record_count, "Wrong sort order. #{previous} > #{job.record_count}") if previous
           previous = job.record_count
           count   += 1
         end
+
         assert_equal @jobs.count, count
       end
     end
@@ -141,6 +149,7 @@ class QueryTest < Minitest::Test
         # Pagination should be ignored
         q.start       = 1
         q.page_size   = 1
+
         assert_equal 2, q.count
       end
     end
@@ -157,6 +166,7 @@ class QueryTest < Minitest::Test
         # Pagination should be ignored
         q.start       = 1
         q.page_size   = 3
+
         assert_equal 10, q.unfiltered_count
       end
     end

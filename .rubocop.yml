@@ -4,6 +4,8 @@ plugins:
   - rubocop-minitest
   - rubocop-performance
   - rubocop-rails
+  - rubocop-capybara
+  - rubocop-rake
 
 # Merge (rather than replace) Exclude lists from .rubocop_todo.yml so a cop that
 # is both softened here and grandfathered there keeps both exclusions.
@@ -13,6 +15,7 @@ inherit_mode:
 
 AllCops:
   TargetRubyVersion: 3.2
+  NewCops: enable
   Exclude:
     - '.git/**/*'
     - '.github/**/*'

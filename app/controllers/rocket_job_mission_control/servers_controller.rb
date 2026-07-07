@@ -5,9 +5,9 @@ module RocketJobMissionControl
     before_action :show_sidebar
 
     rescue_from AccessGranted::AccessDenied do |exception|
-      raise exception if Rails.env.development? || Rails.env.test?
+      raise exception if Rails.env.local?
 
-      redirect_back(fallback_location: servers_path, allow_other_host: false, alert: "Access not authorized.")
+      redirect_back_or_to(servers_path, allow_other_host: false, alert: "Access not authorized.")
     end
 
     def index
@@ -56,54 +56,54 @@ module RocketJobMissionControl
         RocketJob::Server.destroy_zombies
       elsif VALID_ACTIONS.include?(server_action)
         RocketJob::Subscribers::Server.publish(server_action)
-        flash[:success] = t(:success, scope: %i[server update_all], action: server_action.to_s)
+        flash[:success] = t("server.update_all.success", action: server_action.to_s)
       else
-        flash[:danger] = t(:invalid, scope: %i[server update_all])
+        flash[:danger] = t("server.update_all.invalid")
       end
 
       # TODO: Refresh the same page it was on
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
     def stop
       authorize! :stop, @server
       RocketJob::Subscribers::Server.publish(:stop, server_id: @server.id)
-      flash[:success] = t(:success, scope: %i[server update_one], action: "stop", name: @server.name)
+      flash[:success] = t("server.update_one.success", action: "stop", name: @server.name)
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
     def destroy
       authorize! :destroy, @server
       @server.destroy
-      flash[:success] = t(:success, scope: %i[server destroy])
+      flash[:success] = t("server.destroy.success")
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
     def pause
       authorize! :pause, @server
       RocketJob::Subscribers::Server.publish(:pause, server_id: @server.id)
-      flash[:success] = t(:success, scope: %i[server update_one], action: "pause", name: @server.name)
+      flash[:success] = t("server.update_one.success", action: "pause", name: @server.name)
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
     def resume
       authorize! :resume, @server
       RocketJob::Subscribers::Server.publish(:resume, server_id: @server.id)
-      flash[:success] = t(:success, scope: %i[server update_one], action: "resume", name: @server.name)
+      flash[:success] = t("server.update_one.success", action: "resume", name: @server.name)
 
       respond_to do |format|
-        format.html { redirect_to servers_path }
+        format.html { redirect_to servers_path, status: :see_other }
       end
     end
 
@@ -135,7 +135,7 @@ module RocketJobMissionControl
     def find_server_or_redirect
       return if (@server = RocketJob::Server.where(id: params[:id]).first)
 
-      flash[:danger] = t(:failure, scope: %i[server find], id: params[:id])
+      flash[:danger] = t("server.find.failure", id: params[:id])
 
       redirect_to(servers_path)
     end

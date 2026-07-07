@@ -63,7 +63,7 @@ module RocketJobMissionControl
             end
 
             it "adds a flash alert message" do
-              assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
+              assert_equal I18n.t("job.find.failure", id: 42), flash[:danger]
             end
           end
 
@@ -119,7 +119,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
+            assert_equal I18n.t("job.find.failure", id: 42), flash[:danger]
           end
         end
 
@@ -139,6 +139,7 @@ module RocketJobMissionControl
 
           it "calls sanitize" do
             job.reload
+
             assert_nil job.description
             assert_nil job.log_level
             assert_equal :queued, job.state
@@ -157,7 +158,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
+            assert_equal I18n.t("job.find.failure", id: 42), flash[:danger]
           end
         end
 
@@ -187,7 +188,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[job find], id: 42), flash[:danger]
+            assert_equal I18n.t("job.find.failure", id: 42), flash[:danger]
           end
         end
 
@@ -202,7 +203,7 @@ module RocketJobMissionControl
             end
 
             it "notifies the user" do
-              assert_equal I18n.t(:no_errors, scope: %i[job failures]), flash[:warning]
+              assert_equal I18n.t("job.failures.no_errors"), flash[:warning]
             end
           end
 
@@ -226,6 +227,7 @@ module RocketJobMissionControl
 
             it "paginates" do
               expected_total = failed_job.input.failed.where("exception.class_name" => error_type).count - 1
+
               assert_equal 0,              assigns(:pagination)[:offset], assigns(:pagination)
               assert_equal expected_total, assigns(:pagination)[:total],  assigns(:pagination)
             end
@@ -233,7 +235,7 @@ module RocketJobMissionControl
             it "returns the first exception" do
               assert_equal error_type, assigns(:failure_exception).class_name
               assert_equal failed_slice.exception.message, assigns(:failure_exception).message
-              assert assigns(:failure_exception).backtrace.present?
+              assert_predicate assigns(:failure_exception).backtrace, :present?
             end
           end
         end
@@ -287,6 +289,7 @@ module RocketJobMissionControl
                   "recordsFiltered" => 0,
                   "recordsTotal"    => 0
                 }
+
                 assert_equal expected, json
               end
             end
@@ -373,6 +376,7 @@ module RocketJobMissionControl
         %i[index aborted completed failed paused queued running scheduled].each do |method|
           it "#{method} has read access as default" do
             get method, format: :json
+
             assert_response :success
           end
         end
@@ -396,6 +400,7 @@ module RocketJobMissionControl
               it "redirects with #{method} method and role #{role}" do
                 set_role(role)
                 patch method, params: @params
+
                 assert_response(:redirect)
               end
             end
@@ -463,6 +468,7 @@ module RocketJobMissionControl
           failed_slice.records = ["null\x00byte"]
           failed_slice.save!
           get :view_slice, params: {id: failed_job.id, error_type: error_type, offset: "0"}
+
           assert_includes response.body, "record-escape"
           assert_includes response.body, "\\x00"
         end
@@ -500,6 +506,7 @@ module RocketJobMissionControl
           failed_slice.records = ["null\x00byte"]
           failed_slice.save!
           get :edit_slice, params: {id: failed_job.id, error_type: error_type, offset: "0", line_index: "0"}
+
           assert_includes response.body, "null\\x00byte"
         end
 
@@ -535,6 +542,7 @@ module RocketJobMissionControl
             "id"         => failed_job.id.to_s
           }
           slice.reload
+
           assert_equal "null\x00byte", slice.records.first
         end
 
@@ -547,8 +555,9 @@ module RocketJobMissionControl
             "offset"     => "0",
             "id"         => failed_job.id.to_s
           }
+
           assert_response :redirect
-          assert flash[:danger].present?
+          assert_predicate flash[:danger], :present?
         end
       end
 

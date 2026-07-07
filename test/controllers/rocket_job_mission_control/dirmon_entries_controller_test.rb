@@ -45,7 +45,7 @@ module RocketJobMissionControl
           end
 
           it "changes the state to enabled" do
-            assert existing_dirmon_entry.reload.enabled?
+            assert_predicate existing_dirmon_entry.reload, :enabled?
           end
         end
 
@@ -60,7 +60,7 @@ module RocketJobMissionControl
           end
 
           it "alerts the user" do
-            assert_equal I18n.t(:failure, scope: %i[dirmon_entry enable]), flash[:danger]
+            assert_equal I18n.t("dirmon_entry.enable.failure"), flash[:danger]
           end
         end
       end
@@ -77,7 +77,7 @@ module RocketJobMissionControl
           end
 
           it "changes the state to disabled" do
-            assert existing_dirmon_entry.reload.disabled?
+            assert_predicate existing_dirmon_entry.reload, :disabled?
           end
         end
 
@@ -91,7 +91,7 @@ module RocketJobMissionControl
           end
 
           it "alerts the user" do
-            assert_equal I18n.t(:failure, scope: %i[dirmon_entry disable]), flash[:danger]
+            assert_equal I18n.t("dirmon_entry.disable.failure"), flash[:danger]
           end
         end
       end
@@ -108,7 +108,7 @@ module RocketJobMissionControl
         end
 
         it "assigns a new entry" do
-          assert assigns(:dirmon_entry).present?
+          assert_predicate assigns(:dirmon_entry), :present?
           assert_not assigns(:dirmon_entry).persisted?
         end
 
@@ -143,7 +143,7 @@ module RocketJobMissionControl
             end
 
             it "adds an error" do
-              assert assigns(:dirmon_entry).errors[:job_class_name].present?
+              assert_predicate assigns(:dirmon_entry).errors[:job_class_name], :present?
             end
           end
         end
@@ -201,7 +201,7 @@ module RocketJobMissionControl
           end
 
           it "creates the entry" do
-            assert assigns(:dirmon_entry).persisted?
+            assert_predicate assigns(:dirmon_entry), :persisted?
           end
 
           it "has no errors" do
@@ -277,7 +277,7 @@ module RocketJobMissionControl
           end
 
           it "adds a flash alert message" do
-            assert_equal I18n.t(:failure, scope: %i[dirmon_entry find], id: 42), flash[:danger]
+            assert_equal I18n.t("dirmon_entry.find.failure", id: 42), flash[:danger]
           end
         end
 
@@ -291,7 +291,7 @@ module RocketJobMissionControl
           end
 
           it "assigns the entry" do
-            assert assigns(:dirmon_entry).present?
+            assert_predicate assigns(:dirmon_entry), :present?
           end
         end
       end
@@ -342,12 +342,13 @@ module RocketJobMissionControl
 
           it "redirects to the new entry" do
             new_entry = RocketJob::DirmonEntry.where(name: "Replicated entry").first
+
             assert_redirected_to dirmon_entry_path(new_entry)
           end
 
           it "creates a copy without destroying the original" do
-            assert RocketJob::DirmonEntry.where(name: "Replicated entry").exists?
-            assert RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id).exists?
+            assert_predicate RocketJob::DirmonEntry.where(name: "Replicated entry"), :exists?
+            assert_predicate RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id), :exists?
           end
         end
 
@@ -365,7 +366,7 @@ module RocketJobMissionControl
           end
 
           it "carries the validation errors on the entry" do
-            assert assigns(:dirmon_entry).errors.present?
+            assert_predicate assigns(:dirmon_entry).errors, :present?
           end
         end
       end
@@ -418,6 +419,7 @@ module RocketJobMissionControl
                   "recordsFiltered" => 0,
                   "recordsTotal"    => 0
                 }
+
                 assert_equal expected, json
               end
             end
@@ -487,6 +489,7 @@ module RocketJobMissionControl
         %i[index disabled enabled failed pending].each do |method|
           it "#{method} has read only default access" do
             get method, format: :json
+
             assert_response :success
           end
         end

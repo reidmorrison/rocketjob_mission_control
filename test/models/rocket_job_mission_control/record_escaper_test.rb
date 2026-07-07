@@ -56,6 +56,7 @@ class RecordEscaperTest < Minitest::Test
       ].each do |original|
         it "restores every byte of #{original.inspect}" do
           restored = Escaper.unescape(Escaper.escape(original))
+
           assert_equal original.b, restored.b
         end
       end

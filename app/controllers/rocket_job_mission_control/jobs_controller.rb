@@ -66,6 +66,14 @@ module RocketJobMissionControl
       render_datatable(jobs, "Scheduled", JobsDatatable::SCHEDULED_COLUMNS, run_at: :asc)
     end
 
+    def show
+      authorize! :read, @job
+    end
+
+    def edit
+      authorize! :edit, @job
+    end
+
     def update
       authorize! :update, @job
       permitted_params = JobSanitizer.sanitize(job_params, @job.class, @job)
@@ -82,52 +90,44 @@ module RocketJobMissionControl
     def abort
       authorize! :abort, @job
       @job.abort!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def destroy
       authorize! :destroy, @job
       @job.destroy
-      redirect_to(jobs_path)
+      redirect_to(jobs_path, status: :see_other)
     end
 
     def retry
       authorize! :retry, @job
       @job.retry!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def pause
       authorize! :pause, @job
       @job.pause!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def resume
       authorize! :resume, @job
       @job.resume!
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def run_now
       authorize! :run_now, @job
       @job.unset(:run_at) if @job.scheduled?
-      redirect_to(job_path(@job))
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def fail
       authorize! :fail, @job
       @job.fail!
 
-      redirect_to(job_path(@job))
-    end
-
-    def show
-      authorize! :read, @job
-    end
-
-    def edit
-      authorize! :edit, @job
+      redirect_to(job_path(@job), status: :see_other)
     end
 
     def view_slice
@@ -183,7 +183,7 @@ module RocketJobMissionControl
 
       # Normalize CRLF on the (ASCII-safe) escaped text, then convert the
       # \xHH / \\ escapes back into the original bytes. See RecordEscaper.
-      updated_records = updated_records.map { |record| RecordEscaper.unescape(record.gsub(/\r\n/, "\n")) }
+      updated_records = updated_records.map { |record| RecordEscaper.unescape(record.gsub("\r\n", "\n")) }
 
       # Assings modified slice (from the form) back to slice
       slice.records = updated_records
@@ -224,7 +224,7 @@ module RocketJobMissionControl
       if slice.save
         logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
         flash[:success] = "Record #{slice.first_record_number + line_index} removed from the slice."
-        redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset)
+        redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset), status: :see_other
       else
         flash[:danger] = "Error removing line."
       end
@@ -236,14 +236,14 @@ module RocketJobMissionControl
       offset     = params.fetch(:offset, 0).to_i
 
       if error_type.blank?
-        flash[:warning] = t(:no_errors, scope: %i[job failures])
+        flash[:warning] = t("job.failures.no_errors")
         redirect_to(job_path(@job))
       end
 
       scope = @job.input.failed.where("exception.class_name" => error_type)
       count = scope.count
       unless count.positive?
-        flash[:warning] = t(:no_errors, scope: %i[job failures])
+        flash[:warning] = t("job.failures.no_errors")
         redirect_to(job_path(@job))
       end
 
@@ -288,7 +288,7 @@ module RocketJobMissionControl
     def find_job_or_redirect
       return if (@job = RocketJob::Job.where(id: params[:id]).first)
 
-      flash[:danger] = t(:failure, scope: %i[job find], id: params[:id])
+      flash[:danger] = t("job.find.failure", id: params[:id])
 
       redirect_to(jobs_path)
     end
@@ -336,9 +336,9 @@ module RocketJobMissionControl
                          "Error loading jobs."
                        end
 
-      raise exception if Rails.env.development? || Rails.env.test?
+      raise exception if Rails.env.local?
 
-      redirect_back(fallback_location: jobs_path, allow_other_host: false)
+      redirect_back_or_to(jobs_path, allow_other_host: false)
     end
 
     def render_datatable(jobs, description, columns, sort_order)

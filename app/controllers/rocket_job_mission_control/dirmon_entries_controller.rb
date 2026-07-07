@@ -5,9 +5,9 @@ module RocketJobMissionControl
     before_action :show_sidebar
 
     rescue_from AccessGranted::AccessDenied do |exception|
-      raise exception if Rails.env.development? || Rails.env.test?
+      raise exception if Rails.env.local?
 
-      redirect_back(fallback_location: dirmon_entries_path, allow_other_host: false, alert: "Access not authorized.")
+      redirect_back_or_to(dirmon_entries_path, allow_other_host: false, alert: "Access not authorized.")
     end
 
     def index
@@ -47,6 +47,10 @@ module RocketJobMissionControl
       @dirmon_entry.errors.add(:job_class_name, "Invalid Job Class")
     end
 
+    def edit
+      authorize! :edit, @dirmon_entry
+    end
+
     def create
       authorize! :create, RocketJob::DirmonEntry
       @dirmon_entry = RocketJob::DirmonEntry.new(dirmon_params)
@@ -62,14 +66,24 @@ module RocketJobMissionControl
       end
     end
 
+    def update
+      authorize! :update, @dirmon_entry
+      sanitized_params = DirmonSanitizer.sanitize(params[:rocket_job_dirmon_entry], @dirmon_entry.job_class, @dirmon_entry)
+      properties       = DirmonSanitizer.diff_properties(sanitized_params[:properties], @dirmon_entry)
+
+      sanitized_params[:properties] = properties
+
+      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update(sanitized_params)
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
+      else
+        render :edit
+      end
+    end
+
     def destroy
       authorize! :destroy, @dirmon_entry
       @dirmon_entry.destroy
-      redirect_to(dirmon_entries_path)
-    end
-
-    def edit
-      authorize! :edit, @dirmon_entry
+      redirect_to(dirmon_entries_path, status: :see_other)
     end
 
     # When you click on the Copy button,
@@ -101,28 +115,14 @@ module RocketJobMissionControl
       end
     end
 
-    def update
-      authorize! :update, @dirmon_entry
-      sanitized_params = DirmonSanitizer.sanitize(params[:rocket_job_dirmon_entry], @dirmon_entry.job_class, @dirmon_entry)
-      properties       = DirmonSanitizer.diff_properties(sanitized_params[:properties], @dirmon_entry)
-
-      sanitized_params[:properties] = properties
-
-      if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update(sanitized_params)
-        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
-      else
-        render :edit
-      end
-    end
-
     def enable
       authorize! :enable, @dirmon_entry
 
       if @dirmon_entry.may_enable?
         @dirmon_entry.enable!
-        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry), status: :see_other)
       else
-        flash[:danger] = t(:failure, scope: %i[dirmon_entry enable])
+        flash[:danger] = t("dirmon_entry.enable.failure")
         render(:show)
       end
     end
@@ -132,9 +132,9 @@ module RocketJobMissionControl
 
       if @dirmon_entry.may_disable?
         @dirmon_entry.disable!
-        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
+        redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry), status: :see_other)
       else
-        flash[:danger] = t(:failure, scope: %i[dirmon_entry disable])
+        flash[:danger] = t("dirmon_entry.disable.failure")
         render(:show)
       end
     end
@@ -152,7 +152,7 @@ module RocketJobMissionControl
     def find_entry_or_redirect
       return if (@dirmon_entry = RocketJob::DirmonEntry.where(id: params[:id]).first)
 
-      flash[:danger] = t(:failure, scope: %i[dirmon_entry find], id: params[:id])
+      flash[:danger] = t("dirmon_entry.find.failure", id: params[:id])
       redirect_to(dirmon_entries_path)
     end
 

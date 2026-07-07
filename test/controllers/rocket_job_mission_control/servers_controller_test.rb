@@ -35,6 +35,7 @@ module RocketJobMissionControl
 
             it "redirects to servers" do
               patch server_action, params: {id: server.id}
+
               assert_redirected_to servers_path
             end
 
@@ -46,6 +47,7 @@ module RocketJobMissionControl
                                                             }) do
                 patch server_action, params: {id: server.id}
               end
+
               assert_equal server_action, action
               assert_equal server.id, server_id
             end
@@ -104,7 +106,7 @@ module RocketJobMissionControl
           end
 
           it "displays an invalid action error message" do
-            assert_equal I18n.t(:invalid, scope: %i[server update_all]), flash[:danger]
+            assert_equal I18n.t("server.update_all.invalid"), flash[:danger]
           end
         end
       end
@@ -120,7 +122,7 @@ module RocketJobMissionControl
           end
 
           it "displays a flash message" do
-            assert_equal I18n.t(:success, scope: %i[server destroy]), flash[:success]
+            assert_equal I18n.t("server.destroy.success"), flash[:success]
           end
 
           it "destroys the server" do
@@ -138,7 +140,7 @@ module RocketJobMissionControl
           end
 
           it "displays a flash message" do
-            assert_equal I18n.t(:failure, scope: %i[server find], id: 999_999), flash[:danger]
+            assert_equal I18n.t("server.find.failure", id: 999_999), flash[:danger]
           end
         end
       end
@@ -191,6 +193,7 @@ module RocketJobMissionControl
                   "recordsFiltered" => 0,
                   "recordsTotal"    => 0
                 }
+
                 assert_equal expected, json
               end
             end
@@ -259,6 +262,7 @@ module RocketJobMissionControl
         %i[index starting running paused stopping zombie].each do |method|
           it "#{method} has read access as default" do
             get method, format: :json
+
             assert_response :success
           end
         end
@@ -273,6 +277,7 @@ module RocketJobMissionControl
               it "redirects with #{method} method and role #{role}" do
                 set_role(role)
                 patch method, params: {id: server.id}
+
                 assert_response(:redirect)
               end
             end

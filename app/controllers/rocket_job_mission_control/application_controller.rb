@@ -6,10 +6,10 @@ module RocketJobMissionControl
 
     private
 
-    def with_time_zone(&block)
+    def with_time_zone(&)
       return unless (time_zone = session["time_zone"] || "UTC")
 
-      Time.use_zone(time_zone, &block)
+      Time.use_zone(time_zone, &)
     end
 
     def current_policy

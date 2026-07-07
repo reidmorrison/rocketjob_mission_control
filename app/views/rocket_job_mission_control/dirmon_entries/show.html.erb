@@ -1,5 +1,5 @@
-<div class="panel panel-default">
-  <div class="panel-heading page-title-bar">
+<div class="card">
+  <div class="card-header page-title-bar">
     <h2 class='page-title'><%= @dirmon_entry.name %></h2>
   </div>
 </div>
@@ -8,26 +8,26 @@
   <div class='btn-toolbar job-actions'>
     <div class='btn-group'>
       <% if @dirmon_entry.may_enable? && can?(:enable, @dirmon_entry) %>
-        <%= link_to 'Enable', enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default', data: {confirm: 'Are you sure you want to enable this Dirmon Entry?'} %>
+        <%= link_to 'Enable', enable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-secondary', data: {confirm: 'Are you sure you want to enable this Dirmon Entry?'} %>
       <% end %>
       <% if @dirmon_entry.may_disable? && can?(:disable, @dirmon_entry) %>
-        <%= link_to 'Disable', disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-default', data: {confirm: 'Are you sure you want to disable this Dirmon Entry?'} %>
+        <%= link_to 'Disable', disable_dirmon_entry_path(@dirmon_entry.id), method: :put, class: 'btn btn-secondary', data: {confirm: 'Are you sure you want to disable this Dirmon Entry?'} %>
       <% end %>
     </div>
 
     <div class='btn-group'>
       <% if can?(:destroy, @dirmon_entry) %>
-        <%= link_to 'Destroy', dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-default', data: {confirm: 'Are you sure?'} %>
+        <%= link_to 'Destroy', dirmon_entry_path(@dirmon_entry), method: :delete, class: 'btn btn-secondary', data: {confirm: 'Are you sure?'} %>
       <% end %>
     </div>
     <div class='btn-group'>
       <% if can?(:copy, @dirmon_entry) %>
-        <%= link_to 'Copy', copy_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>
+        <%= link_to 'Copy', copy_dirmon_entry_path(@dirmon_entry), class: 'btn btn-secondary' %>
       <% end %>
     </div>
     <div class='btn-group'>
       <% if can?(:edit, @dirmon_entry) %>
-        <%= link_to 'Edit', edit_dirmon_entry_path(@dirmon_entry), class: 'btn btn-default' %>
+        <%= link_to 'Edit', edit_dirmon_entry_path(@dirmon_entry), class: 'btn btn-secondary' %>
       <% end %>
     </div>
   </div>

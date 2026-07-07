@@ -18,7 +18,7 @@ module RocketJobMissionControl
         "2"           => h(started_ago(server)),
         "3"           => h(time_since_heartbeat(server)),
         "4"           => action_links_html(server),
-        "DT_RowClass" => "card callout #{server_card_class(server)}"
+        "DT_RowClass" => "rjmc-card callout #{server_card_class(server)}"
       }
     end
 
@@ -46,12 +46,12 @@ module RocketJobMissionControl
       events  = valid_events(server)
 
       if events.include?(:resume) && view.can?(:resume, server)
-        actions += (link_to "resume", resume_server_path(server), method: :patch, class: "btn btn-default",
+        actions += (link_to "resume", resume_server_path(server), method: :patch, class: "btn btn-secondary",
 data: {confirm: "Resume this server?"}).to_s
       end
 
       if events.include?(:pause) && view.can?(:pause, server)
-        actions += (link_to "pause", pause_server_path(server), method: :patch, class: "btn btn-default",
+        actions += (link_to "pause", pause_server_path(server), method: :patch, class: "btn btn-secondary",
 data: {confirm: "Pause this server?"}).to_s
       end
 

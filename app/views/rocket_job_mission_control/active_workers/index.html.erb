@@ -1,21 +1,21 @@
 <div class='job-list'>
   <div class='list'>
-    <div class="panel panel-default">
-      <div class="panel-heading page-title-bar">
+    <div class="card">
+      <div class="card-header page-title-bar">
         <div class='row'>
           <div class='col-sm-10'>
             <h2 class='page-title'><i class='fas fa-circle-notch'></i>Active Workers</h2>
           </div>
 
           <div class='col-sm-2'>
-            <div class='btn btn-default pull-right dt-reload' data-behavior='reload'>
+            <div class='btn btn-secondary float-end dt-reload' data-behavior='reload'>
               <i class='fas fa-sync'></i>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="panel-body">
+      <div class="card-body">
         <% if @server_name %>
           <h4><%= "For Server: #{@server_name}" %></h4>
         <% end %>

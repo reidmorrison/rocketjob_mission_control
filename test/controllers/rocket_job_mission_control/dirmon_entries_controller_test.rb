@@ -436,25 +436,25 @@ module RocketJobMissionControl
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.pending.first.id}\">\n          <i class=\"fa-solid fa-cogs pending\" style=\"font-size: 75%\" title=\"pending\"></i>\n          Test_for_state_pending\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
                     "2"           => "path_for_state_pending",
-                    "DT_RowClass" => "card callout callout-pending"
+                    "DT_RowClass" => "rjmc-card callout callout-pending"
                   },
                   enabled:  {
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.enabled.first.id}\">\n          <i class=\"fa-solid fa-circle-check enabled\" style=\"font-size: 75%\" title=\"enabled\"></i>\n          Test_for_state_enabled\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
                     "2"           => "path_for_state_enabled",
-                    "DT_RowClass" => "card callout callout-enabled"
+                    "DT_RowClass" => "rjmc-card callout callout-enabled"
                   },
                   failed:   {
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.failed.first.id}\">\n          <i class=\"fa-solid fa-triangle-exclamation failed\" style=\"font-size: 75%\" title=\"failed\"></i>\n          Test_for_state_failed\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
                     "2"           => "path_for_state_failed",
-                    "DT_RowClass" => "card callout callout-failed"
+                    "DT_RowClass" => "rjmc-card callout callout-failed"
                   },
                   disabled: {
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.disabled.first.id}\">\n          <i class=\"fa-solid fa-ban disabled\" style=\"font-size: 75%\" title=\"disabled\"></i>\n          Test_for_state_disabled\n        </a>\n",
                     "1"           => "RocketJob::Jobs::SimpleJob",
                     "2"           => "path_for_state_disabled",
-                    "DT_RowClass" => "card callout callout-disabled"
+                    "DT_RowClass" => "rjmc-card callout callout-disabled"
                   }
                 }
 

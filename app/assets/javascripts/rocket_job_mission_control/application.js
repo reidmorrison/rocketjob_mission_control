@@ -14,8 +14,7 @@
 //= require rails-ujs
 //= require rocket_job_mission_control/datatables.min
 //= require rocket_job_mission_control/datatable_init
-//= require rocket_job_mission_control/bootstrap.min
-//= require rocket_job_mission_control/base
+//= require rocket_job_mission_control/bootstrap.bundle.min
 //= require rocket_job_mission_control/dirmon_entries
 //= require rocket_job_mission_control/tom-select.complete.min
 //= require rocket_job_mission_control/tom_select_init

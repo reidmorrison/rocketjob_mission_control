@@ -1,8 +1,8 @@
 <div id='servers'>
   <div class='server-list'>
     <div class='list'>
-      <div class="panel panel-default">
-        <div class="panel-heading page-title-bar">
+      <div class="card">
+        <div class="card-header page-title-bar">
           <div class='row'>
             <div class='col-sm-10'>
               <% state = @description.to_s.downcase %>
@@ -12,17 +12,17 @@
             </div>
 
             <div class='col-sm-2'>
-              <div class='btn btn-default pull-right dt-reload' data-behavior='reload'>
+              <div class='btn btn-secondary float-end dt-reload' data-behavior='reload'>
                 <i class='fas fa-sync'></i>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="panel-body">
-          <%# Rendered here, then moved by the script into the DataTables toolbar,
-              centered between "Show entries" and "Search". %>
-          <div id='server-collection-actions' class='dt-toolbar-actions' style='display: none;'>
+        <div class="card-body">
+          <%# Hidden here on load, then moved by the script into the centered
+              toolbar slot built by the `dom` template below. %>
+          <div id='server-collection-actions' class='dt-toolbar-actions text-center' style='display: none;'>
             <div class='action-buttons'>
               <% Array(@actions).each do |action| %>
                 <% if can?(action, RocketJob::Server) %>
@@ -31,7 +31,7 @@
                           rocket_job_mission_control.update_all_servers_path(server_action: action),
                           method: :patch,
                           data:   {confirm: t(:confirm, scope: [:server, :update_all], action: action.to_s.singularize.humanize.downcase)},
-                          class:  'btn btn-default'
+                          class:  'btn btn-secondary'
                       ) %>
                 <% end %>
               <% end %>
@@ -63,15 +63,25 @@
       $('.servers-datatable'),
       [{data: '0'}, {data: '1'}, {data: '2'}, {data: '3'}, {data: '4', orderable: false}],
       {
-        // Three-column toolbar: length (left), actions (centered), search (right).
+        // Three-column top toolbar on a single line: length (left), collection
+        // actions (centered), search (right). The DataTables 2.x `layout` API
+        // renders a custom cell as its own row, so the legacy `dom` template is
+        // used to keep the actions inline with the length/search controls.
         dom: "<'row'<'col-sm-3'l><'col-sm-6 text-center dt-actions-slot'><'col-sm-3'f>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-5'i><'col-sm-7'p>>"
       }
     );
 
-    $('#server-collection-actions')
-      .appendTo($('.servers-datatable').closest('.dataTables_wrapper').find('.dt-actions-slot'))
-      .css('display', 'inline-block');
+    // DataTables 2.x renamed its wrapper to .dt-container. Move the collection
+    // action buttons into the centered toolbar slot built above; if that slot
+    // is ever missing, fall back to a slot at the top of the wrapper so the
+    // buttons still appear rather than being detached by appendTo.
+    var $wrapper = $('.servers-datatable').closest('.dt-container');
+    var $slot    = $wrapper.find('.dt-actions-slot');
+    if ($slot.length === 0) {
+      $slot = $("<div class='dt-actions-slot text-center mb-2'></div>").prependTo($wrapper);
+    }
+    $('#server-collection-actions').appendTo($slot).css('display', 'inline-block');
   });
 </script>

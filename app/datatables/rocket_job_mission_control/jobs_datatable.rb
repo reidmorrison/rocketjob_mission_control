@@ -90,7 +90,7 @@ module RocketJobMissionControl
         h[index.to_s] = send(column[:value], job)
         index += 1
       end
-      h["DT_RowClass"] = "card callout callout-#{job_state(job)}"
+      h["DT_RowClass"] = "rjmc-card callout callout-#{job_state(job)}"
       h
     end
 

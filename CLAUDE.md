@@ -57,6 +57,50 @@ bin/rocketjob           # start a Rocket Job server with 10 workers (processes q
 
 To develop against a local checkout of Rocket Job, edit `rjmc/Gemfile` to point `rocketjob` at `path:` instead of `github:`. Seed jobs `AllTypesJob`, `CSVJob`, `KaboomBatchJob` live in the dummy app for DirmonEntry / batch / error-path testing.
 
+#### Visual verification with headless Chrome
+
+There is no JS/system test suite, so CSS/markup regressions (Bootstrap version, DataTables styling, etc.) are invisible to `rake`. If the dummy app's dev server is already running (check with `ps aux | grep puma` / `lsof -i :3000` before starting a second one), screenshot and measure it directly instead of guessing at CSS:
+
+```bash
+# The engine mounts at "/" in the dummy app (see rjmc/config/routes.rb), not "/rocketjob".
+open -a "Google Chrome" # or use the path below directly
+
+# Get a real job id to view (states: queued/scheduled/running/paused/failed/completed/aborted):
+cd rjmc && bin/rails runner 'puts RocketJob::Job.where(state: :failed).first&.id'
+
+# Screenshot a page:
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless=new --disable-gpu --hide-scrollbars --window-size=1280,1600 \
+  --screenshot=/tmp/page.png "http://127.0.0.1:3000/jobs/<id>"
+# Then use the Read tool on /tmp/page.png to view it.
+```
+
+For pixel measurements (e.g. comparing gaps between sections, confirming a CSS rule actually applied), use `puppeteer-core` driving the same Chrome binary instead of screenshotting-and-eyeballing:
+
+```bash
+cd <scratchpad dir> && npm init -y && npm install puppeteer-core
+```
+
+```js
+const puppeteer = require('puppeteer-core');
+(async () => {
+  const browser = await puppeteer.launch({
+    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    headless: 'new', args: ['--no-sandbox']
+  });
+  const page = await browser.newPage();
+  await page.setViewport({width: 1280, height: 1600});
+  await page.goto('http://127.0.0.1:3000/jobs/<id>', {waitUntil: 'networkidle0'});
+  const result = await page.evaluate(() => {
+    // e.g. return getBoundingClientRect()/getComputedStyle() for the elements in question
+  });
+  console.log(JSON.stringify(result, null, 2));
+  await browser.close();
+})();
+```
+
+This caught two real bugs during the Bootstrap 5 migration that CSS reading alone missed: the DataTables Bootstrap-5 integration renames its own layout row class (so a selector targeting the documented `.dt-layout-row` matched nothing — the real class was `.row.mt-2`), and a "fixed" zebra-striping rule that was technically applied but visually imperceptible (`#f7f7f7` vs `#fff`). Reading the vendored `datatables.min.js` and `.min.css` is essential for finding the actual class names the Bootstrap 5 integration emits (`grep -oE` for the literal strings) rather than assuming the upstream docs' names still apply after minification/rebuild.
+
 ## Architecture
 
 ### Request flow: DataTables + AJAX
@@ -96,7 +140,7 @@ Rocket Job jobs have user-defined fields, so strong-params lists are computed at
 
 ### Front-end assets
 
-All JS/CSS libraries are vendored files under `app/assets/` (no npm, importmap, or CDN). Current versions: jQuery 3.7.1, Bootstrap 3.4.1, a DataTables 2.3.8 downloader bundle with Bootstrap 3 styling and the Responsive 3.0.8 extension only (`responsive: true` is the sole extension the app uses; rebuild it via the datatables.net download builder URL in the file header, e.g. the `/v/bs/dt-2.3.8/r-3.0.8/` combined CDN path), tom-select 2.4.3 (vanilla JS, no jQuery; `tom-select.complete.min.js` + the `tom-select.default.min.css` theme, both dropped in from the jsDelivr `tom-select@2.4.3/dist` CDN; initialized by `tom_select_init.js` over every `select.tom-select`), jquery.json-viewer 1.5.0 (vendored verbatim; upgrade by replacing the file, theming lives in `json_tree.css`), and Font Awesome 7.3.0 (free; woff2-only webfonts under `app/assets/fonts/webfonts/`, vendored as `fontawesome-all.min.css.erb` with `url()` refs rewritten to `font_path("webfonts/...")`; upgrade by dropping in the new release's `all.min.css` + woff2 and re-applying that rewrite). FA7 keeps every FA5 icon name as an alias, so existing `fas fa-*` classes still resolve.
+All JS/CSS libraries are vendored files under `app/assets/` (no npm, importmap, or CDN). Current versions: jQuery 3.7.1, Bootstrap 5.3.3 (vendored `bootstrap.min.css` + `bootstrap.bundle.min.js` with Popper bundled; BS components need no jQuery and are driven by `data-bs-*` attributes), a DataTables 2.3.8 downloader bundle with Bootstrap 5 styling and the Responsive 3.0.8 extension only (`responsive: true` is the sole extension the app uses; rebuild it via the datatables.net download builder URL in the file header, e.g. the `/v/bs5/dt-2.3.8/r-3.0.8/` combined CDN path), tom-select 2.4.3 (vanilla JS, no jQuery; `tom-select.complete.min.js` + the `tom-select.default.min.css` theme, both dropped in from the jsDelivr `tom-select@2.4.3/dist` CDN; initialized by `tom_select_init.js` over every `select.tom-select`), jquery.json-viewer 1.5.0 (vendored verbatim; upgrade by replacing the file, theming lives in `json_tree.css`), and Font Awesome 7.3.0 (free; woff2-only webfonts under `app/assets/fonts/webfonts/`, vendored as `fontawesome-all.min.css.erb` with `url()` refs rewritten to `font_path("webfonts/...")`; upgrade by dropping in the new release's `all.min.css` + woff2 and re-applying that rewrite). FA7 keeps every FA5 icon name as an alias, so existing `fas fa-*` classes still resolve.
 
 The pipeline is Sprockets-only: `application.js` is a `//= require` manifest (including `rails-ujs`, which powers every `data-method` state-transition link), and several stylesheets are `.css.erb` using `asset_path`. Host apps on Rails 8+ default to Propshaft and must add `sprockets-rails` to use this engine.
 
@@ -110,8 +154,10 @@ The pipeline is Sprockets-only: `application.js` is a `//= require` manifest (in
 
 Remove items from this list as they are fixed:
 
-1. Bootstrap 3.4.1 is EOL with an unpatched XSS CVE (CVE-2024-6484, carousel; unused here). The big-ticket project: migrate to Bootstrap 5, Propshaft-compatible assets (plain CSS `url()` instead of `.css.erb`; note the vendored Font Awesome CSS is still a `.css.erb` using `font_path`, so it is part of this migration), Turbo-friendly action links instead of rails-ujs `data-method`. Font Awesome is already on 7.3.0, and Selectize has been replaced with tom-select.
+1. Remaining pieces of the front-end modernization: Propshaft-compatible assets (plain CSS `url()` instead of `.css.erb`; `base.css.erb` and the vendored Font Awesome CSS are still `.css.erb` using `image_path`/`font_path`, and the pipeline still uses Sprockets `//= require` manifests, so a full Propshaft move also has to replace those), Turbo-friendly action links instead of rails-ujs `data-method`, and re-applying the cosmic dark theme that was dropped during the Bootstrap 5 upgrade (see [[restore-cosmic-theme-after-bs5]]). Font Awesome is already on 7.3.0, and Selectize has been replaced with tom-select.
 2. Housekeeping is done (`feature/ci-housekeeping`, PR #108): gemspec `s.test_files` removed; CI on `actions/checkout@v4`; RuboCop, bundler-audit, and dependabot all wired into CI; `.rubocop.yml` `TargetRubyVersion` at 3.2.
+
+Fixed in `feature/bootstrap-5` (was the big-ticket half of item 1): Bootstrap 3.4.1 (EOL, unpatched carousel XSS CVE-2024-6484) replaced with Bootstrap 5.3.3. Layout ported to BS5 markup (navbar, `alert-dismissible`/`btn-close`, `data-bs-*`); the custom BS3 `row-offcanvas` sidebar and its dead `base.js` toggle were dropped; all 23 panels became cards; forms/buttons/utilities migrated (`form-group`→`mb-3`, select `form-control`→`form-select`, `btn-default`→`btn-secondary`, `pull-*`→`float-*`); the DataTables bundle was rebuilt on the `bs5` styling variant; and the orphaned Glyphicons fonts + `bootstrap.min.css.erb` were removed. Per the migration decision the custom "cosmic" dark theme was dropped for now and must be re-applied afterward (see [[restore-cosmic-theme-after-bs5]]). No automated tests assert on Bootstrap classes, so the visual result needs browser verification.
 
 Fixed in `feature/modernize-vendored-js` (was item 1): the DataTables bundle was rebuilt on 2.3.8 with only Bootstrap 3 styling and Responsive 3.0.8, dropping JSZip, pdfmake, the Flash export button, and every other unused extension (all CVE-bearing pieces were in the dropped set); jQuery bumped 3.5.1 → 3.7.1. The JS bundle shrank from 2.2 MB to ~118 KB.
 

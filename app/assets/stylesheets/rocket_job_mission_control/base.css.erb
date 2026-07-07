@@ -1,4 +1,4 @@
-html, body, #wrapper, #wrapper > .container-fluid, #main, .row.row-offcanvas.row-offcanvas-left {
+html, body, #wrapper, #wrapper > .container-fluid, #main {
   height: 100%;
 }
 
@@ -59,7 +59,15 @@ a:hover, a:focus { color: var(--cosmic-blue-dark); }
 
 /* Datatables */
 table.datatable { border-collapse: collapse; }
-.dataTables_wrapper { margin-top: 0; }
+.dt-container { margin-top: 0; }
+
+/* The DataTables Bootstrap 5 integration builds each toolbar/table/footer row
+   as `<div class="row mt-2 justify-content-between">` (it overrides the core
+   `dt-layout-row` class name), so the `mt-2` stacks extra whitespace above and
+   below the length/search controls. Zero the top margin on those rows; BS5
+   spacing utilities are `!important`, so this override must be too. (The
+   servers page uses a custom `dom`, so its rows are plain and unaffected.) */
+.dt-container > .row { margin-top: 0 !important; }
 
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
   position: absolute;
@@ -78,14 +86,17 @@ table.dataTable thead .sorting_asc:after { content: "\f160"; }
 table.dataTable thead .sorting_desc:after { content: "\f161"; }
 table.dataTable thead > tr > th { padding-left: 30px; }
 
-div.row {
-  margin-left: -15px;
-  margin-right: -15px;
+/* Clear separator under the column headers. Bootstrap 5 / DataTables 2 no
+   longer draws a strong header rule, so add one back to distinguish the header
+   row from the data rows. A subtle header fill reinforces it. */
+table.datatable thead > tr > th {
+  background-color: #f0f2f5;
+  border-bottom: 2px solid #adb5bd;
 }
 
-.dataTables_info, .dataTables_paginate { margin-top: 20px !important; }
+.dt-info, .dt-paging { margin-top: 20px !important; }
 
-.datatable .card td { vertical-align: middle; }
+.datatable .rjmc-card td { vertical-align: middle; }
 
 /* Row action buttons: compact, themed cosmic-blue to match the toolbar. The
    `a.btn` selector is needed to outrank the per-row `.callout-<state> a` link
@@ -396,17 +407,29 @@ h3 { margin-top: 0; }
   padding-left: 5px;
 }
 
+/* Bootstrap 5 has no `.nav > li > a { display:block }` rule, so bare sidebar
+   links render inline. Make each its own full-width row -- otherwise the two
+   links (Create + All) in the dirmon list item sit on one line. */
+#sidebar .nav a {
+  display: block;
+  padding: 4px 5px;
+}
+
 #sidebar .nav > li > a:hover,
 #sidebar .nav > li > a:focus {
   color: #fff;
   background-color: rgba(255, 106, 24, 0.35);
 }
 
+/* Matches how Bootstrap 5's navbar-dark marks the active top-nav item: full-
+   opacity white text (vs the translucent 0.75 default) with no background,
+   just bolder here since the sidebar has no translucent/solid contrast to
+   lean on the way the navbar's 0.55 -> #fff jump does. */
 #sidebar .nav > .active > a,
 #sidebar .nav > .active > a:hover,
 #sidebar .nav > .active > a:focus {
   color: #fff;
-  background-color: var(--cosmic-flame-active);
+  font-weight: bold;
 }
 
 /* Fixed-width sidebar rail on wide screens. The sidebar is taken out of flow
@@ -526,42 +549,52 @@ h3 { margin-top: 0; }
 
 .job-search-box { padding: 20px 100px; }
 
-.list .card:nth-child(1) { border-top: 1px solid #ddd; }
-.list .card:nth-child(odd) { background-color: #fff; }
+.list .rjmc-card:nth-child(1) { border-top: 1px solid #ddd; }
+.list .rjmc-card:nth-child(odd) { background-color: #fff; }
 
-.list .card {
+.list .rjmc-card {
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
   height: 100%;
   background-color: #f7f7f7;
 }
 
-.list .card:hover {
+.list .rjmc-card:hover {
   cursor: pointer;
   background-color: #dadada;
 }
 
-.list .card .inner {
+/* Bootstrap 5 paints every table cell with var(--bs-table-bg) (a plain, non
+   -important declaration), which hides a background set on the <tr>. Re-apply
+   the zebra striping and hover onto the cells (with !important to be safe) so
+   the alternating row colors show on the list tables. Even rows use a clearly
+   perceptible grey -- the old #f7f7f7 vs #fff was too subtle to read. The hover
+   rule is last so it wins over the odd-row rule at equal specificity. */
+.list .rjmc-card td { background-color: #eaedf2 !important; }
+.list .rjmc-card:nth-child(odd) td { background-color: #fff !important; }
+.list .rjmc-card:hover td { background-color: #d5dce8 !important; }
+
+.list .rjmc-card .inner {
   padding: 0.5em;
   position: relative;
   margin: 0 0 0 10px;
 }
 
-.list .card .inner .title {
+.list .rjmc-card .inner .title {
   display: inline-block;
   vertical-align: middle;
 }
 
-.list .card .inner .title i.queued,    .page-title i.queued    { color: #a29f00; }
-.list .card .inner .title i.scheduled, .page-title i.scheduled { color: purple; }
-.list .card .inner .title i.running,   .page-title i.running   { color: #337ab7; }
-.list .card .inner .title i.sleeping,  .page-title i.sleeping  { color: darkcyan; }
-.list .card .inner .title i.completed, .page-title i.completed { color: green; }
-.list .card .inner .title i.paused,    .page-title i.paused    { color: orange; }
-.list .card .inner .title i.failed,    .page-title i.failed    { color: red; }
-.list .card .inner .title i.aborted,   .page-title i.aborted   { color: darkorange; }
-.list .card .inner .title i.enabled,   .page-title i.enabled   { color: green; }
-.list .card .inner .title i.disabled,  .page-title i.disabled  { color: orange; }
+.list .rjmc-card .inner .title i.queued,    .page-title i.queued    { color: #a29f00; }
+.list .rjmc-card .inner .title i.scheduled, .page-title i.scheduled { color: purple; }
+.list .rjmc-card .inner .title i.running,   .page-title i.running   { color: #337ab7; }
+.list .rjmc-card .inner .title i.sleeping,  .page-title i.sleeping  { color: darkcyan; }
+.list .rjmc-card .inner .title i.completed, .page-title i.completed { color: green; }
+.list .rjmc-card .inner .title i.paused,    .page-title i.paused    { color: orange; }
+.list .rjmc-card .inner .title i.failed,    .page-title i.failed    { color: red; }
+.list .rjmc-card .inner .title i.aborted,   .page-title i.aborted   { color: darkorange; }
+.list .rjmc-card .inner .title i.enabled,   .page-title i.enabled   { color: green; }
+.list .rjmc-card .inner .title i.disabled,  .page-title i.disabled  { color: orange; }
 
 /* Jobs/servers/dirmon list page title: cosmic-blue heading (theme accent) with
    a state-colored status icon. */
@@ -615,8 +648,13 @@ h3 { margin-top: 0; }
 
 /* Consistent, themed section sub-headers on the detail/show pages
    (Details, Dates, Exceptions, Input Categories, ...). */
+/* Inter-section spacing is driven mainly by the preceding table's 1.5em bottom
+   margin. Keep the section-header top margin small so the flow sections
+   (Details, Dates, Categories) don't gap wider than the `.status-message`
+   sections (Exceptions, Statistics), whose header is a `:first-child` and has
+   no top margin. */
 .section-header {
-  margin: 1.5em 0 0.75em;
+  margin: 0.25em 0 0.75em;
   padding-bottom: 6px;
   font-size: 18px;
   font-weight: bold;
@@ -673,7 +711,10 @@ h3 { margin-top: 0; }
   white-space: pre-wrap;
   word-break: break-word;
 }
-.records .records-failed {
+/* Highlight the failed record row. Target the cells, not the <tr>: Bootstrap 5
+   paints each cell with var(--bs-table-bg), which would cover a row-level
+   background. */
+.records .records-failed td {
   background-color: #fdecea;
 }
 .records .records-failed .records-line-number {
@@ -722,24 +763,24 @@ textarea.input_slices {
   border-color: var(--cosmic-blue-dark);
 }
 
-.list .card .inner .title h3 {
+.list .rjmc-card .inner .title h3 {
   font-weight: bold;
   margin: 0;
   font-size: 16px;
 }
 
-.list .card .inner .lead {
+.list .rjmc-card .inner .lead {
   margin-bottom: 5px;
   font-size: 18px;
 }
 
-.list .card .inner .duration, .list .card .inner .description, .list .card .inner .completion {
+.list .rjmc-card .inner .duration, .list .rjmc-card .inner .description, .list .rjmc-card .inner .completion {
   color: #7c735c;
   font-size: 18px;
   font-weight: 200;
 }
 
-.list .card .inner .batch {
+.list .rjmc-card .inner .batch {
   position: absolute;
   right: -10px;
   top: -10px;
@@ -762,9 +803,9 @@ textarea.input_slices {
   font-size: 0.85em;
 }
 
-.grid .card { padding: 1em; }
+.grid .rjmc-card { padding: 1em; }
 
-.grid .card .inner {
+.grid .rjmc-card .inner {
   padding: 1em;
   border-radius: 3px;
   display: inline-block;
@@ -779,23 +820,23 @@ textarea.input_slices {
   text-align: center;
 }
 
-.grid .card .inner .title,
-.grid .card .inner .state,
-.grid .card .inner .threads,
-.grid .card .inner .time {
+.grid .rjmc-card .inner .title,
+.grid .rjmc-card .inner .state,
+.grid .rjmc-card .inner .threads,
+.grid .rjmc-card .inner .time {
   margin-bottom: 10px;
 }
 
-.grid .card .inner .actions {
+.grid .rjmc-card .inner .actions {
   padding: 10px 0;
   background: #f5f5f5;
   border: 1px solid #eee;
   border-radius: 2px;
 }
 
-.grid .card .inner .title { text-align: center; }
+.grid .rjmc-card .inner .title { text-align: center; }
 
-.grid .card .inner .title h3 {
+.grid .rjmc-card .inner .title h3 {
   font-weight: bold;
   margin: 0;
   font-size: 16px;

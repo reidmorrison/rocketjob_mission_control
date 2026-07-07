@@ -15,7 +15,7 @@ module RocketJobMissionControl
         "2"           => job_name_with_link(active_worker.job.class.name, active_worker.job.id),
         "3"           => h(active_worker.job.description&.truncate(50)),
         "4"           => h("#{active_worker.duration} ago"),
-        "DT_RowClass" => "card callout callout-running"
+        "DT_RowClass" => "rjmc-card callout callout-running"
       }
     end
 

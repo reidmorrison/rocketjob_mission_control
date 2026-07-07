@@ -1,48 +1,43 @@
-<nav class='navbar navbar-default' id='header'>
+<nav class='navbar navbar-expand-lg navbar-dark bg-dark' id='header'>
   <div class='container-fluid'>
-    <div class='navbar-header'>
-      <button aria-expanded='false' class='navbar-toggle collapsed' data-target='.navbar-collapse' data-toggle='collapse' type='button'>
-        <span class='sr-only'>Toggle navigation</span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-      </button>
+    <a class='navbar-brand brand' href='http://rocketjob.io' target='_blank'>
+      <%= image_tag('rocket_job_mission_control/header-rocket-256.png') %>
+      <span class='brand-rocket'>Rocket</span><span class='brand-job'>Job</span>
+    </a>
 
-      <a class='navbar-brand brand' href='http://rocketjob.io' target='_blank'>
-        <%= image_tag('rocket_job_mission_control/header-rocket-256.png') %>
-        <span class='brand-rocket'>Rocket</span><span class='brand-job'>Job</span>
-      </a>
-    </div>
+    <button aria-controls='navbar-menu' aria-expanded='false' aria-label='Toggle navigation' class='navbar-toggler' data-bs-target='#navbar-menu' data-bs-toggle='collapse' type='button'>
+      <span class='navbar-toggler-icon'></span>
+    </button>
 
-    <div class='navbar-collapse collapse'>
-      <ul class='nav navbar-nav'>
-        <li class='<%= active_page("jobs") %>'>
-          <%= link_to running_jobs_path do %>
+    <div class='collapse navbar-collapse' id='navbar-menu'>
+      <ul class='navbar-nav me-auto'>
+        <li class='nav-item'>
+          <%= link_to running_jobs_path, class: "nav-link #{active_page('jobs')}" do %>
             <i class='fas fa-home'></i> Jobs
           <% end %>
         </li>
 
-        <li class='<%= active_page("servers") %>'>
-          <%= link_to servers_path do %>
+        <li class='nav-item'>
+          <%= link_to servers_path, class: "nav-link #{active_page('servers')}" do %>
             <i class='fas fa-database'></i> Servers
           <% end %>
         </li>
 
-        <li class='<%= active_page("active_workers") %>'>
-          <%= link_to active_workers_path do %>
+        <li class='nav-item'>
+          <%= link_to active_workers_path, class: "nav-link #{active_page('active_workers')}" do %>
             <i class='fas fa-circle-notch'></i> Workers
           <% end %>
         </li>
 
-        <li class='<%= active_page("dirmon_entries") %>'>
-          <%= link_to enabled_dirmon_entries_path do %>
+        <li class='nav-item'>
+          <%= link_to enabled_dirmon_entries_path, class: "nav-link #{active_page('dirmon_entries')}" do %>
             <i class='fas fa-folder'></i> Directory Monitoring
           <% end %>
         </li>
       </ul>
 
-      <ul class='nav navbar-nav navbar-right'>
-        <li><a href='/'><i class='fas fa-home'></i> Home</a></li>
+      <ul class='navbar-nav ms-auto'>
+        <li class='nav-item'><a class='nav-link' href='/'><i class='fas fa-home'></i> Home</a></li>
       </ul>
     </div>
   </div>

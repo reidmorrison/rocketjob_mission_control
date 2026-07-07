@@ -1,8 +1,8 @@
 <% input_category = f.object %>
 
 <div class="nested-fields">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
+  <div class="card border-primary">
+    <div class="card-header">
       <div class="row">
         <div class="col-sm-12">
           <h4><%= input_category.name %></h4>
@@ -10,43 +10,43 @@
       </div>
     </div>
 
-    <div class="panel-body">
+    <div class="card-body">
       <%= f.hidden_field :name, value: input_category.name %>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :columns %>
         <% options = input_category.columns || []%>
-        <%= f.select(:columns, options_for_select(options, options), { include_hidden: false }, { class: "tom-select form-control", multiple: true }) %>
+        <%= f.select(:columns, options_for_select(options, options), { include_hidden: false }, { class: "tom-select form-select", multiple: true }) %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :format %>
         <% options = extract_inclusion_values(RocketJob::Category::Input, :format) %>
         <% value = input_category.format %>
-        <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "tom-select form-control" }) %>
+        <%= f.select(:format, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :format_options %>
         <% value = input_category.format_options %>
         <%= f.text_field(:format_options, value: value ? value.to_json : nil, class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}') %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :mode %>
         <% options = extract_inclusion_values(RocketJob::Category::Input, :mode) %>
         <% value = input_category.mode %>
-        <%= f.select(:mode, options, { include_blank: true, selected: value }, { class: "tom-select form-control" }) %>
+        <%= f.select(:mode, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label "Skip and Ignore Unknown Columns" %>
         <% options = extract_inclusion_values(RocketJob::Category::Input, :skip_unknown) %>
         <% value = input_category.skip_unknown %>
-        <%= f.select(:skip_unknown, options, { include_blank: true, selected: value }, { class: "tom-select form-control" }) %>
+        <%= f.select(:skip_unknown, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <%= f.label :slice_size %>
         <% value = input_category.slice_size %>
         <%= f.number_field(:slice_size, value: value, class: "form-control") %>

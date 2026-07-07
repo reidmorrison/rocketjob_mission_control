@@ -211,7 +211,7 @@ module RocketJobMissionControl
                     "2"           => /s ago/,
                     "3"           => /s ago/,
                     "4"           => %r{/servers/#{RocketJob::Server.starting.first.id}/stop},
-                    "DT_RowClass" => "card callout callout-info"
+                    "DT_RowClass" => "rjmc-card callout callout-info"
                   },
                   running:  {
                     "0"           => /#{RocketJob::Server.running.first.name}/,
@@ -219,7 +219,7 @@ module RocketJobMissionControl
                     "2"           => /s ago/,
                     "3"           => /s ago/,
                     "4"           => %r{/servers/#{RocketJob::Server.running.first.id}/stop},
-                    "DT_RowClass" => "card callout callout-success"
+                    "DT_RowClass" => "rjmc-card callout callout-success"
                   },
                   paused:   {
                     "0"           => /#{RocketJob::Server.paused.first.name}/,
@@ -227,7 +227,7 @@ module RocketJobMissionControl
                     "2"           => /s ago/,
                     "3"           => /s ago/,
                     "4"           => %r{/servers/#{RocketJob::Server.paused.first.id}/stop},
-                    "DT_RowClass" => "card callout callout-warning"
+                    "DT_RowClass" => "rjmc-card callout callout-warning"
                   },
                   stopping: {
                     "0"           => /#{RocketJob::Server.stopping.first.name}/,
@@ -235,7 +235,7 @@ module RocketJobMissionControl
                     "2"           => /s ago/,
                     "3"           => /s ago/,
                     "4"           => %r{/servers/#{RocketJob::Server.stopping.first.id}},
-                    "DT_RowClass" => "card callout callout-alert"
+                    "DT_RowClass" => "rjmc-card callout callout-alert"
                   }
                 }
 

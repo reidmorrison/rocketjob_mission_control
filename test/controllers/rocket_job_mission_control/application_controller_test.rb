@@ -30,18 +30,21 @@ module RocketJobMissionControl
 
         it "defaults to AccessPolicy when not configured" do
           Config.access_policy_class = nil
+
           assert_equal AccessPolicy, @controller.send(:access_policy_class)
           assert_instance_of AccessPolicy, @controller.send(:current_policy)
         end
 
         it "uses a configured policy class" do
           Config.access_policy_class = CustomAccessPolicy
+
           assert_equal CustomAccessPolicy, @controller.send(:access_policy_class)
           assert_instance_of CustomAccessPolicy, @controller.send(:current_policy)
         end
 
         it "constantizes a policy class supplied as a String" do
           Config.access_policy_class = "RocketJobMissionControl::CustomAccessPolicy"
+
           assert_equal CustomAccessPolicy, @controller.send(:access_policy_class)
           assert_instance_of CustomAccessPolicy, @controller.send(:current_policy)
         end
@@ -56,17 +59,20 @@ module RocketJobMissionControl
         it "uses correct timezone with session and time_zone set" do
           session["time_zone"] = "America/Los_Angeles"
           get :index
+
           assert_equal "America/Los_Angeles", assigns(:time_zone).name
         end
 
         it "uses correct timezone with session, but no time_zone set" do
           session["user_id"] = "42"
           get :index
+
           assert_equal "UTC", assigns(:time_zone).name
         end
 
         it "uses correct timezone without a session" do
           get :index
+
           assert_equal "UTC", assigns(:time_zone).name
         end
       end

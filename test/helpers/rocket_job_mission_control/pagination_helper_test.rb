@@ -12,7 +12,7 @@ module RocketJobMissionControl
 
         describe "when the current position is NOT equal to the boundary" do
           it "returns blank" do
-            assert page_nav_disabled_class(4, 0).blank?
+            assert_predicate page_nav_disabled_class(4, 0), :blank?
           end
         end
       end

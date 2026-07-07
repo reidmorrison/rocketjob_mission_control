@@ -7,6 +7,7 @@ module RocketJobMissionControl
         it "returns the count for a state, defaulting to zero" do
           RocketJob::DirmonEntry.delete_all
           RocketJob::DirmonEntry.create!(name: "test", pattern: "/tmp/*", job_class_name: "AllTypesJob")
+
           assert_equal 1, dirmon_counts_by_state(:pending)
           assert_equal 0, dirmon_counts_by_state(:failed)
         end

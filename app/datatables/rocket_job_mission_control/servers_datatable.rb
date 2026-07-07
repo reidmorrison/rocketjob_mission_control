@@ -6,7 +6,7 @@ module RocketJobMissionControl
     def initialize(view, query)
       query.display_columns = %w[name heartbeat.workers started_at heartbeat.updated_at]
       query.search_columns  = [:name]
-      super(view, query)
+      super
     end
 
     private

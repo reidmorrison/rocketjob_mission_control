@@ -20,7 +20,7 @@ module RocketJobMissionControl
 
         accept_confirm { click_on "Enable" }
 
-        assert dirmon_entry.reload.enabled?
+        assert_predicate dirmon_entry.reload, :enabled?
       end
 
       it "disables an enabled entry" do
@@ -29,7 +29,7 @@ module RocketJobMissionControl
 
         accept_confirm { click_on "Disable" }
 
-        assert dirmon_entry.reload.disabled?
+        assert_predicate dirmon_entry.reload, :disabled?
       end
 
       it "destroys an entry" do

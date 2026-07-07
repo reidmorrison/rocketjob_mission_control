@@ -138,7 +138,7 @@ module RocketJobMissionControl
         path,
         title: "#{action} job",
         class: "btn btn-secondary",
-        data:  {turbo_method: http_method, turbo_confirm: t(:confirm, scope: %i[job action], action: action)}
+        data:  {turbo_method: http_method, turbo_confirm: t("job.action.confirm", action: action)}
       )
     end
 
@@ -149,7 +149,7 @@ module RocketJobMissionControl
         title: "#{action} job",
         class: "btn btn-secondary btn-group",
         role:  "group",
-        data:  {turbo_method: http_method, turbo_confirm: t(:confirm, scope: %i[job action], action: action)}
+        data:  {turbo_method: http_method, turbo_confirm: t("job.action.confirm", action: action)}
       )
     end
 

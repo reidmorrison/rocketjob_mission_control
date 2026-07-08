@@ -16,11 +16,11 @@ Gem::Specification.new do |s|
 
   s.add_dependency "access-granted", "~> 1.3"
   s.add_dependency "railties", ">= 7.2"
-  s.add_dependency "rocketjob", "~> 6.3"
+  s.add_dependency "rocketjob", "~> 7.0"
 
   s.metadata = {
     "bug_tracker_uri"       => "https://github.com/reidmorrison/rocketjob_mission_control/issues",
-    "changelog_uri"         => "https://github.com/reidmorrison/rocketjob_mission_control/releases",
+    "changelog_uri"         => "https://github.com/reidmorrison/rocketjob_mission_control/blob/main/CHANGELOG.md",
     "documentation_uri"     => "https://rocketjob.io",
     "homepage_uri"          => "https://rocketjob.io",
     "source_code_uri"       => "https://github.com/reidmorrison/rocketjob_mission_control/tree/v#{RocketJobMissionControl::VERSION}",

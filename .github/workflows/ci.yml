@@ -43,7 +43,7 @@ jobs:
         run: ruby --version
 
       - name: Set up Chrome
-        uses: browser-actions/setup-chrome@v1
+        uses: browser-actions/setup-chrome@v2
 
       - name: Run Tests
         run: bundle exec rake test

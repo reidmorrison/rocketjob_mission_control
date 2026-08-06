@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`rocketjob_mission_control` is a **mountable Rails Engine** (namespace `RocketJobMissionControl`) that provides the web UI for managing [Rocket Job](http://rocketjob.io). It is packaged as a gem and mounted into a host Rails app via `mount RocketJobMissionControl::Engine => 'rocketjob'`. Data is persisted in MongoDB through Mongoid; the engine reads and mutates `RocketJob::Job`, `RocketJob::Server`, `RocketJob::Worker`, and `RocketJob::DirmonEntry` documents. It defines no database tables of its own.
+`rocketjob_mission_control` is a **mountable Rails Engine** (namespace `RocketJobMissionControl`) that provides the web UI for managing [Rocket Job](https://rocketjob.reidmorrison.com/). It is packaged as a gem and mounted into a host Rails app via `mount RocketJobMissionControl::Engine => 'rocketjob'`. Data is persisted in MongoDB through Mongoid; the engine reads and mutates `RocketJob::Job`, `RocketJob::Server`, `RocketJob::Worker`, and `RocketJob::DirmonEntry` documents. It defines no database tables of its own.
 
 ## Sister projects (local checkouts)
 

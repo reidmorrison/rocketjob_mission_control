@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name                  = "rocketjob_mission_control"
   s.version               = RocketJobMissionControl::VERSION
   s.authors               = ["Michael Cloutier", "Chris Lamb", "Jonathan Whittington", "Reid Morrison"]
-  s.homepage              = "https://rocketjob.io"
+  s.homepage              = "https://rocketjob.reidmorrison.com/"
   s.summary               = "Ruby's missing batch system."
   s.description           = "Rocket Job Mission Control is the Web user interface to manage Rocket Job."
   s.license               = "Apache-2.0"
@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.metadata = {
     "bug_tracker_uri"       => "https://github.com/reidmorrison/rocketjob_mission_control/issues",
     "changelog_uri"         => "https://github.com/reidmorrison/rocketjob_mission_control/blob/main/CHANGELOG.md",
-    "documentation_uri"     => "https://rocketjob.io",
-    "homepage_uri"          => "https://rocketjob.io",
+    "documentation_uri"     => "https://rocketjob.reidmorrison.com/",
+    "homepage_uri"          => "https://rocketjob.reidmorrison.com/",
     "source_code_uri"       => "https://github.com/reidmorrison/rocketjob_mission_control/tree/v#{RocketJobMissionControl::VERSION}",
     "rubygems_mfa_required" => "true"
   }

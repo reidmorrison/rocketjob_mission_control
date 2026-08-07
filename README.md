@@ -1,10 +1,10 @@
 # Rocket Job Mission Control
 [![Gem Version](https://img.shields.io/gem/v/rocketjob_mission_control.svg)](https://rubygems.org/gems/rocketjob_mission_control) [![Build Status](https://github.com/reidmorrison/rocketjob_mission_control/workflows/build/badge.svg)](https://github.com/reidmorrison/rocketjob_mission_control/actions?query=workflow%3Abuild) [![Downloads](https://img.shields.io/gem/dt/rocketjob_mission_control.svg)](https://rubygems.org/gems/rocketjob_mission_control) [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](http://opensource.org/licenses/Apache-2.0) ![](https://img.shields.io/badge/status-Production%20Ready-blue.svg)
 
-Rocket Job Mission Control is the web based user interface for [Rocket Job](http://rocketjob.io),
+Rocket Job Mission Control is the web based user interface for [Rocket Job](https://rocketjob.reidmorrison.com/),
 Ruby's missing batch system.
 
-![Screen shot](http://rocketjob.io/images/rjmc_running.png)
+![Screen shot](https://rocketjob.reidmorrison.com/images/rjmc/jobs/running.png)
 
 It is a mountable [Rails Engine](https://guides.rubyonrails.org/engines.html) that plugs directly
 into an existing Rails application, giving operators a single place to:
@@ -15,15 +15,15 @@ into an existing Rails application, giving operators a single place to:
 2. **Manage servers and workers.** See which servers and workers are active, what each worker is
    currently processing, and stop, pause, or resume servers.
 3. **Manage directory monitoring.** Create, edit, enable, disable, copy, and replicate
-   [Directory Monitor](http://rocketjob.io/dirmon.html) entries that turn arriving files into jobs.
+   [Directory Monitor](https://rocketjob.reidmorrison.com/dirmon.html) entries that turn arriving files into jobs.
 
 Already in use in production processing large files with millions of records, as well as large jobs
 that walk through entire databases.
 
 ## Documentation
 
-* [Rocket Job Mission Control Guide](http://rocketjob.io/mission_control)
-* [Rocket Job Guide](http://rocketjob.io)
+* [Rocket Job Mission Control Guide](https://rocketjob.reidmorrison.com/mission_control.html)
+* [Rocket Job Guide](https://rocketjob.reidmorrison.com/)
 
 ## Install
 

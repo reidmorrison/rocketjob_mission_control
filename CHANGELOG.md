@@ -3,13 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [7.0.0] Unreleased
+## [7.0.0] 2026-09-05
 
 ### Breaking changes
 
-- Depend on `rocketjob` ~> 7.0. Rocket Job v7 is not yet published to RubyGems; until
-  it is released, point the host app's Gemfile at the `reidmorrison/rocketjob` GitHub
-  main branch (`gem "rocketjob", github: "reidmorrison/rocketjob"`).
+- Depend on `rocketjob` ~> 7.0.
 - Raise the minimum dependency versions: Ruby 3.2, Rails/`railties` 7.2.
 - Replace Bootstrap 3.4.1 (EOL, unpatched carousel XSS CVE-2024-6484) with Bootstrap
   5.3.3. The layout, navbar, panels (now cards), forms, buttons, and utility classes
@@ -71,13 +69,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   `rocketjob` itself).
 - Document the headless-Chrome / Puppeteer visual verification workflow used to catch
   CSS/markup regressions that the test suite can't see.
+- Point the gemspec URLs, the navbar brand link, and every documentation link at
+  `https://rocketjob.reidmorrison.com/`; the Rocket Job documentation site has moved
+  from `rocketjob.io`.
 
 ### Internal
 
 - Raise test coverage from 89.1% to 95.9% (SimpleCov); add Solargraph for development.
 - Enforce RuboCop in CI and apply safe and reviewed-unsafe autocorrections.
 - Remove dead code: an unused datatable duration column and an unrouted dirmon action.
-- Bump `actions/checkout` 4 -> 7; add bundler-audit to CI.
+- Bump `actions/checkout` 4 -> 7 and `browser-actions/setup-chrome` 1 -> 2; add
+  bundler-audit to CI.
 - Expand the dummy app's seed data to exercise every Mission Control view, including
   large/nested Array and Hash fields, and make seeding idempotent.
 

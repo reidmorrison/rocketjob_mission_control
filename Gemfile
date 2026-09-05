@@ -5,7 +5,6 @@ gemspec
 gem "minitest", "~> 5.0"
 gem "mongoid", "~> 9.1.0"
 gem "rails", "~> 8.1.0"
-gem "rocketjob", github: "reidmorrison/rocketjob"
 gem "sprockets-rails"
 
 gem "appraisal"

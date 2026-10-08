@@ -8,7 +8,7 @@ module RocketJobMissionControl
       {
         "0"           => name_with_link(dirmon),
         "1"           => h(dirmon.job_class_name),
-        "2"           => h(dirmon.pattern.try(:truncate, 80)),
+        "2"           => h(dirmon.pattern_display_name.try(:truncate, 80)),
         "DT_RowClass" => "rjmc-card callout callout-#{dirmon.state}"
       }
     end

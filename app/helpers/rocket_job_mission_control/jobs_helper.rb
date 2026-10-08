@@ -107,8 +107,14 @@ module RocketJobMissionControl
       (job.record_count.to_f / job.input_category.slice_size).ceil
     end
 
+    # The job's upload file name, without any credentials, such as the password of an SFTP url that Dirmon
+    # archived the file to, see RocketJob.path_display_name.
+    def job_upload_file_name(job)
+      RocketJob.path_display_name(job.upload_file_name)
+    end
+
     def job_custom_fields(job)
-      attrs = job.attributes.dup
+      attrs = job.display_attributes
       DISPLAYED_FIELDS.each { |key| attrs.delete(key) }
       # Convert time zones for any custom time fields
       attrs.keys { |key| attrs[key] = attrs[key].in_time_zone(Time.zone) if attrs[key].is_a?(Time) }

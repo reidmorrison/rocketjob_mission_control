@@ -48,6 +48,62 @@ module RocketJobMissionControl
         end
       end
 
+      describe "#job_upload_file_name" do
+        let :job do
+          RocketJob::Jobs::UploadFileJob.new(job_class_name: "RocketJob::Jobs::SimpleJob")
+        end
+
+        it "returns a local file name as is" do
+          job.upload_file_name = "/var/sftp/archive/file.csv"
+
+          assert_equal "/var/sftp/archive/file.csv", job_upload_file_name(job)
+        end
+
+        it "leaves out the credentials of a url" do
+          job.upload_file_name = "sftp://user:secret@sftp.example.org/archive/file.csv"
+
+          assert_equal "sftp://sftp.example.org/archive/file.csv", job_upload_file_name(job)
+        end
+
+        it "leaves out a String that is not a valid path, since its credentials cannot be found" do
+          job = Struct.new(:upload_file_name).new("sftp://user:p@ss@sftp.example.org/archive/file.csv")
+
+          assert_equal "(not a valid path)", job_upload_file_name(job)
+        end
+      end
+
+      describe "#job_custom_fields" do
+        let :job do
+          RocketJob::Jobs::CopyFileJob.new(
+            source_url:  "/exports/source.csv",
+            target_url:  "sftp://user:secret@sftp.example.org/uploads/source.csv",
+            target_args: {username: "jack", password: "other-secret"}
+          )
+        end
+
+        it "shows urls without their credentials" do
+          fields = job_custom_fields(job)
+
+          assert_equal "/exports/source.csv", fields["source_url"]
+          assert_equal "sftp://sftp.example.org/uploads/source.csv", fields["target_url"]
+        end
+
+        it "shows the arguments of a path without their secrets" do
+          assert_equal({"username" => "jack", "password" => "[FILTERED]"}, job_custom_fields(job)["target_args"].deep_stringify_keys)
+        end
+
+        it "leaves out the fields that are displayed elsewhere" do
+          assert_not job_custom_fields(job).key?("priority")
+        end
+
+        it "does not change the job" do
+          job_custom_fields(job)
+
+          assert_equal "sftp://user:secret@sftp.example.org/uploads/source.csv", job.target_url
+          assert_includes job.attributes.keys, "priority"
+        end
+      end
+
       describe "#jobs_states" do
         it "returns the states" do
           assert_equal %w[queued running completed paused failed aborted], job_states

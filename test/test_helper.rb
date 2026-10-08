@@ -2,8 +2,8 @@ ENV["RAILS_ENV"] ||= "test"
 
 require "simplecov"
 SimpleCov.start "rails" do
-  add_filter "/test/"
-  add_filter "/rjmc/"
+  skip "/test/"
+  skip "/rjmc/"
 end
 
 require "yaml"

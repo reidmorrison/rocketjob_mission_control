@@ -62,7 +62,7 @@ module RocketJobMissionControl
 
       if server.stopping? && view.can?(:destroy, server)
         actions += "Server is stopping..."
-        confirmation = ""
+        confirmation = +""
         unless server.zombie?
           confirmation << "Warning!\n\nDestroying this server will hard kill its active workers/jobs.\nKilled jobs will be requeued for processing on another worker.\n\n"
         end

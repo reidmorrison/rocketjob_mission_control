@@ -2,6 +2,8 @@
 
 source "https://rubygems.org"
 
+gem "iostreams", github: "reidmorrison/iostreams", branch: "main"
+gem "rocketjob", github: "reidmorrison/rocketjob", branch: "main"
 gem "minitest", "~> 5.0"
 gem "mongoid", "~> 9.0.0"
 gem "rails", "~> 8.0.0"

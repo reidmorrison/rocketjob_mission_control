@@ -195,19 +195,20 @@ module RocketJobMissionControl
       backtrace_strip_paths.any? { |path| line.to_s.start_with?(path) }
     end
 
-    # Reversible, ASCII-safe form of a failed record for an edit textarea.
-    # See RecordEscaper; unescape it with RecordEscaper.unescape on save.
+    # Reversible form of a failed record for an edit textarea, which keeps its type.
+    # See RecordEditor; convert it back with RecordEditor.from_text on save.
     def escape_record(value)
-      RecordEscaper.escape(value)
+      RecordEditor.to_text(value)
     end
 
     # Read-only HTML for a failed record, with each unprintable/invalid byte
     # rendered as a highlighted `\xHH` token. Each highlight carries a hover
     # tooltip naming the byte, so an operator can see (in context) exactly which
-    # byte broke the record and what it is.
+    # byte broke the record and what it is. A record that is not a String, such as
+    # a Hash, is shown as Extended JSON, see RecordEditor.
     def highlight_record(value)
       safe_join(
-        RecordEscaper.segments(value).map do |type, text|
+        RecordEscaper.segments(RecordEditor.to_display_text(value)).map do |type, text|
           next text if type == :text
 
           content_tag(:span, text, class: "record-escape", title: record_escape_title(text))

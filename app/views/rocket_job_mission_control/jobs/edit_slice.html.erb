@@ -11,19 +11,19 @@
     <div class='job-status'>
       <div class='section-header'>Edit Record: <%= @first_record_number + @line_index %></div>
 
+      <% record = @lines[@line_index] %>
       <p class='form-text'>
-        Unprintable bytes are shown as <code>\xHH</code> escapes (for example a null byte as <code>\x00</code>)
-        and are converted back to the original bytes when saved. A literal backslash is shown as <code>\\</code>.
+        <% if record.is_a?(String) %>
+          Unprintable bytes are shown as <code>\xHH</code> escapes (for example a null byte as <code>\x00</code>)
+          and are converted back to the original bytes when saved. A literal backslash is shown as <code>\\</code>.
+        <% else %>
+          This record is not text, so it is shown as MongoDB Extended JSON, and saved with the same types of values.
+          For example <code>{"$date": "..."}</code> is saved as a time.
+        <% end %>
       </p>
 
-      <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name), method: :patch) do |f| %>
-        <% @lines.each_with_index do |line, index| %>
-          <% if @line_index == index %>
-            <%= f.text_area :records, value: escape_record(line), class: 'input_slices form-control', id: index, multiple: true, rows: 20, wrap: "soft" %>
-          <% else %>
-            <%= f.hidden_field :records, value: escape_record(line), class: 'input_slices', id: index, multiple: true %>
-          <% end %>
-        <% end %>
+      <%= form_for(:job, url: update_slice_job_path(@job, offset: @offset, error_type: @failure_exception.class_name, line_index: @line_index), method: :patch) do |f| %>
+        <%= f.text_area :record, value: escape_record(record), class: 'input_slices form-control', id: @line_index, rows: 20, wrap: "soft" %>
 
         <div id='submit'>
           <%= f.submit 'Save', class: 'btn btn-primary' %>

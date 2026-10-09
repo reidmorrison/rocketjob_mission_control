@@ -31,6 +31,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixes
 
+- Editing a record of a failed slice only changes that record, and keeps its type. Previously every
+  record of the slice was saved as text, so a Hash or Array record, such as one uploaded in `:hash` or
+  `:array` mode, or the range of an integer range upload, became the text of its Ruby `inspect`, such as
+  `{"name" => "Jack"}`, which the job then could not process. A record that is not text is now shown,
+  and edited, as MongoDB Extended JSON, so that values such as a time keep their types.
+- Deleting a record of a failed slice only removes that record. Previously it removed every record in
+  the slice that was equal to it.
+- The log entry for an edited or deleted record shows the job's upload file name without any credentials.
 - Replicating a Dirmon entry no longer copies when the storage of the original became unavailable,
   which could fail the copy before its own storage had been unavailable for an hour.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.

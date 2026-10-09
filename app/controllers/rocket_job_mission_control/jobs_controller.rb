@@ -172,32 +172,32 @@ module RocketJobMissionControl
       authorize! :update_slice, @job
 
       # Params from the edit_slice form
-      error_type      = params[:error_type]
-      offset          = params.fetch(:offset, 0).to_i
-      updated_records = params["job"]["records"]
+      error_type = params[:error_type]
+      offset     = params.fetch(:offset, 0).to_i
+      line_index = params[:line_index].to_i
 
       # Find the same slice edit_slice displayed: filtered by error type and
       # ordered so the offset selects the matching slice.
       scope = @job.input.failed.where("exception.class_name" => error_type)
       slice = scope.order(_id: 1).limit(1).skip(offset).first
 
-      # Normalize CRLF on the (ASCII-safe) escaped text, then convert the
-      # \xHH / \\ escapes back into the original bytes. See RecordEscaper.
-      updated_records = updated_records.map { |record| RecordEscaper.unescape(record.gsub("\r\n", "\n")) }
-
-      # Assings modified slice (from the form) back to slice
-      slice.records = updated_records
+      # Replace only the edited record, converting its text back into a record
+      # of the same kind, see RecordEditor. The other records are left as they are.
+      records             = slice.to_a.dup
+      records[line_index] = RecordEditor.from_text(params.dig("job", "record"), records[line_index])
+      slice.records       = records
 
       if slice.save
-        logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
+        logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{upload_file_display_name}")
         flash[:success] = "slice updated"
         redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset)
       else
         flash[:danger] = "Error updating slice."
       end
-    rescue EncodingError => e
+    rescue EncodingError, JSON::ParserError, BSON::Error => e
       # Mongo only stores UTF-8, so a record left with invalid bytes cannot be
-      # saved. Surface it instead of returning a 500.
+      # saved, and the JSON of a record that is not text must be valid.
+      # Surface it instead of returning a 500.
       flash[:danger] = "Error updating slice: #{e.message}"
       redirect_to view_slice_job_path(@job, error_type: params[:error_type], offset: offset)
     end
@@ -214,15 +214,13 @@ module RocketJobMissionControl
       scope = @job.input.failed.where("exception.class_name" => error_type)
       slice = scope.order(_id: 1).limit(1).skip(offset).first
 
-      # Finds and deletes line
-      value = slice.to_a[line_index]
-      slice.to_a.delete(value)
-
-      # Assings full array back to slice
-      slice.records = slice.to_a
+      # Deletes only the selected record, not every record equal to it.
+      records = slice.to_a.dup
+      records.delete_at(line_index)
+      slice.records = records
 
       if slice.save
-        logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
+        logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{upload_file_display_name}")
         flash[:success] = "Record #{slice.first_record_number + line_index} removed from the slice."
         redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset), status: :see_other
       else
@@ -258,6 +256,11 @@ module RocketJobMissionControl
     end
 
     private
+
+    # The name of the job's upload file, without any credentials, such as the password of an SFTP url, to log.
+    def upload_file_display_name
+      RocketJob.path_display_name(@job.upload_file_name)
+    end
 
     def assign_job_values(target, hash)
       hash.each_pair do |attribute, value|

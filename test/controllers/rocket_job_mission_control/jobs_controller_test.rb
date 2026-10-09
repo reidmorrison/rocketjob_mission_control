@@ -472,6 +472,14 @@ module RocketJobMissionControl
           assert_includes response.body, "record-escape"
           assert_includes response.body, "\\x00"
         end
+
+        it "shows a record that is not text as Extended JSON" do
+          failed_slice.records = [{"name" => "Jack", "count" => 1}]
+          failed_slice.save!
+          get :view_slice, params: {id: failed_job.id, error_type: error_type, offset: "0"}
+
+          assert_includes response.body, "{&quot;name&quot;:&quot;Jack&quot;,&quot;count&quot;:1}"
+        end
       end
 
       describe "#edit_slice" do
@@ -513,6 +521,15 @@ module RocketJobMissionControl
         it "confirms deletion with the record number" do
           assert_includes response.body, "Record #{failed_slice.first_record_number} will be deleted from the slice."
         end
+
+        it "shows a record that is not text as Extended JSON" do
+          failed_slice.records = [{"name" => "Jack", "count" => 1}]
+          failed_slice.save!
+          get :edit_slice, params: {id: failed_job.id, error_type: error_type, offset: "0", line_index: "0"}
+
+          assert_includes response.body, "&quot;count&quot;: 1"
+          assert_includes response.body, "This record is not text"
+        end
       end
 
       describe "#update slice" do
@@ -521,8 +538,51 @@ module RocketJobMissionControl
         let(:error_type) { failed_job.input.failed.order(_id: 1).first.exception.class_name }
 
         before do
-          params = {"job" => {"records" => %w[1 2 3]}, "error_type" => error_type, "offset" => "0", "id" => failed_job.id.to_s}
+          params = {"job" => {"record" => "1"}, "error_type" => error_type, "offset" => "0", "line_index" => "0", "id" => failed_job.id.to_s}
           post :update_slice, params: params
+        end
+
+        # Replaces the records of the first failed slice, and returns it.
+        def failed_slice_with(records)
+          slice         = failed_job.input.failed.order(_id: 1).first
+          slice.records = records
+          slice.save!
+          slice
+        end
+
+        def update_record(slice, line_index, text)
+          post :update_slice, params: {
+            "job"        => {"record" => text},
+            "error_type" => slice.exception.class_name,
+            "offset"     => "0",
+            "line_index" => line_index.to_s,
+            "id"         => failed_job.id.to_s
+          }
+          slice.reload
+        end
+
+        it "replaces only the edited record, keeping the type of each record" do
+          slice = failed_slice_with([{"name" => "Jack", "count" => 1}, ["Jill", 2]])
+          update_record(slice, 1, "[\"Jill\", 3]")
+
+          assert_equal [{"name" => "Jack", "count" => 1}, ["Jill", 3]], slice.records
+        end
+
+        it "keeps the types of the values in a record edited as Extended JSON" do
+          at    = Time.at(1_760_000_000).utc
+          slice = failed_slice_with([{"name" => "Jack", "at" => at}])
+          update_record(slice, 0, RecordEditor.to_text({"name" => "Jill", "at" => at}))
+
+          assert_equal [{"name" => "Jill", "at" => at}], slice.records
+        end
+
+        it "reports JSON that is not valid instead of raising" do
+          slice = failed_slice_with([{"name" => "Jack"}])
+          update_record(slice, 0, "{oops")
+
+          assert_response :redirect
+          assert_predicate flash[:danger], :present?
+          assert_equal [{"name" => "Jack"}], slice.records
         end
 
         it "redirects back to the same slice" do
@@ -536,9 +596,10 @@ module RocketJobMissionControl
         it "unescapes submitted records back to their original bytes" do
           slice = failed_job.input.failed.order(_id: 1).first
           post :update_slice, params: {
-            "job"        => {"records" => ["null\\x00byte"]},
+            "job"        => {"record" => "null\\x00byte"},
             "error_type" => slice.exception.class_name,
             "offset"     => "0",
+            "line_index" => "0",
             "id"         => failed_job.id.to_s
           }
           slice.reload
@@ -550,9 +611,10 @@ module RocketJobMissionControl
           slice = failed_job.input.failed.order(_id: 1).first
           # \xA3 unescapes to an invalid UTF-8 byte, which Mongo cannot store.
           post :update_slice, params: {
-            "job"        => {"records" => ["bad\\xA3byte"]},
+            "job"        => {"record" => "bad\\xA3byte"},
             "error_type" => slice.exception.class_name,
             "offset"     => "0",
+            "line_index" => "0",
             "id"         => failed_job.id.to_s
           }
 
@@ -644,6 +706,17 @@ module RocketJobMissionControl
 
         it "adds a flash success message" do
           assert_match(/removed from the slice/, flash[:success])
+        end
+      end
+
+      describe "PATCH #delete_line of a record that another record equals" do
+        it "removes only the selected record" do
+          slice         = failed_job.input.failed.order(_id: 1).first
+          slice.records = %w[same same other]
+          slice.save!
+          patch :delete_line, params: {id: failed_job.id, error_type: slice.exception.class_name, offset: "0", line_index: "1"}
+
+          assert_equal %w[same other], failed_job.input.find(slice.id).records
         end
       end
     end

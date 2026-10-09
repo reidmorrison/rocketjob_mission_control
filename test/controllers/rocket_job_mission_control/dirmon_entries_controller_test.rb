@@ -320,6 +320,23 @@ module RocketJobMissionControl
           end
         end
 
+        describe "with credentials in a path of its properties" do
+          before do
+            entry = RocketJob::DirmonEntry.create!(
+              name:           "Copy test",
+              job_class_name: "RocketJob::Jobs::CopyFileJob",
+              pattern:        "copy_path",
+              properties:     {"target_url" => "sftp://user:secret@sftp.example.org/out/data.csv"}
+            )
+            get :show, params: {id: entry.id}
+          end
+
+          it "shows the path without the credentials" do
+            assert_includes response.body, "sftp://sftp.example.org/out/data.csv"
+            assert_not_includes response.body, "secret"
+          end
+        end
+
         describe "whose storage is unavailable" do
           before do
             existing_dirmon_entry.update!(unavailable_at: Time.current - 120)

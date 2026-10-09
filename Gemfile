@@ -22,7 +22,7 @@ gem "cuprite"
 gem "minispec-rails", require: false
 gem "puma"
 gem "rails-controller-testing"
-gem "simplecov", "~> 1.0", require: false
+gem "simplecov", require: false
 
 gem "solargraph", require: false
 

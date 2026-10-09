@@ -16,8 +16,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Paths are shown without the user name, password or query of a url, such as
   `sftp://user:password@host/file.csv`: the upload file name on the job details page, the job's
   path and url attributes, such as the `source_url` and `target_url` of a `CopyFileJob`, the secrets in
-  a `CopyFileJob`'s arguments and streams, such as an SFTP password or PGP passphrase, and a Dirmon
-  entry's pattern and archive directory on its details page and in the Dirmon entries list. A value
+  a `CopyFileJob`'s arguments and streams, such as an SFTP password or PGP passphrase, the paths in an
+  `UploadFileJob`'s properties, the file name of each input and output category, and a Dirmon entry's
+  pattern, archive directory and the paths in its properties, on its details page and in the Dirmon
+  entries list. A value
   that is not a valid path is shown as `(not a valid path)`. The edit and copy forms still show the
   full value, so that it can be changed.
 

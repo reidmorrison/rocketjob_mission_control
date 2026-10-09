@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Breaking changes
+
+- Depend on `rocketjob` ~> 7.1, which requires IOStreams 3.0.
+- Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
+  original, and why it failed.
+
+### Security
+
+- Paths are shown without the user name, password or query of a url, such as
+  `sftp://user:password@host/file.csv`: the upload file name on the job details page, the job's
+  path and url attributes, such as the `source_url` and `target_url` of a `CopyFileJob`, the secrets in
+  a `CopyFileJob`'s arguments and streams, such as an SFTP password or PGP passphrase, the paths in an
+  `UploadFileJob`'s properties, the file name of each input and output category, and a Dirmon entry's
+  pattern, archive directory and the paths in its properties, on its details page and in the Dirmon
+  entries list. A value
+  that is not a valid path is shown as `(not a valid path)`. The edit and copy forms still show the
+  full value, so that it can be changed.
+
+### New features
+
+- A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
+  unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
+  has been unavailable for an hour, so until then it is still shown as enabled.
+
+### Fixes
+
+- Replicating a Dirmon entry no longer copies when the storage of the original became unavailable,
+  which could fail the copy before its own storage had been unavailable for an hour.
+- Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
+
 ## [7.0.0] 2026-09-05
 
 ### Breaking changes

@@ -17,12 +17,21 @@
       </tr>
       <tr>
         <td><label>Pattern:</label></td>
-        <td><%= @dirmon_entry.pattern %></td>
+        <td><%= @dirmon_entry.pattern_display_name %></td>
       </tr>
       <tr>
         <td><label>Archive Directory:</label></td>
-        <td><%= @dirmon_entry.archive_directory %></td>
+        <td><%= @dirmon_entry.archive_directory_display_name %></td>
       </tr>
+      <% if (unavailable_at = @dirmon_entry.unavailable_at) %>
+        <tr>
+          <td><label>Storage Unavailable Since:</label></td>
+          <td>
+            <%= unavailable_at.in_time_zone(Time.zone) %>
+            (<%= RocketJob.seconds_as_duration(Time.now - unavailable_at) %> ago)
+          </td>
+        </tr>
+      <% end %>
       <tr>
         <td><label>ID:</label></td>
         <td><%= @dirmon_entry.id %></td>

@@ -25,6 +25,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### New features
 
+- The job and Dirmon entry forms, and the job details page, show the `encoding` of the files of each input
+  and output category, such as `Windows-1252`, and what an upload does with characters that are not valid
+  in it, `invalid_characters`, which Rocket Job 7.1 adds. So a Dirmon entry can read the files of a partner
+  who sends Windows-1252 without changing the job.
 - A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
   unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
   has been unavailable for an hour, so until then it is still shown as enabled.

@@ -155,6 +155,16 @@ module RocketJobMissionControl
               assert_predicate assigns(:dirmon_entry).errors[:job_class_name], :present?
             end
           end
+
+          describe "with a batch job_class_name" do
+            let(:entry_params) { {rocket_job_dirmon_entry: {job_class_name: "DataImportJob"}} }
+
+            it "shows the encoding of the files, and what to do with invalid characters" do
+              assert_match(/input_categories_attributes\]\[[^\]]*\]\[encoding\]/, response.body)
+              assert_match(/input_categories_attributes\]\[[^\]]*\]\[invalid_characters\]/, response.body)
+              assert_match(/output_categories_attributes\]\[[^\]]*\]\[encoding\]/, response.body)
+            end
+          end
         end
       end
 
@@ -227,6 +237,25 @@ module RocketJobMissionControl
 
           it "saves properties" do
             assert_equal "42", assigns(:dirmon_entry).properties[:priority]
+          end
+
+          describe "for a batch job" do
+            let(:dirmon_params) do
+              {
+                name:           "Test",
+                pattern:        "/files/*",
+                job_class_name: "DataImportJob",
+                properties:     {input_categories_attributes: {"0" => {name: "main", encoding: "Windows-1252", invalid_characters: "raise"}}}
+              }
+            end
+
+            it "saves the encoding of the files, and what to do with invalid characters" do
+              assert_predicate assigns(:dirmon_entry), :persisted?
+              category = assigns(:dirmon_entry).properties[:input_categories].first
+
+              assert_equal "Windows-1252", category[:encoding]
+              assert_equal "raise", category[:invalid_characters]
+            end
           end
 
           %i[name pattern job_class_name].each do |attribute|

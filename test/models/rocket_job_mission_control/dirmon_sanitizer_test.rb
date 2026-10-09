@@ -92,6 +92,24 @@ class DirmonSanitizerTest < Minitest::Test
 
         assert_equal expected, cleansed
       end
+
+      it "passes the encoding of a category's files, and what to do with invalid characters" do
+        params   = {
+          properties: {
+            input_categories_attributes:  {0 => {encoding: "Windows-1252", invalid_characters: "raise"}},
+            output_categories_attributes: {0 => {name: :errors, encoding: "ISO-8859-1"}}
+          }
+        }
+        cleansed = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
+
+        assert_equal 0, dirmon_entry.errors.count
+        expected = {
+          input_categories:  [{encoding: "Windows-1252", invalid_characters: "raise"}],
+          output_categories: [{name: :errors, encoding: "ISO-8859-1"}]
+        }
+
+        assert_equal expected, cleansed[:properties]
+      end
     end
 
     describe ".diff_category" do
@@ -110,6 +128,16 @@ class DirmonSanitizerTest < Minitest::Test
         expected = {format: "psv", name: "main"}
 
         assert_equal expected, diff
+      end
+
+      it "returns an encoding that differs from the job's" do
+        default_category = sample_job.input_category
+        properties       = {name: "main", encoding: "Windows-1252", invalid_characters: "raise"}
+        updated_category = RocketJob::Category::Input.new(properties)
+
+        diff = RocketJobMissionControl::DirmonSanitizer.diff_category(properties, updated_category, default_category)
+
+        assert_equal({encoding: "Windows-1252", invalid_characters: "raise", name: "main"}, diff)
       end
 
       it "is empty with no changes" do

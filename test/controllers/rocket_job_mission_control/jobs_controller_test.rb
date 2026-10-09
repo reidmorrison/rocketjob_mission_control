@@ -709,6 +709,41 @@ module RocketJobMissionControl
         end
       end
 
+      describe "a category's encoding" do
+        let :csv_job do
+          job                                   = CSVJob.new
+          job.input_category.encoding           = "Windows-1252"
+          job.input_category.invalid_characters = :raise
+          job.save!
+          job
+        end
+
+        it "is shown on the job page" do
+          get :show, params: {id: csv_job.id}
+
+          assert_includes response.body, "Windows-1252"
+          assert_includes response.body, "Invalid Characters:"
+        end
+
+        it "can be edited" do
+          get :edit, params: {id: csv_job.id}
+
+          assert_match(/value="Windows-1252"[^>]*name="job\[input_categories_attributes\]\[0\]\[encoding\]"/, response.body)
+          assert_match(/input_categories_attributes\]\[0\]\[invalid_characters\]/, response.body)
+        end
+
+        it "is saved" do
+          patch :update, params: {
+            id:  csv_job.id,
+            job: {input_categories_attributes: {"0" => {name: "main", encoding: "ISO-8859-1", invalid_characters: "replace"}}}
+          }
+          csv_job.reload
+
+          assert_equal "ISO-8859-1", csv_job.input_category.encoding
+          assert_equal :replace, csv_job.input_category.invalid_characters
+        end
+      end
+
       describe "PATCH #delete_line of a record that another record equals" do
         it "removes only the selected record" do
           slice         = failed_job.input.failed.order(_id: 1).first

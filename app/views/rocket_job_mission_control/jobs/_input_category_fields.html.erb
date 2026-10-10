@@ -33,6 +33,18 @@
       </div>
 
       <div class="mb-3">
+        <%= f.label :encoding %>
+        <%= f.text_field(:encoding, value: input_category.encoding, class: "form-control", placeholder: "UTF-8, or the encoding of the files, such as Windows-1252") %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :invalid_characters %>
+        <% options = extract_inclusion_values(RocketJob::Category::Input, :invalid_characters).compact %>
+        <% value = input_category.invalid_characters %>
+        <%= f.select(:invalid_characters, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
+      </div>
+
+      <div class="mb-3">
         <%= f.label :mode %>
         <% options = extract_inclusion_values(RocketJob::Category::Input, :mode) %>
         <% value = input_category.mode %>

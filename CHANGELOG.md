@@ -25,12 +25,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### New features
 
+- The job and Dirmon entry forms, and the job details page, show the `encoding` of the files of each input
+  and output category, such as `Windows-1252`, and what an upload does with characters that are not valid
+  in it, `invalid_characters`, which Rocket Job 7.1 adds. So a Dirmon entry can read the files of a partner
+  who sends Windows-1252 without changing the job.
 - A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
   unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
   has been unavailable for an hour, so until then it is still shown as enabled.
 
 ### Fixes
 
+- Editing a record of a failed slice only changes that record, and keeps its type. Previously every
+  record of the slice was saved as text, so a Hash or Array record, such as one uploaded in `:hash` or
+  `:array` mode, or the range of an integer range upload, became the text of its Ruby `inspect`, such as
+  `{"name" => "Jack"}`, which the job then could not process. A record that is not text is now shown,
+  and edited, as MongoDB Extended JSON, so that values such as a time keep their types.
+- Deleting a record of a failed slice only removes that record. Previously it removed every record in
+  the slice that was equal to it.
+- The log entry for an edited or deleted record shows the job's upload file name without any credentials.
 - Replicating a Dirmon entry no longer copies when the storage of the original became unavailable,
   which could fail the copy before its own storage had been unavailable for an hour.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.

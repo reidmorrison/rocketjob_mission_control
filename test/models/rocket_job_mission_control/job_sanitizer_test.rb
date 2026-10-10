@@ -104,5 +104,20 @@ class JobSanitizerTest < Minitest::Test
         assert_equal({array: ["rf@exp.com", "rm@exp.com", "lb@exp.com"]}, cleansed)
       end
     end
+
+    describe ".sanitize_categories" do
+      it "passes the encoding of a category's files, and what to do with invalid characters" do
+        properties = {
+          "0" => {name: "main", encoding: "Windows-1252", invalid_characters: "raise", bad_field: "Not permissible"}
+        }
+
+        assert_equal [{name: "main", encoding: "Windows-1252", invalid_characters: "raise"}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
+      end
+
+      it "strips a blank encoding" do
+        assert_equal [{name: "main"}], RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", encoding: ""}})
+      end
+    end
   end
 end

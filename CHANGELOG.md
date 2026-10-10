@@ -29,12 +29,27 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   and output category, such as `Windows-1252`, and what an upload does with characters that are not valid
   in it, `invalid_characters`, which Rocket Job 7.1 adds. So a Dirmon entry can read the files of a partner
   who sends Windows-1252 without changing the job.
+- The encoding is picked from a list of the common encodings, such as `UTF-8`, `Windows-1252` and
+  `IBM037`, or any other that Ruby knows is typed in. The `source_encoding` and `target_encoding` of a
+  `CopyFileJob` are picked the same way, as is any field that a job validates as an encoding.
+- The job details page shows the encoding that an output category's file is written in when the category
+  has none, such as `US-ASCII (the format's)` for fixed width.
+- The job form shows why each category is not valid, such as an encoding that writes a byte order mark,
+  in that category. Previously it only said that the categories were not valid.
 - A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
   unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
   has been unavailable for an hour, so until then it is still shown as enabled.
 
 ### Fixes
 
+- The job, new Dirmon entry, edit Dirmon entry and copy Dirmon entry forms show why they could not be
+  saved. Previously Turbo Drive ignored the form that was rendered again, since it had a 200 status, so
+  nothing appeared to happen. They are now rendered with 422.
+- An encoding, or what to do with invalid characters, that is left blank on the job form clears it back
+  to its default. Previously a blank value was ignored, so it could not be cleared.
+- A Dirmon entry with a category value that is not valid, such as its encoding, is not saved, and the
+  form shows why. Previously it was saved, and every file that it found failed. This needs the Rocket Job
+  release that validates them.
 - Editing a record of a failed slice only changes that record, and keeps its type. Previously every
   record of the slice was saved as text, so a Hash or Array record, such as one uploaded in `:hash` or
   `:array` mode, or the range of an integer range upload, became the text of its Ruby `inspect`, such as

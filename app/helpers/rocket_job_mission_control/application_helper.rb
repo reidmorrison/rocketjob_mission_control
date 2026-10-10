@@ -17,6 +17,10 @@ module RocketJobMissionControl
       zombie:    "fa-solid fa-ghost"
     }.freeze
 
+    # The encodings to suggest for the text in a file, such as that of a category's files. Any other encoding that
+    # Ruby knows can be typed in, and the model validates it, see RocketJob::EncodingValidator.
+    SUGGESTED_ENCODINGS = %w[UTF-8 Windows-1252 ISO-8859-1 ISO-8859-15 US-ASCII UTF-16LE UTF-16BE Shift_JIS IBM037].freeze
+
     def state_icon(state)
       "#{STATE_ICON_MAP[state.to_sym]} #{state}"
     end
@@ -83,6 +87,19 @@ module RocketJobMissionControl
       values
     end
 
+    # Whether the attribute holds the encoding of the text in a file, which the class declares by validating it as one,
+    # such as RocketJob::Category::Base#encoding or RocketJob::Jobs::CopyFileJob#source_encoding.
+    def encoding_field?(klass, attribute)
+      klass.validators_on(attribute).any?(RocketJob::EncodingValidator)
+    end
+
+    # Returns the select for the encoding of the text in a file, which suggests the common encodings, and takes any
+    # other that is typed in, see tom_select_init.js. Blank is UTF-8, or the format's own encoding.
+    def encoding_select(f, attribute, value)
+      options = value.blank? || SUGGESTED_ENCODINGS.include?(value) ? SUGGESTED_ENCODINGS : [value, *SUGGESTED_ENCODINGS]
+      f.select(attribute, options, {include_blank: true, selected: value}, {class: "tom-select form-select"})
+    end
+
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
     def editable_field_html(klass, field_name, value, f)
       # When editing a job the values are of the correct type.
@@ -100,7 +117,9 @@ module RocketJobMissionControl
 placeholder: placeholder)
       when "String", "Symbol", "Mongoid::StringifiedSymbol"
         options = extract_inclusion_values(klass, field_name)
-        if options
+        if encoding_field?(klass, field_name)
+          encoding_select(f, field_name, value)
+        elsif options
           f.select(field_name, options, {include_blank: options.include?(nil), selected: value},
                    {class: "tom-select form-select"})
         else
@@ -143,7 +162,7 @@ placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}')
       fields = f.fields_for(association, new_object, child_index: id) do |builder|
         # `association.to_s.singularize + "_fields"` ends up evaluating to `address_fields`
         # The render function will then look for `views/people/_address_fields.html.erb`
-        # The render function also needs to be passed the value of 'builder', because `views/dirmon_entries/_input_categories.html.erb` needs this to render the form tags.
+        # The render function also needs to be passed the value of 'builder', because `views/dirmon_entries/_input_category_fields.html.erb` needs this to render the form tags.
         render("#{association.to_s.singularize}_fields", f: builder)
       end
 

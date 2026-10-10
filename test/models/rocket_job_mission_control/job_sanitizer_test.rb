@@ -115,8 +115,16 @@ class JobSanitizerTest < Minitest::Test
                      RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
       end
 
-      it "strips a blank encoding" do
-        assert_equal [{name: "main"}], RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", encoding: ""}})
+      it "clears a blank encoding, and what to do with invalid characters, back to their defaults" do
+        properties = {"0" => {name: "main", encoding: "", invalid_characters: "", format: ""}}
+
+        assert_equal [{name: "main", encoding: nil, invalid_characters: nil}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
+      end
+
+      it "strips a blank encoding when blanks are not cleared, such as for a Dirmon entry" do
+        assert_equal [{name: "main"}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", encoding: ""}}, false)
       end
     end
   end

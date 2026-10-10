@@ -117,6 +117,63 @@ module RocketJobMissionControl
           assert_nil extract_inclusion_values(klass, :name)
         end
       end
+
+      describe "#encoding_field?" do
+        it "is true for an attribute that is validated as an encoding" do
+          assert encoding_field?(RocketJob::Category::Input, :encoding)
+          assert encoding_field?(RocketJob::Jobs::CopyFileJob, :target_encoding)
+        end
+
+        it "is false for any other attribute" do
+          assert_not encoding_field?(RocketJob::Category::Input, :format)
+          assert_not encoding_field?(RocketJob::Jobs::CopyFileJob, :source_url)
+        end
+      end
+
+      describe "#encoding_select" do
+        let :category do
+          RocketJob::Category::Input.new
+        end
+
+        def render_select(value)
+          category.encoding = value
+          fields_for(:category, category) { |f| encoding_select(f, :encoding, value) }
+        end
+
+        it "suggests the common encodings, with a blank for UTF-8" do
+          html = render_select(nil)
+
+          assert_includes html, 'class="tom-select form-select"'
+          assert_includes html, '<option value="" label=" "></option>'
+          ApplicationHelper::SUGGESTED_ENCODINGS.each { |name| assert_includes html, ">#{name}</option>" }
+        end
+
+        it "selects a suggested encoding" do
+          assert_includes render_select("Windows-1252"), '<option selected="selected" value="Windows-1252">'
+        end
+
+        it "selects an encoding that is not suggested, such as one that was typed in" do
+          html = render_select("EUC-JP")
+
+          assert_includes html, '<option selected="selected" value="EUC-JP">'
+          assert_operator html.index("EUC-JP"), :<, html.index("UTF-8")
+        end
+
+        it "escapes the encoding, since it is typed in" do
+          assert_includes render_select("<b>"), "&lt;b&gt;"
+          assert_not_includes render_select("<b>"), "<b>"
+        end
+      end
+
+      describe "#editable_field_html" do
+        it "selects the encoding of a field that is validated as one" do
+          job  = RocketJob::Jobs::CopyFileJob.new(target_encoding: "ISO-8859-1")
+          html = fields_for(:job, job) { |f| editable_field_html(job.class, :target_encoding, job.target_encoding, f) }
+
+          assert_includes html, 'name="job[target_encoding]"'
+          assert_includes html, '<option selected="selected" value="ISO-8859-1">'
+        end
+      end
     end
   end
 end

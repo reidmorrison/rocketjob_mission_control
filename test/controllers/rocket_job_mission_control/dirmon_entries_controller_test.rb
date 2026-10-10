@@ -191,7 +191,7 @@ module RocketJobMissionControl
           end
 
           it "renders the edit template" do
-            assert_response :success
+            assert_response :unprocessable_content
           end
 
           it "alerts the user" do
@@ -199,6 +199,54 @@ module RocketJobMissionControl
               assert_select "div.message", "job_class_name: [\"Job FakeAndBadJob must be defined and inherit from RocketJob::Job\"]"
             else
               assert_select "div.message", "job_class_name: [\"job_class_name must be defined and must be derived from RocketJob::Job\"]"
+            end
+          end
+        end
+
+        describe "the encoding of a batch job's files" do
+          let :import_dirmon_entry do
+            RocketJob::DirmonEntry.create!(
+              name:           "Import",
+              job_class_name: "DataImportJob",
+              pattern:        "import/*.csv",
+              properties:     {input_categories: [{name: "main", encoding: "Windows-1252"}]}
+            )
+          end
+
+          def update_encoding(encoding)
+            patch :update, params: {
+              id:                      import_dirmon_entry.id,
+              rocket_job_dirmon_entry: {properties: {input_categories_attributes: {"0" => {name: "main", encoding: encoding}}}}
+            }
+          end
+
+          it "is changed" do
+            update_encoding("ISO-8859-1")
+
+            assert_redirected_to dirmon_entry_path(import_dirmon_entry)
+            assert_equal "ISO-8859-1", import_dirmon_entry.reload.properties["input_categories"].first["encoding"]
+          end
+
+          it "is cleared when it is left blank" do
+            update_encoding("")
+
+            assert_redirected_to dirmon_entry_path(import_dirmon_entry)
+            assert_nil import_dirmon_entry.reload.properties["input_categories"]
+          end
+
+          describe "that is not valid" do
+            before do
+              update_encoding("UTF-16")
+            end
+
+            it "is not saved" do
+              assert_template :edit
+              assert_equal "Windows-1252", import_dirmon_entry.reload.properties["input_categories"].first["encoding"]
+            end
+
+            it "shows why" do
+              assert_includes response.body, "Input category main: Encoding"
+              assert_includes response.body, "so name its byte order, such as UTF-16LE"
             end
           end
         end
@@ -279,7 +327,7 @@ module RocketJobMissionControl
 
           describe "on model attributes" do
             it "renders the new template" do
-              assert_response :success
+              assert_response :unprocessable_content
               assert_template :new
             end
 
@@ -477,7 +525,7 @@ module RocketJobMissionControl
           end
 
           it "re-renders the copy form" do
-            assert_response :success
+            assert_response :unprocessable_content
             assert_template :copy
           end
 

@@ -1,6 +1,6 @@
 <% output_category = f.object %>
 
-<div class="nested-fields">
+<div>
   <div class="card border-success">
     <div class="card-header">
       <div class="row">
@@ -34,7 +34,7 @@
 
       <div class="mb-3">
         <%= f.label :encoding %>
-        <%= f.text_field(:encoding, value: output_category.encoding, class: "form-control", placeholder: "UTF-8, or the encoding to write the file in, such as ISO-8859-1") %>
+        <%= encoding_select(f, :encoding, output_category.encoding) %>
       </div>
     </div>
   </div>

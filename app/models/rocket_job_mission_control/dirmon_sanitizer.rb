@@ -23,7 +23,8 @@ module RocketJobMissionControl
     # Returns [Hash] the difference between the supplied params and those already set in the job itself
     def self.diff_properties(sanitized_properties, dirmon_entry)
       default_job = dirmon_entry.job_class.new
-      updated_job = dirmon_entry.job_class.from_properties(sanitized_properties)
+      # Without properties to change, such as when only the pattern changed, the job has the defaults.
+      updated_job = dirmon_entry.job_class.from_properties(sanitized_properties || {})
       properties  = {}
       sanitized_properties&.each_pair do |name, value|
         if name == :input_categories

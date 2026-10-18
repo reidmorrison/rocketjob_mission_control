@@ -177,6 +177,10 @@ class DirmonSanitizerTest < Minitest::Test
 
         assert_equal expected, diff
       end
+
+      it "is empty without properties, such as when only the pattern of an entry for a batch job changed" do
+        assert_empty RocketJobMissionControl::DirmonSanitizer.diff_properties(nil, dirmon_entry)
+      end
     end
   end
 end

@@ -10,7 +10,7 @@ module RocketJobMissionControl
       let :dirmon_entry do
         RocketJob::DirmonEntry.create!(
           name:           "System test entry",
-          job_class_name: "RocketJob::Jobs::SimpleJob",
+          job_class_name: "DataImportJob",
           pattern:        "system_test_path"
         )
       end

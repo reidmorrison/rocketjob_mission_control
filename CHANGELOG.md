@@ -50,6 +50,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - A Dirmon entry with a category value that is not valid, such as its encoding, is not saved, and the
   form shows why. Previously it was saved, and every file that it found failed. This needs the Rocket Job
   release that validates them.
+- Saving a Dirmon entry for a batch job without changing its properties, such as only its pattern,
+  raised `NoMethodError`. It is saved.
 - Editing a record of a failed slice only changes that record, and keeps its type. Previously every
   record of the slice was saved as text, so a Hash or Array record, such as one uploaded in `:hash` or
   `:array` mode, or the range of an integer range upload, became the text of its Ruby `inspect`, such as

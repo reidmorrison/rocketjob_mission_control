@@ -22,10 +22,10 @@
                 <td><%= job_category_file_name(category) %></td>
               </tr>
             <% end %>
-            <% if category.encoding.present? %>
+            <% if (encoding = job_output_category_encoding(category)).present? %>
               <tr>
                 <td><label>Encoding:</label></td>
-                <td><%= category.encoding %></td>
+                <td><%= encoding %><%= " (the format's)" if category.encoding.blank? %></td>
               </tr>
             <% end %>
             <% if category.format %>

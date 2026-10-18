@@ -119,6 +119,18 @@ module RocketJobMissionControl
       category.class.display_properties("file_name" => category.file_name)["file_name"]
     end
 
+    # The encoding of the text in the output category's file, which the category decides, see
+    # RocketJob::Category::Output#text_encoding: its own encoding, or the format's, such as US-ASCII for fixed width.
+    # Returns nil for UTF-8.
+    #
+    # The format's encoding cannot be found when its options are not valid, such as fixed width without a layout,
+    # so the category's own encoding is shown instead.
+    def job_output_category_encoding(category)
+      category.text_encoding
+    rescue ArgumentError, IOStreams::Errors::Error
+      category.encoding
+    end
+
     def job_custom_fields(job)
       attrs = job.display_attributes
       DISPLAYED_FIELDS.each { |key| attrs.delete(key) }

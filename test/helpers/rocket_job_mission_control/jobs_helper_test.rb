@@ -90,6 +90,36 @@ module RocketJobMissionControl
         end
       end
 
+      describe "#job_output_category_encoding" do
+        let :category do
+          DataImportJob.new.output_category
+        end
+
+        it "is nil for UTF-8" do
+          assert_nil job_output_category_encoding(category)
+        end
+
+        it "is the category's encoding" do
+          category.encoding = "ISO-8859-1"
+
+          assert_equal "ISO-8859-1", job_output_category_encoding(category)
+        end
+
+        it "is the format's encoding when the category has none" do
+          category.format         = :fixed
+          category.format_options = {layout: [{size: 5, key: "name"}]}
+
+          assert_equal "US-ASCII", job_output_category_encoding(category)
+        end
+
+        it "is the category's encoding when the format's cannot be found, such as fixed width without a layout" do
+          category.format   = :fixed
+          category.encoding = "IBM037"
+
+          assert_equal "IBM037", job_output_category_encoding(category)
+        end
+      end
+
       describe "#job_custom_fields" do
         let :job do
           RocketJob::Jobs::CopyFileJob.new(

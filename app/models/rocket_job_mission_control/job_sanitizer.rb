@@ -3,6 +3,10 @@ module RocketJobMissionControl
     CATEGORIES_FIELDS = %i[id name format format_options encoding invalid_characters mode skip_unknown slice_size
                            columns].freeze
 
+    # The category fields whose blank value means their default, nil, such as the UTF-8 of an `encoding` that is
+    # left blank, so that blanking them clears a value that was set.
+    CLEARABLE_CATEGORY_FIELDS = %i[encoding invalid_characters].freeze
+
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
     # Parameters
     #   properties [Hash]
@@ -50,19 +54,21 @@ module RocketJobMissionControl
       end
 
       if properties.key?(:input_categories_attributes)
-        categories                            = sanitize_categories(properties[:input_categories_attributes])
+        categories                            = sanitize_categories(properties[:input_categories_attributes], nil_blank)
         permissible_params[:input_categories] = categories unless categories == [{}]
       end
 
       if properties.key?(:output_categories_attributes)
-        categories                             = sanitize_categories(properties[:output_categories_attributes])
+        categories                             = sanitize_categories(properties[:output_categories_attributes], nil_blank)
         permissible_params[:output_categories] = categories unless categories == [{}]
       end
 
       permissible_params
     end
 
-    def self.sanitize_categories(properties)
+    # Returns [Array<Hash>] the permissible properties of each category, see .sanitize for `nil_blank`, which only
+    # applies to the CLEARABLE_CATEGORY_FIELDS.
+    def self.sanitize_categories(properties, nil_blank = true)
       categories = []
 
       properties.each_pair do |_, category|
@@ -71,7 +77,10 @@ module RocketJobMissionControl
           next unless category.key?(key)
 
           value = category[key]
-          next if value.blank?
+          if value.blank?
+            hash[key] = nil if nil_blank && CLEARABLE_CATEGORY_FIELDS.include?(key)
+            next
+          end
           next if (key == :columns) && value == [""]
 
           value     = JSON.parse(value) if key == :format_options

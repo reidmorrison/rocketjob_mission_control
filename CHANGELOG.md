@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking changes
 
-- Depend on `rocketjob` ~> 7.1, which requires IOStreams 3.0.
+- Depend on `rocketjob` ~> 8.0, which requires IOStreams 3.0.
 - Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
   original, and why it failed.
 
@@ -58,6 +58,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Deleting a record of a failed slice only removes that record. Previously it removed every record in
   the slice that was equal to it.
 - The log entry for an edited or deleted record shows the job's upload file name without any credentials.
+- The job details page, and the log entry for an edited or deleted record, read the upload file name of a
+  batch job from its input category, since Rocket Job 8 removes the `upload_file_name` of a batch job, an
+  alias for that file name.
 - Replicating a Dirmon entry no longer copies when the storage of the original became unavailable,
   which could fail the copy before its own storage had been unavailable for an hour.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.

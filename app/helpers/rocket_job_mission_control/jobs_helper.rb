@@ -107,10 +107,17 @@ module RocketJobMissionControl
       (job.record_count.to_f / job.input_category.slice_size).ceil
     end
 
-    # The job's upload file name, without any credentials, such as the password of an SFTP url that Dirmon
-    # archived the file to, see RocketJob.path_display_name.
+    # The name of the file that the job uploads, without any credentials, such as the password of an SFTP url that
+    # Dirmon archived the file to: the file name of a batch job's input category, see #job_category_file_name, or the
+    # job's own upload_file_name, such as an UploadFileJob's, see RocketJob.path_display_name. Returns nil when it has
+    # none.
     def job_upload_file_name(job)
-      RocketJob.path_display_name(job.upload_file_name)
+      if job.respond_to?(:input_category)
+        category = job.input_category
+        job_category_file_name(category) if category.file_name
+      elsif job.respond_to?(:upload_file_name) && job.upload_file_name
+        RocketJob.path_display_name(job.upload_file_name)
+      end
     end
 
     # The category's file name, without any credentials, such as the password of an SFTP url that the output is

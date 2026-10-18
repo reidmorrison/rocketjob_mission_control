@@ -30,10 +30,10 @@
           <td><%= @job.cron_schedule %></td>
         </tr>
       <% end %>
-      <% if @job.respond_to?(:upload_file_name) && @job.upload_file_name %>
+      <% if (upload_file_name = job_upload_file_name(@job)) %>
         <tr>
           <td><label>Upload File Name:</label></td>
-          <td><%= job_upload_file_name(@job) %></td>
+          <td><%= upload_file_name %></td>
         </tr>
       <% end %>
       <tr>

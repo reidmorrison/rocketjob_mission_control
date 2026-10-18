@@ -70,6 +70,26 @@ module RocketJobMissionControl
 
           assert_equal "(not a valid path)", job_upload_file_name(job)
         end
+
+        it "returns nil when the job has no upload file name" do
+          assert_nil job_upload_file_name(job)
+        end
+
+        describe "of a batch job" do
+          let :job do
+            DataImportJob.new
+          end
+
+          it "returns the file name of its input category, without its credentials" do
+            job.input_category.file_name = "sftp://user:secret@sftp.example.org/archive/file.csv"
+
+            assert_equal "sftp://sftp.example.org/archive/file.csv", job_upload_file_name(job)
+          end
+
+          it "returns nil when its input category has no file name" do
+            assert_nil job_upload_file_name(job)
+          end
+        end
       end
 
       describe "#job_category_file_name" do

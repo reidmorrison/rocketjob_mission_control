@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "access-granted", "~> 1.3"
   s.add_dependency "railties", ">= 7.2"
-  s.add_dependency "rocketjob", "~> 7.1"
+  s.add_dependency "rocketjob", "~> 8.0"
 
   s.metadata = {
     "bug_tracker_uri"       => "https://github.com/reidmorrison/rocketjob_mission_control/issues",

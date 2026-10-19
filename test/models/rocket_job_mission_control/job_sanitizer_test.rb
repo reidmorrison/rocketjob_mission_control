@@ -126,6 +126,33 @@ class JobSanitizerTest < Minitest::Test
         assert_equal [{name: "main"}],
                      RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", encoding: ""}}, false)
       end
+
+      it "parses the JSON of a schema" do
+        properties = {"0" => {name: "main", schema: %({"fields": [{"name": "name"}]}\n)}}
+
+        assert_equal [{name: "main", schema: {"fields" => [{"name" => "name"}]}}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
+      end
+
+      it "keeps the path or url of a schema" do
+        properties = {"0" => {name: "main", schema: " s3://bucket/schemas/people.json "}}
+
+        assert_equal [{name: "main", schema: "s3://bucket/schemas/people.json"}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
+      end
+
+      it "clears a blank schema" do
+        assert_equal [{name: "main", schema: nil}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", schema: ""}})
+      end
+
+      it "leaves out a schema that is not valid JSON, and sets the error" do
+        properties = {"0" => {name: "main", schema: "{ bad json"}}
+
+        assert_equal [{name: "main"}], RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, true, @job)
+        assert_equal :properties, @job.errors.first.attribute
+        assert_includes @job.errors.first.message, "Schema is not valid JSON"
+      end
     end
   end
 end

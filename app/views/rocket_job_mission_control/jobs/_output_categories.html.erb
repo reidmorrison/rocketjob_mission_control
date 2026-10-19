@@ -33,6 +33,12 @@
                 <td><label>Format:</label></td>
                 <td><%= category.format %></td>
               </tr>
+              <% if category.schema.present? %>
+                <tr>
+                  <td><label>Schema:</label></td>
+                  <td><%= job_category_schema(category) %></td>
+                </tr>
+              <% end %>
               <% if category.format_options %>
                 <tr>
                   <td><label>Format Options:</label></td>

@@ -25,6 +25,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### New features
 
+- The job and Dirmon entry forms, and the job details page, show the `schema` of each input and output category,
+  which describes the fields of its files and the type of each one: a schema as JSON, or the path or url of the
+  JSON file that holds it, which the job details page shows without its user name, password or query. A schema is
+  edited as JSON, or as such a path or url, and cleared when it is left blank. JSON that is not valid is reported,
+  and the schema is not changed.
 - The job and Dirmon entry forms, and the job details page, show the `encoding` of the files of each input
   and output category, such as `Windows-1252`, and what an upload does with characters that are not valid
   in it, `invalid_characters`, which Rocket Job 7.1 adds. So a Dirmon entry can read the files of a partner

@@ -175,6 +175,11 @@ module RocketJobMissionControl
               assert_match(/input_categories_attributes\]\[[^\]]*\]\[invalid_characters\]/, response.body)
               assert_match(/output_categories_attributes\]\[[^\]]*\]\[encoding\]/, response.body)
             end
+
+            it "shows the schema of each category" do
+              assert_match(/<textarea[^>]*input_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
+              assert_match(/<textarea[^>]*output_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
+            end
           end
         end
       end
@@ -314,6 +319,24 @@ module RocketJobMissionControl
 
               assert_equal "Windows-1252", category[:encoding]
               assert_equal "raise", category[:invalid_characters]
+            end
+          end
+
+          describe "for a batch job with a schema" do
+            let(:dirmon_params) do
+              {
+                name:           "Test",
+                pattern:        "/files/*",
+                job_class_name: "DataImportJob",
+                properties:     {input_categories_attributes: {"0" => {name: "main", schema: %({"fields": [{"name": "name"}]})}}}
+              }
+            end
+
+            it "saves the schema of the files" do
+              assert_predicate assigns(:dirmon_entry), :persisted?
+              category = assigns(:dirmon_entry).properties[:input_categories].first
+
+              assert_equal({"fields" => [{"name" => "name"}]}, category[:schema])
             end
           end
 

@@ -1,11 +1,11 @@
 module RocketJobMissionControl
   module JobSanitizer
-    CATEGORIES_FIELDS = %i[id name format format_options encoding invalid_characters mode skip_unknown slice_size
-                           columns].freeze
+    CATEGORIES_FIELDS = %i[id name format format_options schema encoding invalid_characters mode skip_unknown
+                           slice_size columns].freeze
 
     # The category fields whose blank value means their default, nil, such as the UTF-8 of an `encoding` that is
-    # left blank, so that blanking them clears a value that was set.
-    CLEARABLE_CATEGORY_FIELDS = %i[encoding invalid_characters].freeze
+    # left blank, or no `schema`, so that blanking them clears a value that was set.
+    CLEARABLE_CATEGORY_FIELDS = %i[schema encoding invalid_characters].freeze
 
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
     # Parameters
@@ -54,12 +54,12 @@ module RocketJobMissionControl
       end
 
       if properties.key?(:input_categories_attributes)
-        categories                            = sanitize_categories(properties[:input_categories_attributes], nil_blank)
+        categories = sanitize_categories(properties[:input_categories_attributes], nil_blank, target)
         permissible_params[:input_categories] = categories unless categories == [{}]
       end
 
       if properties.key?(:output_categories_attributes)
-        categories                             = sanitize_categories(properties[:output_categories_attributes], nil_blank)
+        categories = sanitize_categories(properties[:output_categories_attributes], nil_blank, target)
         permissible_params[:output_categories] = categories unless categories == [{}]
       end
 
@@ -67,8 +67,8 @@ module RocketJobMissionControl
     end
 
     # Returns [Array<Hash>] the permissible properties of each category, see .sanitize for `nil_blank`, which only
-    # applies to the CLEARABLE_CATEGORY_FIELDS.
-    def self.sanitize_categories(properties, nil_blank = true)
+    # applies to the CLEARABLE_CATEGORY_FIELDS, and `target`, which gets the error of a schema that is not valid JSON.
+    def self.sanitize_categories(properties, nil_blank = true, target = nil)
       categories = []
 
       properties.each_pair do |_, category|
@@ -83,13 +83,31 @@ module RocketJobMissionControl
           end
           next if (key == :columns) && value == [""]
 
-          value     = JSON.parse(value) if key == :format_options
+          value = JSON.parse(value) if key == :format_options
+          if key == :schema
+            value = sanitize_schema(value, target)
+            next if value.nil?
+          end
           hash[key] = value
         end
         categories << hash
       end
 
       categories
+    end
+
+    # Returns [Hash|String] the schema of a category as its form gives it, see RocketJob::Category::Base#schema: the
+    # JSON of a schema, which is parsed, or the path or url of the JSON file that holds it.
+    # Returns nil, and adds the error to the supplied target, when the JSON is not valid, so that the schema is not
+    # changed.
+    def self.sanitize_schema(value, target)
+      text = value.strip
+      return text unless text.start_with?("{")
+
+      JSON.parse(text)
+    rescue JSON::ParserError => e
+      target&.errors&.add(:properties, "Schema is not valid JSON: #{e.message}")
+      nil
     end
   end
 end

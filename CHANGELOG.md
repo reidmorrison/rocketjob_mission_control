@@ -42,6 +42,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixes
 
+- Editing or deleting a record of a failed slice keeps the header row of the file that the slice holds the rows
+  of, which Rocket Job 8 stores for an input category with a schema, so that the slice is read by it when it is
+  retried. Previously the slice was saved without it, and failed again when it was retried.
 - The job, new Dirmon entry, edit Dirmon entry and copy Dirmon entry forms show why they could not be
   saved. Previously Turbo Drive ignored the form that was rendered again, since it had a 200 status, so
   nothing appeared to happen. They are now rendered with 422.

@@ -3,14 +3,25 @@ require_relative "../../compare_hashes"
 
 module RocketJobMissionControl
   class DirmonEntriesControllerTest < ActionController::TestCase
+    # A job that a Dirmon entry can start, since it receives the file in `full_file_name`, with a path in its
+    # properties, which can include credentials.
+    class CopyToJob < RocketJob::Job
+      field :full_file_name, type: String
+      field :target_url, type: String, user_editable: true, path: true
+
+      def perform
+      end
+    end
+
     describe DirmonEntriesController do
       before do
         set_role(:admin)
         RocketJob::DirmonEntry.delete_all
       end
 
+      # A Dirmon entry's job class must be able to receive a file, see RocketJob::DirmonEntry.
       let :job_class_name do
-        "RocketJob::Jobs::SimpleJob"
+        "DataImportJob"
       end
 
       let :existing_dirmon_entry do
@@ -401,7 +412,7 @@ module RocketJobMissionControl
           before do
             entry = RocketJob::DirmonEntry.create!(
               name:           "Copy test",
-              job_class_name: "RocketJob::Jobs::CopyFileJob",
+              job_class_name: CopyToJob.name,
               pattern:        "copy_path",
               properties:     {"target_url" => "sftp://user:secret@sftp.example.org/out/data.csv"}
             )
@@ -600,25 +611,25 @@ module RocketJobMissionControl
                 expected_data = {
                   pending:  {
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.pending.first.id}\">\n          <i class=\"fa-solid fa-cogs pending\" style=\"font-size: 75%\" title=\"pending\"></i>\n          Test_for_state_pending\n        </a>\n",
-                    "1"           => "RocketJob::Jobs::SimpleJob",
+                    "1"           => job_class_name,
                     "2"           => "path_for_state_pending",
                     "DT_RowClass" => "rjmc-card callout callout-pending"
                   },
                   enabled:  {
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.enabled.first.id}\">\n          <i class=\"fa-solid fa-circle-check enabled\" style=\"font-size: 75%\" title=\"enabled\"></i>\n          Test_for_state_enabled\n        </a>\n",
-                    "1"           => "RocketJob::Jobs::SimpleJob",
+                    "1"           => job_class_name,
                     "2"           => "path_for_state_enabled",
                     "DT_RowClass" => "rjmc-card callout callout-enabled"
                   },
                   failed:   {
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.failed.first.id}\">\n          <i class=\"fa-solid fa-triangle-exclamation failed\" style=\"font-size: 75%\" title=\"failed\"></i>\n          Test_for_state_failed\n        </a>\n",
-                    "1"           => "RocketJob::Jobs::SimpleJob",
+                    "1"           => job_class_name,
                     "2"           => "path_for_state_failed",
                     "DT_RowClass" => "rjmc-card callout callout-failed"
                   },
                   disabled: {
                     "0"           => "        <a href=\"/dirmon_entries/#{RocketJob::DirmonEntry.disabled.first.id}\">\n          <i class=\"fa-solid fa-ban disabled\" style=\"font-size: 75%\" title=\"disabled\"></i>\n          Test_for_state_disabled\n        </a>\n",
-                    "1"           => "RocketJob::Jobs::SimpleJob",
+                    "1"           => job_class_name,
                     "2"           => "path_for_state_disabled",
                     "DT_RowClass" => "rjmc-card callout callout-disabled"
                   }

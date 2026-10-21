@@ -39,7 +39,7 @@
 
       <div class="mb-3">
         <%= f.label :encoding %>
-        <%= encoding_select(f, :encoding, input_category.encoding) %>
+        <%= f.text_field(:encoding, value: input_category.encoding, class: "form-control", placeholder: "UTF-8, or the encoding of the files, such as Windows-1252") %>
       </div>
 
       <div class="mb-3">

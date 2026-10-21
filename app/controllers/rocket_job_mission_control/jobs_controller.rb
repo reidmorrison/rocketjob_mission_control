@@ -83,7 +83,7 @@ module RocketJobMissionControl
       if @job.errors.empty? && @job.valid? && @job.save
         redirect_to job_path(@job)
       else
-        render :edit, status: FORM_ERROR_STATUS
+        render :edit
       end
     end
 

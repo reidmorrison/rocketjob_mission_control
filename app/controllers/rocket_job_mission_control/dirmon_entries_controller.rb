@@ -62,7 +62,7 @@ module RocketJobMissionControl
       if @dirmon_entry.errors.empty? && @dirmon_entry.save
         redirect_to(dirmon_entry_path(@dirmon_entry))
       else
-        render :new, status: FORM_ERROR_STATUS
+        render :new
       end
     end
 
@@ -76,7 +76,7 @@ module RocketJobMissionControl
       if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update(sanitized_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))
       else
-        render :edit, status: FORM_ERROR_STATUS
+        render :edit
       end
     end
 
@@ -111,7 +111,7 @@ module RocketJobMissionControl
         dirmon_entry_replicate.errors.messages.each_pair do |field, message|
           @dirmon_entry.errors.add(field, message)
         end
-        render :copy, status: FORM_ERROR_STATUS
+        render :copy
       end
     end
 

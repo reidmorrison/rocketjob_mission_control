@@ -183,9 +183,7 @@ module RocketJobMissionControl
 
       # Replace only the edited record, converting its text back into a record
       # of the same kind, see RecordEditor. The other records are left as they are.
-      # A copy of the slice's own records keeps what they carry, such as the header
-      # row of the file that the rows of a slice of a file are read by.
-      records             = slice.records.dup
+      records             = slice.to_a.dup
       records[line_index] = RecordEditor.from_text(params.dig("job", "record"), records[line_index])
       slice.records       = records
 
@@ -216,9 +214,8 @@ module RocketJobMissionControl
       scope = @job.input.failed.where("exception.class_name" => error_type)
       slice = scope.order(_id: 1).limit(1).skip(offset).first
 
-      # Deletes only the selected record, not every record equal to it, from a copy
-      # of the slice's own records, which keeps what they carry, see #update_slice.
-      records = slice.records.dup
+      # Deletes only the selected record, not every record equal to it.
+      records = slice.to_a.dup
       records.delete_at(line_index)
       slice.records = records
 

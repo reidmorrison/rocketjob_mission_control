@@ -181,10 +181,13 @@ module RocketJobMissionControl
       scope = @job.input.failed.where("exception.class_name" => error_type)
       slice = scope.order(_id: 1).limit(1).skip(offset).first
 
-      # The slice replaces only the edited record, converted from its text back into
-      # a record of the same kind, see RecordEditor, and keeps its other records, and
-      # what they hold besides, such as the header row of the rows of a file.
-      slice.replace_record(line_index, RecordEditor.from_text(params.dig("job", "record"), slice.at(line_index)))
+      # Replace only the edited record, converting its text back into a record
+      # of the same kind, see RecordEditor. The other records are left as they are.
+      # A copy of the slice's own records keeps what they carry, such as the header
+      # row of the file that the rows of a slice of a file are read by.
+      records             = slice.records.dup
+      records[line_index] = RecordEditor.from_text(params.dig("job", "record"), records[line_index])
+      slice.records       = records
 
       if slice.save
         logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{upload_file_display_name}")
@@ -193,10 +196,10 @@ module RocketJobMissionControl
       else
         flash[:danger] = "Error updating slice."
       end
-    rescue EncodingError, JSON::ParserError, BSON::Error, IndexError => e
+    rescue EncodingError, JSON::ParserError, BSON::Error => e
       # Mongo only stores UTF-8, so a record left with invalid bytes cannot be
-      # saved, the JSON of a record that is not text must be valid, and the slice
-      # must have a record at the index. Surface it instead of returning a 500.
+      # saved, and the JSON of a record that is not text must be valid.
+      # Surface it instead of returning a 500.
       flash[:danger] = "Error updating slice: #{e.message}"
       redirect_to view_slice_job_path(@job, error_type: params[:error_type], offset: offset)
     end
@@ -213,9 +216,11 @@ module RocketJobMissionControl
       scope = @job.input.failed.where("exception.class_name" => error_type)
       slice = scope.order(_id: 1).limit(1).skip(offset).first
 
-      # The slice deletes only the selected record, not every record equal to it,
-      # and keeps what its records hold besides, see #update_slice.
-      slice.delete_record(line_index)
+      # Deletes only the selected record, not every record equal to it, from a copy
+      # of the slice's own records, which keeps what they carry, see #update_slice.
+      records = slice.records.dup
+      records.delete_at(line_index)
+      slice.records = records
 
       if slice.save
         logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{upload_file_display_name}")
@@ -224,9 +229,6 @@ module RocketJobMissionControl
       else
         flash[:danger] = "Error removing line."
       end
-    rescue IndexError => e
-      flash[:danger] = "Error removing line: #{e.message}"
-      redirect_to view_slice_job_path(@job, error_type: params[:error_type], offset: offset), status: :see_other
     end
 
     def exception

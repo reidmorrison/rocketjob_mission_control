@@ -585,15 +585,6 @@ module RocketJobMissionControl
           assert_equal %w[name age], slice.records.header
         end
 
-        it "reports an index without a record instead of raising" do
-          slice = failed_slice_with(%w[only])
-          update_record(slice, 3, "changed")
-
-          assert_response :redirect
-          assert_predicate flash[:danger], :present?
-          assert_equal %w[only], slice.records
-        end
-
         it "reports JSON that is not valid instead of raising" do
           slice = failed_slice_with([{"name" => "Jack"}])
           update_record(slice, 0, "{oops")

@@ -307,8 +307,6 @@ module RocketJobMissionControl
           :format,
           :format_options,
           :schema,
-          :encoding,
-          :invalid_characters,
           :mode,
           :skip_unknown,
           :slice_size,
@@ -320,7 +318,6 @@ module RocketJobMissionControl
           :format,
           :format_options,
           :schema,
-          :encoding,
           {columns: []}
         ]
       )

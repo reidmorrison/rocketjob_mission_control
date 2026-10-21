@@ -800,96 +800,12 @@ module RocketJobMissionControl
           assert_template :edit
           assert_equal schema, csv_job.input_category.schema
         end
-      end
 
-      describe "a category's encoding" do
-        let :csv_job do
-          job                                   = CSVJob.new
-          job.input_category.encoding           = "Windows-1252"
-          job.input_category.invalid_characters = :raise
-          job.save!
-          job
-        end
+        it "shows why it is not valid in its category" do
+          update_schema(JSON.generate("fields" => [{"name" => "name", "type" => "time"}]))
 
-        it "is shown on the job page" do
-          get :show, params: {id: csv_job.id}
-
-          assert_includes response.body, "Windows-1252"
-          assert_includes response.body, "Invalid Characters:"
-        end
-
-        it "can be edited" do
-          get :edit, params: {id: csv_job.id}
-
-          assert_match(/<select[^>]*name="job\[input_categories_attributes\]\[0\]\[encoding\]"/, response.body)
-          assert_includes response.body, '<option selected="selected" value="Windows-1252">'
-          assert_match(/input_categories_attributes\]\[0\]\[invalid_characters\]/, response.body)
-        end
-
-        it "is saved" do
-          patch :update, params: {
-            id:  csv_job.id,
-            job: {input_categories_attributes: {"0" => {name: "main", encoding: "ISO-8859-1", invalid_characters: "replace"}}}
-          }
-          csv_job.reload
-
-          assert_equal "ISO-8859-1", csv_job.input_category.encoding
-          assert_equal :replace, csv_job.input_category.invalid_characters
-        end
-
-        it "is cleared when it is left blank" do
-          patch :update, params: {
-            id:  csv_job.id,
-            job: {input_categories_attributes: {"0" => {name: "main", encoding: "", invalid_characters: ""}}}
-          }
-          csv_job.reload
-
-          assert_nil csv_job.input_category.encoding
-          assert_nil csv_job.input_category.invalid_characters
-        end
-
-        describe "that is not valid" do
-          before do
-            patch :update, params: {
-              id:  csv_job.id,
-              job: {input_categories_attributes: {"0" => {name: "main", encoding: "UTF-16"}}}
-            }
-          end
-
-          it "is not saved" do
-            assert_template :edit
-            assert_equal "Windows-1252", csv_job.reload.input_category.encoding
-          end
-
-          it "shows why in the category" do
-            assert_includes response.body, "writes a byte order mark in front of each piece of text, " \
-                                           "so name its byte order, such as UTF-16LE"
-          end
-        end
-
-        describe "of the output" do
-          let :import_job do
-            job                                = DataImportJob.new
-            job.output_category.format         = :fixed
-            job.output_category.format_options = {layout: [{size: 10, key: "name"}]}
-            job.save!
-            job
-          end
-
-          it "shows the format's encoding when the category has none" do
-            get :show, params: {id: import_job.id}
-
-            assert_includes response.body, "US-ASCII (the format&#39;s)"
-          end
-
-          it "shows the category's encoding" do
-            import_job.output_category.encoding = "ISO-8859-1"
-            import_job.save!
-            get :show, params: {id: import_job.id}
-
-            assert_includes response.body, "ISO-8859-1"
-            assert_not_includes response.body, "(the format&#39;s)"
-          end
+          assert_response :unprocessable_content
+          assert_select ".card-body .alert-danger", /Schema is not valid/
         end
       end
 

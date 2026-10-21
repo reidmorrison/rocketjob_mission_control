@@ -22,12 +22,6 @@
                 <td><%= job_category_file_name(category) %></td>
               </tr>
             <% end %>
-            <% if (encoding = job_output_category_encoding(category)).present? %>
-              <tr>
-                <td><label>Encoding:</label></td>
-                <td><%= encoding %><%= " (the format's)" if category.encoding.blank? %></td>
-              </tr>
-            <% end %>
             <% if category.format %>
               <tr>
                 <td><label>Format:</label></td>

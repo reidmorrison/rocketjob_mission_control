@@ -36,11 +36,6 @@
         <% value = output_category.format_options %>
         <%= f.text_field(:format_options, value: value ? value.to_json : nil, class: "form-control", placeholder: '{"key1":"value1", "key2":"value2", "key3":"value3"}') %>
       </div>
-
-      <div class="mb-3">
-        <%= f.label :encoding %>
-        <%= encoding_select(f, :encoding, output_category.encoding) %>
-      </div>
     </div>
   </div>
 </div>

@@ -1,11 +1,10 @@
 module RocketJobMissionControl
   module JobSanitizer
-    CATEGORIES_FIELDS = %i[id name format format_options schema encoding invalid_characters mode skip_unknown
-                           slice_size columns].freeze
+    CATEGORIES_FIELDS = %i[id name format format_options schema mode skip_unknown slice_size columns].freeze
 
-    # The category fields whose blank value means their default, nil, such as the UTF-8 of an `encoding` that is
-    # left blank, or no `schema`, so that blanking them clears a value that was set.
-    CLEARABLE_CATEGORY_FIELDS = %i[schema encoding invalid_characters].freeze
+    # The category fields whose blank value means their default, nil, such as no `schema`, so that blanking them
+    # clears a value that was set.
+    CLEARABLE_CATEGORY_FIELDS = %i[schema].freeze
 
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
     # Parameters

@@ -17,10 +17,6 @@ module RocketJobMissionControl
       zombie:    "fa-solid fa-ghost"
     }.freeze
 
-    # The encodings to suggest for the text in a file, such as that of a category's files. Any other encoding that
-    # Ruby knows can be typed in, and the model validates it, see RocketJob::EncodingValidator.
-    SUGGESTED_ENCODINGS = %w[UTF-8 Windows-1252 ISO-8859-1 ISO-8859-15 US-ASCII UTF-16LE UTF-16BE Shift_JIS IBM037].freeze
-
     def state_icon(state)
       "#{STATE_ICON_MAP[state.to_sym]} #{state}"
     end
@@ -87,19 +83,6 @@ module RocketJobMissionControl
       values
     end
 
-    # Whether the attribute holds the encoding of the text in a file, which the class declares by validating it as one,
-    # such as RocketJob::Category::Base#encoding or RocketJob::Jobs::CopyFileJob#source_encoding.
-    def encoding_field?(klass, attribute)
-      klass.validators_on(attribute).any?(RocketJob::EncodingValidator)
-    end
-
-    # Returns the select for the encoding of the text in a file, which suggests the common encodings, and takes any
-    # other that is typed in, see tom_select_init.js. Blank is UTF-8, or the format's own encoding.
-    def encoding_select(f, attribute, value)
-      options = value.blank? || SUGGESTED_ENCODINGS.include?(value) ? SUGGESTED_ENCODINGS : [value, *SUGGESTED_ENCODINGS]
-      f.select(attribute, options, {include_blank: true, selected: value}, {class: "tom-select form-select"})
-    end
-
     # Returns the text area for the schema of a category, see RocketJob::Category::Base#schema: the JSON of a schema,
     # or the path or url of the JSON file that holds it. Blank is no schema.
     def schema_text_area(f, value)
@@ -125,9 +108,7 @@ module RocketJobMissionControl
 placeholder: placeholder)
       when "String", "Symbol", "Mongoid::StringifiedSymbol"
         options = extract_inclusion_values(klass, field_name)
-        if encoding_field?(klass, field_name)
-          encoding_select(f, field_name, value)
-        elsif options
+        if options
           f.select(field_name, options, {include_blank: options.include?(nil), selected: value},
                    {class: "tom-select form-select"})
         else

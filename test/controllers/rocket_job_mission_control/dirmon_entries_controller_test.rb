@@ -170,12 +170,6 @@ module RocketJobMissionControl
           describe "with a batch job_class_name" do
             let(:entry_params) { {rocket_job_dirmon_entry: {job_class_name: "DataImportJob"}} }
 
-            it "shows the encoding of the files, and what to do with invalid characters" do
-              assert_match(/input_categories_attributes\]\[[^\]]*\]\[encoding\]/, response.body)
-              assert_match(/input_categories_attributes\]\[[^\]]*\]\[invalid_characters\]/, response.body)
-              assert_match(/output_categories_attributes\]\[[^\]]*\]\[encoding\]/, response.body)
-            end
-
             it "shows the schema of each category" do
               assert_match(/<textarea[^>]*input_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
               assert_match(/<textarea[^>]*output_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
@@ -218,54 +212,6 @@ module RocketJobMissionControl
             end
           end
         end
-
-        describe "the encoding of a batch job's files" do
-          let :import_dirmon_entry do
-            RocketJob::DirmonEntry.create!(
-              name:           "Import",
-              job_class_name: "DataImportJob",
-              pattern:        "import/*.csv",
-              properties:     {input_categories: [{name: "main", encoding: "Windows-1252"}]}
-            )
-          end
-
-          def update_encoding(encoding)
-            patch :update, params: {
-              id:                      import_dirmon_entry.id,
-              rocket_job_dirmon_entry: {properties: {input_categories_attributes: {"0" => {name: "main", encoding: encoding}}}}
-            }
-          end
-
-          it "is changed" do
-            update_encoding("ISO-8859-1")
-
-            assert_redirected_to dirmon_entry_path(import_dirmon_entry)
-            assert_equal "ISO-8859-1", import_dirmon_entry.reload.properties["input_categories"].first["encoding"]
-          end
-
-          it "is cleared when it is left blank" do
-            update_encoding("")
-
-            assert_redirected_to dirmon_entry_path(import_dirmon_entry)
-            assert_nil import_dirmon_entry.reload.properties["input_categories"]
-          end
-
-          describe "that is not valid" do
-            before do
-              update_encoding("UTF-16")
-            end
-
-            it "is not saved" do
-              assert_template :edit
-              assert_equal "Windows-1252", import_dirmon_entry.reload.properties["input_categories"].first["encoding"]
-            end
-
-            it "shows why" do
-              assert_includes response.body, "Input category main: Encoding"
-              assert_includes response.body, "so name its byte order, such as UTF-16LE"
-            end
-          end
-        end
       end
 
       describe "POST #create" do
@@ -301,25 +247,6 @@ module RocketJobMissionControl
 
           it "saves properties" do
             assert_equal "42", assigns(:dirmon_entry).properties[:priority]
-          end
-
-          describe "for a batch job" do
-            let(:dirmon_params) do
-              {
-                name:           "Test",
-                pattern:        "/files/*",
-                job_class_name: "DataImportJob",
-                properties:     {input_categories_attributes: {"0" => {name: "main", encoding: "Windows-1252", invalid_characters: "raise"}}}
-              }
-            end
-
-            it "saves the encoding of the files, and what to do with invalid characters" do
-              assert_predicate assigns(:dirmon_entry), :persisted?
-              category = assigns(:dirmon_entry).properties[:input_categories].first
-
-              assert_equal "Windows-1252", category[:encoding]
-              assert_equal "raise", category[:invalid_characters]
-            end
           end
 
           describe "for a batch job with a schema" do

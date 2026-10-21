@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking changes
 
-- Depend on `rocketjob` ~> 8.0, which requires IOStreams 3.0.
+- Depend on `rocketjob` ~> 7.1, which requires IOStreams 2.2.
 - Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
   original, and why it failed.
 

@@ -17,6 +17,8 @@ RJMC is one of a family of gems by the same author, all checked out one director
 
 Rocket Job Pro and Enterprise functionality has been rolled into `rocketjob` itself; there are no separate `rocketjob_pro` / `rocketjob_enterprise` gems. To develop against a local copy of any dependency, point `rjmc/Gemfile` at `path: "../<gem>"`.
 
+RJMC's `main` is the 7.1 line: it bundles `rocketjob` from its `v7` branch (Rocket Job 7.1) and `iostreams` from its `v2` branch (IOStreams 2.2). Their `main` branches are Rocket Job 8 and IOStreams 3, so read the `v7` and `v2` branches of the local checkouts, not their `main`. A Rocket Job or IOStreams API that only their `main` has cannot be used in RJMC until it is backported to `v7` or `v2`.
+
 ## Commands
 
 Testing uses [Appraisal](https://github.com/thoughtbot/appraisal) to run against multiple Rails/Mongoid combinations (see `Appraisals`: rails_7.2, rails_8.0, rails_8.1). Gems install into the global gem list.

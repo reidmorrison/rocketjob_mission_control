@@ -2,6 +2,11 @@ source "https://rubygems.org"
 
 gemspec
 
+# Rocket Job 7.1 and IOStreams 2.2 have not been released yet.
+# Remove once they are published to rubygems.org, and require rocketjob ~> 7.1 in the gemspec if needed.
+gem "iostreams", github: "reidmorrison/iostreams", branch: "v2"
+gem "rocketjob", github: "reidmorrison/rocketjob", branch: "v7"
+
 gem "minitest", "~> 5.0"
 gem "mongoid", "~> 9.1.0"
 gem "rails", "~> 8.1.0"

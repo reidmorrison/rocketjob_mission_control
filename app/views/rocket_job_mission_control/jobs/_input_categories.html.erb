@@ -35,6 +35,12 @@
                 <td><label>Format:</label></td>
                 <td><%= category.format %></td>
               </tr>
+              <% if category.schema.present? %>
+                <tr>
+                  <td><label>Schema:</label></td>
+                  <td><%= job_category_schema(category) %></td>
+                </tr>
+              <% end %>
               <tr>
                 <td><label>Header Cleanser:</label></td>
                 <td><%= category.header_cleanser %></td>

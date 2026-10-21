@@ -126,6 +126,13 @@ module RocketJobMissionControl
       category.class.display_properties("file_name" => category.file_name)["file_name"]
     end
 
+    # The category's schema: its fields as a JSON tree, or the path or url of the JSON file that holds it, without any
+    # credentials. The category decides how its schema is shown, see RocketJob::Category::Base.display_properties.
+    def job_category_schema(category)
+      schema = category.class.display_properties("schema" => category.schema)["schema"]
+      schema.is_a?(Hash) ? render_json_tree(schema) : schema
+    end
+
     # The encoding of the text in the output category's file, which the category decides, see
     # RocketJob::Category::Output#text_encoding: its own encoding, or the format's, such as US-ASCII for fixed width.
     # Returns nil for UTF-8.

@@ -305,6 +305,7 @@ module RocketJobMissionControl
           :name,
           :format,
           :format_options,
+          :schema,
           :encoding,
           :invalid_characters,
           :mode,
@@ -317,6 +318,7 @@ module RocketJobMissionControl
           :name,
           :format,
           :format_options,
+          :schema,
           :encoding,
           {columns: []}
         ]

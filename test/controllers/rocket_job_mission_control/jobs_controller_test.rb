@@ -709,6 +709,81 @@ module RocketJobMissionControl
         end
       end
 
+      describe "a category's schema" do
+        let(:schema) { {"fields" => [{"name" => "name"}, {"name" => "age", "type" => "integer"}]} }
+
+        let :csv_job do
+          job                       = CSVJob.new
+          job.input_category.schema = schema
+          job.save!
+          job
+        end
+
+        def update_schema(text)
+          patch :update, params: {
+            id:  csv_job.id,
+            job: {input_categories_attributes: {"0" => {name: "main", schema: text}}}
+          }
+          csv_job.reload
+        end
+
+        it "is shown on the job page" do
+          get :show, params: {id: csv_job.id}
+
+          assert_includes response.body, "Schema:"
+          assert_includes response.body, "&quot;age&quot;"
+        end
+
+        it "is shown as the path or url of its file, without its password" do
+          csv_job.input_category.schema = "sftp://user:secret@host/schemas/people.json"
+          csv_job.save!
+          get :show, params: {id: csv_job.id}
+
+          assert_includes response.body, "sftp://host/schemas/people.json"
+          assert_not_includes response.body, "secret"
+        end
+
+        it "can be edited as JSON" do
+          get :edit, params: {id: csv_job.id}
+
+          assert_match(/<textarea[^>]*name="job\[input_categories_attributes\]\[0\]\[schema\]"/, response.body)
+          assert_includes response.body, "&quot;type&quot;: &quot;integer&quot;"
+        end
+
+        it "is saved from its JSON" do
+          update_schema(JSON.generate("fields" => [{"name" => "name"}]))
+
+          assert_equal({"fields" => [{"name" => "name"}]}, csv_job.input_category.schema)
+        end
+
+        it "is saved as the path or url of its file" do
+          update_schema("s3://bucket/schemas/people.json")
+
+          assert_equal "s3://bucket/schemas/people.json", csv_job.input_category.schema
+        end
+
+        it "is cleared when it is left blank" do
+          update_schema("")
+
+          assert_nil csv_job.input_category.schema
+        end
+
+        it "is not saved when its JSON is not valid" do
+          update_schema("{ bad json")
+
+          assert_template :edit
+          assert_includes response.body, "Schema is not valid JSON"
+          assert_equal schema, csv_job.input_category.schema
+        end
+
+        it "is not saved when it is not a valid schema" do
+          update_schema(JSON.generate("fields" => [{"name" => "name", "type" => "time"}]))
+
+          assert_template :edit
+          assert_equal schema, csv_job.input_category.schema
+        end
+      end
+
       describe "a category's encoding" do
         let :csv_job do
           job                                   = CSVJob.new

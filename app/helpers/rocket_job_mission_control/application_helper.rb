@@ -100,6 +100,14 @@ module RocketJobMissionControl
       f.select(attribute, options, {include_blank: true, selected: value}, {class: "tom-select form-select"})
     end
 
+    # Returns the text area for the schema of a category, see RocketJob::Category::Base#schema: the JSON of a schema,
+    # or the path or url of the JSON file that holds it. Blank is no schema.
+    def schema_text_area(f, value)
+      text = value.is_a?(Hash) ? JSON.pretty_generate(value) : value
+      f.text_area(:schema, value: text, rows: 4, class: "form-control font-monospace",
+                           placeholder: '{"fields": [{"name": "name"}, {"name": "age", "type": "integer"}]}')
+    end
+
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
     def editable_field_html(klass, field_name, value, f)
       # When editing a job the values are of the correct type.

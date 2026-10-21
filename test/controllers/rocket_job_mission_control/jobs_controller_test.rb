@@ -702,7 +702,7 @@ module RocketJobMissionControl
         end
 
         it "re-renders the edit form" do
-          assert_response :success
+          assert_response :unprocessable_content
           assert_template :edit
         end
 
@@ -800,8 +800,14 @@ module RocketJobMissionControl
           assert_template :edit
           assert_equal schema, csv_job.input_category.schema
         end
-      end
 
+        it "shows why it is not valid in its category" do
+          update_schema(JSON.generate("fields" => [{"name" => "name", "type" => "time"}]))
+
+          assert_response :unprocessable_content
+          assert_select ".card-body .alert-danger", /Schema is not valid/
+        end
+      end
 
       describe "PATCH #delete_line of a record that another record equals" do
         it "removes only the selected record" do

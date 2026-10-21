@@ -201,7 +201,7 @@ module RocketJobMissionControl
           end
 
           it "renders the edit template" do
-            assert_response :success
+            assert_response :unprocessable_content
           end
 
           it "alerts the user" do
@@ -288,7 +288,7 @@ module RocketJobMissionControl
 
           describe "on model attributes" do
             it "renders the new template" do
-              assert_response :success
+              assert_response :unprocessable_content
               assert_template :new
             end
 
@@ -486,7 +486,7 @@ module RocketJobMissionControl
           end
 
           it "re-renders the copy form" do
-            assert_response :success
+            assert_response :unprocessable_content
             assert_template :copy
           end
 

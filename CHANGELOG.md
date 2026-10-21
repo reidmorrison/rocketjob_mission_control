@@ -30,6 +30,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   JSON file that holds it, which the job details page shows without its user name, password or query. A schema is
   edited as JSON, or as such a path or url, and cleared when it is left blank. JSON that is not valid is reported,
   and the schema is not changed.
+- The job form shows why each category is not valid, such as a schema that is not valid, in that category.
+  Previously it only said that the categories were not valid.
 - A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
   unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
   has been unavailable for an hour, so until then it is still shown as enabled.
@@ -41,6 +43,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   holds the rows of, which Rocket Job 8 stores for an input category with a schema, and is read by it when it is
   retried. Previously the slice was saved without it, and failed again when it was retried. An index without a
   record is reported, rather than raising.
+- The job, new Dirmon entry, edit Dirmon entry and copy Dirmon entry forms show why they could not be
+  saved. Previously Turbo Drive ignored the form that was rendered again, since it had a 200 status, so
+  nothing appeared to happen. They are now rendered with 422.
 - Saving a Dirmon entry for a batch job without changing its properties, such as only its pattern,
   raised `NoMethodError`. It is saved.
 - Editing a record of a failed slice only changes that record, and keeps its type. Previously every

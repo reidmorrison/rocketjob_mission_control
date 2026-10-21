@@ -576,24 +576,6 @@ module RocketJobMissionControl
           assert_equal [{"name" => "Jill", "at" => at}], slice.records
         end
 
-        it "keeps the header row of the rows of a file that the slice holds" do
-          rows  = IOStreams::Slice.new(["Jack,21", "Jill,x"], header: %w[name age], format: :csv)
-          slice = failed_slice_with(rows)
-          update_record(slice, 1, "Jill,22")
-
-          assert_equal ["Jack,21", "Jill,22"], slice.records.to_a
-          assert_equal %w[name age], slice.records.header
-        end
-
-        it "reports an index without a record instead of raising" do
-          slice = failed_slice_with(%w[only])
-          update_record(slice, 3, "changed")
-
-          assert_response :redirect
-          assert_predicate flash[:danger], :present?
-          assert_equal %w[only], slice.records
-        end
-
         it "reports JSON that is not valid instead of raising" do
           slice = failed_slice_with([{"name" => "Jack"}])
           update_record(slice, 0, "{oops")
@@ -817,17 +799,6 @@ module RocketJobMissionControl
           patch :delete_line, params: {id: failed_job.id, error_type: slice.exception.class_name, offset: "0", line_index: "1"}
 
           assert_equal %w[same other], failed_job.input.find(slice.id).records
-        end
-
-        it "keeps the header row of the rows of a file that the slice holds" do
-          slice         = failed_job.input.failed.order(_id: 1).first
-          slice.records = IOStreams::Slice.new(["Jack,21", "Jill,x"], header: %w[name age], format: :csv)
-          slice.save!
-          patch :delete_line, params: {id: failed_job.id, error_type: slice.exception.class_name, offset: "0", line_index: "1"}
-          records = failed_job.input.find(slice.id).records
-
-          assert_equal ["Jack,21"], records.to_a
-          assert_equal %w[name age], records.header
         end
       end
     end

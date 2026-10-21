@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking changes
 
-- Require Ruby 3.3 or later, `rocketjob` ~> 8.0 and `iostreams` ~> 3.0.
+- Depend on `rocketjob` ~> 7.1, which requires IOStreams 2.2.
 - Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
   original, and why it failed.
 
@@ -32,17 +32,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   and the schema is not changed.
 - The job form shows why each category is not valid, such as a schema that is not valid, in that category.
   Previously it only said that the categories were not valid.
-- A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
-  unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
-  has been unavailable for an hour, so until then it is still shown as enabled.
 
 ### Fixes
 
-- Editing or deleting a record of a failed slice asks the slice to replace or remove it, see Rocket Job's
-  `Sliced::Slice#replace_record` and `#delete_record`, so that the slice keeps the header row of the file that it
-  holds the rows of, which Rocket Job 8 stores for an input category with a schema, and is read by it when it is
-  retried. Previously the slice was saved without it, and failed again when it was retried. An index without a
-  record is reported, rather than raising.
 - The job, new Dirmon entry, edit Dirmon entry and copy Dirmon entry forms show why they could not be
   saved. Previously Turbo Drive ignored the form that was rendered again, since it had a 200 status, so
   nothing appeared to happen. They are now rendered with 422.
@@ -59,8 +51,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - The job details page, and the log entry for an edited or deleted record, read the upload file name of a
   batch job from its input category, since Rocket Job 8 removes the `upload_file_name` of a batch job, an
   alias for that file name.
-- Replicating a Dirmon entry no longer copies when the storage of the original became unavailable,
-  which could fail the copy before its own storage had been unavailable for an hour.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
 
 ## [7.0.0] 2026-09-05

@@ -340,10 +340,6 @@ module RocketJobMissionControl
           it "assigns the entry" do
             assert_predicate assigns(:dirmon_entry), :present?
           end
-
-          it "does not show that its storage is unavailable" do
-            assert_not_includes response.body, "Storage Unavailable Since:"
-          end
         end
 
         describe "with credentials in its pattern and archive directory" do
@@ -372,18 +368,6 @@ module RocketJobMissionControl
           it "shows the path without the credentials" do
             assert_includes response.body, "sftp://sftp.example.org/out/data.csv"
             assert_not_includes response.body, "secret"
-          end
-        end
-
-        describe "whose storage is unavailable" do
-          before do
-            existing_dirmon_entry.update!(unavailable_at: Time.current - 120)
-            get :show, params: {id: existing_dirmon_entry.id}
-          end
-
-          it "shows since when" do
-            assert_includes response.body, "Storage Unavailable Since:"
-            assert_includes response.body, "#{RocketJob.seconds_as_duration(120)} ago"
           end
         end
       end
@@ -458,21 +442,19 @@ module RocketJobMissionControl
           end
         end
 
-        describe "of an entry whose storage is unavailable" do
+        describe "of an enabled entry" do
           before do
             existing_dirmon_entry.enable!
-            existing_dirmon_entry.update!(unavailable_at: Time.current - 120)
             patch :replicate, params: {
               id:                      existing_dirmon_entry.id,
               rocket_job_dirmon_entry: {name: "Replicated entry", pattern: "replicated_path", properties: {}}
             }
           end
 
-          it "creates a pending copy, without the outage of the original" do
+          it "creates a pending copy" do
             new_entry = RocketJob::DirmonEntry.where(name: "Replicated entry").first
 
             assert_predicate new_entry, :pending?
-            assert_nil new_entry.unavailable_at
             assert_equal job_class_name, new_entry.job_class_name
           end
         end

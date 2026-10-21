@@ -32,9 +32,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   and the schema is not changed.
 - The job form shows why each category is not valid, such as a schema that is not valid, in that category.
   Previously it only said that the categories were not valid.
-- A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
-  unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
-  has been unavailable for an hour, so until then it is still shown as enabled.
 
 ### Fixes
 
@@ -54,8 +51,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - The job details page, and the log entry for an edited or deleted record, read the upload file name of a
   batch job from its input category, since Rocket Job 8 removes the `upload_file_name` of a batch job, an
   alias for that file name.
-- Replicating a Dirmon entry no longer copies when the storage of the original became unavailable,
-  which could fail the copy before its own storage had been unavailable for an hour.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
 
 ## [7.0.0] 2026-09-05

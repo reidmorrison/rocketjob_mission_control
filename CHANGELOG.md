@@ -30,10 +30,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   JSON file that holds it, which the job details page shows without its user name, password or query. A schema is
   edited as JSON, or as such a path or url, and cleared when it is left blank. JSON that is not valid is reported,
   and the schema is not changed.
-- The job and Dirmon entry forms, and the job details page, show the `encoding` of the files of each input
-  and output category, such as `Windows-1252`, and what an upload does with characters that are not valid
-  in it, `invalid_characters`, which Rocket Job 7.1 adds. So a Dirmon entry can read the files of a partner
-  who sends Windows-1252 without changing the job.
 - A Dirmon entry whose storage, such as an SFTP server, cannot be reached shows when it became
   unavailable. Rocket Job scans such an entry again on each run, and only fails it once its storage
   has been unavailable for an hour, so until then it is still shown as enabled.

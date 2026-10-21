@@ -40,7 +40,7 @@ After changing gemspec/Gemfile dependencies (e.g. adding a gem), run `bundle upd
 
 Note: `bundle exec rake` with no `APPRAISAL_INITIALIZED`/`TRAVIS` env var runs `app:appraisal`, iterating every appraisal. Set `APPRAISAL_INITIALIZED=1` (or run inside `appraisal <name>`) to run the plain `test` task once.
 
-CI (`.github/workflows/ci.yml`) runs the same appraisals on GitHub Actions with a MongoDB service container: Rails 7.2 on Ruby 3.3, Rails 8.0 on Ruby 3.4, Rails 8.1 on Ruby 4.0.
+CI (`.github/workflows/ci.yml`) runs the same appraisals on GitHub Actions with a MongoDB service container: Rails 7.2 on Ruby 3.2, Rails 8.0 on Ruby 3.4, Rails 8.1 on Ruby 4.0.
 
 ### Dummy app (`rjmc/`)
 
@@ -155,7 +155,7 @@ The layout (`app/views/layouts/rocket_job_mission_control/application.html.erb`)
 
 Remove items from this list as they are fixed:
 
-1. Housekeeping is done (`feature/ci-housekeeping`, PR #108): gemspec `s.test_files` removed; CI on `actions/checkout@v4`; RuboCop, bundler-audit, and dependabot all wired into CI; `.rubocop.yml` `TargetRubyVersion` at 3.3.
+1. Housekeeping is done (`feature/ci-housekeeping`, PR #108): gemspec `s.test_files` removed; CI on `actions/checkout@v4`; RuboCop, bundler-audit, and dependabot all wired into CI; `.rubocop.yml` `TargetRubyVersion` at 3.2.
 
 Fixed in `feature/turbo-action-links` (was the last piece of the front-end modernization): rails-ujs replaced with Turbo Drive. Every `link_to ..., method:, data: {confirm:}` action link (job pause/resume/abort/fail/retry/run_now/destroy, server stop/pause/resume/destroy, dirmon enable/disable/destroy, the failed-slice line delete) now uses `data: {turbo_method:, turbo_confirm:}`; the plain top-level `method:` option was left over from rails-ujs and would have rendered a dead `data-method` attribute under Turbo (confirmed by reading `ActionView::Helpers::UrlHelper#add_method_to_attributes!` in this Rails version — it still targets `data-method`, not `data-turbo-method`). This surfaced a real Turbo/Rails gotcha that touched every one of those controller actions: Turbo submits `data-turbo-method` links via `fetch` with the real HTTP verb, and per the fetch spec only POST is downgraded to GET on a 301/302 redirect (PUT/PATCH/DELETE are preserved) — so `redirect_to` after a pause/abort/destroy/etc. needed `status: :see_other` (303, which forces GET regardless of verb), otherwise the browser re-requested the redirect target with the original verb and hit the wrong action (e.g. a PUT to `/dirmon_entries/:id/disable` redirecting to a PUT on `/dirmon_entries/:id`, which routes to `#update` instead of `#show`). Adopting Turbo Drive also meant the vendored `tom_select_init.js`, `json_tree_init.js`, and `dirmon_entries.js` needed to move from `DOMContentLoaded`/`$(document).ready` (which only ever fires once per session) to `turbo:load` (which fires on the initial load and every subsequent Turbo Drive visit), since Turbo reactivates a page's own inline scripts on each visit but does not re-fire `DOMContentLoaded` for persistent `<head>` scripts. There was no JS/system test suite before this, so the whole class of bug above was invisible to `rake`; this landed alongside a new Capybara + Cuprite system test suite (`test/system/`, driven by the same vendored-Chrome pattern already used for manual verification) covering the job/server/dirmon action links end to end, plus a Chrome install step in CI.
 
@@ -173,7 +173,7 @@ Fixed (was the last piece of item 1): the `//= require` bundles (`application.cs
 
 ## Conventions
 
-- Ruby >= 3.3 required. RuboCop enforces trailing dot position, `lf` line endings, and table-aligned hashes; match the heavy column alignment already used throughout the codebase.
+- Ruby >= 3.2 required. RuboCop enforces trailing dot position, `lf` line endings, and table-aligned hashes; match the heavy column alignment already used throughout the codebase.
 - Tests are Minitest via `minispec-rails`; controller tests include the engine's route helpers and set `@routes = RocketJobMissionControl::Engine.routes`. `test/system/` holds Capybara system tests driven by Cuprite (`test/system_test_case.rb`), using the same vendored-Chrome binary as the manual headless-Chrome verification workflow above; they boot the dummy app for real and click through the UI, so they're the only tests that exercise the vendored JS (Turbo, DataTables, tom-select) end to end.
 - Gem version lives in `lib/rocket_job_mission_control/version.rb`.
 - A form action that renders its form again to show why it could not be saved uses `status: FORM_ERROR_STATUS` (422, see `ApplicationController`). Turbo Drive ignores a 200 response to a form submission, so the errors would never appear. Controller tests do not run Turbo, so only a system test catches this.

@@ -10,12 +10,11 @@ Gem::Specification.new do |s|
   s.summary               = "Ruby's missing batch system."
   s.description           = "Rocket Job Mission Control is the Web user interface to manage Rocket Job."
   s.license               = "Apache-2.0"
-  s.required_ruby_version = ">= 3.3"
+  s.required_ruby_version = ">= 3.2"
 
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "LICENSE.txt", "Rakefile", "README.md"]
 
   s.add_dependency "access-granted", "~> 1.3"
-  s.add_dependency "iostreams", "~> 3.0"
   s.add_dependency "railties", ">= 7.2"
   s.add_dependency "rocketjob", "~> 8.0"
 

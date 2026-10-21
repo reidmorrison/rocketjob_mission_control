@@ -14,7 +14,7 @@ inherit_mode:
     - Exclude
 
 AllCops:
-  TargetRubyVersion: 3.3
+  TargetRubyVersion: 3.2
   NewCops: enable
   Exclude:
     - '.git/**/*'

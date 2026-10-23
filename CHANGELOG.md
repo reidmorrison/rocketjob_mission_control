@@ -10,6 +10,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Depend on `rocketjob` ~> 7.1, which requires IOStreams 2.2.
 - Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
   original, and why it failed.
+- The job and Dirmon entry forms edit an input category's `validate_rows` in place of its `mode`,
+  which Rocket Job 7.1 deprecates and v8 removes: `validate_rows: true` replaces `mode: :hash`, and
+  parses each row of a file while it is uploaded. Left blank, it uses the job class's setting. The job
+  details page shows "Validate Rows" when an upload validates the rows, rather than the `mode`. Needs
+  Rocket Job 7.1 with `validate_rows`.
 
 ### Security
 

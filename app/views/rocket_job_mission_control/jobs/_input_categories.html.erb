@@ -52,10 +52,10 @@
                   <td><%= render_json_tree(category.required_columns) %></td>
                 </tr>
               <% end %>
-              <% if category.mode != :line %>
+              <% if category.upload_validates_rows? %>
                 <tr>
-                  <td><label>Mode:</label></td>
-                  <td><%= category.mode %></td>
+                  <td><label>Validate Rows:</label></td>
+                  <td>true</td>
                 </tr>
               <% end %>
               <% if category.format_options %>

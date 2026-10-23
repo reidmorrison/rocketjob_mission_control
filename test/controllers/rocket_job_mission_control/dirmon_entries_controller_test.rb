@@ -174,6 +174,11 @@ module RocketJobMissionControl
               assert_match(/<textarea[^>]*input_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
               assert_match(/<textarea[^>]*output_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
             end
+
+            it "shows validate_rows of each input category, rather than mode" do
+              assert_match(/<select[^>]*input_categories_attributes\]\[[^\]]*\]\[validate_rows\]/, response.body)
+              assert_no_match(/input_categories_attributes\]\[[^\]]*\]\[mode\]/, response.body)
+            end
           end
         end
       end
@@ -264,6 +269,25 @@ module RocketJobMissionControl
               category = assigns(:dirmon_entry).properties[:input_categories].first
 
               assert_equal({"fields" => [{"name" => "name"}]}, category[:schema])
+            end
+          end
+
+          describe "for a batch job that validates the rows of its files" do
+            let(:dirmon_params) do
+              {
+                name:           "Test",
+                pattern:        "/files/*",
+                job_class_name: "DataImportJob",
+                properties:     {input_categories_attributes: {"0" => {name: "main", validate_rows: "true"}}}
+              }
+            end
+
+            it "saves validate_rows" do
+              assert_predicate assigns(:dirmon_entry), :persisted?
+              category = assigns(:dirmon_entry).properties[:input_categories].first
+
+              # The Boolean, rather than the "true" of the form.
+              assert_same true, category[:validate_rows]
             end
           end
 

@@ -791,6 +791,57 @@ module RocketJobMissionControl
         end
       end
 
+      describe "a category's validate_rows" do
+        let :csv_job do
+          job = CSVJob.new
+          job.save!
+          job
+        end
+
+        def update_validate_rows(value)
+          patch :update, params: {
+            id:  csv_job.id,
+            job: {input_categories_attributes: {"0" => {name: "main", validate_rows: value}}}
+          }
+          csv_job.reload
+        end
+
+        it "is shown on the job page when the upload validates the rows" do
+          get :show, params: {id: csv_job.id}
+
+          assert_not_includes response.body, "Validate Rows:"
+
+          csv_job.input_category.validate_rows = true
+          csv_job.save!
+          get :show, params: {id: csv_job.id}
+
+          assert_includes response.body, "Validate Rows:"
+          assert_not_includes response.body, "Mode:"
+        end
+
+        it "can be edited" do
+          csv_job.input_category.validate_rows = false
+          csv_job.save!
+          get :edit, params: {id: csv_job.id}
+
+          assert_select "select[name='job[input_categories_attributes][0][validate_rows]'] option[selected][value='false']"
+          assert_select "select[name='job[input_categories_attributes][0][mode]']", 0
+        end
+
+        it "is saved" do
+          update_validate_rows("true")
+
+          assert csv_job.input_category.validate_rows
+        end
+
+        it "is cleared when it is left blank" do
+          update_validate_rows("true")
+          update_validate_rows("")
+
+          assert_nil csv_job.input_category.validate_rows
+        end
+      end
+
       describe "PATCH #delete_line of a record that another record equals" do
         it "removes only the selected record" do
           slice         = failed_job.input.failed.order(_id: 1).first

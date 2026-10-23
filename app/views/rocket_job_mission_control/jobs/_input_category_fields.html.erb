@@ -46,10 +46,10 @@
       </div>
 
       <div class="mb-3">
-        <%= f.label :mode %>
-        <% options = extract_inclusion_values(RocketJob::Category::Input, :mode) %>
-        <% value = input_category.mode %>
-        <%= f.select(:mode, options, { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
+        <%= f.label :validate_rows %>
+        <% value = input_category.validate_rows %>
+        <%= f.select(:validate_rows, [true, false], { include_blank: true, selected: value }, { class: "tom-select form-select" }) %>
+        <div class="form-text">Parse each row of a file in the format while it is uploaded, so that a file with a row that cannot be read is rejected before processing starts. Needs a format.</div>
       </div>
 
       <div class="mb-3">

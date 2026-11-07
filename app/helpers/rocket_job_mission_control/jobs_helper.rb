@@ -113,12 +113,6 @@ module RocketJobMissionControl
       RocketJob.path_display_name(job.upload_file_name)
     end
 
-    # The category's file name, without any credentials, such as the password of an SFTP url that the output is
-    # downloaded to. The category decides how its file name is shown, see RocketJob::Category::Base.display_properties.
-    def job_category_file_name(category)
-      category.class.display_properties("file_name" => category.file_name)["file_name"]
-    end
-
     # The category's schema: its fields as a JSON tree, or the path or url of the JSON file that holds it, without any
     # credentials. The category decides how its schema is shown, see RocketJob::Category::Base.display_properties.
     def job_category_schema(category)

@@ -188,7 +188,7 @@ module RocketJobMissionControl
       slice.records       = records
 
       if slice.save
-        logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{upload_file_display_name}")
+        logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
         flash[:success] = "slice updated"
         redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset)
       else
@@ -220,7 +220,7 @@ module RocketJobMissionControl
       slice.records = records
 
       if slice.save
-        logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{upload_file_display_name}")
+        logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
         flash[:success] = "Record #{slice.first_record_number + line_index} removed from the slice."
         redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset), status: :see_other
       else
@@ -256,11 +256,6 @@ module RocketJobMissionControl
     end
 
     private
-
-    # The name of the job's upload file, without any credentials, such as the password of an SFTP url, to log.
-    def upload_file_display_name
-      RocketJob.path_display_name(@job.upload_file_name)
-    end
 
     def assign_job_values(target, hash)
       hash.each_pair do |attribute, value|

@@ -257,10 +257,9 @@ module RocketJobMissionControl
 
     private
 
-    # The name of the job's upload file, without any credentials, such as the password of an SFTP url, to log, see
-    # JobsHelper#job_upload_file_name.
+    # The name of the job's upload file, without any credentials, such as the password of an SFTP url, to log.
     def upload_file_display_name
-      helpers.job_upload_file_name(@job)
+      RocketJob.path_display_name(@job.upload_file_name)
     end
 
     def assign_job_values(target, hash)

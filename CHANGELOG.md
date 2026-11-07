@@ -48,9 +48,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Deleting a record of a failed slice only removes that record. Previously it removed every record in
   the slice that was equal to it.
 - The log entry for an edited or deleted record shows the job's upload file name without any credentials.
-- The job details page, and the log entry for an edited or deleted record, read the upload file name of a
-  batch job from its input category, since Rocket Job 8 removes the `upload_file_name` of a batch job, an
-  alias for that file name.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
 
 ## [7.0.0] 2026-09-05

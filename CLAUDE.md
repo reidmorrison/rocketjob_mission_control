@@ -17,7 +17,7 @@ RJMC is one of a family of gems by the same author, all checked out one director
 
 Rocket Job Pro and Enterprise functionality has been rolled into `rocketjob` itself; there are no separate `rocketjob_pro` / `rocketjob_enterprise` gems. To develop against a local copy of any dependency, point `rjmc/Gemfile` at `path: "../<gem>"`.
 
-RJMC's `main` is the 7.1 line: it bundles `rocketjob` from its `v7` branch (Rocket Job 7.1) and `iostreams` from its `v2` branch (IOStreams 2.2). Their `main` branches are Rocket Job 8 and IOStreams 3, so read the `v7` and `v2` branches of the local checkouts, not their `main`. A Rocket Job or IOStreams API that only their `main` has cannot be used in RJMC until it is backported to `v7` or `v2`.
+RJMC's `main` is the 7.1 line: it depends on Rocket Job 7.1 (`rocketjob ~> 7.1`), which requires IOStreams 2.2, both bundled from rubygems.org. Their `v7` and `v2` branches hold those releases; their `main` branches are Rocket Job 8 and IOStreams 3, so read the `v7` and `v2` branches of the local checkouts, or the `v7.1.0` and `v2.2.0` tags, not their `main`. Rocket Job's `v7-draft` branch holds 7.x backports that 7.1.0 left out, such as the display names that show paths without credentials (`RocketJob.path_display_name`, `Job#display_attributes`, a category's `display_properties`) and an input category's `validate_rows`. A Rocket Job or IOStreams API that is only on their `main`, or on `v7-draft`, cannot be used in RJMC until a Rocket Job or IOStreams release that RJMC depends on has it.
 
 ## Commands
 
@@ -150,6 +150,7 @@ The layout (`app/views/layouts/rocket_job_mission_control/application.html.erb`)
 
 - The flash partial (`app/views/layouts/rocket_job_mission_control/partials/_flash.html.erb`) renders every message with `html_safe`. Anything interpolated into `flash[...]` (params, exception messages, job data) must be escaped or sanitized at the call site, or it is an XSS vector. There is prior history here: commit 3dee9b6 fixed a reflected XSS from unsanitized `params[:id]` in flash messages.
 - Datatable `map` methods build HTML strings by hand; every dynamic cell value must go through `h(...)` (`AbstractDatatable` delegates `h` to `ERB::Util`) because DataTables renders cells as raw HTML.
+- Paths and urls can hold credentials, such as `sftp://user:password@host/file.csv`. RJMC 7.1 shows them as stored, as 7.0 did, since Rocket Job 7.1.0 has none of the display names that leave credentials out. Once a Rocket Job release that RJMC depends on has them, revert the reverts of a8fdd54 and 820d670, and the commit "Log the upload file name, and show a category's schema, as stored", rather than parsing paths in RJMC.
 - Several `rescue_from` handlers start with `raise exception if Rails.env.development? || Rails.env.test?`, so their recovery branches only ever execute in production and are invisible to the test suite. Treat changes to those branches as untested until exercised manually.
 
 ## Known tech debt (modernization review, July 2026)

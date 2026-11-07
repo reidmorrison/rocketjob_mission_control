@@ -3,7 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [7.1.0] 2026-11-07
+
+Mission Control 7.1 goes with Rocket Job 7.1, which moves to IOStreams 2.2, and edits the new `schema` of a
+category.
 
 ### Breaking changes
 
@@ -33,6 +36,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Deleting a record of a failed slice only removes that record. Previously it removed every record in
   the slice that was equal to it.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
+
+### Internal
+
+- Remove the unused nested fields helper and script, and the Dirmon entry category partials that nothing
+  renders.
+- Pin `json` < 3 for the Rails 7.2 and 8.0 appraisals, whose `JSON.generate` calls json 3 rejects.
+- Add a test coverage badge to the readme.
 
 ## [7.0.0] 2026-09-05
 

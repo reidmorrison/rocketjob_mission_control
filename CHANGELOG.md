@@ -8,18 +8,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Breaking changes
 
 - Depend on `rocketjob` ~> 7.1, which requires IOStreams 2.2.
-- Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
-  original, and why it failed.
-
-### Security
-
-- Paths are shown without the user name, password or query of a url, such as
-  `sftp://user:password@host/file.csv`: the upload file name on the job details page, the job's
-  path and url attributes, such as the `source_url` and `target_url` of a `CopyFileJob`, the secrets in
-  a `CopyFileJob`'s arguments and streams, such as an SFTP password or PGP passphrase, and a Dirmon
-  entry's pattern and archive directory on its details page and in the Dirmon entries list. A value
-  that is not a valid path is shown as `(not a valid path)`. The edit and copy forms still show the
-  full value, so that it can be changed.
 
 ### New features
 

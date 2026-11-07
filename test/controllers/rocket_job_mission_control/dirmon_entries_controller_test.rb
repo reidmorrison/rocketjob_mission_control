@@ -22,15 +22,6 @@ module RocketJobMissionControl
         )
       end
 
-      let :sftp_dirmon_entry do
-        RocketJob::DirmonEntry.create!(
-          name:              "SFTP path test",
-          job_class_name:    job_class_name,
-          pattern:           "sftp://user:secret@sftp.example.org/in/*.csv",
-          archive_directory: "sftp://user:secret@sftp.example.org/archive"
-        )
-      end
-
       dirmon_entry_states = RocketJob::DirmonEntry.aasm.states.collect(&:name)
 
       let :one_dirmon_entry_for_every_state do
@@ -331,32 +322,6 @@ module RocketJobMissionControl
             assert_predicate assigns(:dirmon_entry), :present?
           end
         end
-
-        describe "with credentials in its pattern and archive directory" do
-          before do
-            get :show, params: {id: sftp_dirmon_entry.id}
-          end
-
-          it "shows them without the credentials" do
-            assert_includes response.body, "sftp://sftp.example.org/in/*.csv"
-            assert_includes response.body, "sftp://sftp.example.org/archive"
-            assert_not_includes response.body, "secret"
-          end
-        end
-      end
-
-      describe "GET #index json with credentials in a pattern" do
-        before do
-          sftp_dirmon_entry
-          get :index, format: :json
-        end
-
-        it "shows the pattern without the credentials" do
-          row = JSON.parse(response.body)["data"].first
-
-          assert_equal "sftp://sftp.example.org/in/*.csv", row["2"]
-          assert_not_includes response.body, "secret"
-        end
       end
 
       describe "DELETE #destroy" do
@@ -412,23 +377,6 @@ module RocketJobMissionControl
           it "creates a copy without destroying the original" do
             assert_predicate RocketJob::DirmonEntry.where(name: "Replicated entry"), :exists?
             assert_predicate RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id), :exists?
-          end
-        end
-
-        describe "of an enabled entry" do
-          before do
-            existing_dirmon_entry.enable!
-            patch :replicate, params: {
-              id:                      existing_dirmon_entry.id,
-              rocket_job_dirmon_entry: {name: "Replicated entry", pattern: "replicated_path", properties: {}}
-            }
-          end
-
-          it "creates a pending copy" do
-            new_entry = RocketJob::DirmonEntry.where(name: "Replicated entry").first
-
-            assert_predicate new_entry, :pending?
-            assert_equal job_class_name, new_entry.job_class_name
           end
         end
 

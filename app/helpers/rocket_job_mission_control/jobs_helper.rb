@@ -107,12 +107,6 @@ module RocketJobMissionControl
       (job.record_count.to_f / job.input_category.slice_size).ceil
     end
 
-    # The job's upload file name, without any credentials, such as the password of an SFTP url that Dirmon
-    # archived the file to, see RocketJob.path_display_name.
-    def job_upload_file_name(job)
-      RocketJob.path_display_name(job.upload_file_name)
-    end
-
     # The category's schema: its fields as a JSON tree, or the path or url of the JSON file that holds it, without any
     # credentials. The category decides how its schema is shown, see RocketJob::Category::Base.display_properties.
     def job_category_schema(category)
@@ -121,7 +115,7 @@ module RocketJobMissionControl
     end
 
     def job_custom_fields(job)
-      attrs = job.display_attributes
+      attrs = job.attributes.dup
       DISPLAYED_FIELDS.each { |key| attrs.delete(key) }
       # Convert time zones for any custom time fields
       attrs.keys { |key| attrs[key] = attrs[key].in_time_zone(Time.zone) if attrs[key].is_a?(Time) }

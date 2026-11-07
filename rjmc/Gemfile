@@ -5,11 +5,9 @@ gem "puma"
 gem "rails", "~> 8.1.0"
 gem "sprockets-rails"
 
-# Rocket Job 7.1 and IOStreams 2.2, which it requires, have not been released yet. Remove once they are published to
-# rubygems.org.
-gem "iostreams", github: "reidmorrison/iostreams", branch: "v2" # path: "../../iostreams"
+gem "iostreams" # , path: "../../iostreams"
 gem "rails_semantic_logger" # , path: "../../rails_semantic_logger"
-gem "rocketjob", github: "reidmorrison/rocketjob", branch: "v7" # path: "../../rocketjob"
+gem "rocketjob" # , path: "../../rocketjob"
 gem "rocketjob_mission_control", path: "../"
 
 group :development do

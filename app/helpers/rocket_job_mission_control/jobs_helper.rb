@@ -107,34 +107,14 @@ module RocketJobMissionControl
       (job.record_count.to_f / job.input_category.slice_size).ceil
     end
 
-    # The name of the file that the job uploads, without any credentials, such as the password of an SFTP url that
-    # Dirmon archived the file to: the file name of a batch job's input category, see #job_category_file_name, or the
-    # job's own upload_file_name, such as an UploadFileJob's, see RocketJob.path_display_name. Returns nil when it has
-    # none.
-    def job_upload_file_name(job)
-      if job.respond_to?(:input_category)
-        category = job.input_category
-        job_category_file_name(category) if category.file_name
-      elsif job.respond_to?(:upload_file_name) && job.upload_file_name
-        RocketJob.path_display_name(job.upload_file_name)
-      end
-    end
-
-    # The category's file name, without any credentials, such as the password of an SFTP url that the output is
-    # downloaded to. The category decides how its file name is shown, see RocketJob::Category::Base.display_properties.
-    def job_category_file_name(category)
-      category.class.display_properties("file_name" => category.file_name)["file_name"]
-    end
-
-    # The category's schema: its fields as a JSON tree, or the path or url of the JSON file that holds it, without any
-    # credentials. The category decides how its schema is shown, see RocketJob::Category::Base.display_properties.
+    # The category's schema: its fields as a JSON tree, or the path or url of the JSON file that holds it.
     def job_category_schema(category)
-      schema = category.class.display_properties("schema" => category.schema)["schema"]
+      schema = category.schema
       schema.is_a?(Hash) ? render_json_tree(schema) : schema
     end
 
     def job_custom_fields(job)
-      attrs = job.display_attributes
+      attrs = job.attributes.dup
       DISPLAYED_FIELDS.each { |key| attrs.delete(key) }
       # Convert time zones for any custom time fields
       attrs.keys { |key| attrs[key] = attrs[key].in_time_zone(Time.zone) if attrs[key].is_a?(Time) }

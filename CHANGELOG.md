@@ -3,33 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [7.1.0] 2026-11-07
+
+Mission Control 7.1 goes with Rocket Job 7.1, which moves to IOStreams 2.2, and edits the new `schema` of a
+category.
 
 ### Breaking changes
 
 - Depend on `rocketjob` ~> 7.1, which requires IOStreams 2.2.
-- Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
-  original, and why it failed.
-
-### Security
-
-- Paths are shown without the user name, password or query of a url, such as
-  `sftp://user:password@host/file.csv`: the upload file name on the job details page, the job's
-  path and url attributes, such as the `source_url` and `target_url` of a `CopyFileJob`, the secrets in
-  a `CopyFileJob`'s arguments and streams, such as an SFTP password or PGP passphrase, the paths in an
-  `UploadFileJob`'s properties, the file name of each input and output category, and a Dirmon entry's
-  pattern, archive directory and the paths in its properties, on its details page and in the Dirmon
-  entries list. A value
-  that is not a valid path is shown as `(not a valid path)`. The edit and copy forms still show the
-  full value, so that it can be changed.
 
 ### New features
 
 - The job and Dirmon entry forms, and the job details page, show the `schema` of each input and output category,
   which describes the fields of its files and the type of each one: a schema as JSON, or the path or url of the
-  JSON file that holds it, which the job details page shows without its user name, password or query. A schema is
-  edited as JSON, or as such a path or url, and cleared when it is left blank. JSON that is not valid is reported,
-  and the schema is not changed.
+  JSON file that holds it. A schema is edited as JSON, or as such a path or url, and cleared when it is left blank.
+  JSON that is not valid is reported, and the schema is not changed.
 - The job form shows why each category is not valid, such as a schema that is not valid, in that category.
   Previously it only said that the categories were not valid.
 
@@ -47,11 +35,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   and edited, as MongoDB Extended JSON, so that values such as a time keep their types.
 - Deleting a record of a failed slice only removes that record. Previously it removed every record in
   the slice that was equal to it.
-- The log entry for an edited or deleted record shows the job's upload file name without any credentials.
-- The job details page, and the log entry for an edited or deleted record, read the upload file name of a
-  batch job from its input category, since Rocket Job 8 removes the `upload_file_name` of a batch job, an
-  alias for that file name.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
+
+### Internal
+
+- Remove the unused nested fields helper and script, and the Dirmon entry category partials that nothing
+  renders.
+- Pin `json` < 3 for the Rails 7.2 and 8.0 appraisals, whose `JSON.generate` calls json 3 rejects.
+- Add a test coverage badge to the readme.
 
 ## [7.0.0] 2026-09-05
 

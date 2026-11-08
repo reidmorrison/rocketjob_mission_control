@@ -459,6 +459,66 @@ module RocketJobMissionControl
         end
       end
 
+      describe "an input category that validates its lines without validate_rows" do
+        # Rocket Job reports the deprecated :hash mode of each job built from these properties while Ruby's deprecation
+        # warnings are on, as they are in tests.
+        before do
+          @deprecated          = Warning[:deprecated]
+          Warning[:deprecated] = false
+        end
+
+        after do
+          Warning[:deprecated] = @deprecated
+        end
+
+        let :schema do
+          {"fields" => [{"name" => "name"}]}
+        end
+
+        # The deprecated :hash mode with a schema validates the lines, and Rocket Job 8 reads it as validate_rows: true.
+        let :hash_mode_entry do
+          RocketJob::DirmonEntry.create!(
+            name:           "Hash mode",
+            job_class_name: job_class_name,
+            pattern:        "hash_mode/*.csv",
+            properties:     {"input_categories" => [{"name" => "main", "mode" => "hash", "schema" => schema}]}
+          )
+        end
+
+        def update_validate_rows(value)
+          patch :update, params: {
+            id:                      hash_mode_entry.id,
+            rocket_job_dirmon_entry: {
+              properties: {
+                input_categories_attributes: {"0" => {name: "main", schema: schema.to_json, validate_rows: value}}
+              }
+            }
+          }
+          hash_mode_entry.reload
+        end
+
+        def validates_rows?(entry)
+          entry.job_class.from_properties(entry.properties).input_category.upload_validates_rows?
+        end
+
+        it "shows validate_rows as true" do
+          get :edit, params: {id: hash_mode_entry.id}
+
+          assert_select "select[name$='[validate_rows]'] option[selected][value='true']"
+        end
+
+        it "saves validate_rows as the form shows it" do
+          entry = update_validate_rows("true")
+
+          assert_same true, entry.properties["input_categories"].first["validate_rows"]
+          assert validates_rows?(entry)
+        end
+
+        it "still validates them when validate_rows is left blank" do
+          assert validates_rows?(update_validate_rows(""))
+        end
+      end
+
       describe "GET #show" do
         describe "with an invalid id" do
           before do

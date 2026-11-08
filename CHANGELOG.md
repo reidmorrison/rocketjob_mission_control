@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixes
+
+- The job and Dirmon entry forms save the line breaks of a text field as `\n`. Previously they were
+  saved as the `\r\n` that a browser posts, except when editing a Dirmon entry.
+
 ## [7.1.0] 2026-11-07
 
 Mission Control 7.1 goes with Rocket Job 7.1, which moves to IOStreams 2.2, and edits the new `schema` of a

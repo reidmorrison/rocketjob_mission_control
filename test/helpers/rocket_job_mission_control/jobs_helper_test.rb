@@ -66,7 +66,7 @@ module RocketJobMissionControl
         end
 
         it "leaves out a String that is not a valid path, since its credentials cannot be found" do
-          job = Struct.new(:upload_file_name).new("sftp://user:p@ss@sftp.example.org/archive/file.csv")
+          job = Struct.new(:upload_file_name).new("sftp://user:secret@sftp.example.org:port/archive/file.csv")
 
           assert_equal "(not a valid path)", job_upload_file_name(job)
         end

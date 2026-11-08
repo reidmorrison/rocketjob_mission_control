@@ -100,8 +100,8 @@ module RocketJobMissionControl
       dirmon_entry_replicate = RocketJob::DirmonEntry.new(@dirmon_entry.dup.attributes.except("id"))
 
       if (properties = params[:rocket_job_dirmon_entry][:properties])
-        dirmon_entry_replicate.properties = JobSanitizer.sanitize(properties, dirmon_entry_replicate.job_class, @dirmon_entry,
-                                                                  false)
+        sanitized = DirmonSanitizer.sanitize_properties(properties, dirmon_entry_replicate.job_class, @dirmon_entry)
+        dirmon_entry_replicate.properties = DirmonSanitizer.update_properties(properties, sanitized, @dirmon_entry)
       end
 
       if dirmon_entry_replicate.update(dirmon_params)

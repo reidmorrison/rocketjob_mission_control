@@ -6,6 +6,17 @@ module RocketJobMissionControl
     # clears a value that was set.
     CLEARABLE_CATEGORY_FIELDS = %i[schema].freeze
 
+    # The param that the job and Dirmon entry forms post each kind of category in, by the property that holds those
+    # categories, with their class.
+    CATEGORY_PARAMS = {
+      input_categories:  [:input_categories_attributes, RocketJob::Category::Input],
+      output_categories: [:output_categories_attributes, RocketJob::Category::Output]
+    }.freeze
+
+    # A category that a form posted, see .posted_categories: the property that holds it, such as :input_categories,
+    # its class, its name, and the names of its fields that the form posted.
+    PostedCategory = Struct.new(:property, :category_class, :name, :fields)
+
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
     # Parameters
     #   properties [Hash]
@@ -52,19 +63,34 @@ module RocketJobMissionControl
         end
       end
 
-      if properties.key?(:input_categories_attributes)
-        categories = sanitize_categories(properties[:input_categories_attributes], RocketJob::Category::Input, nil_blank,
-                                         target)
-        permissible_params[:input_categories] = categories unless categories == [{}]
-      end
+      CATEGORY_PARAMS.each_pair do |property, (param, category_class)|
+        next unless properties.key?(param)
 
-      if properties.key?(:output_categories_attributes)
-        categories = sanitize_categories(properties[:output_categories_attributes], RocketJob::Category::Output, nil_blank,
-                                         target)
-        permissible_params[:output_categories] = categories unless categories == [{}]
+        categories = sanitize_categories(properties[param], category_class, nil_blank, target)
+        permissible_params[property] = categories unless categories == [{}]
       end
 
       permissible_params
+    end
+
+    # Returns [Array<Symbol>] the user editable fields of the supplied job class that the supplied properties of a form
+    # post, see .sanitize, also those posted blank, which .sanitize can leave out.
+    def self.posted_fields(properties, job_class)
+      job_class.user_editable_fields.select { |field_name| properties.key?(field_name) }
+    end
+
+    # Returns [Array<PostedCategory>] each category that the supplied properties of a form post, see .sanitize, with
+    # the names of its fields that the form posted, see CATEGORIES_FIELDS, also those posted blank, which .sanitize can
+    # leave out.
+    def self.posted_categories(properties)
+      CATEGORY_PARAMS.flat_map do |property, (param, category_class)|
+        next [] unless properties.key?(param)
+
+        properties[param].each_pair.map do |_, category|
+          fields = (CATEGORIES_FIELDS - %i[id name]).select { |key| category.key?(key) }
+          PostedCategory.new(property, category_class, (category[:name].presence || "main").to_s, fields)
+        end
+      end
     end
 
     # Returns [Array<Hash>] the permissible properties of each category of the supplied category class, see .sanitize

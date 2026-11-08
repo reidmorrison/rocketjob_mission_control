@@ -19,6 +19,19 @@ class DirmonSanitizerTest < Minitest::Test
       end
     end
 
+    # A job class that gives its category a schema.
+    class SchemaJob < RocketJob::Job
+      include RocketJob::Batch
+
+      SCHEMA = {"fields" => [{"name" => "name"}]}.freeze
+
+      input_category format: :csv, schema: SCHEMA
+
+      def perform(record)
+        record
+      end
+    end
+
     let :sample_job do
       SampleJob.new
     end
@@ -206,6 +219,20 @@ class DirmonSanitizerTest < Minitest::Test
 
         assert_equal [{"name" => "errors", "format" => "json"}, {"name" => "main", "format" => "json"}],
                      properties["output_categories"]
+      end
+
+      it "removes the options that the schema that the job class gives a category replaces" do
+        entry     = RocketJob::DirmonEntry.new(
+          name:           "Test",
+          job_class_name: SchemaJob.name,
+          pattern:        "the_path",
+          properties:     {"input_categories" => [{"name" => "main", "allowed_columns" => %w[name], "header_cleanser" => "none"}]}
+        )
+        # As the form posts it, with the schema of the job class.
+        posted    = {input_categories_attributes: {"0" => {name: "main", format: "csv", schema: SchemaJob::SCHEMA.to_json}}}
+        sanitized = RocketJobMissionControl::DirmonSanitizer.sanitize_properties(posted, SchemaJob, entry)
+
+        assert_empty RocketJobMissionControl::DirmonSanitizer.update_properties(posted, sanitized, entry)
       end
     end
   end

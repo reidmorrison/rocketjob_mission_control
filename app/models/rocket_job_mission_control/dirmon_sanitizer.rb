@@ -2,12 +2,6 @@ module RocketJobMissionControl
   module DirmonSanitizer
     DIRMON_FIELDS = %i[archive_directory job_class_name name pattern].freeze
 
-    # The params that the form posts each kind of category of a Dirmon entry's properties in.
-    CATEGORY_PARAMS = {
-      "input_categories"  => :input_categories_attributes,
-      "output_categories" => :output_categories_attributes
-    }.freeze
-
     def self.sanitize(params, job_class, target)
       permissible_params = {}
 
@@ -19,11 +13,17 @@ module RocketJobMissionControl
       end
 
       if params.key?(:properties)
-        properties                      = JobSanitizer.sanitize(params[:properties], job_class, target, false)
+        properties                      = sanitize_properties(params[:properties], job_class, target)
         permissible_params[:properties] = properties if properties.present?
       end
 
       permissible_params
+    end
+
+    # Returns [Hash] the supplied properties that a form posted, sanitized for a Dirmon entry, see JobSanitizer.sanitize,
+    # without those posted blank, which .update_properties removes from the entry.
+    def self.sanitize_properties(posted, job_class, target)
+      JobSanitizer.sanitize(posted, job_class, target, false)
     end
 
     # Returns [Hash] the properties of the supplied Dirmon entry with the changes that its form posted, see
@@ -33,27 +33,23 @@ module RocketJobMissionControl
     #
     # Parameters
     #   posted [Hash]
-    #     The properties that the form posted.
+    #     The properties that the form posted, see JobSanitizer.posted_fields and .posted_categories.
     #
     #   sanitized [Hash]
-    #     The same properties after .sanitize.
+    #     The same properties after .sanitize_properties.
     #
     #   dirmon_entry [RocketJob::DirmonEntry]
-    #     The entry being edited.
+    #     The entry whose properties the form shows, such as the one being edited or copied.
     def self.update_properties(posted, sanitized, dirmon_entry)
       properties = dirmon_entry.properties.to_h.deep_stringify_keys
       return properties if posted.blank?
 
       changes = diff_properties(sanitized, dirmon_entry).deep_stringify_keys
-      dirmon_entry.job_class.user_editable_fields.each do |name|
-        merge_property(properties, changes, name.to_s) if posted.key?(name)
+      JobSanitizer.posted_fields(posted, dirmon_entry.job_class).each do |name|
+        merge_property(properties, changes, name.to_s)
       end
-
-      CATEGORY_PARAMS.each_pair do |key, attributes|
-        next unless posted.key?(attributes)
-
-        categories = merge_categories(Array(properties[key]), posted[attributes], Array(changes[key]))
-        categories.empty? ? properties.delete(key) : properties[key] = categories
+      JobSanitizer.posted_categories(posted).each do |category|
+        merge_category(properties, category, changes, dirmon_entry.job_class)
       end
       properties
     end
@@ -106,30 +102,49 @@ module RocketJobMissionControl
       diff
     end
 
-    # Returns [Array<Hash>] the supplied saved categories with the changes that the form posted for each, see
-    # .update_properties. A saved category is found by its name, or is main without one, as a job reads it. A category
-    # left with only its name is removed, since a job then has the job class's category.
-    def self.merge_categories(categories, posted, changes)
-      categories = categories.dup
-      posted.each_pair do |_, category_params|
-        name     = (category_params[:name].presence || "main").to_s
-        change   = changes.find { |category| category["name"].to_s == name } || {}
-        index    = categories.index { |category| category.is_a?(Hash) && (category["name"] || "main").to_s == name }
-        category = index ? categories[index].dup : {"name" => name}
+    # Merges the changes that the form posted for the supplied category, see JobSanitizer.posted_categories, into the
+    # supplied properties, see .update_properties. A saved category is found by its name, or is main without one, as a
+    # job reads it, and is removed when it is left with only its name, since a job then has the job class's category.
+    #
+    # A category with a schema cannot have the options that the schema replaces, such as an input category's
+    # `allowed_columns`, see RocketJob::Category::Input.deprecated_column_options. Those that the form does not show are
+    # removed, since they could not be changed otherwise, so that giving a category a schema replaces them.
+    def self.merge_category(properties, posted, changes, job_class)
+      key        = posted.property.to_s
+      categories = Array(properties[key]).dup
+      change     = Array(changes[key]).find { |category| category["name"].to_s == posted.name } || {}
+      index      = categories.index { |category| category.is_a?(Hash) && (category["name"] || "main").to_s == posted.name }
+      category   = index ? categories[index].dup : {"name" => posted.name}
 
-        (JobSanitizer::CATEGORIES_FIELDS - %i[id name]).each do |field|
-          merge_property(category, change, field.to_s) if category_params.key?(field)
-        end
+      fields = posted.fields.map(&:to_s)
+      fields.each { |field| merge_property(category, change, field) }
+      remove_options_replaced_by_schema(category, posted, job_class)
 
-        if (category.keys - ["name"]).empty?
-          categories.delete_at(index) if index
-        elsif index
-          categories[index] = category
-        else
-          categories << category
-        end
+      if (category.keys - ["name"]).empty?
+        categories.delete_at(index) if index
+      elsif index
+        categories[index] = category
+      else
+        categories << category
       end
-      categories
+      categories.empty? ? properties.delete(key) : properties[key] = categories
+    end
+
+    # Removes the options that the schema of the supplied category replaces, see .merge_category: its own schema, or else
+    # the one that its job class gives it. Those that the form posted stay, such as an input category's `skip_unknown`,
+    # since it can change them.
+    def self.remove_options_replaced_by_schema(category, posted, job_class)
+      schema = category["schema"].presence || job_class_category(job_class, posted)&.schema
+      return if schema.blank?
+
+      replaced = posted.category_class.deprecated_column_options(category.merge("schema" => schema))
+      category.except!(*(replaced - posted.fields.map(&:to_s)))
+    end
+
+    # Returns [RocketJob::Category::Input|RocketJob::Category::Output] the category of a new job of the supplied class
+    # that the supplied posted category changes, see JobSanitizer.posted_categories, or nil when it has none.
+    def self.job_class_category(job_class, posted)
+      job_class.new.public_send(posted.property).find { |category| category.name.to_s == posted.name }
     end
 
     # Sets the supplied property to its change, or removes it when the form did not change it from the default.
@@ -141,6 +156,6 @@ module RocketJobMissionControl
       end
     end
 
-    private_class_method :merge_categories, :merge_property
+    private_class_method :merge_category, :remove_options_replaced_by_schema, :job_class_category, :merge_property
   end
 end

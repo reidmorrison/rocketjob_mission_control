@@ -7,7 +7,8 @@ gem "sprockets-rails"
 
 gem "iostreams" # , path: "../../iostreams"
 gem "rails_semantic_logger" # , path: "../../rails_semantic_logger"
-gem "rocketjob" # , path: "../../rocketjob"
+# Rocket Job 7.2 has not been released yet. Remove once it is published to rubygems.org.
+gem "rocketjob", github: "reidmorrison/rocketjob", branch: "v7" # path: "../../rocketjob"
 gem "rocketjob_mission_control", path: "../"
 
 group :development do

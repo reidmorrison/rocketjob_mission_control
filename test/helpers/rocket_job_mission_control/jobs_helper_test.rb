@@ -72,6 +72,24 @@ module RocketJobMissionControl
         end
       end
 
+      describe "#job_category_file_name" do
+        let :job do
+          DataImportJob.new
+        end
+
+        it "shows the file name without its credentials" do
+          job.output_category.file_name = "sftp://user:secret@sftp.example.org/out/data.csv"
+
+          assert_equal "sftp://sftp.example.org/out/data.csv", job_category_file_name(job.output_category)
+        end
+
+        it "shows a local file name as is" do
+          job.input_category.file_name = "data.csv"
+
+          assert_equal "data.csv", job_category_file_name(job.input_category)
+        end
+      end
+
       describe "#job_custom_fields" do
         let :job do
           RocketJob::Jobs::CopyFileJob.new(

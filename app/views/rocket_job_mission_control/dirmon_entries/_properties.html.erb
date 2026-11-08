@@ -2,9 +2,10 @@
 <div class='row'>
   <div class='col-md-12'>
     <table>
-      <% @dirmon_entry.properties.keys.sort.each do |key| %>
+      <% properties = @dirmon_entry.display_properties %>
+      <% properties.keys.sort.each do |key| %>
         <%
-          value = @dirmon_entry.properties[key]
+          value = properties[key]
           key = key.to_s.titleize
         %>
         <tr>

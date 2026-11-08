@@ -3,6 +3,16 @@ require_relative "../../compare_hashes"
 
 module RocketJobMissionControl
   class DirmonEntriesControllerTest < ActionController::TestCase
+    # A job that a Dirmon entry can start, since it receives the file in `full_file_name`, with a path in its
+    # properties, which can include credentials.
+    class CopyToJob < RocketJob::Job
+      field :full_file_name, type: String
+      field :target_url, type: String, user_editable: true, path: true
+
+      def perform
+      end
+    end
+
     describe DirmonEntriesController do
       before do
         set_role(:admin)
@@ -462,6 +472,23 @@ module RocketJobMissionControl
           it "shows them without the credentials" do
             assert_includes response.body, "sftp://sftp.example.org/in/*.csv"
             assert_includes response.body, "sftp://sftp.example.org/archive"
+            assert_not_includes response.body, "secret"
+          end
+        end
+
+        describe "with credentials in a path of its properties" do
+          before do
+            entry = RocketJob::DirmonEntry.create!(
+              name:           "Copy test",
+              job_class_name: CopyToJob.name,
+              pattern:        "copy_path",
+              properties:     {"target_url" => "sftp://user:secret@sftp.example.org/out/data.csv"}
+            )
+            get :show, params: {id: entry.id}
+          end
+
+          it "shows the path without the credentials" do
+            assert_includes response.body, "sftp://sftp.example.org/out/data.csv"
             assert_not_includes response.body, "secret"
           end
         end

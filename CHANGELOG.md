@@ -14,9 +14,11 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
   Previously the copy kept the state of the original, and why it failed.
 - The job and Dirmon entry forms edit an input category's `validate_rows` in place of its `mode`,
   which Rocket Job 7.2 deprecates and Rocket Job 8 removes: `validate_rows: true` replaces `mode: :hash`,
-  and parses each line of a file while it is uploaded. Left blank, it uses the job class's setting. A
-  category without it whose upload validates its lines anyway, such as one saved with `mode: :hash` and
-  a schema, shows it as true, as Rocket Job 8 reads it. The `mode` is kept as it is saved. The job
+  and parses each line of a file while it is uploaded. Left blank, it is cleared on a job, and left to
+  the job class on a Dirmon entry. A category without it whose upload validates its lines anyway, such
+  as one with `mode: :hash` and a schema, shows it as true, as Rocket Job 8 reads it. Editing a Dirmon
+  entry saves that true only when the entry's own properties, such as a saved `mode: :hash`, are what
+  validate the lines, rather than its job class. The `mode` is kept as it is saved. The job
   details page shows "Validate Rows" when an upload validates the lines, rather than the `mode`.
 
 ### Security

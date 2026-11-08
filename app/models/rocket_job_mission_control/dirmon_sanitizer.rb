@@ -109,6 +109,9 @@ module RocketJobMissionControl
     # A category with a schema cannot have the options that the schema replaces, such as an input category's
     # `allowed_columns`, see RocketJob::Category::Input.deprecated_column_options. Those that the form does not show are
     # removed, since they could not be changed otherwise, so that giving a category a schema replaces them.
+    #
+    # A validate_rows of true that the form shows for a category that its job class already validates is removed, see
+    # .remove_inherited_validate_rows.
     def self.merge_category(properties, posted, changes, job_class)
       key        = posted.property.to_s
       categories = Array(properties[key]).dup
@@ -119,6 +122,7 @@ module RocketJobMissionControl
       fields = posted.fields.map(&:to_s)
       fields.each { |field| merge_property(category, change, field) }
       remove_options_replaced_by_schema(category, posted, job_class)
+      remove_inherited_validate_rows(category, posted, job_class)
 
       if (category.keys - ["name"]).empty?
         categories.delete_at(index) if index
@@ -147,6 +151,28 @@ module RocketJobMissionControl
       job_class.new.public_send(posted.property).find { |category| category.name.to_s == posted.name }
     end
 
+    # Removes the validate_rows of true that the form shows for an input category that validates its lines without it,
+    # see ApplicationHelper#validate_rows_select, when its job class with the fields that the form shows already
+    # validates them, such as a job class that defines the category in the deprecated :hash mode, so that the entry keeps
+    # following its job class. It is kept when the entry's own properties that the form does not show are what validate
+    # them, such as a saved :hash mode, or would stop it, such as a mode of their own.
+    def self.remove_inherited_validate_rows(category, posted, job_class)
+      return unless category["validate_rows"] == true && posted.fields.include?(:validate_rows)
+
+      without = category.except("validate_rows")
+      shown   = without.slice("name", *posted.fields.map(&:to_s))
+      return unless validates_rows?(job_class, posted, shown) && validates_rows?(job_class, posted, without)
+
+      category.delete("validate_rows")
+    end
+
+    # Returns [true|false] whether a job of the supplied class, built with the supplied properties of the posted input
+    # category, validates the lines of each file that it uploads, see RocketJob::Category::Input#upload_validates_rows?.
+    def self.validates_rows?(job_class, posted, category)
+      job = job_class.from_properties(posted.property.to_s => [category])
+      job.input_category(posted.name.to_sym).upload_validates_rows?
+    end
+
     # Sets the supplied property to its change, or removes it when the form did not change it from the default.
     def self.merge_property(properties, changes, key)
       if changes.key?(key)
@@ -156,6 +182,7 @@ module RocketJobMissionControl
       end
     end
 
-    private_class_method :merge_category, :remove_options_replaced_by_schema, :job_class_category, :merge_property
+    private_class_method :merge_category, :remove_options_replaced_by_schema, :job_class_category,
+                         :remove_inherited_validate_rows, :validates_rows?, :merge_property
   end
 end

@@ -68,10 +68,11 @@ module RocketJobMissionControl
 
     def update
       authorize! :update, @dirmon_entry
-      sanitized_params = DirmonSanitizer.sanitize(params[:rocket_job_dirmon_entry], @dirmon_entry.job_class, @dirmon_entry)
-      properties       = DirmonSanitizer.diff_properties(sanitized_params[:properties], @dirmon_entry)
+      entry_params     = params[:rocket_job_dirmon_entry]
+      sanitized_params = DirmonSanitizer.sanitize(entry_params, @dirmon_entry.job_class, @dirmon_entry)
 
-      sanitized_params[:properties] = properties
+      sanitized_params[:properties] =
+        DirmonSanitizer.update_properties(entry_params[:properties], sanitized_params[:properties], @dirmon_entry)
 
       if @dirmon_entry.errors.empty? && @dirmon_entry.valid? && @dirmon_entry.update(sanitized_params)
         redirect_to(rocket_job_mission_control.dirmon_entry_path(@dirmon_entry))

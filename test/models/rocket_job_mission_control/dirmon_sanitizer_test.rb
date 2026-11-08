@@ -154,5 +154,59 @@ class DirmonSanitizerTest < Minitest::Test
         assert_empty RocketJobMissionControl::DirmonSanitizer.diff_properties(nil, dirmon_entry)
       end
     end
+
+    describe ".update_properties" do
+      let :saved_entry do
+        RocketJob::DirmonEntry.new(
+          name:           "Test",
+          job_class_name: job_class_name,
+          pattern:        "the_path",
+          properties:     {
+            "client_name"       => "Jack",
+            "zip_code"          => 12_345,
+            "input_categories"  => [{"format" => "json", "allowed_columns" => %w[name]}],
+            "output_categories" => [{"name" => "errors", "format" => "json"}]
+          }
+        )
+      end
+
+      def update_properties(posted)
+        sanitized = RocketJobMissionControl::DirmonSanitizer.sanitize({properties: posted}, SampleJob, saved_entry)[:properties]
+        RocketJobMissionControl::DirmonSanitizer.update_properties(posted, sanitized, saved_entry)
+      end
+
+      it "keeps every property without any posted" do
+        assert_equal saved_entry.properties, RocketJobMissionControl::DirmonSanitizer.update_properties(nil, nil, saved_entry)
+      end
+
+      it "sets a posted property, and keeps those not posted" do
+        expected = saved_entry.properties.merge("client_name" => "Jill")
+
+        assert_equal expected, update_properties({client_name: "Jill"})
+      end
+
+      it "removes a posted property that is blank" do
+        assert_equal saved_entry.properties.except("client_name"), update_properties({client_name: ""})
+      end
+
+      it "finds a category without a name as main, and keeps what was not posted" do
+        properties = update_properties(input_categories_attributes: {"0" => {name: "main", format: "psv"}})
+
+        assert_equal [{"format" => "psv", "allowed_columns" => %w[name]}], properties["input_categories"]
+      end
+
+      it "removes a category left with only its name" do
+        properties = update_properties(output_categories_attributes: {"0" => {name: "errors", format: "csv"}})
+
+        assert_not properties.key?("output_categories")
+      end
+
+      it "adds a category that was not saved" do
+        properties = update_properties(output_categories_attributes: {"0" => {name: "main", format: "json"}})
+
+        assert_equal [{"name" => "errors", "format" => "json"}, {"name" => "main", "format" => "json"}],
+                     properties["output_categories"]
+      end
+    end
   end
 end

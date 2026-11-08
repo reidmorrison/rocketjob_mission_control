@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - The job and Dirmon entry forms save the line breaks of a text field as `\n`. Previously they were
   saved as the `\r\n` that a browser posts, except when editing a Dirmon entry.
+- Editing a Dirmon entry keeps the properties that its form does not show, such as an input category's
+  `allowed_columns`, `header_cleanser` or `file_name`, or an output category's `nils`. Previously the
+  entry was saved with only what the form posted, so they were lost, and a form that posted no
+  properties, such as for a job class without user editable fields, removed them all. A property that
+  the form shows is still removed when it is cleared, or set to the job class's default.
 
 ## [7.1.0] 2026-11-07
 

@@ -132,6 +132,18 @@ class JobSanitizerTest < Minitest::Test
                      RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", schema: ""}})
       end
 
+      it "removes the blank entry that a multi-select posts from the columns" do
+        properties = {"0" => {name: "main", columns: ["", "name", "age"]}}
+
+        assert_equal [{name: "main", columns: %w[name age]}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
+      end
+
+      it "leaves out columns with none selected" do
+        assert_equal [{name: "main"}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", columns: [""]}})
+      end
+
       it "leaves out a schema that is not valid JSON, and sets the error" do
         properties = {"0" => {name: "main", schema: "{ bad json"}}
 

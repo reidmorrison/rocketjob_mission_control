@@ -76,11 +76,12 @@ module RocketJobMissionControl
           next unless category.key?(key)
 
           value = category[key]
+          # A multi-select posts a blank entry, so that it is posted even with nothing selected.
+          value = value.compact_blank if key == :columns && value.is_a?(Array)
           if value.blank?
             hash[key] = nil if nil_blank && CLEARABLE_CATEGORY_FIELDS.include?(key)
             next
           end
-          next if (key == :columns) && value == [""]
 
           value = JSON.parse(value) if key == :format_options
           if key == :schema

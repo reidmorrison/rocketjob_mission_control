@@ -66,7 +66,7 @@ class DirmonSanitizerTest < Minitest::Test
         cleansed = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
 
         assert_equal 0, dirmon_entry.errors.count
-        expected = {archive_directory: "archive/path", job_class_name: "DirmonSanitizerTest::SampleJob", name: "Test2", pattern: "another/path", properties: {client_name: "Jack", zip_code: 12_345, input_categories: [{format: :json}], output_categories: [{name: :errors, format: :json}]}}
+        expected = {archive_directory: "archive/path", job_class_name: "DirmonSanitizerTest::SampleJob", name: "Test2", pattern: "another/path", properties: {client_name: "Jack", zip_code: 12_345, input_categories: [{format: "json"}], output_categories: [{name: "errors", format: "json"}]}}
 
         assert_equal expected, cleansed
       end

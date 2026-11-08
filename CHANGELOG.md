@@ -14,6 +14,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   entry was saved with only what the form posted, so they were lost, and a form that posted no
   properties, such as for a job class without user editable fields, removed them all. A property that
   the form shows is still removed when it is cleared, or set to the job class's default.
+- A Dirmon entry saves a category's values with the type of their field, such as `skip_unknown` as a
+  Boolean and `slice_size` as an Integer. Previously they were saved as the text that the form posts,
+  such as `"true"` and `"10"`.
 
 ## [7.1.0] 2026-11-07
 

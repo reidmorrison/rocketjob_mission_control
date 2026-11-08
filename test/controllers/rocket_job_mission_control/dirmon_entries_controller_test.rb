@@ -269,6 +269,12 @@ module RocketJobMissionControl
             assert_equal "json", properties["output_categories"].first["format"]
           end
 
+          it "saves each category value with the type of its field" do
+            input = update_properties(form_properties)["input_categories"].first
+
+            assert_equal [true, 10], input.values_at("skip_unknown", "slice_size")
+          end
+
           it "removes a property that its form clears" do
             form_properties[:region] = ""
             form_properties[:input_categories_attributes]["0"][:columns] = [""]

@@ -2,6 +2,10 @@ source "https://rubygems.org"
 
 gemspec
 
+# Rocket Job 7.2 has not been released yet, so bundle it from its release branch, v7, whose main branch is Rocket
+# Job 8. Remove once 7.2.0 is published to rubygems.org, which the gemspec already requires.
+gem "rocketjob", github: "reidmorrison/rocketjob", branch: "v7"
+
 gem "minitest", "~> 5.0"
 gem "mongoid", "~> 9.1.0"
 gem "rails", "~> 8.1.0"

@@ -10,6 +10,22 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
 ### Breaking changes
 
 - Depend on `rocketjob` ~> 7.2.
+- Replicating a Dirmon entry creates a pending entry, through Rocket Job's `DirmonEntry#replicate`.
+  Previously the copy kept the state of the original, and why it failed.
+
+### Security
+
+- Paths are shown without the user name, password or query of a url, such as
+  `sftp://user:password@host/file.csv`, as Rocket Job 7.2 shows them: the upload file name on the job
+  details page, and in the log entry for an edited or deleted record of a failed slice, the job's path
+  and url attributes, such as the `source_url` and `target_url` of a `CopyFileJob`, the secrets in a
+  `CopyFileJob`'s arguments and streams, such as an SFTP password or PGP passphrase, the paths in an
+  `UploadFileJob`'s properties, the file name of each input and output category and the path or url of
+  its schema, and a Dirmon entry's pattern, archive directory and the paths in its properties, on its
+  details page and in the Dirmon entries list. A value that Rocket Job cannot read as a path is shown
+  as stored, or as `(not a valid path)` when it holds an `@` or a `?`, which could be credentials. The
+  edit and copy forms still show the full value, so that it can be changed. Mission Control 7.0 and 7.1
+  showed them as stored.
 
 ### Fixes
 
@@ -35,28 +51,13 @@ category.
 ### Breaking changes
 
 - Depend on `rocketjob` ~> 7.1, which requires IOStreams 2.2.
-- Replicating a Dirmon entry creates a pending entry. Previously the copy kept the state of the
-  original, and why it failed.
-
-### Security
-
-- Paths are shown without the user name, password or query of a url, such as
-  `sftp://user:password@host/file.csv`: the upload file name on the job details page, the job's
-  path and url attributes, such as the `source_url` and `target_url` of a `CopyFileJob`, the secrets in
-  a `CopyFileJob`'s arguments and streams, such as an SFTP password or PGP passphrase, the paths in an
-  `UploadFileJob`'s properties, the file name of each input and output category, and a Dirmon entry's
-  pattern, archive directory and the paths in its properties, on its details page and in the Dirmon
-  entries list. A value
-  that is not a valid path is shown as `(not a valid path)`. The edit and copy forms still show the
-  full value, so that it can be changed.
 
 ### New features
 
 - The job and Dirmon entry forms, and the job details page, show the `schema` of each input and output category,
   which describes the fields of its files and the type of each one: a schema as JSON, or the path or url of the
-  JSON file that holds it, which the job details page shows without its user name, password or query. A schema is
-  edited as JSON, or as such a path or url, and cleared when it is left blank. JSON that is not valid is reported,
-  and the schema is not changed.
+  JSON file that holds it. A schema is edited as JSON, or as such a path or url, and cleared when it is left blank.
+  JSON that is not valid is reported, and the schema is not changed.
 - The job form shows why each category is not valid, such as a schema that is not valid, in that category.
   Previously it only said that the categories were not valid.
 
@@ -74,7 +75,6 @@ category.
   and edited, as MongoDB Extended JSON, so that values such as a time keep their types.
 - Deleting a record of a failed slice only removes that record. Previously it removed every record in
   the slice that was equal to it.
-- The log entry for an edited or deleted record shows the job's upload file name without any credentials.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
 
 ### Internal

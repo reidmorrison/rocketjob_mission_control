@@ -3,6 +3,16 @@ require_relative "../../compare_hashes"
 
 module RocketJobMissionControl
   class DirmonEntriesControllerTest < ActionController::TestCase
+    # A job that a Dirmon entry can start, since it receives the file in `full_file_name`, with a path in its
+    # properties, which can include credentials.
+    class CopyToJob < RocketJob::Job
+      field :full_file_name, type: String
+      field :target_url, type: String, user_editable: true, path: true
+
+      def perform
+      end
+    end
+
     describe DirmonEntriesController do
       before do
         set_role(:admin)
@@ -19,6 +29,15 @@ module RocketJobMissionControl
           name:           "Existing path test",
           job_class_name: job_class_name,
           pattern:        "existing_path"
+        )
+      end
+
+      let :sftp_dirmon_entry do
+        RocketJob::DirmonEntry.create!(
+          name:              "SFTP path test",
+          job_class_name:    job_class_name,
+          pattern:           "sftp://user:secret@sftp.example.org/in/*.csv",
+          archive_directory: "sftp://user:secret@sftp.example.org/archive"
         )
       end
 
@@ -444,6 +463,70 @@ module RocketJobMissionControl
             assert_predicate assigns(:dirmon_entry), :present?
           end
         end
+
+        describe "with credentials in its pattern and archive directory" do
+          before do
+            get :show, params: {id: sftp_dirmon_entry.id}
+          end
+
+          it "shows them without the credentials" do
+            assert_includes response.body, "sftp://sftp.example.org/in/*.csv"
+            assert_includes response.body, "sftp://sftp.example.org/archive"
+            assert_not_includes response.body, "secret"
+          end
+        end
+
+        describe "with credentials in a path of its properties" do
+          before do
+            entry = RocketJob::DirmonEntry.create!(
+              name:           "Copy test",
+              job_class_name: CopyToJob.name,
+              pattern:        "copy_path",
+              properties:     {"target_url" => "sftp://user:secret@sftp.example.org/out/data.csv"}
+            )
+            get :show, params: {id: entry.id}
+          end
+
+          it "shows the path without the credentials" do
+            assert_includes response.body, "sftp://sftp.example.org/out/data.csv"
+            assert_not_includes response.body, "secret"
+          end
+        end
+      end
+
+      describe "GET #index json with credentials in a pattern" do
+        before do
+          sftp_dirmon_entry
+          get :index, format: :json
+        end
+
+        it "shows the pattern without the credentials" do
+          row = JSON.parse(response.body)["data"].first
+
+          assert_equal "sftp://sftp.example.org/in/*.csv", row["2"]
+          assert_not_includes response.body, "secret"
+        end
+      end
+
+      describe "GET #index json searching a pattern with credentials" do
+        def records_found(role, term)
+          set_role(role)
+          get :index, format: :json, params: {search: {value: term}}
+          JSON.parse(response.body)["recordsFiltered"]
+        end
+
+        before do
+          sftp_dirmon_entry
+        end
+
+        it "searches the pattern for a role that can edit an entry" do
+          assert_equal 1, records_found(:dirmon, "user:secret")
+        end
+
+        it "does not search the pattern for a role that cannot see it as stored" do
+          assert_equal 0, records_found(:view, "user:s")
+          assert_equal 1, records_found(:view, "SFTP path")
+        end
       end
 
       describe "DELETE #destroy" do
@@ -533,6 +616,23 @@ module RocketJobMissionControl
               },
               copy.properties
             )
+          end
+        end
+
+        describe "of an enabled entry" do
+          before do
+            existing_dirmon_entry.enable!
+            patch :replicate, params: {
+              id:                      existing_dirmon_entry.id,
+              rocket_job_dirmon_entry: {name: "Replicated entry", pattern: "replicated_path", properties: {}}
+            }
+          end
+
+          it "creates a pending copy" do
+            new_entry = RocketJob::DirmonEntry.where(name: "Replicated entry").first
+
+            assert_predicate new_entry, :pending?
+            assert_equal job_class_name, new_entry.job_class_name
           end
         end
 

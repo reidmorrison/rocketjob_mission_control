@@ -116,9 +116,6 @@ module RocketJobMissionControl
           end
 
           value = JSON.parse(value) if key == :format_options
-          # The Boolean that validate_rows holds, rather than the "true" or "false" of the form, since a Dirmon entry
-          # saves its properties as they are.
-          value = value.to_s == "true" if key == :validate_rows
           if key == :schema
             value = sanitize_schema(value, target)
             next if value.nil?

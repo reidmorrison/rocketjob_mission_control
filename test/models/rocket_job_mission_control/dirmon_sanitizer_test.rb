@@ -19,6 +19,19 @@ class DirmonSanitizerTest < Minitest::Test
       end
     end
 
+    # A job class that gives its category a schema.
+    class SchemaJob < RocketJob::Job
+      include RocketJob::Batch
+
+      SCHEMA = {"fields" => [{"name" => "name"}]}.freeze
+
+      input_category format: :csv, schema: SCHEMA
+
+      def perform(record)
+        record
+      end
+    end
+
     let :sample_job do
       SampleJob.new
     end
@@ -66,7 +79,7 @@ class DirmonSanitizerTest < Minitest::Test
         cleansed = RocketJobMissionControl::DirmonSanitizer.sanitize(params, SampleJob, dirmon_entry)
 
         assert_equal 0, dirmon_entry.errors.count
-        expected = {archive_directory: "archive/path", job_class_name: "DirmonSanitizerTest::SampleJob", name: "Test2", pattern: "another/path", properties: {client_name: "Jack", zip_code: 12_345, input_categories: [{format: :json}], output_categories: [{name: :errors, format: :json}]}}
+        expected = {archive_directory: "archive/path", job_class_name: "DirmonSanitizerTest::SampleJob", name: "Test2", pattern: "another/path", properties: {client_name: "Jack", zip_code: 12_345, input_categories: [{format: "json"}], output_categories: [{name: "errors", format: "json"}]}}
 
         assert_equal expected, cleansed
       end
@@ -152,6 +165,74 @@ class DirmonSanitizerTest < Minitest::Test
 
       it "is empty without properties, such as when only the pattern of an entry for a batch job changed" do
         assert_empty RocketJobMissionControl::DirmonSanitizer.diff_properties(nil, dirmon_entry)
+      end
+    end
+
+    describe ".update_properties" do
+      let :saved_entry do
+        RocketJob::DirmonEntry.new(
+          name:           "Test",
+          job_class_name: job_class_name,
+          pattern:        "the_path",
+          properties:     {
+            "client_name"       => "Jack",
+            "zip_code"          => 12_345,
+            "input_categories"  => [{"format" => "json", "allowed_columns" => %w[name]}],
+            "output_categories" => [{"name" => "errors", "format" => "json"}]
+          }
+        )
+      end
+
+      def update_properties(posted)
+        sanitized = RocketJobMissionControl::DirmonSanitizer.sanitize({properties: posted}, SampleJob, saved_entry)[:properties]
+        RocketJobMissionControl::DirmonSanitizer.update_properties(posted, sanitized, saved_entry)
+      end
+
+      it "keeps every property without any posted" do
+        assert_equal saved_entry.properties, RocketJobMissionControl::DirmonSanitizer.update_properties(nil, nil, saved_entry)
+      end
+
+      it "sets a posted property, and keeps those not posted" do
+        expected = saved_entry.properties.merge("client_name" => "Jill")
+
+        assert_equal expected, update_properties({client_name: "Jill"})
+      end
+
+      it "removes a posted property that is blank" do
+        assert_equal saved_entry.properties.except("client_name"), update_properties({client_name: ""})
+      end
+
+      it "finds a category without a name as main, and keeps what was not posted" do
+        properties = update_properties(input_categories_attributes: {"0" => {name: "main", format: "psv"}})
+
+        assert_equal [{"format" => "psv", "allowed_columns" => %w[name]}], properties["input_categories"]
+      end
+
+      it "removes a category left with only its name" do
+        properties = update_properties(output_categories_attributes: {"0" => {name: "errors", format: "csv"}})
+
+        assert_not properties.key?("output_categories")
+      end
+
+      it "adds a category that was not saved" do
+        properties = update_properties(output_categories_attributes: {"0" => {name: "main", format: "json"}})
+
+        assert_equal [{"name" => "errors", "format" => "json"}, {"name" => "main", "format" => "json"}],
+                     properties["output_categories"]
+      end
+
+      it "removes the options that the schema that the job class gives a category replaces" do
+        entry     = RocketJob::DirmonEntry.new(
+          name:           "Test",
+          job_class_name: SchemaJob.name,
+          pattern:        "the_path",
+          properties:     {"input_categories" => [{"name" => "main", "allowed_columns" => %w[name], "header_cleanser" => "none"}]}
+        )
+        # As the form posts it, with the schema of the job class.
+        posted    = {input_categories_attributes: {"0" => {name: "main", format: "csv", schema: SchemaJob::SCHEMA.to_json}}}
+        sanitized = RocketJobMissionControl::DirmonSanitizer.sanitize_properties(posted, SchemaJob, entry)
+
+        assert_empty RocketJobMissionControl::DirmonSanitizer.update_properties(posted, sanitized, entry)
       end
     end
   end

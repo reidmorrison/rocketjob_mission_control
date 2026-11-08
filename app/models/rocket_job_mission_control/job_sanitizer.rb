@@ -6,6 +6,17 @@ module RocketJobMissionControl
     # clears a value that was set.
     CLEARABLE_CATEGORY_FIELDS = %i[schema].freeze
 
+    # The param that the job and Dirmon entry forms post each kind of category in, by the property that holds those
+    # categories, with their class.
+    CATEGORY_PARAMS = {
+      input_categories:  [:input_categories_attributes, RocketJob::Category::Input],
+      output_categories: [:output_categories_attributes, RocketJob::Category::Output]
+    }.freeze
+
+    # A category that a form posted, see .posted_categories: the property that holds it, such as :input_categories,
+    # its class, its name, and the names of its fields that the form posted.
+    PostedCategory = Struct.new(:property, :category_class, :name, :fields)
+
     # Returns [Hash] the permissible params for the specified job class, after sanitizing.
     # Parameters
     #   properties [Hash]
@@ -52,22 +63,43 @@ module RocketJobMissionControl
         end
       end
 
-      if properties.key?(:input_categories_attributes)
-        categories = sanitize_categories(properties[:input_categories_attributes], nil_blank, target)
-        permissible_params[:input_categories] = categories unless categories == [{}]
-      end
+      CATEGORY_PARAMS.each_pair do |property, (param, category_class)|
+        next unless properties.key?(param)
 
-      if properties.key?(:output_categories_attributes)
-        categories = sanitize_categories(properties[:output_categories_attributes], nil_blank, target)
-        permissible_params[:output_categories] = categories unless categories == [{}]
+        categories = sanitize_categories(properties[param], category_class, nil_blank, target)
+        permissible_params[property] = categories unless categories == [{}]
       end
 
       permissible_params
     end
 
-    # Returns [Array<Hash>] the permissible properties of each category, see .sanitize for `nil_blank`, which only
-    # applies to the CLEARABLE_CATEGORY_FIELDS, and `target`, which gets the error of a schema that is not valid JSON.
-    def self.sanitize_categories(properties, nil_blank = true, target = nil)
+    # Returns [Array<Symbol>] the user editable fields of the supplied job class that the supplied properties of a form
+    # post, see .sanitize, also those posted blank, which .sanitize can leave out.
+    def self.posted_fields(properties, job_class)
+      job_class.user_editable_fields.select { |field_name| properties.key?(field_name) }
+    end
+
+    # Returns [Array<PostedCategory>] each category that the supplied properties of a form post, see .sanitize, with
+    # the names of its fields that the form posted, see CATEGORIES_FIELDS, also those posted blank, which .sanitize can
+    # leave out.
+    def self.posted_categories(properties)
+      CATEGORY_PARAMS.flat_map do |property, (param, category_class)|
+        next [] unless properties.key?(param)
+
+        properties[param].each_pair.map do |_, category|
+          fields = (CATEGORIES_FIELDS - %i[id name]).select { |key| category.key?(key) }
+          PostedCategory.new(property, category_class, (category[:name].presence || "main").to_s, fields)
+        end
+      end
+    end
+
+    # Returns [Array<Hash>] the permissible properties of each category of the supplied category class, see .sanitize
+    # for `nil_blank`, which only applies to the CLEARABLE_CATEGORY_FIELDS, and `target`, which gets the error of a
+    # schema that is not valid JSON.
+    #
+    # Each value is converted by its field in the category class, such as a Boolean or an Integer rather than the text
+    # that the form posts, since a Dirmon entry saves its properties as they are given.
+    def self.sanitize_categories(properties, category_class, nil_blank = true, target = nil)
       categories = []
 
       properties.each_pair do |_, category|
@@ -76,18 +108,20 @@ module RocketJobMissionControl
           next unless category.key?(key)
 
           value = category[key]
+          # A multi-select posts a blank entry, so that it is posted even with nothing selected.
+          value = value.compact_blank if key == :columns && value.is_a?(Array)
           if value.blank?
             hash[key] = nil if nil_blank && CLEARABLE_CATEGORY_FIELDS.include?(key)
             next
           end
-          next if (key == :columns) && value == [""]
 
           value = JSON.parse(value) if key == :format_options
           if key == :schema
             value = sanitize_schema(value, target)
             next if value.nil?
           end
-          hash[key] = value
+          field     = category_class.fields[key.to_s]
+          hash[key] = field ? field.mongoize(value) : value
         end
         categories << hash
       end

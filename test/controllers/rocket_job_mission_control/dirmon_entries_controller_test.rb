@@ -193,6 +193,128 @@ module RocketJobMissionControl
             end
           end
         end
+
+        describe "for a batch job" do
+          let :saved_properties do
+            {
+              "region"            => "eu-west",
+              "input_categories"  => [
+                {
+                  "name"            => "main",
+                  "format"          => "psv",
+                  "columns"         => %w[name age],
+                  "skip_unknown"    => true,
+                  "allowed_columns" => %w[name age],
+                  "header_cleanser" => "none",
+                  "file_name"       => "sftp://user:secret@example.com/in.csv",
+                  "slice_size"      => 10
+                }
+              ],
+              "output_categories" => [{"name" => "main", "format" => "json", "nils" => true}]
+            }
+          end
+
+          let :entry do
+            RocketJob::DirmonEntry.create!(
+              name:           "Batch",
+              job_class_name: job_class_name,
+              pattern:        "batch/*.csv",
+              properties:     saved_properties
+            )
+          end
+
+          # The properties that the edit form posts for the entry, unchanged, see dirmon_entries/_form.html.erb.
+          let :form_properties do
+            {
+              description:                  "",
+              log_level:                    "",
+              priority:                     "50",
+              region:                       "eu-west",
+              throttle_group:               "",
+              throttle_running_workers:     "",
+              input_categories_attributes:  {
+                "0" => {name: "main", columns: ["", "name", "age"], format: "psv", schema: "", format_options: "",
+                        mode: "line", skip_unknown: "true", slice_size: "10"}
+              },
+              output_categories_attributes: {
+                "1" => {name: "main", columns: [""], format: "json", schema: "", format_options: ""}
+              }
+            }
+          end
+
+          def update_properties(properties)
+            patch :update, params: {id: entry.id, rocket_job_dirmon_entry: {name: "Renamed", properties: properties}}
+
+            assert_redirected_to dirmon_entry_path(entry)
+            entry.reload.properties
+          end
+
+          it "keeps the properties that its form does not show" do
+            properties = update_properties(form_properties)
+            input      = properties["input_categories"].first
+
+            assert_equal %w[name age], input["allowed_columns"]
+            assert_equal "none", input["header_cleanser"]
+            assert_equal "sftp://user:secret@example.com/in.csv", input["file_name"]
+            assert properties["output_categories"].first["nils"]
+          end
+
+          it "keeps the properties that its form shows" do
+            properties = update_properties(form_properties)
+            input      = properties["input_categories"].first
+
+            assert_equal "eu-west", properties["region"]
+            assert_equal "psv", input["format"]
+            assert_equal %w[name age], input["columns"]
+            assert_equal "json", properties["output_categories"].first["format"]
+          end
+
+          it "saves each category value with the type of its field" do
+            input = update_properties(form_properties)["input_categories"].first
+
+            assert_equal [true, 10], input.values_at("skip_unknown", "slice_size")
+          end
+
+          it "removes a property that its form clears" do
+            form_properties[:region] = ""
+            form_properties[:input_categories_attributes]["0"][:columns] = [""]
+            properties = update_properties(form_properties)
+            input      = properties["input_categories"].first
+
+            assert_not properties.key?("region")
+            assert_not input.key?("columns")
+            assert_equal %w[name age], input["allowed_columns"]
+          end
+
+          it "removes a property that its form sets to the job class's default" do
+            form_properties[:input_categories_attributes]["0"][:format]  = "csv"
+            form_properties[:output_categories_attributes]["1"][:format] = "csv"
+            properties = update_properties(form_properties)
+
+            assert_not properties["input_categories"].first.key?("format")
+            assert_equal({"name" => "main", "nils" => true}, properties["output_categories"].first)
+          end
+
+          it "removes the options that a schema replaces when its form gives a category a schema" do
+            form_properties[:input_categories_attributes]["0"][:schema]       = %({"fields": [{"name": "name"}]})
+            form_properties[:input_categories_attributes]["0"][:skip_unknown] = "false"
+            properties = update_properties(form_properties)
+            input      = properties["input_categories"].first
+
+            assert_equal({"fields" => [{"name" => "name"}]}, input["schema"])
+            assert_not input.key?("allowed_columns")
+            assert_not input.key?("header_cleanser")
+            assert_equal "sftp://user:secret@example.com/in.csv", input["file_name"]
+            assert_predicate DataImportJob.from_properties(properties).input_category, :valid?
+          end
+
+          it "keeps every property when its form posts none" do
+            patch :update, params: {id: entry.id, rocket_job_dirmon_entry: {name: "Renamed"}}
+
+            assert_equal "Renamed", entry.reload.name
+            assert_equal saved_properties, entry.properties
+          end
+        end
       end
 
       describe "POST #create" do
@@ -377,6 +499,40 @@ module RocketJobMissionControl
           it "creates a copy without destroying the original" do
             assert_predicate RocketJob::DirmonEntry.where(name: "Replicated entry"), :exists?
             assert_predicate RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id), :exists?
+          end
+        end
+
+        describe "for a batch job" do
+          let :batch_entry do
+            RocketJob::DirmonEntry.create!(
+              name:           "Batch",
+              job_class_name: job_class_name,
+              pattern:        "batch/*.csv",
+              properties:     {
+                "region"           => "eu-west",
+                "input_categories" => [{"name" => "main", "format" => "psv", "allowed_columns" => %w[name age]}]
+              }
+            )
+          end
+
+          it "keeps the properties that its form does not show, with those that it changes" do
+            patch :replicate, params: {
+              id:                      batch_entry.id,
+              rocket_job_dirmon_entry: {
+                name:       "Copied",
+                pattern:    "copied/*.csv",
+                properties: {region: "us-west", input_categories_attributes: {"0" => {name: "main", format: "psv"}}}
+              }
+            }
+            copy = RocketJob::DirmonEntry.where(name: "Copied").first
+
+            assert_equal(
+              {
+                "region"           => "us-west",
+                "input_categories" => [{"name" => "main", "format" => "psv", "allowed_columns" => %w[name age]}]
+              },
+              copy.properties
+            )
           end
         end
 

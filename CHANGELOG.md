@@ -9,6 +9,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - The job and Dirmon entry forms save the line breaks of a text field as `\n`. Previously they were
   saved as the `\r\n` that a browser posts, except when editing a Dirmon entry.
+- Editing or copying a Dirmon entry keeps the properties that its form does not show, such as an input
+  category's `allowed_columns`, `header_cleanser` or `file_name`, or an output category's `nils`.
+  Previously the entry was saved with only what the form posted, so they were lost, and an edit whose
+  form posted no properties, such as for a job class without user editable fields, removed them all. A
+  property that the form shows is still removed when it is cleared, or set to the job class's default.
+  A category with a schema, its own or its job class's, loses the options that the schema replaces
+  and that the form does not show, such as `allowed_columns`, since Rocket Job does not accept them
+  with one.
+- A Dirmon entry saves a category's values with the type of their field, such as `skip_unknown` as a
+  Boolean and `slice_size` as an Integer. Previously they were saved as the text that the form posts,
+  such as `"true"` and `"10"`.
 
 ## [7.1.0] 2026-11-07
 

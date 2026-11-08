@@ -734,12 +734,13 @@ module RocketJobMissionControl
           assert_includes response.body, "&quot;age&quot;"
         end
 
-        it "is shown as the path or url of its file" do
-          csv_job.input_category.schema = "s3://bucket/schemas/people.json"
+        it "is shown as the path or url of its file, without its password" do
+          csv_job.input_category.schema = "sftp://user:secret@host/schemas/people.json"
           csv_job.save!
           get :show, params: {id: csv_job.id}
 
-          assert_includes response.body, "s3://bucket/schemas/people.json"
+          assert_includes response.body, "sftp://host/schemas/people.json"
+          assert_not_includes response.body, "secret"
         end
 
         it "can be edited as JSON" do

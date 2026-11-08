@@ -40,8 +40,9 @@ category.
 
 - The job and Dirmon entry forms, and the job details page, show the `schema` of each input and output category,
   which describes the fields of its files and the type of each one: a schema as JSON, or the path or url of the
-  JSON file that holds it. A schema is edited as JSON, or as such a path or url, and cleared when it is left blank.
-  JSON that is not valid is reported, and the schema is not changed.
+  JSON file that holds it, which the job details page shows without its user name, password or query. A schema is
+  edited as JSON, or as such a path or url, and cleared when it is left blank. JSON that is not valid is reported,
+  and the schema is not changed.
 - The job form shows why each category is not valid, such as a schema that is not valid, in that category.
   Previously it only said that the categories were not valid.
 
@@ -59,6 +60,7 @@ category.
   and edited, as MongoDB Extended JSON, so that values such as a time keep their types.
 - Deleting a record of a failed slice only removes that record. Previously it removed every record in
   the slice that was equal to it.
+- The log entry for an edited or deleted record shows the job's upload file name without any credentials.
 - Remove a Ruby 4.0 frozen string literal warning when listing stopping servers.
 
 ### Internal

@@ -107,9 +107,10 @@ module RocketJobMissionControl
       (job.record_count.to_f / job.input_category.slice_size).ceil
     end
 
-    # The category's schema: its fields as a JSON tree, or the path or url of the JSON file that holds it.
+    # The category's schema: its fields as a JSON tree, or the path or url of the JSON file that holds it, without any
+    # credentials. The category decides how its schema is shown, see RocketJob::Category::Base.display_properties.
     def job_category_schema(category)
-      schema = category.schema
+      schema = category.class.display_properties("schema" => category.schema)["schema"]
       schema.is_a?(Hash) ? render_json_tree(schema) : schema
     end
 

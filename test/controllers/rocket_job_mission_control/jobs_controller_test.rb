@@ -828,6 +828,15 @@ module RocketJobMissionControl
           assert_select "select[name='job[input_categories_attributes][0][mode]']", 0
         end
 
+        it "is shown as true when the upload validates the rows without it" do
+          csv_job.input_category.mode   = :hash
+          csv_job.input_category.schema = {"fields" => [{"name" => "name"}]}
+          csv_job.save!
+          get :edit, params: {id: csv_job.id}
+
+          assert_select "select[name='job[input_categories_attributes][0][validate_rows]'] option[selected][value='true']"
+        end
+
         it "is saved" do
           update_validate_rows("true")
 

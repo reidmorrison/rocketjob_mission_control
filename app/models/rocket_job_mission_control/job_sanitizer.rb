@@ -53,21 +53,27 @@ module RocketJobMissionControl
       end
 
       if properties.key?(:input_categories_attributes)
-        categories = sanitize_categories(properties[:input_categories_attributes], nil_blank, target)
+        categories = sanitize_categories(properties[:input_categories_attributes], RocketJob::Category::Input, nil_blank,
+                                         target)
         permissible_params[:input_categories] = categories unless categories == [{}]
       end
 
       if properties.key?(:output_categories_attributes)
-        categories = sanitize_categories(properties[:output_categories_attributes], nil_blank, target)
+        categories = sanitize_categories(properties[:output_categories_attributes], RocketJob::Category::Output, nil_blank,
+                                         target)
         permissible_params[:output_categories] = categories unless categories == [{}]
       end
 
       permissible_params
     end
 
-    # Returns [Array<Hash>] the permissible properties of each category, see .sanitize for `nil_blank`, which only
-    # applies to the CLEARABLE_CATEGORY_FIELDS, and `target`, which gets the error of a schema that is not valid JSON.
-    def self.sanitize_categories(properties, nil_blank = true, target = nil)
+    # Returns [Array<Hash>] the permissible properties of each category of the supplied category class, see .sanitize
+    # for `nil_blank`, which only applies to the CLEARABLE_CATEGORY_FIELDS, and `target`, which gets the error of a
+    # schema that is not valid JSON.
+    #
+    # Each value is converted by its field in the category class, such as a Boolean or an Integer rather than the text
+    # that the form posts, since a Dirmon entry saves its properties as they are given.
+    def self.sanitize_categories(properties, category_class, nil_blank = true, target = nil)
       categories = []
 
       properties.each_pair do |_, category|
@@ -88,7 +94,8 @@ module RocketJobMissionControl
             value = sanitize_schema(value, target)
             next if value.nil?
           end
-          hash[key] = value
+          field     = category_class.fields[key.to_s]
+          hash[key] = field ? field.mongoize(value) : value
         end
         categories << hash
       end

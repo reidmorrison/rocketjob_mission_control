@@ -27,9 +27,10 @@ class JobSanitizerTest < Minitest::Test
       end
 
       it "replaces the \\r\\n line breaks that a browser posts with \\n" do
-        cleansed = RocketJobMissionControl::JobSanitizer.sanitize({string: "line 1\r\nline 2"}, @job.class, @job, false)
+        properties = {string: "line 1\r\nline 2", symbol: "line 1\r\nline 2"}
+        cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
 
-        assert_equal({string: "line 1\nline 2"}, cleansed)
+        assert_equal({string: "line 1\nline 2", symbol: "line 1\nline 2"}, cleansed)
       end
 
       it "strips blank values" do

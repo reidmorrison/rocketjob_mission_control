@@ -31,7 +31,7 @@ module RocketJobMissionControl
         next unless field&.type
 
         case field.type.name
-        when "String"
+        when "String", "Symbol", "Mongoid::StringifiedSymbol"
           value = value.gsub("\r\n", "\n")
         when "Hash"
           begin

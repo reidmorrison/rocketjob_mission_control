@@ -161,6 +161,13 @@ module RocketJobMissionControl
       params.fetch(:rocket_job_dirmon_entry, {}).permit(:name, :archive_directory, :pattern, :job_class_name, :properties)
     end
 
+    # The columns of the Dirmon entries list that its search box searches. A pattern can hold credentials, which the
+    # list leaves out, see RocketJob::DirmonEntry#pattern_display_name, so it is only searched for a role that can edit
+    # an entry, whose form shows the pattern as stored. Otherwise a search could find a password one letter at a time.
+    def dirmon_search_columns
+      can?(:edit, RocketJob::DirmonEntry) ? %i[job_class_name name pattern] : %i[job_class_name name]
+    end
+
     def render_datatable(entries, description)
       respond_to do |format|
         format.html do
@@ -170,7 +177,7 @@ module RocketJobMissionControl
 
         format.json do
           query                 = RocketJobMissionControl::Query.new(entries, name: :asc)
-          query.search_columns  = %i[job_class_name name pattern]
+          query.search_columns  = dirmon_search_columns
           query.display_columns = %w[name _type pattern]
           render(json: DirmonEntriesDatatable.new(view_context, query))
         end

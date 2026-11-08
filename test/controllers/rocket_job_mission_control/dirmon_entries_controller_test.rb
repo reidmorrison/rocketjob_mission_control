@@ -508,6 +508,27 @@ module RocketJobMissionControl
         end
       end
 
+      describe "GET #index json searching a pattern with credentials" do
+        def records_found(role, term)
+          set_role(role)
+          get :index, format: :json, params: {search: {value: term}}
+          JSON.parse(response.body)["recordsFiltered"]
+        end
+
+        before do
+          sftp_dirmon_entry
+        end
+
+        it "searches the pattern for a role that can edit an entry" do
+          assert_equal 1, records_found(:dirmon, "user:secret")
+        end
+
+        it "does not search the pattern for a role that cannot see it as stored" do
+          assert_equal 0, records_found(:view, "user:s")
+          assert_equal 1, records_found(:view, "SFTP path")
+        end
+      end
+
       describe "DELETE #destroy" do
         describe "with a valid id" do
           before do

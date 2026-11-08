@@ -295,6 +295,19 @@ module RocketJobMissionControl
             assert_equal({"name" => "main", "nils" => true}, properties["output_categories"].first)
           end
 
+          it "removes the options that a schema replaces when its form gives a category a schema" do
+            form_properties[:input_categories_attributes]["0"][:schema]       = %({"fields": [{"name": "name"}]})
+            form_properties[:input_categories_attributes]["0"][:skip_unknown] = "false"
+            properties = update_properties(form_properties)
+            input      = properties["input_categories"].first
+
+            assert_equal({"fields" => [{"name" => "name"}]}, input["schema"])
+            assert_not input.key?("allowed_columns")
+            assert_not input.key?("header_cleanser")
+            assert_equal "sftp://user:secret@example.com/in.csv", input["file_name"]
+            assert_predicate DataImportJob.from_properties(properties).input_category, :valid?
+          end
+
           it "keeps every property when its form posts none" do
             patch :update, params: {id: entry.id, rocket_job_dirmon_entry: {name: "Renamed"}}
 
@@ -486,6 +499,40 @@ module RocketJobMissionControl
           it "creates a copy without destroying the original" do
             assert_predicate RocketJob::DirmonEntry.where(name: "Replicated entry"), :exists?
             assert_predicate RocketJob::DirmonEntry.where(id: existing_dirmon_entry.id), :exists?
+          end
+        end
+
+        describe "for a batch job" do
+          let :batch_entry do
+            RocketJob::DirmonEntry.create!(
+              name:           "Batch",
+              job_class_name: job_class_name,
+              pattern:        "batch/*.csv",
+              properties:     {
+                "region"           => "eu-west",
+                "input_categories" => [{"name" => "main", "format" => "psv", "allowed_columns" => %w[name age]}]
+              }
+            )
+          end
+
+          it "keeps the properties that its form does not show, with those that it changes" do
+            patch :replicate, params: {
+              id:                      batch_entry.id,
+              rocket_job_dirmon_entry: {
+                name:       "Copied",
+                pattern:    "copied/*.csv",
+                properties: {region: "us-west", input_categories_attributes: {"0" => {name: "main", format: "psv"}}}
+              }
+            }
+            copy = RocketJob::DirmonEntry.where(name: "Copied").first
+
+            assert_equal(
+              {
+                "region"           => "us-west",
+                "input_categories" => [{"name" => "main", "format" => "psv", "allowed_columns" => %w[name age]}]
+              },
+              copy.properties
+            )
           end
         end
 

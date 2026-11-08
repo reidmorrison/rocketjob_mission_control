@@ -32,6 +32,32 @@ class DirmonSanitizerTest < Minitest::Test
       end
     end
 
+    # A job class whose category validates the lines of a file without validate_rows. Rocket Job reports the deprecated
+    # :hash mode while Ruby's deprecation warnings are on, as they are in tests.
+    deprecated           = Warning[:deprecated]
+    Warning[:deprecated] = false
+    class HashModeJob < RocketJob::Job
+      include RocketJob::Batch
+
+      input_category format: :csv, mode: :hash, schema: {"fields" => [{"name" => "name"}]}
+
+      def perform(record)
+        record
+      end
+    end
+
+    # A job class in the deprecated :hash mode without a schema, which validates the lines with the schema of an entry.
+    class HashModeWithoutSchemaJob < RocketJob::Job
+      include RocketJob::Batch
+
+      input_category format: :csv, mode: :hash
+
+      def perform(record)
+        record
+      end
+    end
+    Warning[:deprecated] = deprecated
+
     let :sample_job do
       SampleJob.new
     end
@@ -233,6 +259,39 @@ class DirmonSanitizerTest < Minitest::Test
         sanitized = RocketJobMissionControl::DirmonSanitizer.sanitize_properties(posted, SchemaJob, entry)
 
         assert_empty RocketJobMissionControl::DirmonSanitizer.update_properties(posted, sanitized, entry)
+      end
+
+      describe "validate_rows" do
+        def updated_categories(saved, value, job_class: HashModeJob, schema: "")
+          entry     = RocketJob::DirmonEntry.new(name: "Test", job_class_name: job_class.name, pattern: "the_path",
+                                                 properties: saved)
+          # As the form posts it, with the format and schema, see dirmon_entries/_input_category_fields.html.erb.
+          posted    = {input_categories_attributes: {"0" => {name: "main", format: "csv", schema: schema, validate_rows: value}}}
+          sanitized = RocketJobMissionControl::DirmonSanitizer.sanitize_properties(posted, job_class, entry)
+          RocketJobMissionControl::DirmonSanitizer.update_properties(posted, sanitized, entry)["input_categories"]
+        end
+
+        it "leaves out the true that the form shows when the job class already validates the lines" do
+          assert_nil updated_categories({}, "true")
+        end
+
+        it "keeps a true that the entry needs, since its own properties do not validate the lines" do
+          saved = {"input_categories" => [{"name" => "main", "mode" => "line"}]}
+
+          assert_equal [{"name" => "main", "mode" => "line", "validate_rows" => true}], updated_categories(saved, "true")
+        end
+
+        it "leaves out the true that the form shows when the job class validates the lines with the schema that it shows" do
+          schema = {"fields" => [{"name" => "name"}]}
+          saved  = {"input_categories" => [{"name" => "main", "schema" => schema}]}
+
+          assert_equal [{"name" => "main", "schema" => schema}],
+                       updated_categories(saved, "true", job_class: HashModeWithoutSchemaJob, schema: schema.to_json)
+        end
+
+        it "keeps false" do
+          assert_equal [{"name" => "main", "validate_rows" => false}], updated_categories({}, "false")
+        end
       end
     end
   end

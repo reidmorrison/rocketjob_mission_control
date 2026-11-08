@@ -1,10 +1,10 @@
 module RocketJobMissionControl
   module JobSanitizer
-    CATEGORIES_FIELDS = %i[id name format format_options schema mode skip_unknown slice_size columns].freeze
+    CATEGORIES_FIELDS = %i[id name format format_options schema validate_rows skip_unknown slice_size columns].freeze
 
     # The category fields whose blank value means their default, nil, such as no `schema`, so that blanking them
     # clears a value that was set.
-    CLEARABLE_CATEGORY_FIELDS = %i[schema].freeze
+    CLEARABLE_CATEGORY_FIELDS = %i[schema validate_rows].freeze
 
     # The param that the job and Dirmon entry forms post each kind of category in, by the property that holds those
     # categories, with their class.

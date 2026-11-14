@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "minitest", "~> 5.0"
+gem "minitest", "~> 6.1"
 gem "mongoid", "~> 9.1.0"
 gem "rails", "~> 8.1.0"
 gem "sprockets-rails"

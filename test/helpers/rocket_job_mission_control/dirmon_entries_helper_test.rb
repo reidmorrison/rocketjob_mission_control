@@ -24,6 +24,13 @@ module RocketJobMissionControl
           assert_equal "eu-west", job.region
         end
 
+        it "is nil, and says why, for a job class name that is a constant but not a class" do
+          dirmon_entry = RocketJob::DirmonEntry.new(name: "test", pattern: "/tmp/*", job_class_name: "RUBY_VERSION")
+
+          assert_nil dirmon_entry_job(dirmon_entry)
+          assert_includes dirmon_entry.errors[:properties].first, "cannot build a RUBY_VERSION"
+        end
+
         it "is nil without a job class" do
           assert_nil dirmon_entry_job(RocketJob::DirmonEntry.new(name: "test", pattern: "/tmp/*"))
         end

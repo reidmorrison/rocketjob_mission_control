@@ -26,7 +26,7 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
 - The job and Dirmon entry pages show the schema that Rocket Job 7.2 proposes to replace each category's
   deprecated options, which Rocket Job 8 removes: the settings that replace them, what to check before
   applying them, or why they cannot be translated, see `RocketJob::SchemaProposal`. They are only shown
-  when there is one, and change nothing.
+  when there is one, and for a job only while it can still run, and change nothing.
 
 ### Security
 

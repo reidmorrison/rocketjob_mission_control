@@ -799,8 +799,20 @@ module RocketJobMissionControl
           get :show, params: {id: job.id}
 
           assert_response :success
-          assert_select ".schema-proposals h6", /CSVJob .*input category main/
+          assert_select ".schema-proposals h4", /CSVJob .*input category main/
           assert_select ".schema-proposals td label", "Allowed Columns:"
+          assert_select ".schema-proposals td", "remove"
+          assert_select ".schema-proposals .json-tree"
+        end
+
+        it "is not shown for a job that can no longer run" do
+          job = CSVJob.new
+          job.input_category.allowed_columns = %w[name age]
+          job.abort!
+          get :show, params: {id: job.id}
+
+          assert_response :success
+          assert_select ".schema-proposals", 0
         end
 
         it "is not shown for a job without them" do

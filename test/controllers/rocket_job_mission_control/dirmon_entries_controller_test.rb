@@ -564,8 +564,24 @@ module RocketJobMissionControl
           get :show, params: {id: entry.id}
 
           assert_response :success
-          assert_select ".schema-proposals h6", /Dirmon entry "Deprecated options"/
+          assert_select ".schema-proposals h4", /Dirmon entry "Deprecated options"/
           assert_select ".schema-proposals td label", "Allowed Columns:"
+          assert_select ".schema-proposals details summary", "What a schema reads differently"
+        end
+
+        it "shows why the categories could not be read" do
+          entry = RocketJob::DirmonEntry.new(
+            name:           "Unreadable categories",
+            job_class_name: job_class_name,
+            pattern:        "unreadable/*.csv",
+            properties:     {"input_categories" => [{"name" => "main", "allowed_columns" => %w[name], "gone" => 1}]}
+          )
+          entry.save!(validate: false)
+          get :show, params: {id: entry.id}
+
+          assert_response :success
+          assert_select ".schema-proposals .alert-warning", /Its categories could not be read/
+          assert_select ".schema-proposals details", 0
         end
       end
 

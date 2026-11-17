@@ -33,7 +33,7 @@
       <% if @job.respond_to?(:upload_file_name) && @job.upload_file_name %>
         <tr>
           <td><label>Upload File Name:</label></td>
-          <td><%= @job.upload_file_name %></td>
+          <td><%= job_upload_file_name(@job) %></td>
         </tr>
       <% end %>
       <tr>

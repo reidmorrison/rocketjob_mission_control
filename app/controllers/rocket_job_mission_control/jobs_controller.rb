@@ -188,7 +188,7 @@ module RocketJobMissionControl
       slice.records       = records
 
       if slice.save
-        logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
+        logger.info("Slice Updated By #{login}, job: #{@job.id}, file_name: #{helpers.job_upload_file_name(@job)}")
         flash[:success] = "slice updated"
         redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset)
       else
@@ -220,7 +220,7 @@ module RocketJobMissionControl
       slice.records = records
 
       if slice.save
-        logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{@job.upload_file_name}")
+        logger.info("Line Deleted By #{login}, job: #{@job.id}, file_name: #{helpers.job_upload_file_name(@job)}")
         flash[:success] = "Record #{slice.first_record_number + line_index} removed from the slice."
         redirect_to view_slice_job_path(@job, error_type: error_type, offset: offset), status: :see_other
       else

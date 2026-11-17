@@ -10,6 +10,23 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
 ### Breaking changes
 
 - Depend on `rocketjob` ~> 7.2.
+- Replicating a Dirmon entry creates a pending entry, through Rocket Job's `DirmonEntry#replicate`.
+  Previously the copy kept the state of the original, and why it failed.
+
+### Security
+
+- Paths are shown without the user name, password or query of a url, such as
+  `sftp://user:password@host/file.csv`, as Rocket Job 7.2 shows them: the upload file name on the job
+  details page, and in the log entry for an edited or deleted record of a failed slice, each attribute of
+  the job that its class declares as a path, with `path: true` or the type `IOStreams::Path`, such as
+  the `source_url` and `target_url` of a `CopyFileJob`, the secrets in a `CopyFileJob`'s arguments and
+  streams, such as an SFTP password or PGP passphrase, the paths in an `UploadFileJob`'s properties, the
+  file name of each input and output category and the path or url of its schema, and a Dirmon entry's
+  pattern, archive directory and the paths in its properties, on its details page and in the Dirmon
+  entries list. A value that Rocket Job cannot read as a path is shown as stored, or as
+  `(not a valid path)` when it holds an `@` or a `?`, which could be credentials. The edit and copy forms
+  still show the full value, so that it can be changed, and so the Dirmon entries list only searches
+  the pattern for a role that can edit an entry. Mission Control 7.0 and 7.1 showed them as stored.
 
 ### Fixes
 

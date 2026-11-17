@@ -24,14 +24,15 @@ class RecordEditorTest < Minitest::Test
         ["Jack", 2],
         [200, 299],
         42,
-        nil,
         true
       ].each do |record|
         it "is converted back into the same #{record.class.name}" do
-          converted = editor.from_text(editor.to_text(record), record)
-
-          record.nil? ? assert_nil(converted) : assert_equal(record, converted)
+          assert_equal record, editor.from_text(editor.to_text(record), record)
         end
+      end
+
+      it "converts nil back into nil" do
+        assert_nil editor.from_text(editor.to_text(nil), nil)
       end
 
       it "keeps the types of values that JSON does not have, such as a time or an object id" do

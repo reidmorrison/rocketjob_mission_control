@@ -300,7 +300,7 @@ module RocketJobMissionControl
           :format,
           :format_options,
           :schema,
-          :mode,
+          :validate_rows,
           :skip_unknown,
           :slice_size,
           {columns: []}

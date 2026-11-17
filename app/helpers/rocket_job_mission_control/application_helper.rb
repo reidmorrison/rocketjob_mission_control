@@ -91,6 +91,16 @@ module RocketJobMissionControl
                            placeholder: '{"fields": [{"name": "name"}, {"name": "age", "type": "integer"}]}')
     end
 
+    # Returns the select for the validate_rows of an input category, see RocketJob::Category::Input#validate_rows:
+    # blank, which clears it on a job and leaves it to the job class on a Dirmon entry, true or false. A category without
+    # one whose upload validates its lines anyway, such as one with a schema in the deprecated :hash mode, shows true,
+    # as Rocket Job 8 reads it, so that the form shows what the category does.
+    def validate_rows_select(f, category)
+      value = category.validate_rows
+      value = true if value.nil? && category.upload_validates_rows?
+      f.select(:validate_rows, [true, false], {include_blank: true, selected: value}, {class: "tom-select form-select"})
+    end
+
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
     def editable_field_html(klass, field_name, value, f)
       # When editing a job the values are of the correct type.

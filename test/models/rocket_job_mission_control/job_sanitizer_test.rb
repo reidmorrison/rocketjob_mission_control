@@ -146,6 +146,22 @@ class JobSanitizerTest < Minitest::Test
                      RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, RocketJob::Category::Input)
       end
 
+      it "keeps validate_rows as a Boolean" do
+        properties = {"0" => {name: "main", validate_rows: "true"}, "1" => {name: "other", validate_rows: "false"}}
+
+        assert_equal [{name: "main", validate_rows: true}, {name: "other", validate_rows: false}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, RocketJob::Category::Input)
+      end
+
+      it "clears a blank validate_rows" do
+        assert_equal [{name: "main", validate_rows: nil}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", validate_rows: ""}},
+                                                                               RocketJob::Category::Input)
+        assert_equal [{name: "main"}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", validate_rows: ""}},
+                                                                               RocketJob::Category::Input, false)
+      end
+
       it "clears a blank schema" do
         assert_equal [{name: "main", schema: nil}],
                      RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", schema: ""}},

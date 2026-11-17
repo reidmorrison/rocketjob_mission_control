@@ -174,6 +174,11 @@ module RocketJobMissionControl
               assert_match(/<textarea[^>]*input_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
               assert_match(/<textarea[^>]*output_categories_attributes\]\[[^\]]*\]\[schema\]/, response.body)
             end
+
+            it "shows validate_rows of each input category, rather than mode" do
+              assert_match(/<select[^>]*input_categories_attributes\]\[[^\]]*\]\[validate_rows\]/, response.body)
+              assert_no_match(/input_categories_attributes\]\[[^\]]*\]\[mode\]/, response.body)
+            end
           end
         end
       end
@@ -389,6 +394,25 @@ module RocketJobMissionControl
             end
           end
 
+          describe "for a batch job that validates the rows of its files" do
+            let(:dirmon_params) do
+              {
+                name:           "Test",
+                pattern:        "/files/*",
+                job_class_name: "DataImportJob",
+                properties:     {input_categories_attributes: {"0" => {name: "main", validate_rows: "true"}}}
+              }
+            end
+
+            it "saves validate_rows" do
+              assert_predicate assigns(:dirmon_entry), :persisted?
+              category = assigns(:dirmon_entry).properties[:input_categories].first
+
+              # The Boolean, rather than the "true" of the form.
+              assert_same true, category[:validate_rows]
+            end
+          end
+
           %i[name pattern job_class_name].each do |attribute|
             it "assigns the correct value for #{attribute}" do
               assert_equal dirmon_params[attribute], assigns(:dirmon_entry)[attribute]
@@ -432,6 +456,66 @@ module RocketJobMissionControl
 
         it "assigns the entry" do
           assert_equal existing_dirmon_entry, assigns(:dirmon_entry)
+        end
+      end
+
+      describe "an input category that validates its lines without validate_rows" do
+        # Rocket Job reports the deprecated :hash mode of each job built from these properties while Ruby's deprecation
+        # warnings are on, as they are in tests.
+        before do
+          @deprecated          = Warning[:deprecated]
+          Warning[:deprecated] = false
+        end
+
+        after do
+          Warning[:deprecated] = @deprecated
+        end
+
+        let :schema do
+          {"fields" => [{"name" => "name"}]}
+        end
+
+        # The deprecated :hash mode with a schema validates the lines, and Rocket Job 8 reads it as validate_rows: true.
+        let :hash_mode_entry do
+          RocketJob::DirmonEntry.create!(
+            name:           "Hash mode",
+            job_class_name: job_class_name,
+            pattern:        "hash_mode/*.csv",
+            properties:     {"input_categories" => [{"name" => "main", "mode" => "hash", "schema" => schema}]}
+          )
+        end
+
+        def update_validate_rows(value)
+          patch :update, params: {
+            id:                      hash_mode_entry.id,
+            rocket_job_dirmon_entry: {
+              properties: {
+                input_categories_attributes: {"0" => {name: "main", schema: schema.to_json, validate_rows: value}}
+              }
+            }
+          }
+          hash_mode_entry.reload
+        end
+
+        def validates_rows?(entry)
+          entry.job_class.from_properties(entry.properties).input_category.upload_validates_rows?
+        end
+
+        it "shows validate_rows as true" do
+          get :edit, params: {id: hash_mode_entry.id}
+
+          assert_select "select[name$='[validate_rows]'] option[selected][value='true']"
+        end
+
+        it "saves validate_rows as the form shows it" do
+          entry = update_validate_rows("true")
+
+          assert_same true, entry.properties["input_categories"].first["validate_rows"]
+          assert validates_rows?(entry)
+        end
+
+        it "still validates them when validate_rows is left blank" do
+          assert validates_rows?(update_validate_rows(""))
         end
       end
 

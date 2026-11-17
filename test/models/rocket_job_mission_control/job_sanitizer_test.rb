@@ -112,32 +112,73 @@ class JobSanitizerTest < Minitest::Test
       end
     end
 
+    describe ".posted_fields" do
+      it "lists the user editable fields that were posted, also those posted blank" do
+        assert_equal %i[string], RocketJobMissionControl::JobSanitizer.posted_fields({string: "", secure: "x"}, @job.class)
+      end
+    end
+
+    describe ".posted_categories" do
+      it "lists each posted category, main without a name, with the fields that were posted, also those posted blank" do
+        properties = {
+          input_categories_attributes:  {"0" => {format: "", unknown: "x"}},
+          output_categories_attributes: {"1" => {name: "errors", columns: ["", "name"]}}
+        }
+        posted = RocketJobMissionControl::JobSanitizer.posted_categories(properties).collect(&:to_a)
+
+        assert_equal [[:input_categories, RocketJob::Category::Input, "main", %i[format]],
+                      [:output_categories, RocketJob::Category::Output, "errors", %i[columns]]], posted
+      end
+    end
+
     describe ".sanitize_categories" do
       it "parses the JSON of a schema" do
         properties = {"0" => {name: "main", schema: %({"fields": [{"name": "name"}]}\n)}}
 
         assert_equal [{name: "main", schema: {"fields" => [{"name" => "name"}]}}],
-                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, RocketJob::Category::Input)
       end
 
       it "keeps the path or url of a schema" do
         properties = {"0" => {name: "main", schema: " s3://bucket/schemas/people.json "}}
 
         assert_equal [{name: "main", schema: "s3://bucket/schemas/people.json"}],
-                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties)
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, RocketJob::Category::Input)
       end
 
       it "clears a blank schema" do
         assert_equal [{name: "main", schema: nil}],
-                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", schema: ""}})
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", schema: ""}},
+                                                                               RocketJob::Category::Input)
+      end
+
+      it "removes the blank entry that a multi-select posts from the columns" do
+        properties = {"0" => {name: "main", columns: ["", "name", "age"]}}
+
+        assert_equal [{name: "main", columns: %w[name age]}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, RocketJob::Category::Input)
+      end
+
+      it "leaves out columns with none selected" do
+        assert_equal [{name: "main"}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories({"0" => {name: "main", columns: [""]}},
+                                                                               RocketJob::Category::Input)
       end
 
       it "leaves out a schema that is not valid JSON, and sets the error" do
         properties = {"0" => {name: "main", schema: "{ bad json"}}
 
-        assert_equal [{name: "main"}], RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, true, @job)
+        assert_equal [{name: "main"}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, RocketJob::Category::Input, true, @job)
         assert_equal :properties, @job.errors.first.attribute
         assert_includes @job.errors.first.message, "Schema is not valid JSON"
+      end
+
+      it "converts each value by its field in the category class" do
+        properties = {"0" => {name: "main", skip_unknown: "true", slice_size: "10"}}
+
+        assert_equal [{name: "main", skip_unknown: true, slice_size: 10}],
+                     RocketJobMissionControl::JobSanitizer.sanitize_categories(properties, RocketJob::Category::Input)
       end
     end
   end

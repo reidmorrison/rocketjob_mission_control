@@ -553,6 +553,22 @@ module RocketJobMissionControl
         end
       end
 
+      describe "GET #show with deprecated category options" do
+        it "shows the proposed schema" do
+          entry = RocketJob::DirmonEntry.create!(
+            name:           "Deprecated options",
+            job_class_name: job_class_name,
+            pattern:        "deprecated/*.csv",
+            properties:     {"input_categories" => [{"name" => "main", "allowed_columns" => %w[name age]}]}
+          )
+          get :show, params: {id: entry.id}
+
+          assert_response :success
+          assert_select ".schema-proposals h6", /Dirmon entry "Deprecated options"/
+          assert_select ".schema-proposals td label", "Allowed Columns:"
+        end
+      end
+
       describe "GET #show" do
         describe "with an invalid id" do
           before do

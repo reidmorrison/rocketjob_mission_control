@@ -26,6 +26,13 @@ class JobSanitizerTest < Minitest::Test
         assert_equal({string: "hello", integer: "12", symbol: "name"}, cleansed)
       end
 
+      it "replaces the \\r\\n line breaks that a browser posts with \\n" do
+        properties = {string: "line 1\r\nline 2", symbol: "line 1\r\nline 2"}
+        cleansed   = RocketJobMissionControl::JobSanitizer.sanitize(properties, @job.class, @job, false)
+
+        assert_equal({string: "line 1\nline 2", symbol: "line 1\nline 2"}, cleansed)
+      end
+
       it "strips blank values" do
         properties = {
           string:    "",

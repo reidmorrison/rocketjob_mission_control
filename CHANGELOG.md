@@ -51,6 +51,9 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
 - A Dirmon entry saves a category's values with the type of their field, such as `skip_unknown` as a
   Boolean and `slice_size` as an Integer. Previously they were saved as the text that the form posts,
   such as `"true"` and `"10"`.
+- The edit and copy forms of a Dirmon entry whose properties cannot build its job, such as one naming a
+  category that only a subclass of its job class defines, which Rocket Job 7.2 rejects, show why, and
+  still edit its other attributes. Previously the page failed with an error.
 
 ### Internal
 

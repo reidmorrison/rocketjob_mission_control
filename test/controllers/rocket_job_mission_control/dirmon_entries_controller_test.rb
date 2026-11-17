@@ -459,6 +459,40 @@ module RocketJobMissionControl
         end
       end
 
+      describe "an entry whose properties cannot build a job" do
+        # Rocket Job 7.2 raises for a category that only a subclass of the job class defines, which 7.1 accepted.
+        let :unbuildable_entry do
+          entry = RocketJob::DirmonEntry.new(
+            name:           "Unbuildable",
+            job_class_name: job_class_name,
+            pattern:        "unbuildable/*.csv",
+            properties:     {"input_categories" => [{"name" => "other", "format" => "csv"}]}
+          )
+          entry.save!(validate: false)
+          entry
+        end
+
+        %i[edit copy].each do |action|
+          it "shows its #{action} form with why its properties cannot be edited" do
+            get action, params: {id: unbuildable_entry.id}
+
+            assert_response :success
+            assert_includes response.body, "Unknown Input Category: :other"
+            assert_select "[name^='rocket_job_dirmon_entry[properties]']", 0
+          end
+        end
+
+        it "saves its other attributes, and keeps its properties" do
+          patch :update, params: {id: unbuildable_entry.id, rocket_job_dirmon_entry: {name: "Renamed"}}
+
+          assert_redirected_to dirmon_entry_path(unbuildable_entry)
+          unbuildable_entry.reload
+
+          assert_equal "Renamed", unbuildable_entry.name
+          assert_equal [{"name" => "other", "format" => "csv"}], unbuildable_entry.properties["input_categories"]
+        end
+      end
+
       describe "an input category that validates its lines without validate_rows" do
         # Rocket Job reports the deprecated :hash mode of each job built from these properties while Ruby's deprecation
         # warnings are on, as they are in tests.

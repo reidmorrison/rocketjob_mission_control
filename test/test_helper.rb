@@ -10,6 +10,8 @@ require "yaml"
 require "rails/version"
 require_relative "../rjmc/config/environment"
 require "minitest/autorun"
+# Minitest 6 keeps stub and Mock in the minitest-mock gem.
+require "minitest/mock"
 require "rails/test_help"
 require "minispec/rails"
 require_relative "system_test_case"

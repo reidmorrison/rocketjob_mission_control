@@ -19,6 +19,7 @@ gem "sprockets"
 gem "capybara"
 gem "cuprite"
 gem "minispec-rails", require: false
+gem "minitest-mock"
 gem "puma"
 gem "rails-controller-testing"
 gem "simplecov", require: false

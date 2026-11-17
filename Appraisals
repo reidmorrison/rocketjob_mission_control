@@ -3,6 +3,9 @@ appraise "rails_7.2" do
   gem "mongoid", "~> 8.1.0"
   # Rails 7.2 and 8.0 pass quirks_mode to JSON.generate, which json 3 rejects.
   gem "json", "< 3"
+  # Rails 7.2's test runner (line_filtering) cannot run on Minitest 6, whose mocks are built into Minitest 5.
+  gem "minitest", "~> 5.0"
+  remove_gem "minitest-mock"
 end
 
 appraise "rails_8.0" do

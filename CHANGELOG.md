@@ -52,6 +52,11 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
   Boolean and `slice_size` as an Integer. Previously they were saved as the text that the form posts,
   such as `"true"` and `"10"`.
 
+### Internal
+
+- Run the tests on Minitest 6, with the `minitest-mock` gem that now holds `stub`, except for the Rails 7.2
+  appraisal, whose test runner needs Minitest 5.
+
 ## [7.1.0] 2026-11-07
 
 Mission Control 7.1 goes with Rocket Job 7.1, which moves to IOStreams 2.2, and edits the new `schema` of a

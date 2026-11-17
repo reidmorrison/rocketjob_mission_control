@@ -28,7 +28,9 @@ class RecordEditorTest < Minitest::Test
         true
       ].each do |record|
         it "is converted back into the same #{record.class.name}" do
-          assert_equal record, editor.from_text(editor.to_text(record), record)
+          converted = editor.from_text(editor.to_text(record), record)
+
+          record.nil? ? assert_nil(converted) : assert_equal(record, converted)
         end
       end
 

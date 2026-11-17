@@ -3,7 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [7.2.0] Unreleased
+
+Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for Rocket Job 8.
+
+### Breaking changes
+
+- Depend on `rocketjob` ~> 7.2.
 
 ### Fixes
 

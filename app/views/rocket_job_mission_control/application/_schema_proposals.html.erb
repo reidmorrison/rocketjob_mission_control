@@ -1,5 +1,6 @@
 <%# The schemas that Rocket Job proposes to replace the deprecated category options of a job or Dirmon entry. %>
-<% proposals = schema_proposals_of(owner) %>
+<%# The owner answers none for a job that can no longer run, and one with the error when its categories cannot be read. %>
+<% proposals = owner.schema_proposals %>
 <% if proposals.present? %>
   <%# A proposal without changes only says why, such as a job that has already uploaded its input. %>
   <% changes = proposals.any? { |proposal| proposal.changes.present? } %>

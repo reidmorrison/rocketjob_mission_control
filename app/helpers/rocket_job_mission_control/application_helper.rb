@@ -101,21 +101,6 @@ module RocketJobMissionControl
       f.select(:validate_rows, [true, false], {include_blank: true, selected: value}, {class: "tom-select form-select"})
     end
 
-    # Returns [Array<RocketJob::SchemaProposal>] the schemas that Rocket Job proposes to replace the deprecated category
-    # options that the supplied job or Dirmon entry holds, so that they can be moved to a schema before Rocket Job 8
-    # removes those options. When its categories cannot be read, such as a category option that its job class does not
-    # have, returns one proposal that says why, so that the page still shows, much as RocketJob::SchemaProposal.all
-    # reports such an owner. The error is logged with its backtrace too, since it can come from a mistake in the job
-    # class or in Rocket Job.
-    def schema_proposals_of(owner)
-      owner.schema_proposals
-    rescue StandardError => e
-      where = "#{owner.class.name} #{owner.id}"
-      logger.warn("#{where}: its schema proposals could not be read: #{e.class}: #{e.message}\n" \
-                  "#{Array(e.backtrace).join("\n")}")
-      [RocketJob::SchemaProposal.new(where: where, error: "Its categories could not be read: #{e.class}: #{e.message}")]
-    end
-
     # Returns the editable field as html for use in editing dynamic fields from a Job class.
     def editable_field_html(klass, field_name, value, f)
       # When editing a job the values are of the correct type.

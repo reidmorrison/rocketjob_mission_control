@@ -92,26 +92,6 @@ module RocketJobMissionControl
         end
       end
 
-      describe "#schema_proposals_of" do
-        it "returns the proposals of the supplied job or Dirmon entry" do
-          job = CSVJob.new
-          job.input_category.allowed_columns = %w[name age]
-          proposals = schema_proposals_of(job)
-
-          assert_equal 1, proposals.size
-          assert proposals.first.changes.key?("allowed_columns")
-        end
-
-        it "returns one that says why its categories could not be read" do
-          entry = RocketJob::DirmonEntry.new(name: "Test", job_class_name: "DataImportJob", pattern: "the_path",
-                                             properties: {"input_categories" => [{"name" => "main", "allowed_columns" => %w[name], "gone" => 1}]})
-          proposals = schema_proposals_of(entry)
-
-          assert_equal 1, proposals.size
-          assert_includes proposals.first.error, "Its categories could not be read"
-        end
-      end
-
       describe "#extract_inclusion_values" do
         it "returns the inclusion list for a validated attribute" do
           klass = Class.new do

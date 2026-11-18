@@ -35,3 +35,4 @@
 <%= render partial: 'details', locals: {dirmon_entry: @dirmon_entry} %>
 <%= render partial: 'properties', locals: {dirmon_entry: @dirmon_entry} %>
 <%= render partial: 'exception', locals: {dirmon_entry: @dirmon_entry} if @dirmon_entry.exception %>
+<%= render partial: 'schema_proposals', locals: {owner: @dirmon_entry} %>

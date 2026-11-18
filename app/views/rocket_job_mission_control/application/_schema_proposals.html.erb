@@ -1,0 +1,73 @@
+<%# The schemas that Rocket Job proposes to replace the deprecated category options of a job or Dirmon entry. %>
+<% proposals = schema_proposals_of(owner) %>
+<% if proposals.present? %>
+  <%# A proposal without changes only says why, such as a job that has already uploaded its input. %>
+  <% changes = proposals.any? { |proposal| proposal.changes.present? } %>
+  <div class="card schema-proposals">
+    <div class="card-header">
+      <h3 class="h6 mb-0">Proposed Schema</h3>
+    </div>
+
+    <div class="card-body">
+      <% if changes %>
+        <p>
+          Rocket Job 8 removes the deprecated category options below. Rocket Job proposes these settings to replace
+          them. Review each one, read a recent file with it (<code>RocketJob::SchemaProposal#dry_run</code>), and apply it by hand.
+        </p>
+      <% end %>
+
+      <% proposals.each do |proposal| %>
+        <div class="schema-proposal mb-3">
+          <h4 class="h6"><%= proposal.where %></h4>
+
+          <% if proposal.error %>
+            <div class="alert alert-warning">Cannot translate: <%= proposal.error %></div>
+          <% end %>
+
+          <% if proposal.changes.present? %>
+            <%# The same label and value table as the other details, see base.css. %>
+            <div class='row'>
+              <div class='col-md-12'>
+                <table>
+                  <% proposal.changes.each_pair do |name, value| %>
+                    <tr>
+                      <td><label><%= name.to_s.titleize %>:</label></td>
+                      <td>
+                        <% if value.nil? %>
+                          remove
+                        <% elsif value.is_a?(Hash) || value.is_a?(Array) %>
+                          <%= render_json_tree(value) %>
+                        <% else %>
+                          <%= value %>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
+              </div>
+            </div>
+          <% end %>
+
+          <% if proposal.notes.present? %>
+            <ul>
+              <% proposal.notes.each do |note| %>
+                <li><%= note %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if changes %>
+        <details>
+          <summary>What a schema reads differently</summary>
+          <ul>
+            <% RocketJob::SchemaProposal::FILE_CHECKS.each do |check| %>
+              <li><%= check %></li>
+            <% end %>
+          </ul>
+        </details>
+      <% end %>
+    </div>
+  </div>
+<% end %>

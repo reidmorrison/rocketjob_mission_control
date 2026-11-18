@@ -11,6 +11,22 @@ module RocketJobMissionControl
       nil
     end
 
+    # Returns [RocketJob::Job] the job that the entry's properties build, whose values its form shows, or nil without a
+    # job class. Returns nil too when Rocket Job cannot build one from them, such as for a category that the job class
+    # does not define or an option that it no longer has, and adds why to the entry's errors, so that its form still
+    # shows its other attributes rather than failing. The error is logged with its backtrace too, since it can come from
+    # the job class itself, such as a mistake in a default of one of its fields.
+    def dirmon_entry_job(dirmon_entry)
+      dirmon_entry.job_class&.from_properties(dirmon_entry.properties)
+    rescue ArgumentError, NoMethodError, Mongoid::Errors::MongoidError => e
+      job_class_name = dirmon_entry.job_class_name
+      logger.warn("Dirmon entry #{dirmon_entry.id}: its properties cannot build a #{job_class_name}: #{e.class}: " \
+                  "#{e.message}\n#{Array(e.backtrace).join("\n")}")
+      reason = e.respond_to?(:problem) ? e.problem : e.message
+      dirmon_entry.errors.add(:properties, "cannot build a #{job_class_name}, so they cannot be edited here: #{reason}")
+      nil
+    end
+
     def rocket_job_mission_control
       @@rocket_job_mission_control_engine_url_helpers ||= RocketJobMissionControl::Engine.routes.url_helpers
     end

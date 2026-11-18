@@ -8,7 +8,8 @@ gem "rocketjob", github: "reidmorrison/rocketjob", branch: "v7"
 
 gem "minitest", "~> 6.1"
 gem "mongoid", "~> 9.1.0"
-gem "rails", "~> 8.1.0"
+# Rails 8.1.2 is the first 8.1 release whose test runner supports Minitest 6.
+gem "rails", "~> 8.1.2"
 gem "sprockets-rails"
 
 gem "appraisal"
@@ -19,6 +20,7 @@ gem "sprockets"
 gem "capybara"
 gem "cuprite"
 gem "minispec-rails", require: false
+gem "minitest-mock"
 gem "puma"
 gem "rails-controller-testing"
 gem "simplecov", require: false

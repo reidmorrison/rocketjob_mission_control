@@ -21,6 +21,13 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
   validate the lines, rather than its job class. The `mode` is kept as it is saved. The job
   details page shows "Validate Rows" when an upload validates the lines, rather than the `mode`.
 
+### New features
+
+- The job and Dirmon entry pages show the schema that Rocket Job 7.2 proposes to replace each category's
+  deprecated options, which Rocket Job 8 removes: the settings that replace them, what to check before
+  applying them, or why they cannot be translated, see `RocketJob::SchemaProposal`. They are only shown
+  when there is one, and for a job only while it can still run, and change nothing.
+
 ### Security
 
 - Paths are shown without the user name, password or query of a url, such as
@@ -51,6 +58,14 @@ Mission Control 7.2 goes with Rocket Job 7.2, which prepares an application for 
 - A Dirmon entry saves a category's values with the type of their field, such as `skip_unknown` as a
   Boolean and `slice_size` as an Integer. Previously they were saved as the text that the form posts,
   such as `"true"` and `"10"`.
+- The edit and copy forms of a Dirmon entry whose properties cannot build its job, such as one naming a
+  category that only a subclass of its job class defines, which Rocket Job 7.2 rejects, show why, and
+  still edit its other attributes. Previously the page failed with an error.
+
+### Internal
+
+- Run the tests on Minitest 6, with the `minitest-mock` gem that now holds `stub`, except for the Rails 7.2
+  appraisal, whose test runner needs Minitest 5.
 
 ## [7.1.0] 2026-11-07
 

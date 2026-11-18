@@ -13,6 +13,42 @@ module RocketJobMissionControl
         end
       end
 
+      describe "#dirmon_entry_job" do
+        def entry(properties)
+          RocketJob::DirmonEntry.new(name: "test", pattern: "/tmp/*", job_class_name: "DataImportJob", properties: properties)
+        end
+
+        it "builds the job from the entry's properties" do
+          job = dirmon_entry_job(entry("region" => "eu-west"))
+
+          assert_equal "eu-west", job.region
+        end
+
+        it "is nil, and says why, for a job class name that is a constant but not a class" do
+          dirmon_entry = RocketJob::DirmonEntry.new(name: "test", pattern: "/tmp/*", job_class_name: "RUBY_VERSION")
+
+          assert_nil dirmon_entry_job(dirmon_entry)
+          assert_includes dirmon_entry.errors[:properties].first, "cannot build a RUBY_VERSION"
+        end
+
+        it "is nil without a job class" do
+          assert_nil dirmon_entry_job(RocketJob::DirmonEntry.new(name: "test", pattern: "/tmp/*"))
+        end
+
+        {
+          "a category that the job class does not define" => {"input_categories" => [{"name" => "other"}]},
+          "an option that a category does not have"       => {"input_categories" => [{"name" => "main", "gone" => 1}]},
+          "a field that the job class does not have"      => {"gone" => 1}
+        }.each_pair do |description, properties|
+          it "is nil, and says why, for properties with #{description}" do
+            dirmon_entry = entry(properties)
+
+            assert_nil dirmon_entry_job(dirmon_entry)
+            assert_includes dirmon_entry.errors[:properties].first, "cannot build a DataImportJob"
+          end
+        end
+      end
+
       describe "#dirmon_entry_find_category" do
         let(:categories) { [{"name" => "main"}, {"name" => "errors"}] }
 

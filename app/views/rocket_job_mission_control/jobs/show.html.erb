@@ -49,3 +49,7 @@
   </div>
 </div>
 <%= render partial: 'status', locals: {job: @job} %>
+<%# Only a job that can still run, as RocketJob::SchemaProposal.all reads, since a finished job uses its categories no more. %>
+<% if RocketJob::SchemaProposal::RUNNABLE_JOB_STATES.include?(@job.state.to_s) %>
+  <%= render partial: 'schema_proposals', locals: {owner: @job} %>
+<% end %>

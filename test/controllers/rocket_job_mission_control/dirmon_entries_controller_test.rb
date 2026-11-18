@@ -459,6 +459,40 @@ module RocketJobMissionControl
         end
       end
 
+      describe "an entry whose properties cannot build a job" do
+        # Rocket Job 7.2 raises for a category that only a subclass of the job class defines, which 7.1 accepted.
+        let :unbuildable_entry do
+          entry = RocketJob::DirmonEntry.new(
+            name:           "Unbuildable",
+            job_class_name: job_class_name,
+            pattern:        "unbuildable/*.csv",
+            properties:     {"input_categories" => [{"name" => "other", "format" => "csv"}]}
+          )
+          entry.save!(validate: false)
+          entry
+        end
+
+        %i[edit copy].each do |action|
+          it "shows its #{action} form with why its properties cannot be edited" do
+            get action, params: {id: unbuildable_entry.id}
+
+            assert_response :success
+            assert_includes response.body, "Unknown Input Category: :other"
+            assert_select "[name^='rocket_job_dirmon_entry[properties]']", 0
+          end
+        end
+
+        it "saves its other attributes, and keeps its properties" do
+          patch :update, params: {id: unbuildable_entry.id, rocket_job_dirmon_entry: {name: "Renamed"}}
+
+          assert_redirected_to dirmon_entry_path(unbuildable_entry)
+          unbuildable_entry.reload
+
+          assert_equal "Renamed", unbuildable_entry.name
+          assert_equal [{"name" => "other", "format" => "csv"}], unbuildable_entry.properties["input_categories"]
+        end
+      end
+
       describe "an input category that validates its lines without validate_rows" do
         # Rocket Job reports the deprecated :hash mode of each job built from these properties while Ruby's deprecation
         # warnings are on, as they are in tests.
@@ -516,6 +550,38 @@ module RocketJobMissionControl
 
         it "still validates them when validate_rows is left blank" do
           assert validates_rows?(update_validate_rows(""))
+        end
+      end
+
+      describe "GET #show with deprecated category options" do
+        it "shows the proposed schema" do
+          entry = RocketJob::DirmonEntry.create!(
+            name:           "Deprecated options",
+            job_class_name: job_class_name,
+            pattern:        "deprecated/*.csv",
+            properties:     {"input_categories" => [{"name" => "main", "allowed_columns" => %w[name age]}]}
+          )
+          get :show, params: {id: entry.id}
+
+          assert_response :success
+          assert_select ".schema-proposals h4", /Dirmon entry "Deprecated options"/
+          assert_select ".schema-proposals td label", "Allowed Columns:"
+          assert_select ".schema-proposals details summary", "What a schema reads differently"
+        end
+
+        it "shows why the categories could not be read" do
+          entry = RocketJob::DirmonEntry.new(
+            name:           "Unreadable categories",
+            job_class_name: job_class_name,
+            pattern:        "unreadable/*.csv",
+            properties:     {"input_categories" => [{"name" => "main", "allowed_columns" => %w[name], "gone" => 1}]}
+          )
+          entry.save!(validate: false)
+          get :show, params: {id: entry.id}
+
+          assert_response :success
+          assert_select ".schema-proposals .alert-warning", /Its categories could not be read/
+          assert_select ".schema-proposals details", 0
         end
       end
 

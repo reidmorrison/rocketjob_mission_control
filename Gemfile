@@ -2,10 +2,6 @@ source "https://rubygems.org"
 
 gemspec
 
-# Rocket Job 7.2 has not been released yet, so bundle it from its release branch, v7, whose main branch is Rocket
-# Job 8. Remove once 7.2.0 is published to rubygems.org, which the gemspec already requires.
-gem "rocketjob", github: "reidmorrison/rocketjob", branch: "v7"
-
 gem "minitest", "~> 6.1"
 gem "mongoid", "~> 9.1.0"
 # Rails 8.1.2 is the first 8.1 release whose test runner supports Minitest 6.

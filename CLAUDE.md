@@ -17,7 +17,7 @@ RJMC is one of a family of gems by the same author, all checked out one director
 
 Rocket Job Pro and Enterprise functionality has been rolled into `rocketjob` itself; there are no separate `rocketjob_pro` / `rocketjob_enterprise` gems. To develop against a local copy of any dependency, point `rjmc/Gemfile` at `path: "../<gem>"`.
 
-RJMC's `main` is the 7.2 line: it depends on Rocket Job 7.2 (`rocketjob ~> 7.2`), which requires IOStreams 2.2. IOStreams 2.2.0 is bundled from rubygems.org, but Rocket Job 7.2.0 is not released yet, so the Gemfile, each appraisal and the dummy app bundle `rocketjob` from its `v7` branch until it is. Their `v7` and `v2` branches hold those releases; their `main` branches are Rocket Job 8 and IOStreams 3, so read the `v7` and `v2` branches of the local checkouts, or the `v2.2.0` tag, not their `main`. A Rocket Job or IOStreams API that is only on their `main` cannot be used in RJMC until a Rocket Job or IOStreams release that RJMC depends on has it.
+RJMC's `main` is the 7.2 line: it depends on Rocket Job 7.2 (`rocketjob ~> 7.2`), which requires IOStreams 2.2. Both are bundled from rubygems.org. Their `v7` and `v2` branches hold those releases; their `main` branches are Rocket Job 8 and IOStreams 3, so read the `v7` and `v2` branches of the local checkouts, or the `v2.2.0` tag, not their `main`. A Rocket Job or IOStreams API that is only on their `main` cannot be used in RJMC until a Rocket Job or IOStreams release that RJMC depends on has it.
 
 ## Commands
 

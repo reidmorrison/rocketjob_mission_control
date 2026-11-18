@@ -14,3 +14,4 @@ Gemfile.lock
 .generators
 .rakeTasks
 node_modules
+/tmp
